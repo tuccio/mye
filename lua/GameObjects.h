@@ -8,7 +8,7 @@ namespace mye
 	namespace lua
 	{
 
-		int RegisterGameObjects(lua_State *L);
+		void RegisterGameObjects(lua_State *L);
 
 	}
 

@@ -1,9 +1,13 @@
-#include <luabind/luabind.hpp>
-#include <luabind/operator.hpp>
-#include <luabind/return_reference_to_policy.hpp>
-
 #include <mye/core/GameObject.h>
 #include <mye/core/Game.h>
+
+#include <iostream>
+
+#include <lua.hpp>
+
+#include "Types.h"
+
+using namespace mye::core;
 
 namespace mye
 {
@@ -11,52 +15,113 @@ namespace mye
 	namespace lua
 	{
 
-		class Wrapper
+		const char *hello(void)
+		{
+			return "hello";
+		}
+
+		int __gameobject_new(lua_State *L);
+		int __gameobject_create(lua_State *L);
+		int __gameobject_destroy(lua_State *L);
+		int __gameobject_exists(lua_State *L);
+		int __gameobject_newindex(lua_State *L);
+
+		void RegisterGameObjects(lua_State *L)
 		{
 
-		public:
+			lua_newtable(L);
 
-			Wrapper(int i)
-			{
-				_x.i = i;
-			}
+			lua_pushcfunction(L, __gameobject_new);
+			lua_setfield(L, -2, "new");
 
-			Wrapper(float f)
-			{
-				_x.f = f;
-			}
+			lua_setglobal(L, "GameObject");
 
-		private:
+		}
 
-			union Types
-			{
-				int i;
-				float f;
-			} _x;
-
-		};
-
-		int RegisterGameObjects(lua_State *L)
+		int __gameobject_new(lua_State *L)
 		{
 
-			using namespace mye::core;
-			using namespace luabind;
+			// Create the table for the instance
 
-			open(L);
+			lua_newuserdata(L, sizeof(GameObjectHandle));
 
-			module(L)
-			[
-				def("CreateGameObject", &Game::CreateGameObject)
-			];
+			// Create the metatable			
 
-			module(L)
-			[
-				class_<GameObjectHandle>("GameObjectHandle").
-					def("Exists", Game::IsGameObject).
-					def("Destroy", &Game::DestroyGameObject)
-			];
+			luaL_newmetatable(L, MYE_LUA_GAMEOBJECT);
 
-			return 0;
+			lua_pushcfunction(L, __gameobject_newindex);
+			lua_setfield(L, -2, "__newindex");
+
+			lua_setmetatable(L, -2);
+
+			return 1;
+
+		}
+
+		int __gameobject_newindex(lua_State *L)
+		{
+
+			int nargs = lua_gettop(L);
+
+			if (nargs != 3)
+			{
+				luaL_error(L, "GameObject: Assignment argument count error");
+				return 0;
+			}
+
+			void *d = luaL_checkudata(L, 1, MYE_LUA_GAMEOBJECT);				
+
+			if (!d)
+			{
+				luaL_error(L, "GameObject: Call error");
+			}
+
+			GameObjectHandle hObj;
+
+			memcpy(&hObj,
+				d,
+				sizeof(GameObjectHandle));
+
+			const char *field = lua_tostring(L, 2);
+
+			if (field[0] != '_')
+			{
+
+				int objectType = lua_type(L, 3);
+
+				switch (objectType)
+				{
+
+				case LUA_TSTRING:
+					std::cout << "string assignment" << std::endl;
+					break;
+
+				case LUA_TTABLE:
+					std::cout << "table assignment" << std::endl;
+					break;
+
+				case LUA_TNUMBER:
+					std::cout << "number assignment" << std::endl;
+					break;
+
+				case LUA_TNIL:
+					std::cout << "nil assignment" << std::endl;
+					break;
+
+				default:						
+					luaL_error(L, "GameObject: Assignment type error");
+					break;
+
+				}
+
+				return 0;
+
+			}
+			else
+			{
+				luaL_error(L, "GameObject: Identifiers prefixed by underscores are reserved");
+				return 0;
+			}
 
 		}
 

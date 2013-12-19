@@ -5,7 +5,7 @@
 using namespace std;
 
 int main(int argc, char *argv[])
-{
+{	
 
 	mye::lua::Interpreter lint;
 

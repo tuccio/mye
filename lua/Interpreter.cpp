@@ -2,13 +2,13 @@
 
 #include "Vector.h"
 #include "GameObjects.h"
-#include "Components.h"
 
 using namespace mye::lua;
 using namespace std;
 
 Interpreter::Interpreter(void)
 {
+
 
 	_L = luaL_newstate();
 
@@ -17,7 +17,6 @@ Interpreter::Interpreter(void)
 	RegisterVector(_L);
 
  	RegisterGameObjects(_L);
- 	RegisterComponents(_L);
 
 }
 

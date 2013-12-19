@@ -21,13 +21,13 @@
     <ClInclude Include="Vector.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="Components.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
     <ClInclude Include="GameObjects.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="ComponentHandler.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="Types.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>
@@ -36,9 +36,6 @@
       <Filter>File di origine</Filter>
     </ClCompile>
     <ClCompile Include="Vector.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="Components.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
     <ClCompile Include="GameObjects.cpp">

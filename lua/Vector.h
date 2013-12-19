@@ -8,7 +8,7 @@ namespace mye
 	namespace lua
 	{
 
-		int RegisterVector(lua_State *L);
+		void RegisterVector(lua_State *L);
 
 	}
 

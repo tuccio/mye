@@ -2,7 +2,14 @@
 
 --local hObj = factory:CreateObject()
 
-local hObj = CreateGameObject()
+local hObj = GameObject.new()
+
+hObj.n = 10
+hObj.s = "sweg"
+hObj.v = { 0, 1, 0 }
+
+--[[
+local hObj = GameObject.new()
 
 print(hObj:Exists())
 
@@ -10,10 +17,12 @@ hObj:Destroy()
 
 print(hObj:Exists())
 
+hObj:hello()
+
+]]--
+
 -- hObj.transform
 
-hObj.pi = 3.14
-hObj.velocity = vec3(1, 0, 0)
 
 --[[
 function printVector(v)

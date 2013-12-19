@@ -15,9 +15,13 @@ namespace mye
 
 			~Game(void);
 
+			/* Game objects */
+
 			static GameObjectHandle CreateGameObject(void);
+
 			static GameObject* GetGameObject(const GameObjectHandle &hObj);
 			static void DestroyGameObject(const GameObjectHandle &hObj);
+
 			static bool IsGameObject(const GameObjectHandle &hObj);
 
 		private:
