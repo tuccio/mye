@@ -3,6 +3,8 @@
 #include <lua.hpp>
 #include <string>
 
+#include "__vec.h"
+
 namespace mye
 {
 

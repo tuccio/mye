@@ -6,6 +6,7 @@
 #include <lua.hpp>
 
 #include "Types.h"
+#include "Utils.h"
 
 using namespace mye::core;
 
@@ -21,20 +22,37 @@ namespace mye
 		}
 
 		int __gameobject_new(lua_State *L);
+
 		int __gameobject_create(lua_State *L);
 		int __gameobject_destroy(lua_State *L);
 		int __gameobject_exists(lua_State *L);
+
 		int __gameobject_newindex(lua_State *L);
+		int __gameobject_proxy(lua_State *L);
 
 		void RegisterGameObjects(lua_State *L)
 		{
 
+			// Create a proxy table
+
 			lua_newtable(L);
 
-			lua_pushcfunction(L, __gameobject_new);
-			lua_setfield(L, -2, "new");
+			// Create a metatable
 
-			lua_setglobal(L, "GameObject");
+			lua_newtable(L);
+
+			lua_pushcfunction(L, __gameobject_proxy);
+			lua_setfield(L, -2, "__index");
+
+			lua_pushcfunction(L, __mye_donothing);
+			lua_setfield(L, -2, "__newindex");
+
+			lua_pushnil(L);
+			lua_setfield(L, -2, "__metatable");
+
+			lua_setmetatable(L, -2);
+
+			lua_setglobal(L, MYE_LUA_GAMEOBJECT);
 
 		}
 
@@ -47,10 +65,11 @@ namespace mye
 
 			// Create the metatable			
 
-			luaL_newmetatable(L, MYE_LUA_GAMEOBJECT);
-
-			lua_pushcfunction(L, __gameobject_newindex);
-			lua_setfield(L, -2, "__newindex");
+			if (luaL_newmetatable(L, MYE_LUA_GAMEOBJECT))
+			{
+				lua_pushcfunction(L, __gameobject_newindex);
+				lua_setfield(L, -2, "__newindex");
+			}
 
 			lua_setmetatable(L, -2);
 
@@ -122,6 +141,19 @@ namespace mye
 				luaL_error(L, "GameObject: Identifiers prefixed by underscores are reserved");
 				return 0;
 			}
+
+		}
+
+		int __gameobject_proxy(lua_State *L)
+		{
+
+			if (strcmp("new", lua_tostring(L, 2)) == 0)
+			{
+				lua_pushcfunction(L, __gameobject_new);
+				return 1;
+			}
+
+			return 0;
 
 		}
 

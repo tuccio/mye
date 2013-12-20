@@ -1,20 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "math", "math\math.vcxproj", "{481F9D3C-BEFF-4CDE-91D4-917CD814A793}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vectest", "vectest\vectest.vcxproj", "{09A38F38-6AB9-4CDA-9C1C-8C3877DED332}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core", "core\core.vcxproj", "{8C0C7CD2-5AE2-4CB3-A0A3-9E3A33EEA0B0}"
-	ProjectSection(ProjectDependencies) = postProject
-		{481F9D3C-BEFF-4CDE-91D4-917CD814A793} = {481F9D3C-BEFF-4CDE-91D4-917CD814A793}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lua", "lua\lua.vcxproj", "{3CD6DCD7-2045-48F1-B0BA-E39634971240}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "luatest", "luatest\luatest.vcxproj", "{8FD5F287-EBE9-4120-A3C5-577905749714}"
 	ProjectSection(ProjectDependencies) = postProject
-		{481F9D3C-BEFF-4CDE-91D4-917CD814A793} = {481F9D3C-BEFF-4CDE-91D4-917CD814A793}
 		{8C0C7CD2-5AE2-4CB3-A0A3-9E3A33EEA0B0} = {8C0C7CD2-5AE2-4CB3-A0A3-9E3A33EEA0B0}
 		{3CD6DCD7-2045-48F1-B0BA-E39634971240} = {3CD6DCD7-2045-48F1-B0BA-E39634971240}
 	EndProjectSection
@@ -25,14 +17,6 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{481F9D3C-BEFF-4CDE-91D4-917CD814A793}.Debug|Win32.ActiveCfg = Debug|Win32
-		{481F9D3C-BEFF-4CDE-91D4-917CD814A793}.Debug|Win32.Build.0 = Debug|Win32
-		{481F9D3C-BEFF-4CDE-91D4-917CD814A793}.Release|Win32.ActiveCfg = Release|Win32
-		{481F9D3C-BEFF-4CDE-91D4-917CD814A793}.Release|Win32.Build.0 = Release|Win32
-		{09A38F38-6AB9-4CDA-9C1C-8C3877DED332}.Debug|Win32.ActiveCfg = Debug|Win32
-		{09A38F38-6AB9-4CDA-9C1C-8C3877DED332}.Debug|Win32.Build.0 = Debug|Win32
-		{09A38F38-6AB9-4CDA-9C1C-8C3877DED332}.Release|Win32.ActiveCfg = Release|Win32
-		{09A38F38-6AB9-4CDA-9C1C-8C3877DED332}.Release|Win32.Build.0 = Release|Win32
 		{8C0C7CD2-5AE2-4CB3-A0A3-9E3A33EEA0B0}.Debug|Win32.ActiveCfg = Debug|Win32
 		{8C0C7CD2-5AE2-4CB3-A0A3-9E3A33EEA0B0}.Debug|Win32.Build.0 = Debug|Win32
 		{8C0C7CD2-5AE2-4CB3-A0A3-9E3A33EEA0B0}.Release|Win32.ActiveCfg = Release|Win32

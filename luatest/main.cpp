@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 
 	mye::lua::Interpreter lint;
 
-	if (!lint.Run("test.lua"))
+	if (!lint.Run("vectest.lua"))
 	{
 		cout << "Error: " << lint.GetLastError() << endl;
 		system("pause");

@@ -1,6 +1,7 @@
 #include "Interpreter.h"
 
 #include "Vector.h"
+#include "Vector3.h"
 #include "GameObjects.h"
 
 using namespace mye::lua;
@@ -14,9 +15,9 @@ Interpreter::Interpreter(void)
 
 	luaL_openlibs(_L);
 
-	RegisterVector(_L);
-
- 	RegisterGameObjects(_L);
+	//RegisterVector(_L);
+	RegisterVector3(_L);
+ 	//RegisterGameObjects(_L);
 
 }
 

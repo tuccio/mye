@@ -20,7 +20,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="test.lua">
+    <None Include="vectest.lua">
       <Filter>File di origine</Filter>
     </None>
   </ItemGroup>

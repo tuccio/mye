@@ -30,6 +30,18 @@
     <ClInclude Include="Types.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="__vec.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="__vec.inl">
+      <Filter>File di origine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Interpreter.cpp">
@@ -42,6 +54,12 @@
       <Filter>File di origine</Filter>
     </ClCompile>
     <ClCompile Include="ComponentHandler.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector3.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
   </ItemGroup>

@@ -39,12 +39,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>C:\lua\include;C:\luabind\luabind-0.9;D:\Documenti\Visual Studio 2012\Projects;$(IncludePath)</IncludePath>
     <IncludePath>C:\lua\include;D:\Documenti\Visual Studio 2012\Projects;$(IncludePath)</IncludePath>
     <LibraryPath>C:\lua\lib;$(LibraryPath)</LibraryPath>
     <TargetName>mye$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\lua\include;D:\Documenti\Visual Studio 2012\Projects;$(IncludePath)</IncludePath>
+    <IncludePath>C:\lua\include;C:\luabind\luabind-0.9;D:\Documenti\Visual Studio 2012\Projects;$(IncludePath)</IncludePath>
     <LibraryPath>C:\lua\lib;$(LibraryPath)</LibraryPath>
     <TargetName>mye$(ProjectName)</TargetName>
   </PropertyGroup>
@@ -76,14 +77,22 @@
     <ClInclude Include="GameObjects.h" />
     <ClInclude Include="Interpreter.h" />
     <ClInclude Include="Types.h" />
+    <ClInclude Include="Utils.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="ComponentHandler.h" />
+    <ClInclude Include="Vector3.h" />
+    <ClInclude Include="__vec.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObjects.cpp" />
     <ClCompile Include="Interpreter.cpp" />
+    <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Vector.cpp" />
     <ClCompile Include="ComponentHandler.cpp" />
+    <ClCompile Include="Vector3.cpp" />
+    <ClInclude Include="__vec.inl">
+      <FileType>CppCode</FileType>
+    </ClInclude>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
