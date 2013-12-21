@@ -2,8 +2,6 @@
 
 #include "Component.h"
 
-#include <mye/math/Vector.h>
-
 #include <map>
 #include <string>
 

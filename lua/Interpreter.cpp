@@ -1,8 +1,11 @@
 #include "Interpreter.h"
 
-#include "Vector.h"
+#include "Utils.h"
+
 #include "Vector3.h"
 #include "GameObjects.h"
+
+#include <luabind/luabind.hpp>
 
 using namespace mye::lua;
 using namespace std;
@@ -10,14 +13,15 @@ using namespace std;
 Interpreter::Interpreter(void)
 {
 
-
 	_L = luaL_newstate();
 
 	luaL_openlibs(_L);
+	luabind::open(_L);
 
-	//RegisterVector(_L);
+	RegisterUtils(_L);
+
 	RegisterVector3(_L);
- 	//RegisterGameObjects(_L);
+ 	RegisterGameObjects(_L);
 
 }
 

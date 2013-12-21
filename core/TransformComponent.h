@@ -2,9 +2,6 @@
 
 #include "Component.h"
 
-#include <mye/math/Vector.h>
-#include <mye/math/Transform.h>
-
 namespace mye
 {
 
@@ -12,8 +9,7 @@ namespace mye
 	{
 
 		struct TransformComponent :
-			public Component,
-			public mye::math::Transform
+			public Component
 		{
 
 		public:

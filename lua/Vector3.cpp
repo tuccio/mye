@@ -22,8 +22,6 @@ namespace mye
 		void RegisterVector3(lua_State *L)
 		{
 
-			open(L);
-
 			module(L)
 			[
 
