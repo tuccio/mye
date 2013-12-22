@@ -1,6 +1,8 @@
 #include <mye/core/GameObject.h>
 #include <mye/core/Game.h>
 
+#include <mye/core/Components.h>
+
 #include <iostream>
 
 #include <lua.hpp>
@@ -9,8 +11,15 @@
 #include "Types.h"
 #include "Utils.h"
 
+#define GAMEOBJECT_OVERLOADS "GameObjectOverloads"
+#define GAMEOBJECT_CLASSES "GameObjectClasses"
+#define OVERLOAD_SENTINEL "__overload"
+
 using namespace mye::core;
+using namespace mye::lua;
 using namespace luabind;
+
+/* GameObject static */
 
 namespace mye
 {
@@ -18,59 +27,61 @@ namespace mye
 	namespace lua
 	{
 
-		/* GameObject static */
-
-		luabind::object __gameobject_static_index(
-			const luabind::object &table,
+		object __gameobject_static_index(
+			const object &table,
 			const std::string &field)
 		{
 
-			if (field == "new")
+			lua_State *L = table.interpreter();
+
+			object o = RegistryEntry(L)[MYE_LUA_GAMEOBJECT_STATIC_AUX][field];
+
+			if (type(o) == LUA_TSTRING &&
+				object_cast<std::string>(o) == OVERLOAD_SENTINEL)
 			{
-				lua_State *L = table.interpreter();
-				return make_function(L, &Game::CreateGameObject);
+
+				return globals(L)[GAMEOBJECT_OVERLOADS][field];
+
 			}
 
-			return luabind::object();
+			return o;
 
 		}
 
-		void RegisterGameObjectStaticTable(lua_State *L)
+		GameObjectHandle __gameobject_static_new(const std::string &classname)
 		{
 
-			object sTable = newtable(L);
-			object sMeta = newtable(L);
+			GameObjectHandle hObj = Game::CreateGameObject();
 
-			sMeta["__metatable"] = false;
+			
 
-			sMeta["__newindex"] = registry(L)[MYE_LUA_NOOP];
-			sMeta["__index"] = make_function(L, &__gameobject_static_index);
+			return hObj;
 
-			setmetatable(sTable, sMeta);
+		}
 
-			globals(L)[MYE_LUA_GAMEOBJECT] = sTable;
+		void __gameobject_static_registerclass(const std::string &name,
+			const object &c)
+		{
+
+			lua_State *L = c.interpreter();
+			RegistryEntry(L)[GAMEOBJECT_CLASSES][name] = c;
 
 		}
 
 		/* GameObject */
 
-		static std::map<std::string, luabind::object> __gameobject_methods;
-
-		luabind::object __gameobject_index(
-			const luabind::object &table,
+		object __gameobject_index(
+			const object &ud,
 			const std::string &field)
 		{
 
-			if (field == "Exists")
-			{
-				lua_State *L = table.interpreter();
-				return make_function(L, &Game::IsGameObject);
-			}
+			lua_State *L = ud.interpreter();
 
-			if (field == "Destroy")
+			object o = RegistryEntry(L)[MYE_LUA_GAMEOBJECT_AUX][field];
+
+			if (type(o) == LUA_TFUNCTION)
 			{
-				lua_State *L = table.interpreter();
-				return make_function(L, &Game::DestroyGameObject);
+				return o;
 			}
 
 			// TODO: Add Update, transform, ...
@@ -81,21 +92,106 @@ namespace mye
 		}
 
 		void __gameobject_newindex(
-			const luabind::object &table,
+			const object &ud,
 			const std::string &field,
-			const luabind::object &value)
+			const object &value)
 		{
 
 			// TODO: Add Update, transform, ...
 			// TODO: Add variable component handling
 
+			GameObjectHandle hObj = object_cast<GameObjectHandle>(ud);
+
+			GameObject *go = Game::GetGameObject(hObj);
+
+			if (go)
+			{
+
+				VariableComponent *vc = go->GetComponent<VariableComponent>();
+
+				if (vc)
+				{
+
+
+
+				}
+
+			}
+
+		}
+
+		/* Register stuff */
+
+		void RegisterGameObjectStaticTable(lua_State *L)
+		{
+
+			object sTable = newtable(L);
+			object sMeta = newtable(L);
+
+			sMeta["__metatable"] = false;
+
+			sMeta["__newindex"] = RegistryEntry(L)[MYE_LUA_NOOP];
+			sMeta["__index"] = make_function(L, &__gameobject_static_index);
+
+			setmetatable(sTable, sMeta);
+
+			globals(L)[MYE_LUA_GAMEOBJECT] = sTable;
+
+			object sAuxTable = newtable(L);
+			object sAuxMeta = newtable(L);
+
+			sAuxMeta["__metatable"] = false;
+			sAuxMeta["__newindex"] = RegistryEntry(L)[MYE_LUA_NOOP];
+
+			module(L, GAMEOBJECT_OVERLOADS)
+			[
+				def("new", &Game::CreateGameObject),
+				def("new", &__gameobject_static_new)
+			];
+
+			sAuxTable["new"] = OVERLOAD_SENTINEL;
+
+			setmetatable(sAuxTable, sAuxMeta);
+
+			RegistryEntry(L)[MYE_LUA_GAMEOBJECT_STATIC_AUX] = sAuxTable;
+
+		}
+
+		void RegisterGameObjectTable(lua_State *L)
+		{
+
+			object sTable = newtable(L);
+			object sMeta = newtable(L);
+
+			sMeta["__metatable"] = false;
+			sMeta["__newindex"] = RegistryEntry(L)[MYE_LUA_NOOP];
+
+			sTable["Exists"] = make_function(L, &Game::IsGameObject);
+			sTable["Destroy"] = make_function(L, &Game::DestroyGameObject);
+
+			setmetatable(sTable, sMeta);
+
+			RegistryEntry(L)[MYE_LUA_GAMEOBJECT_AUX] = sTable;
+
+		}
+
+		void RegisterGameObjectHandleTable(lua_State *L)
+		{
+
+			object mt = newtable(L);
+
+			mt["__index"] = make_function(L, &__gameobject_index);
+			mt["__newindex"] = make_function(L, &__gameobject_newindex);
+
+			RegistryEntry(L)[MYE_LUA_GAMEOBJECT] = mt;
+
 		}
 
 		void RegisterGameObjects(lua_State *L)
 		{
-
 			RegisterGameObjectStaticTable(L);
-
+			RegisterGameObjectTable(L);
+			RegisterGameObjectHandleTable(L);
 		}
 
 	}
@@ -112,7 +208,7 @@ namespace luabind
 
 		static int compute_score(lua_State *L, int index)
 		{
-			return luaL_checkudata(L, index, MYE_LUA_GAMEOBJECT) != NULL;
+			return GetMYEType(L, index) == MYE_LUA_GAMEOBJECT;
 		}
 
 		GameObjectHandle from(lua_State *L, int index)
@@ -137,23 +233,11 @@ namespace luabind
 			void *d = lua_newuserdata(L, sizeof(GameObjectHandle));
 
 			object ud = object(from_stack(L, -1));
+			object udmt = mye::lua::RegistryEntry(L)[MYE_LUA_GAMEOBJECT];
 
-			if (luaL_newmetatable(L, MYE_LUA_GAMEOBJECT))
-			{
+			setmetatable(ud, udmt);
 
-
-				object mt = object(from_stack(L, -1));
-
-				mt["__index"] = make_function(L, &mye::lua::__gameobject_index);
-				mt["__newindex"] = make_function(L, &mye::lua::__gameobject_newindex);
-
-				setmetatable(ud, mt);
-
-			}
-			else
-			{
-				setmetatable(ud, object(from_stack(L, -1)));
-			}
+			SetMYEType(ud, MYE_LUA_GAMEOBJECT);
 
 			memcpy(d, &hObj, sizeof(GameObjectHandle));
 

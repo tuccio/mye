@@ -4,34 +4,32 @@
 
 using namespace std;
 
-#define VECTEST 0
-#define GOTEST 1
+#define VECTEST 1
+#define GOTEST 2
+#define GOCLASS 3
+
+#define TEST GOTEST
 
 int main(int argc, char *argv[])
 {	
 
 	mye::lua::Interpreter lint;
 
-#if VECTEST
+	std::string testfile;
 
-	if (!lint.Run("vectest.lua"))
+#if TEST == VECTEST
+	testfile = "vectest.lua";
+#elif TEST == GOTEST
+	testfile = "gotest.lua";
+#elif TEST == GOCLASS
+	testfile = "goclass.lua";
+#endif
+
+	if (!lint.Run(testfile))
 	{
 		cout << "Error: " << lint.GetLastError() << endl;
 		system("pause");
 	}
-
-#endif
-
-#if GOTEST
-
-	if (!lint.Run("gotest.lua"))
-	{
-		cout << "Error: " << lint.GetLastError() << endl;
-		system("pause");
-	}
-
-#endif
-
 	return 0;
 
 }

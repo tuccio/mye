@@ -27,18 +27,18 @@ void GameObject::AddComponent(const Component &component)
 
 }
 
-Component& GameObject::GetComponent(const std::string &name)
+Component* GameObject::GetComponent(const std::string &name)
 {
 
 	auto it = _components.find(name);
 
 	if (it != _components.end())
 	{
-		return *it->second;
+		return it->second;
 	}
 	else
 	{
-		return NullComponent::dummy;
+		return NULL;
 	}
 
 }

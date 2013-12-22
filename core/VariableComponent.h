@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Component.h"
+#include "Variable.h"
 
 #include <map>
 #include <string>
@@ -23,12 +24,10 @@ namespace mye
 			VariableComponent(void);
 			~VariableComponent(void);
 
-			void Register(const std::string &name, double initValue = 0);
+			bool Contains(const std::string &name) const;
 
-			double Get(const std::string &name);
-			void Set(const std::string &name, double value);
-
-			void Remove(const std::string &name);
+			Variable& operator[] (const std::string &name);
+			const Variable& operator[] (const std::string &name) const;
 
 			void Clear(void);
 
@@ -38,7 +37,7 @@ namespace mye
 
 		private:
 
-			std::map<std::string, double> _info;
+			std::map<std::string, Variable> _info;
 
 		};
 

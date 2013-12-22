@@ -21,7 +21,12 @@ namespace mye
 			~GameObject(void);
 
 			void AddComponent(const Component &component);
-			Component& GetComponent(const std::string &name);
+
+			Component* GetComponent(const std::string &name);
+			
+			template <typename T>
+			T* GetComponent(void);
+
 			void RemoveComponent(const std::string &name);
 
 			void Destroy(void);
@@ -33,6 +38,12 @@ namespace mye
 			std::map<std::string, Component*> _components;
 
 		};
+
+		template <typename T>
+		T* GameObject::GetComponent(void)
+		{
+			return static_cast<T*>(GetComponent(T::Name()));
+		}
 
 		typedef OpaqueObjectHandle<GameObject> GameObjectHandle;
 		typedef OpaqueObjectsManager<GameObject> GameObjectsManager;

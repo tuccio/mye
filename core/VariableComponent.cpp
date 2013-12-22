@@ -18,64 +18,36 @@ VariableComponent::~VariableComponent(void)
 {
 }
 
-void VariableComponent::Register(const std::string &name, double initValue)
+bool VariableComponent::Contains(const std::string &name) const
+{
+	return _info.find(name) != _info.end();
+}
+
+Variable& VariableComponent::operator[] (const std::string &name)
 {
 	
 	auto it = _info.find(name);
 
 	if (it == _info.end())
 	{
-		_info.insert(pair<string, double>(name, initValue));
-
+		return (_info[name] = Variable());
 	}
+
+	return it->second;
 
 }
 
-double VariableComponent::Get(const std::string &name)
+const Variable& VariableComponent::operator[] (const std::string &name) const
 {
 
 	auto it = _info.find(name);
 
-	if (it != _info.end())
-	{
-		return it->second;
-	}
-	else
+	if (it == _info.end())
 	{
 		throw;
 	}
 
-}
-
-void VariableComponent::Set(const std::string &name, double value)
-{
-
-	auto it = _info.find(name);
-
-	if (it != _info.end())
-	{
-		it->second = value;
-	}
-	else
-	{
-		throw;
-	}
-
-}
-
-void VariableComponent::Remove(const std::string &name)
-{
-
-	auto it = _info.find(name);
-
-	if (it != _info.end())
-	{
-		_info.erase(it);
-	}
-	else
-	{
-		throw;
-	}
+	return it->second;
 
 }
 
