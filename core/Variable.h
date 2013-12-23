@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Eigen/Eigen>
+#include <typeindex>
 
 namespace mye
 {
@@ -13,38 +13,58 @@ namespace mye
 
 		public:
 
-			enum Type
-			{
-				MYE_NULL = 0,
-				MYE_FLOAT,
-				MYE_VEC3,
-				MYE_POINTER
-			};
-
 			Variable(void);
 			~Variable(void);
 
-			Type GetType(void);
+			std::type_index GetType(void) const;
 
 			void SetNull(void);
 
-			void SetFloat(float x);
-			float GetFloat(void) const;
+			template <typename T>
+			void Set(T x);
 
-			void SetVec3(const Eigen::Vector3f &v);
-			Eigen::Vector3f GetVec3(void) const;		
-
-			void SetPointer(void *p);
-			void* GetPointer(void) const;
+			template <typename T>
+			T Get(void) const;
 
 		private:
 
 			void Clear(void);
 
-			Type _type;			
+			std::type_index _type;	
 			void *_data;
+			size_t _datasize;
 
 		};
+
+		template <typename T>
+		void Variable::Set(T x)
+		{
+
+			size_t newsize = sizeof(T);
+
+			if (newsize > _datasize)
+			{
+
+				if (_datasize > 0)
+				{
+					delete _data;
+				}
+
+				_data = new T;
+				_datasize = newsize;
+
+			}
+
+			_type = typeid(T);
+			memcpy(_data, &x, newsize);
+
+		}
+
+		template <typename T>
+		T Variable::Get(void) const
+		{
+			return * (T*) _data;
+		}
 
 	}
 

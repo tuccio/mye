@@ -18,6 +18,11 @@ VariableComponent::~VariableComponent(void)
 {
 }
 
+Variable& VariableComponent::Add(const std::string &name)
+{
+	return _info[name] = Variable();
+}
+
 bool VariableComponent::Contains(const std::string &name) const
 {
 	return _info.find(name) != _info.end();
@@ -30,7 +35,7 @@ Variable& VariableComponent::operator[] (const std::string &name)
 
 	if (it == _info.end())
 	{
-		return (_info[name] = Variable());
+		throw;
 	}
 
 	return it->second;

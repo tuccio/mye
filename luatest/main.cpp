@@ -8,7 +8,7 @@ using namespace std;
 #define GOTEST 2
 #define GOCLASS 3
 
-#define TEST GOTEST
+#define TEST 3
 
 int main(int argc, char *argv[])
 {	

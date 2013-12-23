@@ -24,6 +24,7 @@ namespace mye
 			VariableComponent(void);
 			~VariableComponent(void);
 
+			Variable& Add(const std::string &name);
 			bool Contains(const std::string &name) const;
 
 			Variable& operator[] (const std::string &name);

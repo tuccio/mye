@@ -25,15 +25,10 @@ function Ball:SetColor(c)
 	self.color = c
 end
 
-b = Ball.__init()
+local hObj = GameObject:new()
+local hBall = GameObject:new("Ball")
 
-b:MoveTo(vec3(1, 1, -1))
-b:SetColor(2)
-
-GameObject.RegisterClass("Ball", Ball)
-
-local hBall = GameObject.new(Ball)
-local hObj = GameObject.new()
+hBall:MoveTo(vec3(1, 1, 1))
 
 print(hBall.position)
 print(hBall.velocity)
