@@ -27,6 +27,12 @@ namespace mye
 			template <typename T>
 			T* GetComponent(void);
 
+			void SetName(const std::string &name);
+			const std::string& GetName(void) const;
+
+			void SetType(const std::string &name);
+			const std::string& GetType(void) const;
+
 			void RemoveComponent(const std::string &name);
 
 			void Destroy(void);
@@ -36,6 +42,8 @@ namespace mye
 		private:
 
 			std::map<std::string, Component*> _components;
+			std::string _type;
+			std::string _name;
 
 		};
 

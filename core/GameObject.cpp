@@ -55,6 +55,26 @@ void GameObject::RemoveComponent(const std::string &name)
 
 }
 
+void GameObject::SetName(const std::string &name)
+{
+	_name = name;
+}
+
+const std::string& GameObject::GetName(void) const
+{
+	return _name;
+}
+
+void GameObject::SetType(const std::string &type)
+{
+	_type = type;
+}
+
+const std::string& GameObject::GetType(void) const
+{
+	return _type;
+}
+
 void GameObject::Destroy(void)
 {
 }

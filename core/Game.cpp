@@ -18,6 +18,14 @@ GameObjectHandle Game::CreateGameObject(void)
 	return _goManager.Create();
 }
 
+GameObjectHandle Game::CreateGameObject(const std::string &classname)
+{
+	GameObjectHandle hObj = _goManager.Create();
+	GameObject *go = _goManager.Get(hObj);
+	go->SetType(classname);
+	return hObj;
+}
+
 GameObject* Game::GetGameObject(const GameObjectHandle &hObj)
 {
 	return _goManager.Get(hObj);

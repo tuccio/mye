@@ -18,6 +18,7 @@ namespace mye
 			/* Game objects */
 
 			static GameObjectHandle CreateGameObject(void);
+			static GameObjectHandle CreateGameObject(const std::string &classname);
 
 			static GameObject* GetGameObject(const GameObjectHandle &hObj);
 			static void DestroyGameObject(const GameObjectHandle &hObj);
