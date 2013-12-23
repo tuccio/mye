@@ -37,4 +37,10 @@ print(hBall.position)
 print(hBall.velocity)
 print(hBall.color)
 
+hBall.color = "red"
+hBall.sweg = true
+
+print(hBall.color)
+print(hBall.sweg)
+
 os.execute("pause")

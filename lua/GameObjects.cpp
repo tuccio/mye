@@ -171,22 +171,16 @@ namespace mye
 
 					std::type_index type = v.GetType();
 
-					if (type == typeid(float))
-					{
-						return object(L, v.Get<float>());
-					}
-					else if (type == typeid(int))
-					{
-						return object(L, v.Get<int>());
-					}
-					else if (type == typeid(Eigen::Vector3f))
-					{
-						return object(L, v.Get<Eigen::Vector3f>());
-					}
-					else if (type == typeid(object))
-					{
-						return v.Get<object>();
-					}
+#define __TYPECHECK_BEGIN(__Type) if (type == typeid(__Type)) { return object(L, v.Get<__Type>()); }
+#define __TYPECHECK(__Type) else __TYPECHECK_BEGIN(__Type)
+#define __TYPECHECK_END() else { return object(); }
+
+					__TYPECHECK_BEGIN(float)
+					__TYPECHECK(int)
+					__TYPECHECK(bool)
+					__TYPECHECK(std::string)
+					__TYPECHECK(Eigen::Vector3f)
+					__TYPECHECK_END()
 					
 				}
 
@@ -223,6 +217,21 @@ namespace mye
 
 				switch (type(value))
 				{
+
+				case LUA_TNUMBER:
+
+					vc->Add(field).Set<float>(object_cast<float>(value));
+					break;
+
+				case LUA_TBOOLEAN:
+
+					vc->Add(field).Set<bool>(object_cast<bool>(value));
+					break;
+
+				case LUA_TSTRING:
+
+					vc->Add(field).Set<std::string>(object_cast<std::string>(value));
+					break;
 
 				case LUA_TUSERDATA:
 

@@ -28,11 +28,13 @@ namespace mye
 
 		private:
 
+			typedef size_t SizeType;
+
 			void Clear(void);
 
 			std::type_index _type;	
 			void *_data;
-			size_t _datasize;
+			SizeType _datasize;
 
 		};
 
@@ -40,7 +42,7 @@ namespace mye
 		void Variable::Set(T x)
 		{
 
-			size_t newsize = sizeof(T);
+			SizeType newsize = sizeof(T);
 
 			if (newsize > _datasize)
 			{
