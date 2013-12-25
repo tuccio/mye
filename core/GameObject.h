@@ -18,6 +18,7 @@ namespace mye
 		public:
 
 			GameObject(void);
+			GameObject(const std::string &name);
 			~GameObject(void);
 
 			void AddComponent(const Component &component);
@@ -27,8 +28,7 @@ namespace mye
 			template <typename T>
 			T* GetComponent(void);
 
-			void SetName(const std::string &name);
-			const std::string& GetName(void) const;
+			const std::string& GetName(void) const;			
 
 			void SetType(const std::string &name);
 			const std::string& GetType(void) const;
@@ -40,6 +40,9 @@ namespace mye
 			void Clear(void);
 
 		private:
+
+			friend class OpaqueObjectsManager<GameObject>;
+			void SetName(const std::string &name);
 
 			std::map<std::string, Component*> _components;
 			std::string _type;

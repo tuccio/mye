@@ -51,23 +51,8 @@ namespace mye
 		template <int N, typename T>
 		std::string __vec_tostring(const Eigen::Matrix<T, N, 1, 0, N, 1> &v);
 
-		template <typename T>
-		T __vec3_getx(const Eigen::Matrix<T, 3, 1, 0, 3, 1> &a);
-
-		template <typename T>
-		void __vec3_setx(Eigen::Matrix<T, 3, 1, 0, 3, 1> &a, T b);
-
-		template <typename T>
-		T __vec3_gety(const Eigen::Matrix<T, 3, 1, 0, 3, 1> &a);
-
-		template <typename T>
-		void __vec3_sety(Eigen::Matrix<T, 3, 1, 0, 3, 1> &a, T b);
-
-		template <typename T>
-		T __vec3_getz(const Eigen::Matrix<T, 3, 1, 0, 3, 1> &a);
-
-		template <typename T>
-		void __vec3_setz(Eigen::Matrix<T, 3, 1, 0, 3, 1> &a, T b);
+		template <int N, typename T, int I>
+		T __vec_get(const Eigen::Matrix<T, N, 1, 0, N, 1> &a);
 
 	}
 

@@ -18,11 +18,7 @@ namespace mye
 			COMPONENTS_N
 		};
 
-		const char* COMPONENT_NAMES[COMPONENTS_N] = {
-			NullComponent::Name(),
-			VariableComponent::Name(),
-			TransformComponent::Name()
-		};
+		extern const char* COMPONENT_NAMES[COMPONENTS_N];
 
 	}
 

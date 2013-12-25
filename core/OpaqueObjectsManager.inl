@@ -39,19 +39,75 @@ OpaqueObjectsManager<T>::~OpaqueObjectsManager(void)
 template <typename T>
 OpaqueObjectHandle<T> OpaqueObjectsManager<T>::Create(void)
 {
+	return Create(std::string());
+}
+
+template <typename T>
+OpaqueObjectHandle<T> OpaqueObjectsManager<T>::Create(const std::string &name)
+{
+
+	OpaqueObjectHandle<T> handle;
 
 	if (_free.empty())
 	{
 		_objects.push_back(Allocation(new T, 0));
-		return OpaqueObjectHandle<T>(_objects.size() - 1, 0);
+		handle = OpaqueObjectHandle<T>(_objects.size() - 1, 0);
 	}
 	else
 	{
-		
+
 		int id = _free.front();
 		_free.pop_front();
 
-		return OpaqueObjectHandle<T>(id, _objects[id].allocation);
+		handle = OpaqueObjectHandle<T>(_objects.size() - 1, 0);
+
+	}
+
+	_objects[handle.id].object->SetName(name);
+
+	if (!name.empty())
+	{		
+		_names.insert(std::pair<std::string, OpaqueObjectHandle<T>>(name, handle));
+	}	
+
+	return handle;
+
+}
+
+template <typename T>
+void OpaqueObjectsManager<T>::Destroy(const OpaqueObjectHandle<T> &hObj)
+{
+
+	if (hObj.id >= 0 &&
+		hObj.id < _objects.size() &&
+		_objects[hObj.id].allocation == hObj.allocation)
+	{
+		
+		_objects[hObj.id].allocation++;
+		_objects[hObj.id].object->Clear();
+		_free.push_back(hObj.id);
+
+		std::string name = _objects[hObj.id].object->GetName();
+
+		if (!name.empty())
+		{
+
+			
+
+			for (auto eqr = _names.equal_range(name);
+				 eqr.first != eqr.second;
+				 eqr.first++)
+			{
+
+				if (eqr.first->second == hObj)
+				{
+					_names.erase(eqr.first);
+					break;
+				}
+
+			}
+
+		}
 
 	}
 
@@ -73,16 +129,16 @@ T* OpaqueObjectsManager<T>::Get(const OpaqueObjectHandle<T> &hObj)
 }
 
 template <typename T>
-void OpaqueObjectsManager<T>::Destroy(const OpaqueObjectHandle<T> &hObj)
+OpaqueObjectHandle<T> OpaqueObjectsManager<T>::Find(const std::string &name)
 {
 
-	if (hObj.id >= 0 &&
-		hObj.id < _objects.size() &&
-		_objects[hObj.id].allocation == hObj.allocation)
+	auto eqr = _names.equal_range(name);
+
+	if (eqr.first == _names.end())
 	{
-		_objects[hObj.id].allocation++;
-		_objects[hObj.id].object->Clear();
-		_free.push_back(hObj.id);
+		return OpaqueObjectHandle<T>(-1, -1);
 	}
+	
+	return eqr.first->second;
 
 }

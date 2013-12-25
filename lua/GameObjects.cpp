@@ -121,7 +121,8 @@ namespace mye
 
 			object cMeta = __gameobject_getclassmeta(L, hObj);
 
-			if (type(cMeta) == LUA_TTABLE)
+			if (cMeta &&
+				type(cMeta) == LUA_TTABLE)
 			{
 				return cMeta[field];
 			}
@@ -144,15 +145,30 @@ namespace mye
 				return o;
 			}
 
-			// TODO: Add Update, transform, ...
-			// TODO: Add variable component handling
-
 			GameObjectHandle hObj = object_cast<GameObjectHandle>(ud);
 			GameObject *go = Game::GetGameObject(hObj);
 
+			// TODO: Add Update, transform, ...
+
+			/* Reserve fields */
+
+			if (field == "name")
+			{
+				std::string name = go->GetName();
+				return (name.empty() ? object() : object(L, name));
+			}
+			else if (field == "transform")
+			{
+
+			}
+
+			// TODO: Add variable component handling
+			
+
 			object fieldobj = __gameobject_getclassfield(L, hObj, field);
 
-			if (type(fieldobj) == LUA_TFUNCTION)
+			if (fieldobj &&
+				type(fieldobj) == LUA_TFUNCTION)
 			{
 				return fieldobj;
 			}
@@ -291,6 +307,12 @@ namespace mye
 			RegistryEntry(sTable.interpreter())[GAMEOBJECT_CLASSES] = object();
 		}
 
+		GameObjectHandle __gameobject_static_find(const object &sTable,
+												  const std::string &name)
+		{
+			return Game::FindGameObject(name);
+		}
+
 		object __gameobject_static_index(
 			const object &table,
 			const std::string &field)
@@ -318,32 +340,43 @@ namespace mye
 		}
 
 		GameObjectHandle __gameobject_static_new(const object &sTable,
-			const std::string &classname)
+			const object &arg1,
+			const object &arg2)
 		{
 
-			GameObjectHandle hObj = Game::CreateGameObject(classname);
+			std::string classname = (type(arg1) == LUA_TSTRING ? object_cast<std::string>(arg1) : std::string());
+			std::string name = (type(arg2) == LUA_TSTRING ? object_cast<std::string>(arg2) : std::string());			
 
-			object ctor = __gameobject_getclassfield(sTable.interpreter(),
-													 hObj,
-													 "__init");
+			GameObjectHandle hObj = Game::CreateGameObject(name);
 
-			if (ctor)
+			if (!classname.empty())
 			{
 
-				object o = call_function<object>(ctor);
+				Game::GetGameObject(hObj)->SetType(classname);
 
-				for (iterator it(o), end; it != end; it++)
+				object ctor = __gameobject_getclassfield(sTable.interpreter(),
+					hObj,
+					"__init");
+
+				if (ctor)
 				{
-					
-					static const std::string &prfx = "__";
-					std::string field = object_cast<std::string>(it.key());
 
-					auto checkprefix = std::mismatch(prfx.begin(), prfx.end(), field.begin());										
+					object o = call_function<object>(ctor);
 
-					if (checkprefix.first != prfx.end() &&
-						type(*it) != LUA_TFUNCTION)
+					for (iterator it(o), end; it != end; it++)
 					{
-						__gameobject_newindex(sTable.interpreter(), hObj, field, *it);
+
+						static const std::string &prfx = "__";
+						std::string field = object_cast<std::string>(it.key());
+
+						auto checkprefix = std::mismatch(prfx.begin(), prfx.end(), field.begin());										
+
+						if (checkprefix.first != prfx.end() &&
+							type(*it) != LUA_TFUNCTION)
+						{
+							__gameobject_newindex(sTable.interpreter(), hObj, field, *it);
+						}
+
 					}
 
 				}
@@ -379,14 +412,14 @@ namespace mye
 			module(L, GAMEOBJECT_OVERLOADS)
 			[
 				def("new", (GameObjectHandle (*) (void)) &Game::CreateGameObject),
-				def("new", (GameObjectHandle (*) (const std::string&)) &Game::CreateGameObject),
-				def("new", (GameObjectHandle (*) (const object&, const std::string&)) &__gameobject_static_new),
+				def("new", (GameObjectHandle (*) (const object&, const object&, const object&)) &__gameobject_static_new),
 				def("new", (GameObjectHandle (*) (const object&)) &__gameobject_static_new)
 			];
 
 			sAuxTable["new"] = OVERLOAD_SENTINEL;
 			sAuxTable["RegisterClass"] = make_function(L, &__gameobject_static_registerclass);
 			sAuxTable["UnregisterClass"] = make_function(L, &__gameobject_static_unregisterclass);
+			sAuxTable["Find"] = make_function(L, &__gameobject_static_find);
 
 			setmetatable(sAuxTable, sAuxMeta);
 

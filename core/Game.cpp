@@ -18,17 +18,9 @@ GameObjectHandle Game::CreateGameObject(void)
 	return _goManager.Create();
 }
 
-GameObjectHandle Game::CreateGameObject(const std::string &classname)
+GameObjectHandle Game::CreateGameObject(const std::string &name)
 {
-	GameObjectHandle hObj = _goManager.Create();
-	GameObject *go = _goManager.Get(hObj);
-	go->SetType(classname);
-	return hObj;
-}
-
-GameObject* Game::GetGameObject(const GameObjectHandle &hObj)
-{
-	return _goManager.Get(hObj);
+	return _goManager.Create(name);
 }
 
 void Game::DestroyGameObject(const GameObjectHandle &hObj)
@@ -42,6 +34,18 @@ void Game::DestroyGameObject(const GameObjectHandle &hObj)
 		_goManager.Destroy(hObj);
 	}
 }
+
+GameObject* Game::GetGameObject(const GameObjectHandle &hObj)
+{
+	return _goManager.Get(hObj);
+}
+
+GameObjectHandle Game::FindGameObject(const std::string &name)
+{
+	return _goManager.Find(name);
+}
+
+
 
 bool Game::IsGameObject(const GameObjectHandle &hObj)
 {

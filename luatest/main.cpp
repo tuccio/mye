@@ -7,6 +7,7 @@ using namespace std;
 #define VECTEST 1
 #define GOTEST 2
 #define GOCLASS 3
+#define WINDOWTEST 4
 
 #define TEST 3
 
@@ -23,6 +24,8 @@ int main(int argc, char *argv[])
 	testfile = "gotest.lua";
 #elif TEST == GOCLASS
 	testfile = "goclass.lua";
+#elif TEST == WINDOWTEST
+	testfile = "windowtest.lua";
 #endif
 
 	if (!lint.Run(testfile))
