@@ -9,6 +9,11 @@ GameObject::GameObject(void)
 {
 }
 
+GameObject::GameObject(const std::string &name) :
+	_name(name)
+{
+}
+
 
 GameObject::~GameObject(void)
 {

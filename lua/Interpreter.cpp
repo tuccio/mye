@@ -2,7 +2,11 @@
 
 #include "Utils.h"
 
+#include "Vector2.h"
 #include "Vector3.h"
+
+#include "Windows.h"
+
 #include "GameObjects.h"
 
 #include <luabind/luabind.hpp>
@@ -20,7 +24,12 @@ Interpreter::Interpreter(void)
 
 	RegisterUtils(_L);
 
+	RegisterVector2(_L);
 	RegisterVector3(_L);
+
+	RegisterWindow(_L);
+	RegisterApplication(_L);
+	
  	RegisterGameObjects(_L);
 
 }

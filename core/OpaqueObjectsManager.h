@@ -2,6 +2,8 @@
 
 #include <vector>
 #include <list>
+#include <string>
+#include <map>
 
 namespace mye
 {
@@ -19,9 +21,21 @@ namespace mye
 			OpaqueObjectHandle(void);
 			OpaqueObjectHandle(int id, int allocation);
 
+			bool IsValid(void) const
+			{
+				return id >= 0 && allocation >= 0;
+			}
+
 		};
 
-		/* Requires T to have a default constructor and a Clear() method */
+		template <typename T>
+		bool operator== (const OpaqueObjectHandle<T> &a, const OpaqueObjectHandle<T> &b)
+		{
+			return a.id == b.id && a.allocation == b.allocation;
+		}
+
+		/* Requires T to have a default constructor,
+		   a SetName(const std::string&) and a Clear(void) method */
 
 		template <typename T>
 		class OpaqueObjectsManager
@@ -33,8 +47,12 @@ namespace mye
 			~OpaqueObjectsManager(void);
 
 			OpaqueObjectHandle<T> Create(void);
-			T* Get(const OpaqueObjectHandle<T> &hObj);
+			OpaqueObjectHandle<T> Create(const std::string& name);
+
 			void Destroy(const OpaqueObjectHandle<T> &hObj);
+
+			T* Get(const OpaqueObjectHandle<T> &hObj);
+			OpaqueObjectHandle<T> Find(const std::string &name);
 
 		private:
 
@@ -51,6 +69,7 @@ namespace mye
 
 			std::vector<Allocation> _objects;
 			std::list<int> _free;
+			std::multimap<std::string, OpaqueObjectHandle<T>> _names;
 
 		};
 
