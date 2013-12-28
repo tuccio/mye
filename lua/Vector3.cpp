@@ -20,7 +20,7 @@ namespace mye
 	{
 
 		template <typename T>
-		void RegisterVector3(lua_State *L, const char *classname)
+		void BindVector3(lua_State *L, const char *classname)
 		{
 
 			typedef Eigen::Matrix<T, 3, 1, 0, 3, 1> VectorType;
@@ -55,11 +55,11 @@ namespace mye
 
 		}
 
-		void RegisterVector3(lua_State *L)
+		void BindVector3(lua_State *L)
 		{
 
-			RegisterVector3<float>(L, MYE_LUA_VEC3);
-			RegisterVector3<int>(L, MYE_LUA_VEC3I);
+			BindVector3<float>(L, MYE_LUA_VEC3);
+			BindVector3<int>(L, MYE_LUA_VEC3I);
 
 		}
 

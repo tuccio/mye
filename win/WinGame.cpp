@@ -1,29 +1,33 @@
-#include "Application.h"
+#include "WinGame.h"
 
 using namespace mye::win;
+using namespace mye::core;
 
-Application::Application(void)
+WinGame::WinGame(InputModule *input,
+				 GameObjectsModule *gameobjects,
+				 SceneModule *scene,
+				 GraphicsModule *graphics,
+				 AudioModule *audio) :
+	Game(input,
+		 gameobjects,
+		 scene,
+		 graphics,
+		 audio)
 {
 	_mainWindow.Create();
 }
 
-
-Application::~Application(void)
+WinGame::~WinGame(void)
 {
 	_mainWindow.Destroy();
 }
 
-Window& Application::GetMainWindow(void)
+Window WinGame::GetMainWindow(void)
 {
 	return _mainWindow;
 }
 
-const Window& Application::GetMainWindow(void) const
-{
-	return _mainWindow;
-}
-
-void Application::Run(void)
+void WinGame::Run(void)
 {
 
 	if (_mainWindow.Exists())
@@ -37,8 +41,6 @@ void Application::Run(void)
 	do
 	{
 
-		//_mainWindow.PeekAndDispatch(msg);
-
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
@@ -50,12 +52,14 @@ void Application::Run(void)
 
 		float dt = (currentTime  - _lastTime) / 1000.0f;
 
-// 		_game->Update(dt);
-// 		_game->Render();
+		/*
+		Update(dt);
+		Render();
+		*/
 
 		_lastTime = currentTime;
 
-		
+
 
 	}
 	while (msg.message != WM_QUIT);

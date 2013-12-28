@@ -1,7 +1,5 @@
-#include <mye/lua/LuaEnvironment.h>
+#include <mye/lua/Interpreter.h>
 #include <mye/win/WinGame.h>
-
-#include <mye/core/VariableComponent.h>
 
 #include <iostream>
 
@@ -27,23 +25,13 @@ int main(int argc, char *argv[])
 	AudioModule audio;
 
 	WinGame game(&input,
-				 &gameobjects,
-				 &scene,
-				 &graphics,
-				 &audio);
+		&gameobjects,
+		&scene,
+		&graphics,
+		&audio);
 
-	std::string testfile = "game.lua";
+	game.Run();
 
-	LuaEnvironment lua;
-
-	lua.SetGameInstance(game);
-
-	if (!lua.RunFile(testfile))
-	{
-		std::cout << "Error: " << lua.GetLastError() << std::endl;
-		system("pause");
-	}
-	
 	return 0;
 
 }
