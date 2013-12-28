@@ -1,46 +1,38 @@
 #pragma once
 
 #include "Component.h"
-#include "Variable.h"
-
-#include <map>
-#include <string>
-
-#include <memory>
+#include <typeindex>
 
 namespace mye
 {
 
 	namespace core
 	{
-		class VariableComponent :
-			public Component
+
+		template <typename T>
+		class VariableComponent : public Component
 		{
 
 		public:
 
-			static const char* Name(void);
-
 			VariableComponent(void);
 			~VariableComponent(void);
 
-			Variable& Add(const std::string &name);
-			bool Contains(const std::string &name) const;
+			VariableComponent* Clone(void) const;
 
-			Variable& operator[] (const std::string &name);
-			const Variable& operator[] (const std::string &name) const;
+			virtual std::type_index GetVariableType(void) const;
 
-			void Clear(void);
-
-			Cloneable* Clone(void) const;
-
-			Component& operator= (const Component& component);
+			T Get(void) const;
+			void Set(const T& v);
 
 		private:
 
-			std::map<std::string, Variable> _info;
+			T _v;
 
 		};
 
 	}
+
 }
+
+#include "VariableComponent.inl"

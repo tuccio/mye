@@ -8,7 +8,7 @@ namespace mye
 	namespace lua
 	{
 
-		void BindVector3(lua_State *L);
+		void BindVariableComponent(lua_State *L);
 
 	}
 

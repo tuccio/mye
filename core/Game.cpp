@@ -2,9 +2,16 @@
 
 using namespace mye::core;
 
-GameObjectsManager Game::_goManager;
-
-Game::Game(void)
+Game::Game(InputModule *input,
+		   GameObjectsModule *gameobjects,
+		   SceneModule *scene,
+		   GraphicsModule *graphics,
+		   AudioModule *audio) :
+	_input(input),
+	_gameobjects(gameobjects),
+	_scene(scene),
+	_graphics(graphics),
+	_audio(audio)
 {
 }
 
@@ -13,41 +20,32 @@ Game::~Game(void)
 {
 }
 
-GameObjectHandle Game::CreateGameObject(void)
+void Game::Run(void)
 {
-	return _goManager.Create();
+
 }
 
-GameObjectHandle Game::CreateGameObject(const std::string &name)
+InputModule* Game::GetInputModule(void)
 {
-	return _goManager.Create(name);
+	return _input;
 }
 
-void Game::DestroyGameObject(const GameObjectHandle &hObj)
+GameObjectsModule* Game::GetGameObjectsModule(void)
 {
-
-	GameObject *o = _goManager.Get(hObj);
-
-	if (o)
-	{
-		o->Destroy();
-		_goManager.Destroy(hObj);
-	}
+	return _gameobjects;
 }
 
-GameObject* Game::GetGameObject(const GameObjectHandle &hObj)
+SceneModule* Game::GetSceneModule(void)
 {
-	return _goManager.Get(hObj);
+	return _scene;
 }
 
-GameObjectHandle Game::FindGameObject(const std::string &name)
+GraphicsModule* Game::GetGraphicsModule(void)
 {
-	return _goManager.Find(name);
+	return _graphics;
 }
 
-
-
-bool Game::IsGameObject(const GameObjectHandle &hObj)
+AudioModule* Game::GetAudioModule(void)
 {
-	return _goManager.Get(hObj) != NULL;
+	return _audio;
 }

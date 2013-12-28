@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Cloneable.h"
+#include "ComponentTypes.h"
 
 #include <string>
 
@@ -15,20 +16,14 @@ namespace mye
 
 		public:
 
-			static const char* Name(void);
-
-			Component(const std::string &name);
+			Component(ComponentTypes _type);
 			virtual ~Component(void) = 0;
 
-			virtual bool IsNull(void) const;
+			ComponentTypes GetComponentType(void);
 
-			const std::string& GetName(void) const;
+		protected:
 
-			virtual Component& operator= (const Component& component) = 0;
-
-		private:
-
-			const std::string _name;
+			ComponentTypes _type;
 
 		};
 	}

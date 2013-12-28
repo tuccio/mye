@@ -2,6 +2,12 @@
 
 #include "GameObject.h"
 
+#include "InputModule.h"
+#include "GameObjectsModule.h"
+#include "SceneModule.h"
+#include "AudioModule.h"
+#include "GraphicsModule.h"
+
 namespace mye
 {
 
@@ -13,25 +19,29 @@ namespace mye
 
 		public:
 
+			Game(InputModule *input,
+				 GameObjectsModule *gameobjects,
+				 SceneModule *scene,
+				 GraphicsModule *graphics,
+				 AudioModule *audio);
+
 			~Game(void);
 
-			/* Game objects */
+			virtual void Run(void);
 
-			static GameObjectHandle CreateGameObject(void);
-			static GameObjectHandle CreateGameObject(const std::string &name);
-
-			static void DestroyGameObject(const GameObjectHandle &hObj);
-
-			static GameObject* GetGameObject(const GameObjectHandle &hObj);
-			static GameObjectHandle FindGameObject(const std::string &name);
-
-			static bool IsGameObject(const GameObjectHandle &hObj);
+			InputModule* GetInputModule(void);
+			GameObjectsModule* GetGameObjectsModule(void);
+			SceneModule* GetSceneModule(void);
+			GraphicsModule* GetGraphicsModule(void);
+			AudioModule* GetAudioModule(void);
 
 		private:
 
-			Game(void);
-
-			static GameObjectsManager _goManager;
+			InputModule *_input;
+			GameObjectsModule *_gameobjects;
+			SceneModule *_scene;
+			GraphicsModule *_graphics;
+			AudioModule *_audio;
 
 		};
 

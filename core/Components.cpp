@@ -2,8 +2,11 @@
 
 using namespace mye::core;
 
-const char* COMPONENT_NAMES[Components::COMPONENTS_N] = {
-	NullComponent::Name(),
-	VariableComponent::Name(),
-	TransformComponent::Name()
+#if COMPONENTS_N > 0
+
+const char* COMPONENT_NAMES[Components::COMPONENTS_N] =
+{
+	
 };
+
+#endif

@@ -1,7 +1,5 @@
 #include "GameObject.h"
 
-#include "NullComponent.h"
-
 using namespace mye::core;
 using namespace std;
 
@@ -21,13 +19,22 @@ GameObject::~GameObject(void)
 
 /* Components */
 
-void GameObject::AddComponent(const Component &component)
+void GameObject::AddComponent(const std::string &name,
+							  const Component &component)
 {
-	
-	if (!component.IsNull())
+
+	auto it = _components.find(name);
+
+	Component *newComponent = static_cast<Component*>(component.Clone());
+
+	if (it != _components.end() && it->second != NULL)
 	{
-		const string &name = component.GetName();
-		_components[name] = static_cast<Component*>(component.Clone());
+		delete it->second;
+		it->second = newComponent;
+	}
+	else
+	{
+		_components[name] = newComponent;
 	}
 
 }
@@ -68,20 +75,6 @@ void GameObject::SetName(const std::string &name)
 const std::string& GameObject::GetName(void) const
 {
 	return _name;
-}
-
-void GameObject::SetType(const std::string &type)
-{
-	_type = type;
-}
-
-const std::string& GameObject::GetType(void) const
-{
-	return _type;
-}
-
-void GameObject::Destroy(void)
-{
 }
 
 void GameObject::Clear(void)
