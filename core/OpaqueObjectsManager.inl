@@ -63,7 +63,10 @@ OpaqueObjectHandle<T> OpaqueObjectsManager<T>::Create(const std::string &name)
 
 	}
 
-	_objects[handle.id].object->SetName(name);
+	T *object = _objects[handle.id].object;
+
+	object->SetName(name);
+	object->OnCreation(this, handle);	
 
 	if (!name.empty())
 	{		
@@ -84,7 +87,7 @@ void OpaqueObjectsManager<T>::Destroy(const OpaqueObjectHandle<T> &hObj)
 	{
 		
 		_objects[hObj.id].allocation++;
-		_objects[hObj.id].object->Clear();
+		_objects[hObj.id].object->OnDestruction();
 		_free.push_back(hObj.id);
 
 		std::string name = _objects[hObj.id].object->GetName();

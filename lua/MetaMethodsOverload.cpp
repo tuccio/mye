@@ -35,10 +35,12 @@ namespace mye
 				const char *field = lua_tostring(L, 2);
 				object obj(from_stack(L, 1));
 
-				if (object_cast_nothrow<GameObjectHandle>(obj))
+				auto hObj = object_cast_nothrow<GameObjectHandle>(obj);
+
+				if (hObj)
 				{
 
-					object r = __goh_getcomponent(obj, field);
+					object r = __goh_getcomponent(hObj.get(), field);
 
 					if (r)
 					{

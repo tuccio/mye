@@ -1,4 +1,5 @@
 #include "GameObjectHandle.h"
+
 #include "Types.h"
 #include "Util.h"
 #include "MetaMethodsOverload.h"
@@ -8,7 +9,7 @@
 #include <Eigen/Eigen>
 #include <luabind/luabind.hpp>
 
-#define LPGAMEOBJECT(__L, __hObj) (object_cast<GameObjectsModule>(globals(__L)["GameObjects"]).Get(__hObj))
+#define LPGAMEOBJECT(__hObj) (Game::GetSingleton().GetGameObjectsModule()->Get(__hObj))
 
 using namespace mye::core;
 using namespace luabind;
@@ -31,9 +32,17 @@ namespace mye
 			[
 
 				class_<GameObjectHandle>(MYE_LUA_GAMEOBJECTHANDLE).
+
 					def("GetName", &__goh_getname).
+
 					def("GetComponent", &__goh_getcomponent).
-					def("AddComponent", &__goh_addcomponent)
+					def("AddComponent", &__goh_addcomponent).
+
+					def("GetParent", &__goh_getparent).
+					def("SetParent", &__goh_setparent).
+					def("GetChildren", &__goh_getchildren).
+
+					def("__tostring", &__goh_tostring)
 
 			];
 
@@ -44,17 +53,15 @@ namespace mye
 
 		}
 
-		std::string __goh_getname(const object &o)
+		std::string __goh_getname(const GameObjectHandle &hObj)
 		{
-			GameObjectHandle hObj = object_cast<GameObjectHandle>(o);
-			return LPGAMEOBJECT(o.interpreter(), hObj)->GetName();
+			return LPGAMEOBJECT(hObj)->GetName();
 		}
 
-		object __goh_getcomponent(const object &o, const std::string &name)
+		object __goh_getcomponent(const GameObjectHandle &hObj, const std::string &name)
 		{
 
-			GameObjectHandle hObj = object_cast<GameObjectHandle>(o);
-			Component *component = LPGAMEOBJECT(o.interpreter(), hObj)->GetComponent(name);
+			Component *component = LPGAMEOBJECT(hObj)->GetComponent(name);
 
 			if (component)
 			{
@@ -69,8 +76,10 @@ namespace mye
 
 						std::type_index type = vc->GetVariableType();
 
-#define VARIABLE_COMPONENT_CAST_BEGIN(__Type) if (type == typeid(__Type)) return object(o.interpreter(), (VariableComponent<__Type>*) component);
-#define VARIABLE_COMPONENT_CAST(__Type) else if (type == typeid(__Type)) return object(o.interpreter(), (VariableComponent<__Type>*) component);
+						lua_State *L = LPLUASTATE;
+
+#define VARIABLE_COMPONENT_CAST_BEGIN(__Type) if (type == typeid(__Type)) return object(L, (VariableComponent<__Type>*) component);
+#define VARIABLE_COMPONENT_CAST(__Type) else if (type == typeid(__Type)) return object(L, (VariableComponent<__Type>*) component);
 
 						VARIABLE_COMPONENT_CAST_BEGIN(float)
 						VARIABLE_COMPONENT_CAST(int)
@@ -94,10 +103,84 @@ namespace mye
 
 		}
 
-		void __goh_addcomponent(const object &o, const std::string &name, const Component &component)
+		void __goh_addcomponent(const GameObjectHandle &hObj,
+			const std::string &name,
+			const Component &component)
 		{
-			GameObjectHandle hObj = object_cast<GameObjectHandle>(o);
-			LPGAMEOBJECT(o.interpreter(), hObj)->AddComponent(name, component);
+			LPGAMEOBJECT(hObj)->AddComponent(name, component);
+		}
+
+		luabind::object __goh_getparent(const GameObjectHandle &hObj)
+		{
+
+			GameObject *parent = LPGAMEOBJECT(hObj)->GetParent();
+
+			if (parent)
+			{
+				return object(LPLUASTATE, parent->GetHandle());
+			}
+			else
+			{
+				return object();
+			}
+
+		}
+
+		void __goh_setparent(const GameObjectHandle &hObj,
+			const luabind::object &oHandle)
+		{
+
+			GameObject *parent;
+
+			if (type(oHandle) != LUA_TNIL)
+			{
+				GameObjectHandle handle = object_cast<GameObjectHandle>(oHandle);
+				parent = LPGAMEOBJECT(handle);
+			}
+			else
+			{
+				parent = NULL;
+			}
+
+			LPGAMEOBJECT(hObj)->SetParent(parent);
+			
+
+		}
+
+		luabind::object __goh_getchildren(const GameObjectHandle &hObj)
+		{
+
+			const GameObject::ChildrenList& children = LPGAMEOBJECT(hObj)->GetChildren();
+
+			object table = newtable(LPLUASTATE);
+
+			int i = 1;
+
+			for (auto child : children)
+			{
+				table[i++] = object(table.interpreter(), child->GetHandle());
+			}
+
+			return table;
+
+		}
+
+		std::string __goh_tostring(const GameObjectHandle &hObj)
+		{
+
+			std::string name = LPGAMEOBJECT(hObj)->GetName();
+
+			if (name.empty())
+			{
+				return std::string("<Unnamed object [") +
+					std::to_string(hObj.id) +
+					std::string(", ") +
+					std::to_string(hObj.allocation) +
+					std::string("]>");
+			}
+
+			return name;
+
 		}
 
 	}

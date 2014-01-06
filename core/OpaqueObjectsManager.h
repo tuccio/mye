@@ -5,6 +5,8 @@
 #include <string>
 #include <map>
 
+#include "INamedObject.h"
+
 namespace mye
 {
 
@@ -34,8 +36,15 @@ namespace mye
 			return a.id == b.id && a.allocation == b.allocation;
 		}
 
-		/* Requires T to have a default constructor,
-		   a SetName(const std::string&) and a Clear(void) method */
+		/*
+		
+			Requires T to have:
+				- Default constructor
+				- Accessible SetName(const std::string&)
+				- Accessible OnCreation(OpaqueObjectsManager*, OpaqueObjectHandle)
+				- Accessible OnDestruction(void)
+
+		*/
 
 		template <typename T>
 		class OpaqueObjectsManager
