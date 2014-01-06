@@ -32,12 +32,13 @@ namespace mye
 			if (lua_isnil(L, 3))
 			{
 
+				const char *field = lua_tostring(L, 2);
 				object obj(from_stack(L, 1));
 
 				if (object_cast_nothrow<GameObjectHandle>(obj))
 				{
 
-					object r = __goh_getcomponent(obj, lua_tostring(L, 2));
+					object r = __goh_getcomponent(obj, field);
 
 					if (r)
 					{
@@ -50,6 +51,7 @@ namespace mye
 
 							switch (component->GetComponentType())
 							{
+
 							case VARIABLE_COMPONENT:
 								{
 

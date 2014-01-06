@@ -1,6 +1,6 @@
 #pragma once
 
-#include "LuaEnvironment.h"
+#include "LuaModule.h"
 
 namespace mye
 {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "LuaModule.h"
+#include <lua.hpp>
 
 namespace mye
 {
@@ -8,7 +8,7 @@ namespace mye
 	namespace lua
 	{
 
-		void BindVector3(lua_State *L);
+		void BindScripts(lua_State *L);
 
 	}
 

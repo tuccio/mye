@@ -1,5 +1,7 @@
 #pragma once
 
+#include <mye/core/IWindow.h>
+
 #include <Windows.h>
 #include <Eigen/Eigen>
 #include <vector>
@@ -10,12 +12,10 @@ namespace mye
 	namespace win
 	{
 
-		class Window
+		class Window : public mye::core::IWindow
 		{
 
 		public:
-
-			struct Properties;			
 
 			Window(void);
 			~Window(void);
@@ -61,20 +61,7 @@ namespace mye
 
 		};
 
-		struct Window::Properties
-		{
-
-			std::string name;
-
-			int x;
-			int y;
-
-			int width;
-			int height;
-
-			bool fullscreen;
-
-		};
+		
 
 		class Window::WindowClassRegisterer
 		{

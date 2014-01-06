@@ -17,11 +17,14 @@
 #define MYE_LUA_VEC3_COMPONENT "Vec3Component"
 #define MYE_LUA_VEC3I_COMPONENT "Vec3iComponent"
 
+#define MYE_LUA_LUAMODULE "LuaModule"
+#define MYE_LUA_SCRIPT "Script"
+
 #define MYE_LUA_VEC2 "vec2"
 #define MYE_LUA_VEC2I "vec2i"
 
 #define MYE_LUA_VEC3 "vec3"
 #define MYE_LUA_VEC3I "vec3i"
 
+#define MYE_LUA_WIN "Windows"
 #define MYE_LUA_WINDOW "Window"
-#define MYE_LUA_APPLICATION "Application"

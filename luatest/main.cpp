@@ -1,23 +1,27 @@
-#include <mye/lua/LuaEnvironment.h>
+#include <mye/lua/LuaModule.h>
 #include <mye/win/WinGame.h>
 
-#include <mye/core/VariableComponent.h>
+#include <mye/core/ResourceManager.h>
+#include <mye/core/ResourceGroupManager.h>
+
+#include <mye/lua/LuaScriptCaller.h>
+#include <mye/lua/LuaScript.h>
 
 #include <iostream>
+
+#include "TextResource.h"
+
+#include <Windows.h>
 
 using namespace std;
 using namespace mye::core;
 using namespace mye::lua;
 using namespace mye::win;
 
-#define VECTEST 1
-#define GOTEST 2
-#define GOCLASS 3
-#define WINDOWTEST 4
-
-#define TEST 4
-
-int main(int argc, char *argv[])
+int CALLBACK WinMain(HINSTANCE hInstance,
+					 HINSTANCE hPrevInstance,
+					 LPSTR lpCmdLine,
+					 int nCmdShow)
 {	
 
 	InputModule input;
@@ -25,24 +29,49 @@ int main(int argc, char *argv[])
 	SceneModule scene;
 	GraphicsModule graphics;
 	AudioModule audio;
+	LuaModule lua;
 
 	WinGame game(&input,
-				 &gameobjects,
-				 &scene,
-				 &graphics,
-				 &audio);
+		&gameobjects,
+		&scene,
+		&graphics,
+		&audio,
+		&lua);
 
-	std::string testfile = "game.lua";
+	ResourceGroupManager rgm;
+	rgm.RegisterResourceManager("Text", new TextResourceManager);
 
-	LuaEnvironment lua;
+	TextResourceManager &trm = TextResourceManager::GetSingleton();
 
-	lua.SetGameInstance(game);
-
-	if (!lua.RunFile(testfile))
 	{
-		std::cout << "Error: " << lua.GetLastError() << std::endl;
-		system("pause");
+
+		TextResourceHandle text = trm.CreateResource("hi.lua");
+		TextResourceHandle t1 = trm.GetResource("hi.lua");
+
+		text->Load();
+		auto str = text->Get();
+
+		trm.FreeResource("hi.lua");
+		str = text->Get();
+
+		TextResourceHandle t2 = trm.GetResource("hi.lua");
+
 	}
+
+	
+
+	if (!game.Init())
+	{
+		MessageBox(NULL, "Initialization failed", "Error", MB_OK | MB_ICONERROR);
+		return 1;
+	}
+
+	// Load classes
+	
+	// Run the main procedure and the game
+
+	lua.LoadProcedure("main.lua").Run();
+	game.Run();
 	
 	return 0;
 

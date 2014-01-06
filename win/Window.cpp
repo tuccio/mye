@@ -10,7 +10,7 @@
 #endif
 #endif
 
-#define WINDOW_CLASS_NAME _T("myeD3DWindow")
+#define WINDOW_CLASS_NAME _T("myeWindow")
 
 using namespace mye::win;
 
@@ -125,6 +125,16 @@ void Window::Show(void)
 void Window::Hide(void)
 {
 	ShowWindow(_hWnd, FALSE);
+}
+
+bool Window::IsFullScreen(void) const
+{
+	throw;
+	return false;
+}
+void Window::SetFullScreen(void)
+{
+	throw;
 }
 
 void Window::SetCaption(const std::string &caption)

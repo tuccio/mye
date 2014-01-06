@@ -67,15 +67,15 @@ void GameObject::RemoveComponent(const std::string &name)
 
 }
 
-void GameObject::SetName(const std::string &name)
-{
-	_name = name;
-}
-
-const std::string& GameObject::GetName(void) const
-{
-	return _name;
-}
+// void GameObject::SetName(const std::string &name)
+// {
+// 	_name = name;
+// }
+// 
+// const std::string& GameObject::GetName(void) const
+// {
+// 	return _name;
+// }
 
 void GameObject::Clear(void)
 {

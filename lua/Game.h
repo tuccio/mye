@@ -1,7 +1,5 @@
 #pragma once
 
-#include "LuaEnvironment.h"
-
 namespace mye
 {
 
@@ -9,6 +7,7 @@ namespace mye
 	{
 
 		void BindGame(lua_State *L);
+		void BindWindow(lua_State *L);
 
 	}
 

@@ -1,18 +1,21 @@
 #include "WinGame.h"
 
-using namespace mye::win;
+using namespace std;
 using namespace mye::core;
+using namespace mye::win;
 
 WinGame::WinGame(InputModule *input,
-				 GameObjectsModule *gameobjects,
-				 SceneModule *scene,
-				 GraphicsModule *graphics,
-				 AudioModule *audio) :
-	Game(input,
-		 gameobjects,
-		 scene,
-		 graphics,
-		 audio)
+	GameObjectsModule *gameobjects,
+	SceneModule *scene,
+	GraphicsModule *graphics,
+	AudioModule *audio,
+	IScriptModule *script) :
+Game(input,
+	gameobjects,
+	scene,
+	graphics,
+	audio,
+	script)
 {
 	_mainWindow.Create();
 }
@@ -22,7 +25,7 @@ WinGame::~WinGame(void)
 	_mainWindow.Destroy();
 }
 
-Window WinGame::GetMainWindow(void)
+mye::core::IWindow& WinGame::GetMainWindow(void)
 {
 	return _mainWindow;
 }

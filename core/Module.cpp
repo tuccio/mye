@@ -1,6 +1,8 @@
 #include "Module.h"
+#include "Game.h"
 
 using namespace mye::core;
+
 
 Module::Module(void)
 {

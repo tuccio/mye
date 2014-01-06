@@ -90,9 +90,7 @@ void OpaqueObjectsManager<T>::Destroy(const OpaqueObjectHandle<T> &hObj)
 		std::string name = _objects[hObj.id].object->GetName();
 
 		if (!name.empty())
-		{
-
-			
+		{	
 
 			for (auto eqr = _names.equal_range(name);
 				 eqr.first != eqr.second;

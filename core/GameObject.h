@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Component.h"
+#include "INamedObject.h"
 #include "OpaqueObjectsManager.h"
 
 namespace mye
@@ -12,7 +13,8 @@ namespace mye
 	namespace core
 	{
 
-		class GameObject
+		class GameObject :
+			public INamedObject
 		{
 
 		public:
@@ -26,14 +28,11 @@ namespace mye
 			Component* GetComponent(const std::string &name);
 			void RemoveComponent(const std::string &name);
 
-			const std::string& GetName(void) const;
-
 			void Clear(void);
 
 		private:
 
 			friend class OpaqueObjectsManager<GameObject>;
-			void SetName(const std::string &name);
 
 			std::map<std::string, Component*> _components;
 			std::string _name;

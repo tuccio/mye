@@ -8,7 +8,8 @@ namespace mye
 
 		enum ComponentTypes
 		{
-			VARIABLE_COMPONENT
+			VARIABLE_COMPONENT,
+			SCRIPT_COMPONENT
 		};
 
 	}
