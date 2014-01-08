@@ -12,16 +12,17 @@ namespace mye
 	namespace win
 	{
 
-		class Window : public mye::core::IWindow
+		class RenderWindow : public mye::core::IWindow
 		{
 
 		public:
 
-			Window(void);
-			~Window(void);
+			RenderWindow(void);
+			~RenderWindow(void);
 
 			bool Create(void);
 			bool Create(const Properties &p);
+
 			void Destroy(void);
 
 			bool Exists(void) const;
@@ -63,7 +64,7 @@ namespace mye
 
 		
 
-		class Window::WindowClassRegisterer
+		class RenderWindow::WindowClassRegisterer
 		{
 
 		public:

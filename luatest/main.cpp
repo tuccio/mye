@@ -1,11 +1,12 @@
-#include <mye/lua/LuaModule.h>
-#include <mye/win/WinGame.h>
-
+#include <mye/core/Logger.h>
 #include <mye/core/ResourceManager.h>
 #include <mye/core/ResourceGroupManager.h>
 
 #include <mye/lua/LuaScriptCaller.h>
 #include <mye/lua/LuaScript.h>
+#include <mye/lua/LuaModule.h>
+
+#include <mye/win/WinGame.h>
 
 #include <iostream>
 
@@ -37,6 +38,8 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 		&graphics,
 		&audio,
 		&lua);
+
+	Logger logger;
 
 	ResourceGroupManager rgm;
 	rgm.RegisterResourceManager("Text", new TextResourceManager);

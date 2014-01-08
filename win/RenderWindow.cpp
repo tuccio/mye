@@ -1,4 +1,7 @@
-#include "Window.h"
+#include "RenderWindow.h"
+#include "Util.h"
+
+#include <mye/core/Logger.h>
 
 #include <memory>
 
@@ -14,7 +17,7 @@
 
 using namespace mye::win;
 
-const Window::Properties Window::_defaultWindowProperties =
+const RenderWindow::Properties RenderWindow::_defaultWindowProperties =
 {
 	WINDOW_CLASS_NAME,
 	CW_USEDEFAULT,
@@ -26,25 +29,26 @@ const Window::Properties Window::_defaultWindowProperties =
 
 /* Window class registerer */
 
-Window::WindowClassRegisterer Window::_wcr;
+RenderWindow::WindowClassRegisterer RenderWindow::_wcr;
 
-Window::WindowClassRegisterer::WindowClassRegisterer(void)
+RenderWindow::WindowClassRegisterer::WindowClassRegisterer(void)
 {
 	Register();
 }
 
-bool Window::WindowClassRegisterer::IsRegistered(void) const
+bool RenderWindow::WindowClassRegisterer::IsRegistered(void) const
 {
 	return _registered;
 }
 
-void Window::WindowClassRegisterer::Register(void)
+void RenderWindow::WindowClassRegisterer::Register(void)
 {
 
 	WNDCLASS wc;
 	memset(&wc, 0, sizeof(wc));
 
-	wc.style = CS_HREDRAW | CS_VREDRAW;
+	//wc.style = CS_HREDRAW | CS_VREDRAW;
+	wc.style = WS_OVERLAPPEDWINDOW;
 	wc.lpfnWndProc = &WindowProc; 
 	wc.hInstance = GetModuleHandle(NULL);
 	wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
@@ -52,27 +56,39 @@ void Window::WindowClassRegisterer::Register(void)
 
 	_registered = (RegisterClass(&wc) ? true : false);
 
+	if (!_registered)
+	{
+
+		auto logger = mye::core::Logger::GetSingletonPointer();
+
+		if (logger)
+		{
+			logger->LogError(GetLastErrorAsString());
+		}
+
+	}
+
 }
 
 /* Window */
 
-Window::Window(void) :
+RenderWindow::RenderWindow(void) :
 	_hWnd(0x0),
 	_hDC(0x0)
 {
 }
 
 
-Window::~Window(void)
+RenderWindow::~RenderWindow(void)
 {
 }
 
-bool Window::Create(void)
+bool RenderWindow::Create(void)
 {
 	return Create(_defaultWindowProperties);
 }
 
-bool Window::Create(const Properties &p)
+bool RenderWindow::Create(const Properties &p)
 {
 
 	if (!_hWnd && _wcr.IsRegistered())
@@ -96,53 +112,53 @@ bool Window::Create(const Properties &p)
 
 }
 
-void Window::Destroy(void)
+void RenderWindow::Destroy(void)
 {
 	DestroyWindow(_hWnd);
 	_hWnd = NULL;
 }
 
-bool Window::Exists(void) const
+bool RenderWindow::Exists(void) const
 {
 	return IsWindow(_hWnd);
 }
 
-bool Window::IsVisible(void) const
+bool RenderWindow::IsVisible(void) const
 {
 	return Exists() && IsWindowVisible(_hWnd);
 }
 
-bool Window::IsMinimized(void) const
+bool RenderWindow::IsMinimized(void) const
 {
 	return (IsIconic(_hWnd) ? true : false);
 }
 
-void Window::Show(void)
+void RenderWindow::Show(void)
 {
 	ShowWindow(_hWnd, TRUE);
 }
 
-void Window::Hide(void)
+void RenderWindow::Hide(void)
 {
 	ShowWindow(_hWnd, FALSE);
 }
 
-bool Window::IsFullScreen(void) const
+bool RenderWindow::IsFullScreen(void) const
 {
 	throw;
 	return false;
 }
-void Window::SetFullScreen(void)
+void RenderWindow::SetFullScreen(void)
 {
 	throw;
 }
 
-void Window::SetCaption(const std::string &caption)
+void RenderWindow::SetCaption(const std::string &caption)
 {
 	SetWindowText(_hWnd, caption.c_str());
 }
 
-std::string Window::GetCaption(void) const
+std::string RenderWindow::GetCaption(void) const
 {
 	
 	int length = GetWindowTextLength(_hWnd);
@@ -154,7 +170,7 @@ std::string Window::GetCaption(void) const
 
 }
 
-void Window::SetSize(const Eigen::Vector2i &size)
+void RenderWindow::SetSize(const Eigen::Vector2i &size)
 {
 
 	SetWindowPos(_hWnd,
@@ -167,7 +183,7 @@ void Window::SetSize(const Eigen::Vector2i &size)
 
 }
 
-Eigen::Vector2i Window::GetSize(void) const
+Eigen::Vector2i RenderWindow::GetSize(void) const
 {
 
 	RECT rect;
@@ -178,7 +194,7 @@ Eigen::Vector2i Window::GetSize(void) const
 
 }
 
-void Window::SetPosition(const Eigen::Vector2i &position)
+void RenderWindow::SetPosition(const Eigen::Vector2i &position)
 {
 
 	SetWindowPos(_hWnd,
@@ -191,7 +207,7 @@ void Window::SetPosition(const Eigen::Vector2i &position)
 
 }
 
-Eigen::Vector2i Window::GetPosition(void) const
+Eigen::Vector2i RenderWindow::GetPosition(void) const
 {
 
 	RECT rect;
@@ -201,7 +217,7 @@ Eigen::Vector2i Window::GetPosition(void) const
 
 }
 
-LRESULT CALLBACK Window::WindowProc(HWND hWnd,
+LRESULT CALLBACK RenderWindow::WindowProc(HWND hWnd,
 									UINT uMsg,
 									WPARAM wParam,
 									LPARAM lParam)

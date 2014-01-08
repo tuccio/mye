@@ -2,7 +2,7 @@
 
 #include <mye/core/Game.h>
 
-#include "Window.h"
+#include "RenderWindow.h"
 
 namespace mye
 {
@@ -30,7 +30,7 @@ namespace mye
 
 		private:
 
-			Window _mainWindow;
+			RenderWindow _mainWindow;
 
 		};
 
