@@ -3,11 +3,13 @@
 #include <iostream>
 #include <fstream>
 
+#include <ctime>
+
 using namespace mye::core;
 
 Logger::Logger(void) :
-	_event(std::cout.rdbuf()),
-	_error(std::cerr.rdbuf())
+	m_eventStream(std::cout.rdbuf()),
+	m_errorStream(std::cerr.rdbuf())
 {
 }
 
@@ -19,57 +21,78 @@ Logger::~Logger(void)
 void Logger::OpenEventLogFile(const std::string &file)
 {
 
-	if (_eventFile)
+	if (m_eventFile)
 	{
-		_eventFile.close();
+		m_eventFile.close();
 	}
 
 	if (!file.empty())
 	{
-		_eventFile.open(file);
+		m_eventFile.open(file);
 	}	
 
-	if (_eventFile)
+	if (m_eventFile)
 	{
-		_event.set_rdbuf(_eventFile.rdbuf());
+		m_eventStream.set_rdbuf(m_eventFile.rdbuf());
 	}
 	else
 	{
-		_event.set_rdbuf(std::cout.rdbuf());
+		m_eventStream.set_rdbuf(std::cout.rdbuf());
 	}
+
+	m_eventStream.clear();
 
 }
 
 void Logger::OpenErrorLogFile(const std::string &file)
 {
 
-	if (_errorFile)
+	if (m_errorFile)
 	{
-		_errorFile.close();
+		m_errorFile.close();
 	}
 
 	if (!file.empty())
 	{
-		_errorFile.open(file);
+		m_errorFile.open(file);
 	}
 
-	if (_errorFile)
+	if (m_errorFile)
 	{
-		_error.set_rdbuf(_errorFile.rdbuf());
+		m_errorStream.set_rdbuf(m_errorFile.rdbuf());
 	}
 	else
 	{
-		_error.set_rdbuf(std::cout.rdbuf());
+		m_errorStream.set_rdbuf(std::cout.rdbuf());
 	}
+
+	m_errorStream.clear();
 
 }
 
 void Logger::LogEvent(const std::string &string)
 {
-	_event << string;
+
+	
+
+	m_eventStream << GetTimestamp() << " " << string << std::endl;
 }
 
 void Logger::LogError(const std::string &string)
 {
-	_error << string;
+	time_t t = time(NULL);
+	m_errorStream << GetTimestamp() << " " << string << std::endl;
+}
+
+const char* Logger::GetTimestamp(void)
+{
+
+	time_t t = time(NULL);
+	tm *timeinfo = localtime(&t);
+
+	static char output[20];
+	strftime(output, 20, "[%d/%m/%y %H:%M:%S]", timeinfo);
+
+	return output;
+
 }

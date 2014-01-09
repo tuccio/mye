@@ -22,12 +22,12 @@ public:
 
 	const std::string& Get(void) const
 	{
-		return _text;
+		return m_text;
 	}
 
 	void Set(const std::string &s)
 	{
-		_text = s;
+		m_text = s;
 	}
 
 protected:
@@ -36,7 +36,7 @@ protected:
 	{
 
 		std::ifstream f(GetName());
-		_text = std::string(std::istreambuf_iterator<char>(f),
+		m_text = std::string(std::istreambuf_iterator<char>(f),
 			std::istreambuf_iterator<char>());
 
 		return true;
@@ -45,17 +45,17 @@ protected:
 
 	void UnloadImpl(void)
 	{
-		_text.clear();
+		m_text.clear();
 	}
 
 	virtual size_t CalculateSizeImpl(void)
 	{
-		return _text.size();
+		return m_text.size();
 	}
 
 private:
 
-	std::string _text;
+	std::string m_text;
 
 };
 

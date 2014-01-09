@@ -21,7 +21,7 @@ namespace mye
 
 		private:
 
-			MYE_RECURSIVE_MUTEX(_mutex)
+			MYE_RECURSIVE_MUTEX(m_mutex)
 
 		};
 

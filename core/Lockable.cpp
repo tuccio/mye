@@ -13,10 +13,10 @@ Lockable::~Lockable(void)
 
 void Lockable::Lock(void)
 {
-	MYE_RECURSIVE_MUTEX_LOCK(_mutex);
+	MYE_RECURSIVE_MUTEX_LOCK(mMutex);
 }
 
 void Lockable::Unlock(void)
 {
-	MYE_RECURSIVE_MUTEX_UNLOCK(_mutex);
+	MYE_RECURSIVE_MUTEX_UNLOCK(mMutex);
 }

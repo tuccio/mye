@@ -4,7 +4,7 @@
 using namespace mye::core;
 
 ResourceManager::ResourceManager(const std::string &type) :
-	_type(type)
+	m_type(type)
 {
 }
 
@@ -21,9 +21,9 @@ ResourceHandle ResourceManager::CreateResource(const std::string &name,
 
 	Lock();
 
-	auto it = _resources.find(name);
+	auto it = m_resources.find(name);
 
-	if (it != _resources.end())
+	if (it != m_resources.end())
 	{
 		_FreeResource(it);
 	}
@@ -35,7 +35,7 @@ ResourceHandle ResourceManager::CreateResource(const std::string &name,
 		resource->SetParametersList(*params);
 	}
 
-	_resources[name] = resource;
+	m_resources[name] = resource;
 
 	Unlock();
 
@@ -61,9 +61,9 @@ ResourceHandle ResourceManager::GetResource(const std::string &name)
 
 	Lock();
 
-	auto it = _resources.find(name);
+	auto it = m_resources.find(name);
 
-	ResourceHandle handle = (it != _resources.end()
+	ResourceHandle handle = (it != m_resources.end()
 		           ? it->second :
 		           ResourceHandle());
 
@@ -78,9 +78,9 @@ void ResourceManager::FreeResource(const std::string &name)
 
 	Lock();
 
-	auto it = _resources.find(name);
+	auto it = m_resources.find(name);
 
-	if (it != _resources.end())
+	if (it != m_resources.end())
 	{
 		_FreeResource(it);
 	}
@@ -91,14 +91,14 @@ void ResourceManager::FreeResource(const std::string &name)
 
 const std::string& ResourceManager::GetType(void) const
 {
-	return _type;
+	return m_type;
 }
 
 void ResourceManager::_FreeResource(ResourcesMap::iterator &it)
 {
 	//it->second->Unload();
 	it->second->Free();
-	_resources.erase(it);
+	m_resources.erase(it);
 }
 
 ResourceHandle ResourceManager::CreateImpl(const std::string &name,

@@ -7,8 +7,8 @@ namespace mye
 		template <typename ConcreteFunctionCaller>
 		Script<ConcreteFunctionCaller>::Script(ScriptModule<ConcreteFunctionCaller> &module,
 			Type type) :
-			_module(module),
-			_type(type)
+			m_module(module),
+			m_type(type)
 		{
 		}
 
@@ -20,20 +20,20 @@ namespace mye
 		template <typename ConcreteFunctionCaller>
 		ScriptModule<ConcreteFunctionCaller>& Script<ConcreteFunctionCaller>::GetModule(void) const
 		{
-			return _module;
+			return m_module;
 		}
 
 		template <typename ConcreteFunctionCaller>
 		template <typename R>
 		R Script<ConcreteFunctionCaller>::Call(const std::string &f) const
 		{
-			return ConcreteFunctionCaller::Call<R>(_module, *this, f);
+			return ConcreteFunctionCaller::Call<R>(m_module, *this, f);
 		}
 
 		template <typename ConcreteFunctionCaller>
 		bool Script<ConcreteFunctionCaller>::Run(void) const
 		{
-			return ConcreteFunctionCaller::Run(_module, *this);
+			return ConcreteFunctionCaller::Run(m_module, *this);
 		}
 
 	}

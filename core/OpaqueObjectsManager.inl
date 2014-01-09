@@ -48,29 +48,29 @@ OpaqueObjectHandle<T> OpaqueObjectsManager<T>::Create(const std::string &name)
 
 	OpaqueObjectHandle<T> handle;
 
-	if (_free.empty())
+	if (m_freeIds.empty())
 	{
-		_objects.push_back(Allocation(new T, 0));
-		handle = OpaqueObjectHandle<T>(_objects.size() - 1, 0);
+		m_objects.push_back(Allocation(new T, 0));
+		handle = OpaqueObjectHandle<T>(m_objects.size() - 1, 0);
 	}
 	else
 	{
 
-		int id = _free.front();
-		_free.pop_front();
+		int id = m_freeIds.front();
+		m_freeIds.pop_front();
 
-		handle = OpaqueObjectHandle<T>(_objects.size() - 1, 0);
+		handle = OpaqueObjectHandle<T>(m_objects.size() - 1, 0);
 
 	}
 
-	T *object = _objects[handle.id].object;
+	T *object = m_objects[handle.id].object;
 
 	object->SetName(name);
 	object->OnCreation(this, handle);	
 
 	if (!name.empty())
 	{		
-		_names.insert(std::pair<std::string, OpaqueObjectHandle<T>>(name, handle));
+		m_names.insert(std::pair<std::string, OpaqueObjectHandle<T>>(name, handle));
 	}	
 
 	return handle;
@@ -82,27 +82,27 @@ void OpaqueObjectsManager<T>::Destroy(const OpaqueObjectHandle<T> &hObj)
 {
 
 	if (hObj.id >= 0 &&
-		hObj.id < _objects.size() &&
-		_objects[hObj.id].allocation == hObj.allocation)
+		hObj.id < m_objects.size() &&
+		m_objects[hObj.id].allocation == hObj.allocation)
 	{
 		
-		_objects[hObj.id].allocation++;
-		_objects[hObj.id].object->OnDestruction();
-		_free.push_back(hObj.id);
+		m_objects[hObj.id].allocation++;
+		m_objects[hObj.id].object->OnDestruction();
+		m_freeIds.push_back(hObj.id);
 
-		std::string name = _objects[hObj.id].object->GetName();
+		std::string name = m_objects[hObj.id].object->GetName();
 
 		if (!name.empty())
 		{	
 
-			for (auto eqr = _names.equal_range(name);
+			for (auto eqr = m_names.equal_range(name);
 				 eqr.first != eqr.second;
 				 eqr.first++)
 			{
 
 				if (eqr.first->second == hObj)
 				{
-					_names.erase(eqr.first);
+					m_names.erase(eqr.first);
 					break;
 				}
 
@@ -119,10 +119,10 @@ T* OpaqueObjectsManager<T>::Get(const OpaqueObjectHandle<T> &hObj)
 {
 
 	if (hObj.id >= 0 &&
-		hObj.id < _objects.size() &&
-		_objects[hObj.id].allocation == hObj.allocation)
+		hObj.id < m_objects.size() &&
+		m_objects[hObj.id].allocation == hObj.allocation)
 	{
-		return _objects[hObj.id].object;
+		return m_objects[hObj.id].object;
 	}
 
 	return NULL;
@@ -133,9 +133,9 @@ template <typename T>
 OpaqueObjectHandle<T> OpaqueObjectsManager<T>::Find(const std::string &name)
 {
 
-	auto eqr = _names.equal_range(name);
+	auto eqr = m_names.equal_range(name);
 
-	if (eqr.first == _names.end())
+	if (eqr.first == m_names.end())
 	{
 		return OpaqueObjectHandle<T>(-1, -1);
 	}

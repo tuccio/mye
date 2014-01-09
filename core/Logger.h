@@ -29,10 +29,12 @@ namespace mye
 
 		private:
 
-			std::ostream _event;
-			std::ostream _error;
+			const char* GetTimestamp(void);
 
-			std::ofstream _eventFile, _errorFile;
+			std::ostream m_eventStream;
+			std::ostream m_errorStream;
+
+			std::ofstream m_eventFile, m_errorFile;
 
 		};
 

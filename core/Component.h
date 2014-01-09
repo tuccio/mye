@@ -16,14 +16,14 @@ namespace mye
 
 		public:
 
-			Component(ComponentTypes _type);
+			Component(ComponentTypes type);
 			virtual ~Component(void) = 0;
 
 			ComponentTypes GetComponentType(void);
 
 		protected:
 
-			ComponentTypes _type;
+			ComponentTypes m_type;
 
 		};
 	}

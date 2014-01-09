@@ -1,5 +1,7 @@
 #include <string>
 
+#include <Windows.h>
+
 namespace mye
 {
 
@@ -7,6 +9,9 @@ namespace mye
 	{
 
 		std::string GetLastErrorAsString(void);
+
+		std::string FormatSystemTime(const SYSTEMTIME *lpTime,
+			const std::string &format);
 
 	}
 

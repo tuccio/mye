@@ -5,13 +5,13 @@ using namespace std;
 
 GameObject::GameObject(void)
 {
-	_parent = NULL;
+	m_parent = NULL;
 }
 
 GameObject::GameObject(const std::string &name) :
-	_name(name)
+	m_name(name)
 {
-	_parent = NULL;
+	m_parent = NULL;
 }
 
 
@@ -25,18 +25,18 @@ void GameObject::AddComponent(const std::string &name,
 							  const Component &component)
 {
 
-	auto it = _components.find(name);
+	auto it = m_components.find(name);
 
 	Component *newComponent = static_cast<Component*>(component.Clone());
 
-	if (it != _components.end() && it->second != NULL)
+	if (it != m_components.end() && it->second != NULL)
 	{
 		delete it->second;
 		it->second = newComponent;
 	}
 	else
 	{
-		_components[name] = newComponent;
+		m_components[name] = newComponent;
 	}
 
 }
@@ -44,9 +44,9 @@ void GameObject::AddComponent(const std::string &name,
 Component* GameObject::GetComponent(const std::string &name)
 {
 
-	auto it = _components.find(name);
+	auto it = m_components.find(name);
 
-	if (it != _components.end())
+	if (it != m_components.end())
 	{
 		return it->second;
 	}
@@ -60,11 +60,11 @@ Component* GameObject::GetComponent(const std::string &name)
 void GameObject::RemoveComponent(const std::string &name)
 {
 
-	auto it = _components.find(name);
+	auto it = m_components.find(name);
 
-	if (it != _components.end())
+	if (it != m_components.end())
 	{
-		_components.erase(it);
+		m_components.erase(it);
 	}
 
 }
@@ -81,16 +81,16 @@ void GameObject::RemoveComponent(const std::string &name)
 
 void GameObject::Clear(void)
 {
-	_components.clear();
-	_children.clear();
-	_parent = NULL;
+	m_components.clear();
+	m_children.clear();
+	m_parent = NULL;
 }
 
 /* Parents and children */
 
 GameObject* GameObject::GetParent(void)
 {
-	return _parent;
+	return m_parent;
 }
 
 void GameObject::SetParent(GameObject *parent)
@@ -99,16 +99,16 @@ void GameObject::SetParent(GameObject *parent)
 	// If the object has a parent, we remove this object
 	// from the old parent children
 
-	if (_parent)
+	if (m_parent)
 	{
 
-		auto it = std::find(_parent->_children.begin(),
-			_parent->_children.end(),
+		auto it = std::find(m_parent->m_children.begin(),
+			m_parent->m_children.end(),
 			this);
 
-		if (it != _parent->_children.end())
+		if (it != m_parent->m_children.end())
 		{
-			_parent->_children.erase(it);
+			m_parent->m_children.erase(it);
 		}
 
 	}
@@ -118,34 +118,34 @@ void GameObject::SetParent(GameObject *parent)
 
 	if (parent)
 	{
-		parent->_children.push_back(this);
+		parent->m_children.push_back(this);
 	}
 
-	_parent = parent;
+	m_parent = parent;
 
 }
 
 const GameObject::ChildrenList& GameObject::GetChildren(void) const
 {
-	return _children;
+	return m_children;
 }
 
 void GameObject::OnCreation(GameObjectsManager *owner,
 							const GameObjectHandle &handle)
 {
-	_owner = owner;
-	_handle = handle;
+	m_owner = owner;
+	m_handle = handle;
 }
 
 void GameObject::OnDestruction(void)
 {
 
-	if (_parent)
+	if (m_parent)
 	{
-		_parent->OnChildDestruction(this);
+		m_parent->OnChildDestruction(this);
 	}
 
-	for (auto child : _children)
+	for (auto child : m_children)
 	{
 		child->OnParentDestruction();
 	}
@@ -156,7 +156,7 @@ void GameObject::OnDestruction(void)
 
 void GameObject::OnParentDestruction(void)
 {
-	_parent = NULL;
+	m_parent = NULL;
 }
 
 void GameObject::OnChildDestruction(GameObject *child)
@@ -166,20 +166,20 @@ void GameObject::OnChildDestruction(GameObject *child)
 
 GameObjectsManager* GameObject::GetOwner(void)
 {
-	return _owner;
+	return m_owner;
 }
 
 GameObjectHandle GameObject::GetHandle(void)
 {
-	return _handle;
+	return m_handle;
 }
 
 void GameObject::SetOwner(GameObjectsManager *owner)
 {
-	_owner = owner;
+	m_owner = owner;
 }
 
 void GameObject::SetHandle(const GameObjectHandle &handle)
 {
-	_handle = handle;
+	m_handle = handle;
 }

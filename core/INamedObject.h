@@ -26,7 +26,7 @@ namespace mye
 
 		private:
 
-			std::string _name;
+			std::string m_name;
 
 		};
 

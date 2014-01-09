@@ -29,7 +29,7 @@ namespace mye
 
 		private:
 
-			static T *_singleton;
+			static T *m_singleton;
 
 		};
 

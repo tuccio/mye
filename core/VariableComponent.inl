@@ -24,13 +24,13 @@ namespace mye
 		template <typename T>
 		T VariableComponent<T>::Get(void) const
 		{
-			return _v;
+			return m_variable;
 		}
 
 		template <typename T>
 		void VariableComponent<T>::Set(const T& v)
 		{
-			_v = v;
+			m_variable = v;
 		}
 
 		template <typename T>

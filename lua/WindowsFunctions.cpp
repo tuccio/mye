@@ -7,8 +7,8 @@
 
 #include <luabind/luabind.hpp>
 
-#include <mye/win/RenderWindow.h>
 #include <mye/core/IWindow.h>
+#include <mye/win/Window.h>
 
 using namespace luabind;
 using namespace mye::core;
@@ -29,7 +29,7 @@ namespace mye
 			module(L, MYE_LUA_WIN)
 			[
 				
-				class_<mye::win::RenderWindow, IWindow>(MYE_LUA_WINDOW).
+				class_<mye::win::Window, IWindow>(MYE_LUA_WINDOW).
 					def(constructor<>()),
 
 				def("AllocConsole", &__win_alloc_console),

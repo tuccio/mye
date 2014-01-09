@@ -5,8 +5,6 @@
 
 #include <mye/core/Game.h>
 
-#include <mye/win/RenderWindow.h>
-
 #include <luabind/luabind.hpp>
 
 #include "Game.h"

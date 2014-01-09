@@ -60,14 +60,14 @@ namespace mye
 			void SetOwner(GameObjectsManager *manager);
 			void SetHandle(const GameObjectHandle &handle);
 
-			std::map<std::string, Component*> _components;
-			std::string _name;
+			std::map<std::string, Component*> m_components;
+			std::string m_name;
 
-			GameObject *_parent;
-			ChildrenList _children;
+			GameObject *m_parent;
+			ChildrenList m_children;
 
-			GameObjectHandle _handle;
-			GameObjectsManager *_owner;
+			GameObjectHandle m_handle;
+			GameObjectsManager *m_owner;
 
 		};
 

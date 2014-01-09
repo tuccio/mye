@@ -9,23 +9,23 @@ Resource::Resource(ResourceManager *owner,
 	INamedObject(name)
 {
 
-	_group = group;
-	_owner = owner;
-	_manual = manual;
+	m_group = group;
+	m_owner = owner;
+	m_manual = manual;
 	
-	_size = 0;
-	_loadingState = RESOURCE_NOTLOADED;
+	m_size = 0;
+	m_loadingState = RESOURCE_NOTLOADED;
 
 }
 
 Resource::Resource(void)
 {
 
-	_owner = NULL;
-	_manual = NULL;
+	m_owner = NULL;
+	m_manual = NULL;
 
-	_size = 0;
-	_loadingState = RESOURCE_NOTLOADED;
+	m_size = 0;
+	m_loadingState = RESOURCE_NOTLOADED;
 
 }
 
@@ -41,32 +41,32 @@ bool Resource::Load(bool background)
 	bool loadSuccess = false;
 	bool prepareSuccess = false;
 
-	if (_loadingState == RESOURCE_NOTLOADED)
+	if (m_loadingState == RESOURCE_NOTLOADED)
 	{
 
 		if (!background)
 		{
 
-			if (!_manual)
+			if (!m_manual)
 			{
 
-				_loadingState = RESOURCE_LOADING;
+				m_loadingState = RESOURCE_LOADING;
 				loadSuccess = LoadImpl();
 
 				if (loadSuccess)
 				{
 
-					_loadingState = RESOURCE_PREPARING;
+					m_loadingState = RESOURCE_PREPARING;
 					prepareSuccess = PrepareImpl();
 
 					if (prepareSuccess)
 					{
-						_loadingState = RESOURCE_LOADED;
-						_size = CalculateSizeImpl();
+						m_loadingState = RESOURCE_LOADED;
+						m_size = CalculateSizeImpl();
 					}
 					else
 					{
-						_loadingState = RESOURCE_NOTLOADED;
+						m_loadingState = RESOURCE_NOTLOADED;
 					}
 
 				}
@@ -75,23 +75,23 @@ bool Resource::Load(bool background)
 			else
 			{
 
-				_loadingState = RESOURCE_LOADING;
-				loadSuccess = _manual->Load(this);
+				m_loadingState = RESOURCE_LOADING;
+				loadSuccess = m_manual->Load(this);
 
 				if (loadSuccess)
 				{
 
-					_loadingState = RESOURCE_PREPARING;
-					prepareSuccess = _manual->Prepare(this);
+					m_loadingState = RESOURCE_PREPARING;
+					prepareSuccess = m_manual->Prepare(this);
 
 					if (prepareSuccess)
 					{
-						_loadingState = RESOURCE_LOADED;
-						_size = CalculateSizeImpl();
+						m_loadingState = RESOURCE_LOADED;
+						m_size = CalculateSizeImpl();
 					}
 					else
 					{
-						_loadingState = RESOURCE_NOTLOADED;
+						m_loadingState = RESOURCE_NOTLOADED;
 					}
 
 				}
@@ -117,14 +117,14 @@ void Resource::Unload(bool background)
 
 	Lock();
 
-	if (_loadingState == RESOURCE_LOADED)
+	if (m_loadingState == RESOURCE_LOADED)
 	{
 
 		if (!background)
 		{
-			_loadingState = RESOURCE_UNLOADING;
+			m_loadingState = RESOURCE_UNLOADING;
 			UnloadImpl();
-			_loadingState = RESOURCE_NOTLOADED;
+			m_loadingState = RESOURCE_NOTLOADED;
 		}
 		else
 		{
@@ -133,7 +133,7 @@ void Resource::Unload(bool background)
 
 	}
 
-	_size = 0;
+	m_size = 0;
 
 	Unlock();
 
@@ -144,12 +144,12 @@ void Resource::Free(bool background)
 
 	Lock();
 
-	if (_loadingState == RESOURCE_LOADED)
+	if (m_loadingState == RESOURCE_LOADED)
 	{
 
 		if (!background)
 		{
-			_loadingState = RESOURCE_FREED;
+			m_loadingState = RESOURCE_FREED;
 			UnloadImpl();
 		}
 		else
@@ -159,7 +159,7 @@ void Resource::Free(bool background)
 
 	}
 
-	_size = 0;
+	m_size = 0;
 
 	Unlock();
 
@@ -167,17 +167,17 @@ void Resource::Free(bool background)
 
 void Resource::SetSize(size_t size)
 {
-	_size = size;
+	m_size = size;
 }
 
 size_t Resource::GetSize(void) const
 {
-	return _size;
+	return m_size;
 }
 
 Resource::LoadingState Resource::GetState(void) const
 {
-	return _loadingState;
+	return m_loadingState;
 }
 
 bool Resource::LoadImpl(void)
@@ -197,10 +197,10 @@ void Resource::UnloadImpl(void)
 
 void Resource::SetParametersList(const ParametersList &params)
 {
-	_params = params;
+	m_params = params;
 }
 
 Resource::ParametersList Resource::GetParametersList(void) const
 {
-	return _params;
+	return m_params;
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include <Eigen/Eigen>
 
 namespace mye
@@ -14,13 +15,16 @@ namespace mye
 
 		public:
 
+			class Listener;
+
 			struct Properties;
+
+			static const Properties DefaultWindowProperties;
 
 			IWindow(void);
 			virtual ~IWindow(void) = 0;
 
-			virtual bool Create(void) = 0;
-			virtual bool Create(const Properties &p) = 0;
+			virtual bool Create(const Properties &p = DefaultWindowProperties) = 0;
 			virtual void Destroy(void) = 0;
 
 			virtual bool Exists(void) const = 0;
@@ -43,12 +47,28 @@ namespace mye
 			virtual void SetPosition(const Eigen::Vector2i &position) = 0;
 			virtual Eigen::Vector2i GetPosition(void) const = 0;
 
+			void AddListener(Listener *listener);
+			void RemoveListener(Listener *listener);
+			void ClearListeners(void);
+
+		protected:
+
+			void NotifyCreate(void);
+			void NotifyDestroy(void);
+			void NotifyResize(const Eigen::Vector2i &size);
+
+		private:
+
+			typedef std::vector<Listener*> ListenerList;
+
+			ListenerList m_listeners;
+
 		};
 
 		struct IWindow::Properties
 		{
 
-			std::string name;
+			std::string caption;
 
 			int x;
 			int y;
@@ -57,6 +77,17 @@ namespace mye
 			int height;
 
 			bool fullscreen;
+
+		};
+
+		class IWindow::Listener
+		{
+
+		public:
+
+			virtual inline void OnCreate(IWindow *window) { }
+			virtual inline void OnDestroy(IWindow * window) { }
+			virtual inline void OnResize(IWindow *window, const Eigen::Vector2i &size) { }
 
 		};
 

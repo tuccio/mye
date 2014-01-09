@@ -23,7 +23,12 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 					 HINSTANCE hPrevInstance,
 					 LPSTR lpCmdLine,
 					 int nCmdShow)
-{	
+{
+
+	Logger logger;
+
+	logger.OpenErrorLogFile("error.log");
+	logger.OpenEventLogFile("event.log");
 
 	InputModule input;
 	GameObjectsModule gameobjects;
@@ -38,8 +43,6 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 		&graphics,
 		&audio,
 		&lua);
-
-	Logger logger;
 
 	ResourceGroupManager rgm;
 	rgm.RegisterResourceManager("Text", new TextResourceManager);

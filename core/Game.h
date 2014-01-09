@@ -52,12 +52,12 @@ namespace mye
 
 		private:
 
-			InputModule *_input;
-			GameObjectsModule *_gameobjects;
-			SceneModule *_scene;
-			GraphicsModule *_graphics;
-			AudioModule *_audio;
-			IScriptModule *_script;
+			InputModule *m_input;
+			GameObjectsModule *m_gameobjects;
+			SceneModule *m_scene;
+			GraphicsModule *m_graphics;
+			AudioModule *m_audio;
+			IScriptModule *m_script;
 
 		};
 

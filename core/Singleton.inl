@@ -5,32 +5,32 @@ namespace mye
 	{
 
 		template <typename T>
-		T* Singleton<T>::_singleton = NULL;
+		T* Singleton<T>::m_singleton = NULL;
 
 		template <typename T>
 		Singleton<T>::Singleton(void)
 		{
-			assert(!_singleton);
-			_singleton = static_cast<T*>(this);
+			assert(!m_singleton);
+			m_singleton = static_cast<T*>(this);
 		}
 
 		template <typename T>
 		Singleton<T>::~Singleton(void)
 		{
-			_singleton = NULL;
+			m_singleton = NULL;
 		}
 
 		template <typename T>
 		T& Singleton<T>::GetSingleton(void)
 		{
-			assert(_singleton);
-			return *_singleton;
+			assert(m_singleton);
+			return *m_singleton;
 		}
 
 		template <typename T>
 		T* Singleton<T>::GetSingletonPointer(void)
 		{
-			return _singleton;
+			return m_singleton;
 		}
 
 	}

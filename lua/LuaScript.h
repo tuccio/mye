@@ -54,9 +54,9 @@ namespace mye
 
 		private:
 
-			ScriptModule<mye::lua::LuaScriptCaller> &_module;
-			Type _type;
-			std::shared_ptr<mye::lua::LuaRegistryReference> _ref;
+			ScriptModule<mye::lua::LuaScriptCaller> &m_module;
+			Type m_type;
+			std::shared_ptr<mye::lua::LuaRegistryReference> m_ref;
 
 		};
 

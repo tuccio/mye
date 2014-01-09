@@ -17,25 +17,25 @@ Game(input,
 	audio,
 	script)
 {
-	_mainWindow.Create();
+	m_mainWindow.Create();
 }
 
 WinGame::~WinGame(void)
 {
-	_mainWindow.Destroy();
+	m_mainWindow.Destroy();
 }
 
 mye::core::IWindow& WinGame::GetMainWindow(void)
 {
-	return _mainWindow;
+	return m_mainWindow;
 }
 
 void WinGame::Run(void)
 {
 
-	if (_mainWindow.Exists())
+	if (m_mainWindow.Exists())
 	{
-		_mainWindow.Create();
+		m_mainWindow.Create();
 	}
 
 	MSG msg;

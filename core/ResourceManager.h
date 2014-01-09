@@ -50,8 +50,8 @@ namespace mye
 
 			void _FreeResource(ResourcesMap::iterator &it);
 
-			ResourcesMap _resources;
-			std::string _type;
+			ResourcesMap m_resources;
+			std::string m_type;
 
 		};
 

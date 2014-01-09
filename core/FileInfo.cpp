@@ -5,7 +5,7 @@
 using namespace mye::core;
 
 FileInfo::FileInfo(const std::string &file) :
-	_file(file)
+	m_file(file)
 {
 }
 
@@ -16,7 +16,7 @@ FileInfo::~FileInfo(void)
 
 std::string FileInfo::GetFilePath(void) const
 {
-	return _file;
+	return m_file;
 }
 
 std::string FileInfo::GetFileName(void) const
@@ -26,7 +26,7 @@ std::string FileInfo::GetFileName(void) const
 
 	std::regex regex("^(.*[/\\\\])?([^/\\\\]+)$");
 
-	if (std::regex_match(_file, sm, regex))
+	if (std::regex_match(m_file, sm, regex))
 	{
 		return sm[2];
 	}
@@ -41,7 +41,7 @@ std::string FileInfo::GetFileDirectory(void) const
 	std::smatch sm;
 	std::regex regex("^(.*[/\\\\])?([^/\\\\]+)$");
 
-	if (std::regex_match(_file, sm, regex))
+	if (std::regex_match(m_file, sm, regex))
 	{
 		return sm[1];
 	}

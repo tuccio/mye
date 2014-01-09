@@ -76,9 +76,9 @@ namespace mye
 
 			};
 
-			std::vector<Allocation> _objects;
-			std::list<int> _free;
-			std::multimap<std::string, OpaqueObjectHandle<T>> _names;
+			std::vector<Allocation> m_objects;
+			std::list<int> m_freeIds;
+			std::multimap<std::string, OpaqueObjectHandle<T>> m_names;
 
 		};
 

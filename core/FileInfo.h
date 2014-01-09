@@ -23,7 +23,7 @@ namespace mye
 
 		private:
 
-			std::string _file;
+			std::string m_file;
 
 		};
 

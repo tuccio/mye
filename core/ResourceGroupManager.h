@@ -39,7 +39,7 @@ namespace mye
 
 			typedef std::unordered_map<std::string, ResourceManager*> ResourceTypesMap;
 
-			ResourceTypesMap _managers;
+			ResourceTypesMap m_managers;
 
 		};
 

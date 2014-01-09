@@ -37,8 +37,8 @@ namespace mye
 
 		private:
 
-			ScriptModule<ConcreteFunctionCaller> &_module;
-			Type _type;
+			ScriptModule<ConcreteFunctionCaller> &m_module;
+			Type m_type;
 
 		};
 

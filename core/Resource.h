@@ -65,15 +65,15 @@ namespace mye
 
 		private:
 
-			ResourceManager *_owner;
-			ManualResourceLoader *_manual;
+			ResourceManager *m_owner;
+			ManualResourceLoader *m_manual;
 
-			std::string _group;
+			std::string m_group;
 
-			LoadingState _loadingState;
-			size_t _size;
+			LoadingState m_loadingState;
+			size_t m_size;
 
-			ParametersList _params;
+			ParametersList m_params;
 
 
 		};

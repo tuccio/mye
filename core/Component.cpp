@@ -4,7 +4,7 @@ using namespace mye::core;
 using namespace std;
 
 Component::Component(ComponentTypes type) :
-	_type(type)
+	m_type(type)
 {
 }
 
@@ -15,5 +15,5 @@ Component::~Component(void)
 
 ComponentTypes Component::GetComponentType(void)
 {
-	return _type;
+	return m_type;
 }

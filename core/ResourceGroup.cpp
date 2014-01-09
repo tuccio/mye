@@ -17,11 +17,11 @@ void ResourceGroup::AddResource(const std::string &name,
 								ManualResourceLoader *manual)
 {
 	
-	auto it = _resources.find(name);
+	auto it = m_resources.find(name);
 
-	if (it != _resources.end())
+	if (it != m_resources.end())
 	{
-		_resources.erase(it);
+		m_resources.erase(it);
 	}
 
 	ResourceInfo info = {
@@ -29,18 +29,18 @@ void ResourceGroup::AddResource(const std::string &name,
 		manual
 	};
 
-	_resources[name] = info;
+	m_resources[name] = info;
 
 }
 
 void ResourceGroup::RemoveResource(const std::string &name)
 {
 
-	auto it = _resources.find(name);
+	auto it = m_resources.find(name);
 
-	if (it != _resources.end())
+	if (it != m_resources.end())
 	{
-		_resources.erase(it);
+		m_resources.erase(it);
 	}
 
 }

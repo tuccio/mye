@@ -1,8 +1,7 @@
 #pragma once
 
 #include <mye/core/Game.h>
-
-#include "RenderWindow.h"
+#include <mye/win/Window.h>
 
 namespace mye
 {
@@ -30,7 +29,7 @@ namespace mye
 
 		private:
 
-			RenderWindow _mainWindow;
+			Window m_mainWindow;
 
 		};
 

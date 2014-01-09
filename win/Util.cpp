@@ -29,7 +29,42 @@ namespace mye
 				LocalFree(error);
 			}
 
+			size_t pos = rError.find_last_not_of("\r\n");
+
+			if (pos != std::string::npos)
+			{
+				rError.resize(pos);
+			}
+
 			return rError;
+
+		}
+
+		std::string FormatSystemTime(const SYSTEMTIME *lpTime,
+			const std::string &format)
+		{
+
+			int len = GetTimeFormat(LOCALE_INVARIANT,
+				TIME_FORCE24HOURFORMAT,
+				lpTime,
+				format.c_str(),
+				NULL,
+				0);
+
+			char *str = new char[len + 1];
+
+			GetTimeFormat(LOCALE_INVARIANT,
+				TIME_FORCE24HOURFORMAT,
+				lpTime,
+				format.c_str(),
+				str,
+				0);
+
+			std::string result(str);
+
+			delete str;
+
+			return result;
 
 		}
 

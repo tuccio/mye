@@ -7,7 +7,7 @@ namespace mye
 		template <typename R>
 		R Script<mye::lua::LuaScriptCaller>::Call(const std::string &f) const
 		{
-			return mye::lua::LuaScriptCaller::Call<R>(_module, *this, f);
+			return mye::lua::LuaScriptCaller::Call<R>(m_module, *this, f);
 		}
 
 	}

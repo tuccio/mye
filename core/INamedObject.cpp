@@ -7,7 +7,7 @@ INamedObject::INamedObject(void)
 }
 
 INamedObject::INamedObject(const std::string &name) :
-	_name(name)
+	m_name(name)
 {
 }
 
@@ -17,10 +17,10 @@ INamedObject::~INamedObject(void)
 
 const std::string& INamedObject::GetName(void) const
 {
-	return _name;
+	return m_name;
 }
 
 void INamedObject::SetName(const std::string &name)
 {
-	_name = name;
+	m_name = name;
 }

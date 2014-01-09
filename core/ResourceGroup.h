@@ -41,7 +41,7 @@ namespace mye
 
 			typedef std::unordered_map<std::string, ResourceInfo> ResourcesInfoMap;
 
-			ResourcesInfoMap _resources;
+			ResourcesInfoMap m_resources;
 
 		};
 

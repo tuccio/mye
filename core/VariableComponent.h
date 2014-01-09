@@ -27,7 +27,7 @@ namespace mye
 
 		private:
 
-			T _v;
+			T m_variable;
 
 		};
 
