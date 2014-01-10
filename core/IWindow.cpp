@@ -64,3 +64,13 @@ void IWindow::NotifyResize(const Eigen::Vector2i &size)
 		listener->OnResize(this, size);
 	}
 }
+
+void IWindow::NotifyUserMessage(unsigned int msg,
+								unsigned long intArg,
+								long *ptrArg)
+{
+	for (auto listener : m_listeners)
+	{
+		listener->OnUserMessage(this, msg, intArg, ptrArg);
+	}
+}

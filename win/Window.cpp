@@ -5,7 +5,7 @@
 
 #include <memory>
 #include <vector>
-
+#include <deque>>
 #if !defined(_T)
 #if defined(_UNICODE)
 #define _T(x) L ##x
@@ -31,6 +31,7 @@ WCR::WCR(void)
 	wc.style         = CS_HREDRAW | CS_VREDRAW;
 	wc.lpfnWndProc   = &Window::WindowProc; 
 	wc.hInstance     = GetModuleHandle(NULL);
+	wc.hCursor       = LoadCursor(wc.hInstance, IDC_ARROW);
 	wc.hbrBackground = GetSysColorBrush(COLOR_BTNFACE);
 	wc.lpszClassName = WINDOW_CLASS_NAME;
 
@@ -68,7 +69,8 @@ bool WCR::IsRegistered(void) const
 /* Window */
 
 Window::Window(void) :
-	m_hWnd(0x0)
+	m_hWnd(0x0),
+	m_menu(0x0)
 {
 }
 
@@ -79,11 +81,12 @@ Window::~Window(void)
 bool Window::Create(const Properties &p)
 {
 
-	return _Create(
-		0x0,
+	return _Create(0x0,
 		WINDOW_CLASS_NAME,
 		p.caption.c_str(),
-		WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,
+		WS_OVERLAPPEDWINDOW |
+			WS_CLIPCHILDREN |
+			WS_MAXIMIZE,
 		(p.x < 0 ? CW_USEDEFAULT : p.x),
 		(p.y < 0 ? CW_USEDEFAULT : p.y),
 		(p.width < 0 ? CW_USEDEFAULT : p.width),
@@ -190,7 +193,9 @@ Eigen::Vector2i Window::GetSize(void) const
 {
 
 	RECT rect;
-	GetClientRect(m_hWnd, &rect);
+
+	BOOL success = GetClientRect(m_hWnd, &rect);
+	assert(success);
 
 	return Eigen::Vector2i(rect.right - rect.left,
 		rect.bottom - rect.top);
@@ -218,6 +223,82 @@ Eigen::Vector2i Window::GetPosition(void) const
 
 	return Eigen::Vector2i(rect.left, rect.top);
 
+}
+
+void Window::AttachMenu(WindowMenu *menu)
+{
+	
+	m_menu = menu;
+
+	HMENU hMenu = CreateMenu();
+
+	_CreateMenu(menu, hMenu);
+
+	SetMenu(m_hWnd, hMenu);
+	DrawMenuBar(m_hWnd);
+
+}
+
+void Window::_CreateMenu(WindowMenu *menu, HMENU hMenu)
+{
+
+	if (menu->GetParent() == NULL || true)
+	{
+
+		auto &subMenus = menu->GetSubMenus();
+
+		for (auto &item : subMenus)
+		{
+
+			DWORD parentId = (menu->GetParent() ? menu->GetParent()->GetID() : 0);
+
+			//InsertMenuItem(hMenu, parentId, FALSE, &info);
+
+			if (item.second.GetSubMenus().size() > 0)
+			{
+				HMENU hSub = CreateMenu();
+				_CreateMenu(&item.second, hSub);
+				AppendMenu(hMenu, MF_POPUP, (UINT_PTR) hSub, item.first.c_str());
+			}
+			else
+			{
+				AppendMenu(hMenu, MF_STRING, item.second.GetID(), item.first.c_str());
+			}
+
+		}
+
+	}
+
+}
+
+void Window::AddMenuListener(WindowMenu::Listener *listener)
+{
+	m_menuListeners.push_back(listener);
+}
+
+void Window::RemoveMenuListener(WindowMenu::Listener *listener)
+{
+	auto it = std::find(m_menuListeners.begin(),
+		m_menuListeners.end(),
+		listener);
+
+	if (it != m_menuListeners.end())
+	{
+		m_menuListeners.erase(it);
+	}
+}
+
+void Window::ClearMenuListeners(void)
+{
+	m_menuListeners.clear();
+}
+
+void Window::NotifyMenuSelected(IDGenerator::ID id)
+{
+	for (auto listener : m_menuListeners)
+	{
+		listener->OnMenuSelected(id);
+	}
 }
 
 HWND Window::GetHandle(void)
@@ -305,14 +386,19 @@ bool Window::_Create(DWORD dwExStyle,
 
 	}
 
+	if (m_hWnd)
+	{
+		NotifyCreate();
+	}
+
 	return m_hWnd != NULL;
 
 }
 
 LRESULT CALLBACK Window::WindowProc(HWND hWnd,
-										  UINT uMsg,
-										  WPARAM wParam,
-										  LPARAM lParam)
+									UINT uMsg,
+									WPARAM wParam,
+									LPARAM lParam)
 {
 
 	switch (uMsg)
@@ -321,10 +407,53 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd,
 	case WM_CREATE:
 
 		break;
+/*
+
+		((Window*) lParam)->NotifyCreate();*/
+		break;
 
 	case WM_DESTROY:
 
-		PostQuitMessage(WM_QUIT);
+		{
+
+			Window *window = (Window*) GetWindowLongPtr(hWnd, GWLP_USERDATA);
+
+			if (window)
+			{
+				window->NotifyDestroy();
+			}
+
+		}
+
+		break;
+
+	case WM_MOUSEMOVE:
+
+	/*	{
+			static HCURSOR hCursor = LoadCursor(GetModuleHandle(NULL), IDC_ARROW);
+			SetCursor(hCursor);
+			ShowCursor(TRUE);
+		}
+*/
+
+		break;
+
+	case WM_COMMAND:
+
+		{
+
+			Window *window = (Window*) GetWindowLongPtr(hWnd, GWLP_USERDATA);
+			unsigned int optId = LOWORD(wParam);
+
+			if (window &&
+				window->m_menu &&
+				window->m_menu->Contains(optId))
+			{
+				window->NotifyMenuSelected(optId);
+			}
+
+		}
+
 		break;
 
 	case WM_SIZE:

@@ -7,6 +7,7 @@
 
 #include "MainWindowListener.h"
 #include "Globals.h"
+#include "SceneView.h"
 
 using namespace mye::core;
 using namespace mye::win;
@@ -18,6 +19,7 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 {
 
 	Logger logger;
+	MainWindowListener mainWindowListener;
 
 	logger.OpenErrorLogFile("error.log");
 	logger.OpenEventLogFile("event.log");
@@ -31,15 +33,28 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 	p.x          = -1;
 	p.y          = -1;
 
-	g_mainWindow.AddListener(new MainWindowListener);
+	g_mainWindow.AddListener(&mainWindowListener);
+	g_mainWindow.AddMenuListener(&mainWindowListener);
 
 	g_mainWindow.Create(p);
 	g_mainWindow.SetCaption("mye Editor");
 
-	g_renderWindow.CreateChild(g_mainWindow, p);
-	g_renderWindow.Show();
+	g_childWindow.CreateChild(g_mainWindow, p);
 
+
+	g_childWindow.Show();
 	g_mainWindow.Show();
+
+	if (!g_childWindow.Init())
+	{
+
+		MessageBox(NULL,
+			"Error while initiating rendering window\nConsult logs for more details",
+			"Error", MB_OK);
+
+		exit(1);
+
+	}
 
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
@@ -53,9 +68,16 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 			DispatchMessage(&msg);
 		}
 
+		if (g_currentView)
+		{
+			g_currentView->Update();
+			g_currentView->Render();
+		}
+
 	}
 	while (msg.message != WM_QUIT);
 
 	return 0;
 
 }
+

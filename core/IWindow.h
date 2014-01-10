@@ -47,6 +47,10 @@ namespace mye
 			virtual void SetPosition(const Eigen::Vector2i &position) = 0;
 			virtual Eigen::Vector2i GetPosition(void) const = 0;
 
+			void SendUserMessage(unsigned int msg,
+				unsigned int intArg,
+				long *ptrArg);
+
 			void AddListener(Listener *listener);
 			void RemoveListener(Listener *listener);
 			void ClearListeners(void);
@@ -56,6 +60,9 @@ namespace mye
 			void NotifyCreate(void);
 			void NotifyDestroy(void);
 			void NotifyResize(const Eigen::Vector2i &size);
+			void NotifyUserMessage(unsigned int msg,
+				unsigned long intArg,
+				long *ptrArg);
 
 		private:
 
@@ -86,8 +93,12 @@ namespace mye
 		public:
 
 			virtual inline void OnCreate(IWindow *window) { }
-			virtual inline void OnDestroy(IWindow * window) { }
+			virtual inline void OnDestroy(IWindow *window) { }
 			virtual inline void OnResize(IWindow *window, const Eigen::Vector2i &size) { }
+			virtual inline void OnUserMessage(IWindow *window,
+				unsigned int msg,
+				unsigned long intArg,
+				long *ptrArg) { }
 
 		};
 

@@ -6,6 +6,8 @@
 #include <Eigen/Eigen>
 #include <Windows.h>
 
+#include "WindowMenu.h"
+
 #undef IsMinimized
 
 namespace mye
@@ -65,6 +67,15 @@ namespace mye
 			virtual void SetPosition(const Eigen::Vector2i &position);
 			virtual Eigen::Vector2i GetPosition(void) const;
 
+			void AttachMenu(WindowMenu *menu);
+			void _CreateMenu(WindowMenu *menu, HMENU hMenu);
+
+			void AddMenuListener(WindowMenu::Listener *listener);
+			void RemoveMenuListener(WindowMenu::Listener *listener);
+			void ClearMenuListeners(void);
+
+			void SendUserMessage(unsigned int message);
+
 			HWND GetHandle(void);
 
 			HDC GetDC(void);
@@ -86,7 +97,12 @@ namespace mye
 
 		private:
 
+			void NotifyMenuSelected(IDGenerator::ID id);
+
 			HWND m_hWnd;
+			WindowMenu *m_menu;
+
+			std::vector<WindowMenu::Listener*> m_menuListeners;
 
 			friend class WCR;
 			static LRESULT CALLBACK WindowProc(HWND hWnd,

@@ -96,3 +96,33 @@ const char* Logger::GetTimestamp(void)
 	return output;
 
 }
+
+bool Logger::LogEventOptional(const std::string &string)
+{
+
+	Logger *logger = GetSingletonPointer();
+
+	if (logger)
+	{
+		logger->LogEvent(string);
+		return true;
+	}
+
+	return false;
+
+}
+
+bool Logger::LogErrorOptional(const std::string &string)
+{
+
+	Logger *logger = GetSingletonPointer();
+
+	if (logger)
+	{
+		logger->LogError(string);
+		return true;
+	}
+
+	return false;
+
+}

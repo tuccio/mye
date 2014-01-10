@@ -27,6 +27,9 @@ namespace mye
 			void LogEvent(const std::string &string);
 			void LogError(const std::string &string);
 
+			static bool LogEventOptional(const std::string &string);
+			static bool LogErrorOptional(const std::string &string);
+
 		private:
 
 			const char* GetTimestamp(void);
