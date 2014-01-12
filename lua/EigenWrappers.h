@@ -8,6 +8,8 @@ namespace mye
 	namespace lua
 	{
 
+		/* Vectors */
+
 		template <int N, typename T>
 		Eigen::Matrix<T, N, 1, 0, N, 1> __vec_add(
 			const Eigen::Matrix<T, N, 1, 0, N, 1> &a,
@@ -54,8 +56,22 @@ namespace mye
 		template <int N, typename T, int I>
 		T __vec_get(const Eigen::Matrix<T, N, 1, 0, N, 1> &a);
 
+		template <int N, typename T, int I>
+		void __vec_set(Eigen::Matrix<T, N, 1, 0, N, 1> &a, T b);
+
+		/* Quaternions */
+
+		template <typename T>
+		std::string __quat_tostring(const Eigen::Quaternion<T> &q);
+
+		template <typename T, int I>
+		T __quat_get(const Eigen::Quaternion<T> &q);
+
+		template <typename T, int I>
+		void __quat_set(Eigen::Quaternion<T> &q, T b);
+
 	}
 
 }
 
-#include "__vec.inl"
+#include "EigenWrappers.inl"

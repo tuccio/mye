@@ -1,6 +1,9 @@
 #pragma once
 
 #include "DX11Device.h"
+
+#include <mye/core/Resource.h>
+
 #include <d3d11.h>
 #include <Effects11\d3dx11effect.h>
 #include <string>
@@ -11,35 +14,26 @@ namespace mye
 	namespace dx11
 	{
 
-		class DX11Shader
+		class DX11Shader :
+			public mye::core::Resource
 		{
 
 		public:
 
-			enum Type
-			{
-				SHADERTYPE_VERTEX,
-				SHADERTYPE_PIXEL,
-				SHADERTYPE_EFFECTS
-			};
+			DX11Shader(mye::core::ResourceManager *owner,
+				const std::string &name,
+				mye::core::ManualResourceLoader *manual = NULL);
 
-			DX11Shader(DX11Device &device);
 			~DX11Shader(void);
 
-			bool Compile(const std::string &src,
-				Type type,
-				std::string &infoLog = std::string());
+		protected:
 
-		private:
+			virtual bool LoadImpl(void);
+			virtual void UnloadImpl(void);
 
-			union
-			{
-				ID3D11VertexShader *vertex;
-				ID3D11PixelShader *pixel;
-				ID3DX11Effect *effect;
-			} m_shader;
+			virtual size_t CalculateSizeImpl(void);
 
-			DX11Device &m_device;
+			std::string m_source;
 
 		};
 

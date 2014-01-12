@@ -18,7 +18,7 @@ bool Module::Init(void)
 	return true;
 }
 
-void Module::Clear(void)
+void Module::ShutDown(void)
 {
 
 }

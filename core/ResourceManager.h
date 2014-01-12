@@ -6,8 +6,6 @@
 #include "Resource.h"
 #include "ResourceHandle.h"
 
-#define MYE_DEFAULT_GROUP ""
-
 namespace mye
 {
 
@@ -24,7 +22,6 @@ namespace mye
 			~ResourceManager(void);
 
 			ResourceHandle CreateResource(const std::string &name,
-				           const std::string &group = MYE_DEFAULT_GROUP,
 				           ManualResourceLoader *manual = NULL,
 				           Resource::ParametersList *params = NULL);
 
@@ -37,14 +34,10 @@ namespace mye
 		protected:
 
 			virtual ResourceHandle CreateImpl(const std::string &name,
-				    const std::string &group,
 				    ManualResourceLoader *manual,
 				    Resource::ParametersList *params);
 
 			virtual void FreeImpl(Resource* resource);
-			
-
-		private:
 
 			typedef std::map<std::string, ResourceHandle> ResourcesMap;
 

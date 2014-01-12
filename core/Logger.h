@@ -30,6 +30,9 @@ namespace mye
 			static bool LogEventOptional(const std::string &string);
 			static bool LogErrorOptional(const std::string &string);
 
+			std::string GetLastEvent(void);
+			std::string GetLastError(void);
+
 		private:
 
 			const char* GetTimestamp(void);
@@ -38,6 +41,9 @@ namespace mye
 			std::ostream m_errorStream;
 
 			std::ofstream m_eventFile, m_errorFile;
+
+			std::string m_lastEvent;
+			std::string m_lastError;
 
 		};
 

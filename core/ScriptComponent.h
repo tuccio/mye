@@ -15,7 +15,7 @@ namespace mye
 
 		public:
 
-			ScriptComponent(void);
+			ScriptComponent(const std::string &name);
 			~ScriptComponent(void);
 
 			//const Script& Get(void);

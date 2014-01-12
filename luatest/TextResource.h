@@ -14,9 +14,8 @@ public:
 
 	TextResource(mye::core::ResourceManager *owner,
 		const std::string &name,
-		const std::string &group = MYE_DEFAULT_GROUP,
 		mye::core::ManualResourceLoader *manual = NULL) :
-		Resource(owner, name, group, manual)
+		Resource(owner, name, manual)
 	{
 	}
 
@@ -99,11 +98,10 @@ public:
 private:
 
 	mye::core::ResourceHandle CreateImpl(const std::string &name,
-		const std::string &group,
 		mye::core::ManualResourceLoader *manual,
 		mye::core::Resource::ParametersList *params)
 	{
-		return mye::core::ResourceHandle(new TextResource(this, name, group));
+		return mye::core::ResourceHandle(new TextResource(this, name));
 	}
 
 };

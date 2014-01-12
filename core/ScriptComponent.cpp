@@ -2,8 +2,8 @@
 
 using namespace mye::core;
 
-ScriptComponent::ScriptComponent(void) :
-	Component(SCRIPT_COMPONENT)
+ScriptComponent::ScriptComponent(const std::string &name) :
+	Component(SCRIPT_COMPONENT, name)
 {
 }
 

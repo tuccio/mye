@@ -1,4 +1,5 @@
 #include "DX11Device.h"
+#include "DX11Utils.h"
 
 #include <mye/core/Logger.h>
 
@@ -11,7 +12,7 @@ DX11Device::DX11Device(void)
 	UINT createDeviceFlags = 0x0;
 	D3D_FEATURE_LEVEL featureLevel;
 
-#ifdef DEBUG
+#ifdef _DEBUG
 	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
@@ -26,6 +27,8 @@ DX11Device::DX11Device(void)
 		&m_device,
 		&featureLevel,
 		&m_dImmediateContext);
+
+	HRDEBUG(hResult);
 
 	if (FAILED(hResult))
 	{

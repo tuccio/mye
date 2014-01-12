@@ -4,7 +4,7 @@ namespace mye
 	namespace lua
 	{
 
-		/* Implementation */
+		/* Vectors */
 
 		template <int N, typename T>
 		Eigen::Matrix<T, N, 1, 0, N, 1> __vec_add(
@@ -106,6 +106,34 @@ namespace mye
 		void __vec_set(Eigen::Matrix<T, N, 1, 0, N, 1> &a, T b)
 		{
 			a[I] = b;
+		}
+
+		/* Quaternions */
+
+		template <typename T>
+		std::string __quat_tostring(const Eigen::Quaternion<T> &q)
+		{
+
+			std::stringstream ss;
+
+			ss << "[" << q.w() << "; " <<
+				q.x() << ", " << q.y() <<
+				", " << q.z() << "]";
+
+			return ss.str();
+
+		}
+
+		template <typename T, int I>
+		T __quat_get(const Eigen::Quaternion<T> &q)
+		{
+			return q.coeffs().coeff(I);
+		}
+
+		template <typename T, int I>
+		void __quat_set(Eigen::Quaternion<T> &q, T b)
+		{
+			q.coeffs().coeffRef(I) = b;
 		}
 
 	}

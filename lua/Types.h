@@ -16,6 +16,10 @@
 #define MYE_LUA_STRING_COMPONENT "StringComponent"
 #define MYE_LUA_VEC3_COMPONENT "Vec3Component"
 #define MYE_LUA_VEC3I_COMPONENT "Vec3iComponent"
+#define MYE_LUA_QUATERNION_COMPONENT "QuaternionComponent"
+#define MYE_LUA_VTRANSFORM_COMPONENT "VTransformComponent"
+
+#define MYE_LUA_TRANSFORM_COMPONENT "TransformComponent"
 
 #define MYE_LUA_LUAMODULE "LuaModule"
 #define MYE_LUA_SCRIPT "Script"
@@ -25,6 +29,12 @@
 
 #define MYE_LUA_VEC3 "vec3"
 #define MYE_LUA_VEC3I "vec3i"
+
+#define MYE_LUA_VEC4 "vec4"
+#define MYE_LUA_VEC4I "vec4i"
+
+#define MYE_LUA_QUATERNION "quaternion"
+#define MYE_LUA_TRANSFORM "transform"
 
 #define MYE_LUA_WIN "Windows"
 #define MYE_LUA_WINDOW "Window"

@@ -15,7 +15,7 @@ namespace mye
 			~Module(void);
 
 			virtual bool Init(void);
-			virtual void Clear(void);
+			virtual void ShutDown(void);
 
 		};
 

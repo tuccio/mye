@@ -27,7 +27,7 @@ namespace mye
 			~DX11Window(void);
 
 			bool Init(void);
-			void Clear(void);
+			void ShutDown(void);
 
 			bool CreateSwapChain(void);
 			bool CreateRenderTargetView(void);
@@ -38,6 +38,10 @@ namespace mye
 
 			void ResizeBuffers(int width, int height);
 			void SetViewport(int x, int y, int width, int height);
+
+			inline ID3D11RenderTargetView* GetRenderTargetView(void);
+			inline ID3D11DepthStencilView* GetDepthStencilView(void);
+			inline IDXGISwapChain* GetSwapChain(void);
 
 		private:
 
@@ -61,6 +65,21 @@ namespace mye
 			} m_resizeListener;
 
 		};
+
+		ID3D11RenderTargetView* DX11Window::GetRenderTargetView(void)
+		{
+			return m_renderTargetView;
+		}
+
+		ID3D11DepthStencilView* DX11Window::GetDepthStencilView(void)
+		{
+			return m_depthStencilView;
+		}
+
+		IDXGISwapChain* DX11Window::GetSwapChain(void)
+		{
+			return m_swapChain;
+		}
 
 	}
 

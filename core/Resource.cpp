@@ -4,12 +4,10 @@ using namespace mye::core;
 
 Resource::Resource(ResourceManager *owner,
 				   const std::string &name,
-				   const std::string &group,
 				   ManualResourceLoader *manual) :
 	INamedObject(name)
 {
 
-	m_group = group;
 	m_owner = owner;
 	m_manual = manual;
 	
@@ -163,11 +161,6 @@ void Resource::Free(bool background)
 
 	Unlock();
 
-}
-
-void Resource::SetSize(size_t size)
-{
-	m_size = size;
 }
 
 size_t Resource::GetSize(void) const

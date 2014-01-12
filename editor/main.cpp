@@ -11,6 +11,9 @@
 
 using namespace mye::core;
 using namespace mye::win;
+using namespace mye::dx11;
+
+void CompileShaders(void);
 
 int CALLBACK WinMain(HINSTANCE hInstance,
 					 HINSTANCE hPrevInstance,
@@ -41,7 +44,6 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 
 	g_childWindow.CreateChild(g_mainWindow, p);
 
-
 	g_childWindow.Show();
 	g_mainWindow.Show();
 
@@ -55,6 +57,9 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 		exit(1);
 
 	}
+
+	CompileShaders();
+
 
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));

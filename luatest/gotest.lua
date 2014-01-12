@@ -1,13 +1,14 @@
-print("Set new field in GameObject")
-GameObject.lol = 1337
-print(GameObject.lol)
+Windows.AllocConsole()
 
-GameObject.new = nil
+GameObjects.lol = 1337
+print(GameObjects.lol)
 
-local hObj = GameObject.new()
+GameObjects.Create = nil
+print(GameObjects.Create)
+
+local hObj = GameObjects:Create()
 local hObj_copy = hObj
-local hObj2 = GameObject.new()
-
+local hObj2 = GameObjects:Create()
 
 print(hObj:Exists())
 print(hObj_copy:Exists())
@@ -19,10 +20,34 @@ print(hObj:Exists())
 print(hObj_copy:Exists())
 print(hObj2:Exists())
 
-
-hObj.x = 3
 hObj2.x = 3
-
 print(hObj2.x)
 
+hObj2:AddComponent(IntComponent("x"))
+hObj2.x = 3
+print(hObj2.x)
+
+hObj2:AddComponent(StringComponent("sup"))
+hObj2.sup = "sup brah"
+print(hObj2.sup)
+
+hObj2:AddComponent(Vec3Component("position"))
+hObj2.position = vec3(0.42141, 0.12219, 0.2131)
+print(hObj2.position)
+
+q = quaternion(1, 2.12, 3.7218, 4.12313)
+q.w = -1
+print(q)
+
+t = transform()
+t.translation = hObj2.position
+t.rotation = q
+t.scale = vec3(1, 1, 1)
+
+print(t.translation)
+print(t.rotation)
+print(t.scale)
+
 os.execute("pause")
+
+Windows.FreeConsole()

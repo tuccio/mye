@@ -1,11 +1,14 @@
 #include "VariableComponent.h"
+#include "Math.h"
+#include "Types.h"
 
+#include <mye/core/Transform.h>
 #include <mye/core/VariableComponent.h>
+
 #include <Eigen/Eigen>
+#include <Eigen/Geometry>
 
 #include <luabind/luabind.hpp>
-
-#include "Types.h"
 
 using namespace mye::core;
 using namespace luabind;
@@ -24,7 +27,7 @@ namespace mye
 			[
 
 				class_<VariableComponent<T>, Component>(name).
-					def(constructor<>()).
+					def(constructor<const std::string&>()).
 					property("value", &VariableComponent<T>::Get, &VariableComponent<T>::Set)
 
 			];
@@ -40,6 +43,8 @@ namespace mye
 			BindVariableComponent<std::string>(L, MYE_LUA_STRING_COMPONENT);
 			BindVariableComponent<Eigen::Vector3f>(L, MYE_LUA_VEC3_COMPONENT);
 			BindVariableComponent<Eigen::Vector3i>(L, MYE_LUA_VEC3I_COMPONENT);
+			//BindVariableComponent<Eigen::Quaternionf>(L, MYE_LUA_QUATERNION_COMPONENT);
+			//BindVariableComponent<AlignmentWrapper<mye::core::Transform>>(L, MYE_LUA_VTRANSFORM_COMPONENT);
 
 		}
 

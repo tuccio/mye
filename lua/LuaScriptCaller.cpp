@@ -1,3 +1,5 @@
+#include <mye/core/Logger.h>
+
 #include <lua.hpp>
 #include <luabind/luabind.hpp>
 
@@ -137,7 +139,11 @@ namespace mye
 
 			}
 
-			luaL_error(L, "Error while running script");
+			std::string errorMessage = lua_tostring(L, -1);
+
+			mye::core::Logger::LogErrorOptional(std::string("Lua script error: ") + errorMessage);
+
+			luaL_error(L, errorMessage.c_str());
 			lua_settop(L, top);
 
 			return false;

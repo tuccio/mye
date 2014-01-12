@@ -2,8 +2,8 @@ type = "Ball"
 
 function Init(hObj)
 
-	hObj:AddComponent("position", Vec3Component())
-	hObj:AddComponent("velocity", Vec3Component())
+	hObj:AddComponent(Vec3Component("position"))
+	hObj:AddComponent(Vec3Component("velocity"))
 	
 	hObj.position = vec3(0, 0, 0)
 	hObj.velocity = vec3(1, 1, 1)

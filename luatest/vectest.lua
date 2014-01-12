@@ -1,3 +1,5 @@
+Windows.AllocConsole()
+
 local type = vec3
 
 local v1 = type(0, 0, 0)
@@ -38,3 +40,4 @@ print("v5 * 2 : " .. tostring(v5 * 2))
 print("v5 / 2 : " .. tostring(v5 / 2))
 
 os.execute("pause")
+Windows.FreeConsole()

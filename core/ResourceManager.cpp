@@ -1,5 +1,4 @@
 #include "ResourceManager.h"
-#include "ResourceGroupManager.h"
 
 using namespace mye::core;
 
@@ -14,7 +13,6 @@ ResourceManager::~ResourceManager(void)
 }
 
 ResourceHandle ResourceManager::CreateResource(const std::string &name,
-											   const std::string &group,
 											   ManualResourceLoader *manual,
 											   Resource::ParametersList *params)
 {
@@ -28,7 +26,7 @@ ResourceHandle ResourceManager::CreateResource(const std::string &name,
 		_FreeResource(it);
 	}
 	
-	ResourceHandle resource(CreateImpl(name, group, manual, params));
+	ResourceHandle resource(CreateImpl(name, manual, params));
 
 	if (params)
 	{
@@ -38,19 +36,6 @@ ResourceHandle ResourceManager::CreateResource(const std::string &name,
 	m_resources[name] = resource;
 
 	Unlock();
-
-	/*ResourceGroup *pgroup = ResourceGroupManager::GetSingleton().GetResourceGroup(group);
-
-	// TODO
-
-	if (pgroup)
-	{
-		
-	}
-	else
-	{
-
-	}*/
 
 	return resource;
 
@@ -96,13 +81,11 @@ const std::string& ResourceManager::GetType(void) const
 
 void ResourceManager::_FreeResource(ResourcesMap::iterator &it)
 {
-	//it->second->Unload();
 	it->second->Free();
 	m_resources.erase(it);
 }
 
 ResourceHandle ResourceManager::CreateImpl(const std::string &name,
-										   const std::string &group,
 										   ManualResourceLoader *manual,
 										   Resource::ParametersList *params)
 {

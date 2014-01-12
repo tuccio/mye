@@ -44,7 +44,7 @@ namespace mye
 			std::string GetLastError(void) const;
 
 			bool Init(void);
-			void Clear(void);
+			void ShutDown(void);
 
 			mye::core::Script<mye::lua::LuaScriptCaller> LoadClass(const std::string &filename);
 			mye::core::Script<mye::lua::LuaScriptCaller> LoadProcedure(const std::string &filename);

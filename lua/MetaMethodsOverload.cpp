@@ -1,4 +1,5 @@
 #include "MetaMethodsOverload.h"
+#include "Math.h"
 #include "Util.h"
 #include "GameObjectHandle.h"
 
@@ -10,6 +11,28 @@
 #include <lua.hpp>
 #include <luabind/luabind.hpp>
 #include <luabind/copy_policy.hpp>
+
+#define VARIABLE_COMPONENT_CAST_GET_BEGIN(__Type)\
+	if (type == typeid(__Type))\
+		rvalue = object(L, static_cast<VariableComponent<__Type>*>(MYE_LUA_COMPONENT_UNWRAP(component))->Get());
+
+#define VARIABLE_COMPONENT_CAST_GET_BLOCK(__Type)\
+	else if (type == typeid(__Type)) \
+		rvalue = object(L, static_cast<VariableComponent<__Type>*>(MYE_LUA_COMPONENT_UNWRAP(component))->Get());
+
+#define VARIABLE_COMPONENT_CAST_SET_BEGIN(__Type) \
+	if (type == typeid(__Type))\
+	{\
+		auto value = object_cast<__Type>(object(from_stack(L, 3)));\
+		static_cast<VariableComponent<__Type>*>(MYE_LUA_COMPONENT_UNWRAP(component))->Set(value);\
+	}
+
+#define VARIABLE_COMPONENT_CAST_SET_BLOCK(__Type) \
+	else if (type == typeid(__Type))\
+	{\
+		auto value = object_cast<__Type>(object(from_stack(L, 3)));\
+		static_cast<VariableComponent<__Type>*>(MYE_LUA_COMPONENT_UNWRAP(component))->Set(value);\
+	}
 
 using namespace luabind;
 using namespace mye::core;
@@ -40,38 +63,43 @@ namespace mye
 				if (hObj)
 				{
 
-					object r = __goh_getcomponent(hObj.get(), field);
+					object wrappedComponent = __goh_getcomponent(hObj.get(), field);
 
-					if (r)
+					if (wrappedComponent)
 					{
 
-						auto component = object_cast<Component*>(r);
+						auto component = object_cast<MYE_LUA_COMPONENT_WRAP_TYPE(Component)>(wrappedComponent);
 						object rvalue;
+
+						//static_cast<VariableComponent<mye::core::TransformComponent>*>(component.get());
+						//auto castedComponent = static_cast<VariableComponent<mye::core::TransformComponent>*>(MYE_LUA_COMPONENT_UNWRAP(component));
+						//rvalue = object(L, castedComponent->Get());
 
 						if (component)
 						{
 
-							switch (component->GetComponentType())
+							switch (MYE_LUA_COMPONENT_UNWRAP(component)->GetComponentType())
 							{
 
 							case VARIABLE_COMPONENT:
 								{
 
-									VariableComponent<char> *tmp = (VariableComponent<char>*) component;
-									auto type = tmp->GetVariableType();
+									auto tmp = static_cast<VariableComponent<char>*>(MYE_LUA_COMPONENT_UNWRAP(component));
+									std::type_index type = tmp->GetVariableType();
 
-#define VARIABLE_COMPONENT_CAST_BEGIN(__Type) if (type == typeid(__Type)) rvalue = object(L, ((VariableComponent<__Type>*) component)->Get());
-#define VARIABLE_COMPONENT_CAST(__Type) else if (type == typeid(__Type)) rvalue = object(L, ((VariableComponent<__Type>*) component)->Get());
+									VARIABLE_COMPONENT_CAST_GET_BEGIN(float)
+									VARIABLE_COMPONENT_CAST_GET_BLOCK(int)
+									VARIABLE_COMPONENT_CAST_GET_BLOCK(bool)
+									VARIABLE_COMPONENT_CAST_GET_BLOCK(std::string)
+									VARIABLE_COMPONENT_CAST_GET_BLOCK(Eigen::Vector3f)
+									VARIABLE_COMPONENT_CAST_GET_BLOCK(Eigen::Vector3i)
+									//VARIABLE_COMPONENT_CAST_GET_BLOCK(mye::core::Transform)
 
-									VARIABLE_COMPONENT_CAST_BEGIN(float)
-									VARIABLE_COMPONENT_CAST(int)
-									VARIABLE_COMPONENT_CAST(bool)
-									VARIABLE_COMPONENT_CAST(std::string)
-									VARIABLE_COMPONENT_CAST(Eigen::Vector3f)
-									VARIABLE_COMPONENT_CAST(Eigen::Vector3i)
+									/*
 
-#undef VARIABLE_COMPONENT_CAST_BEGIN
-#undef VARIABLE_COMPONENT_CAST
+									rvalue = object(L, static_cast<__Type*>((component).get())->Get());
+
+									*/
 
 								}
 
@@ -125,32 +153,27 @@ namespace mye
 
 				lua_call(L, 2, 1);
 
-				object cObj(from_stack(L, -1));
-				auto component = object_cast<Component*>(cObj);
+				object wrappedComponent(from_stack(L, -1));
+				auto component = object_cast<MYE_LUA_COMPONENT_WRAP_TYPE(Component)>(wrappedComponent);
 
 				if (component)
 				{
 
-					switch (component->GetComponentType())
+					switch (MYE_LUA_COMPONENT_UNWRAP(component)->GetComponentType())
 					{
 					case VARIABLE_COMPONENT:
 						{
 
-							VariableComponent<char> *tmp = (VariableComponent<char>*) component;
-							auto type = tmp->GetVariableType();
+							auto tmp = static_cast<VariableComponent<char>*>(MYE_LUA_COMPONENT_UNWRAP(component));
+							std::type_index type = tmp->GetVariableType();
 
-#define VARIABLE_COMPONENT_CAST_BEGIN(__Type) if (type == typeid(__Type)) { auto value = object_cast<__Type>(object(from_stack(L, 3))); ((VariableComponent<__Type>*) component)->Set(value); }
-#define VARIABLE_COMPONENT_CAST(__Type) else if (type == typeid(__Type)) { auto value = object_cast<__Type>(object(from_stack(L, 3))); ((VariableComponent<__Type>*) component)->Set(value); }
-
-							VARIABLE_COMPONENT_CAST_BEGIN(float)
-							VARIABLE_COMPONENT_CAST(int)
-							VARIABLE_COMPONENT_CAST(bool)
-							VARIABLE_COMPONENT_CAST(std::string)
-							VARIABLE_COMPONENT_CAST(Eigen::Vector3f)
-							VARIABLE_COMPONENT_CAST(Eigen::Vector3i)
-
-#undef VARIABLE_COMPONENT_CAST_BEGIN
-#undef VARIABLE_COMPONENT_CAST
+							VARIABLE_COMPONENT_CAST_SET_BEGIN(float)
+							VARIABLE_COMPONENT_CAST_SET_BLOCK(int)
+							VARIABLE_COMPONENT_CAST_SET_BLOCK(bool)
+							VARIABLE_COMPONENT_CAST_SET_BLOCK(std::string)
+							VARIABLE_COMPONENT_CAST_SET_BLOCK(Eigen::Vector3f)
+							VARIABLE_COMPONENT_CAST_SET_BLOCK(Eigen::Vector3i)
+							//VARIABLE_COMPONENT_CAST_SET_BLOCK(mye::core::Transform)
 
 						}
 						

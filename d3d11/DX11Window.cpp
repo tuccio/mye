@@ -1,4 +1,5 @@
 #include "DX11Window.h"
+#include "DX11Utils.h"
 
 #include <mye/core/Logger.h>
 
@@ -20,7 +21,7 @@ DX11Window::DX11Window(DX11Device &device) :
 
 DX11Window::~DX11Window(void)
 {
-	Clear();
+	ShutDown();
 }
 
 bool DX11Window::Init(void)
@@ -32,7 +33,7 @@ bool DX11Window::Init(void)
 		return false;
 	}
 
-	if (CreateDepthStencilBuffers())
+	if (!CreateDepthStencilBuffers())
 	{
 		Logger::LogErrorOptional("Cannot create depth and stencil buffers");
 		return false;
@@ -51,22 +52,25 @@ bool DX11Window::Init(void)
 
 }
 
-void DX11Window::Clear(void)
+void DX11Window::ShutDown(void)
 {
 
 	if (m_depthStencilView)
 	{
 		m_depthStencilView->Release();
+		m_depthStencilView = NULL;
 	}
 
 	if (m_depthStencilBuffer)
 	{
 		m_depthStencilBuffer->Release();
+		m_depthStencilBuffer = NULL;
 	}
 
-	if (m_depthStencilView)
+	if (m_renderTargetView)
 	{
-		m_depthStencilView->Release();
+		m_renderTargetView->Release();
+		m_renderTargetView = NULL;
 	}
 
 }
@@ -90,7 +94,7 @@ bool DX11Window::CreateSwapChain()
 	swapDesc.BufferUsage                 = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapDesc.OutputWindow                = GetHandle();
 /*	swapDesc.Windowed                    = !IsFullScreen();*/
-	swapDesc.Windowed                    = false;
+	swapDesc.Windowed                    = true;
 	swapDesc.SwapEffect                  = DXGI_SWAP_EFFECT_DISCARD;
 	swapDesc.Flags                       = 0;
 
@@ -149,12 +153,14 @@ bool DX11Window::CreateSwapChain()
 		&swapDesc,
 		&m_swapChain);
 
-	bool invalid = hr4 == DXGI_ERROR_INVALID_CALL;
-	bool occluded = hr4 == DXGI_STATUS_OCCLUDED;
+	ReleaseCOM(dxgiDevice);
+	ReleaseCOM(dxgiAdapter);
+	ReleaseCOM(dxgiFactory);
 
-	dxgiDevice->Release();
-	dxgiAdapter->Release();
-	dxgiFactory->Release();
+	HRDEBUG(hr1);
+	HRDEBUG(hr2);
+	HRDEBUG(hr3);
+	HRDEBUG(hr4);
 
 	return !(FAILED(hr1) || FAILED(hr2) || FAILED(hr3) || FAILED(hr4));
 
@@ -181,8 +187,8 @@ void DX11Window::ResizeBuffers(int width, int height)
 		DXGI_FORMAT_UNKNOWN,
 		0);
 
-	m_depthStencilView->Release();
-	m_depthStencilBuffer->Release();
+	ReleaseCOM(m_depthStencilView);
+	ReleaseCOM(m_depthStencilBuffer);
 
 	CreateDepthStencilBuffers();
 	CreateRenderTargetView();
@@ -202,7 +208,7 @@ void DX11Window::SetViewport(int x, int y, int width, int height)
 	viewPort.TopLeftY = y;
 	viewPort.Width    = width;
 	viewPort.Height   = height;
-
+	
 	m_device.GetImmediateContext()->RSSetViewports(1, &viewPort);
 
 }
@@ -212,16 +218,22 @@ bool DX11Window::CreateRenderTargetView(void)
 
 	ID3D11Texture2D *backBuffer;
 
-	m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D),
+	HRESULT hr1 = m_swapChain->GetBuffer(
+		0,
+		__uuidof(ID3D11Texture2D),
 		reinterpret_cast<void**>(&backBuffer));
 
-	HRESULT hResult = m_device.GetDevice()->CreateRenderTargetView(backBuffer,
+	HRESULT hr2 = m_device.GetDevice()->CreateRenderTargetView(
+		backBuffer,
 		0,
 		&m_renderTargetView);
 
-	backBuffer->Release();
+	ReleaseCOM(backBuffer);
 
-	return !FAILED(hResult);
+	HRDEBUG(hr1);
+	HRDEBUG(hr2);
+
+	return !(FAILED(hr1) || FAILED(hr2));
 
 }
 
@@ -233,8 +245,8 @@ bool DX11Window::CreateDepthStencilBuffers(void)
 	Eigen::Vector2i clientSize = GetSize();
 	D3D11_TEXTURE2D_DESC depthStencilDesc;
 
-	depthStencilDesc.Width          = clientSize.x();
-	depthStencilDesc.Height         = clientSize.y();
+	depthStencilDesc.Width          = (clientSize.x() ? clientSize.x() : 1);
+	depthStencilDesc.Height         = (clientSize.y() ? clientSize.y() : 1);
 	depthStencilDesc.MipLevels      = 1;
 	depthStencilDesc.ArraySize      = 1;
 	depthStencilDesc.Format         = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -290,6 +302,9 @@ bool DX11Window::CreateDepthStencilBuffers(void)
 		0,
 		&m_depthStencilView);
 
+	HRDEBUG(hr1);
+	HRDEBUG(hr2);
+
 	return !(FAILED(hr1) || FAILED(hr2));
 
 }
@@ -297,5 +312,7 @@ bool DX11Window::CreateDepthStencilBuffers(void)
 void DX11Window::ResizeListener::OnResize(IWindow *window,
 										  const Eigen::Vector2i &size)
 {
-	((DX11Window*) window)->SetViewport(0, 0, size.x(), size.y());
+	DX11Window *dx11window = ((DX11Window*) window);
+	dx11window->ResizeBuffers(size.x(), size.y());
+	dx11window->SetViewport(0, 0, size.x(), size.y());
 }

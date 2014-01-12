@@ -23,10 +23,7 @@ namespace mye
 		protected:
 
 			void SetName(const std::string &name);
-
-		private:
-
-			std::string m_name;
+			std::string m_name;			
 
 		};
 

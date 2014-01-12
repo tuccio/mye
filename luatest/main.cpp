@@ -1,6 +1,5 @@
 #include <mye/core/Logger.h>
 #include <mye/core/ResourceManager.h>
-#include <mye/core/ResourceGroupManager.h>
 
 #include <mye/lua/LuaScriptCaller.h>
 #include <mye/lua/LuaScript.h>
@@ -43,28 +42,6 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 		&graphics,
 		&audio,
 		&lua);
-
-	ResourceGroupManager rgm;
-	rgm.RegisterResourceManager("Text", new TextResourceManager);
-
-	TextResourceManager &trm = TextResourceManager::GetSingleton();
-
-	{
-
-		TextResourceHandle text = trm.CreateResource("hi.lua");
-		TextResourceHandle t1 = trm.GetResource("hi.lua");
-
-		text->Load();
-		auto str = text->Get();
-
-		trm.FreeResource("hi.lua");
-		str = text->Get();
-
-		TextResourceHandle t2 = trm.GetResource("hi.lua");
-
-	}
-
-	
 
 	if (!game.Init())
 	{

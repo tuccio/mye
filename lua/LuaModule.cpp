@@ -1,6 +1,6 @@
 #include "LuaModule.h"
 
-#include "Vector3.h"
+#include "Math.h"
 #include "Game.h"
 
 #include "LuaScript.h"
@@ -67,7 +67,7 @@ void ScriptModule<LuaScriptCaller>::OpenAllLibraries(void)
 	luaL_openlibs(_L);
 	luabind::open(_L);
 
-	BindVector3(_L);
+	BindMath(_L);
 	BindGame(_L);
 
 }
@@ -87,7 +87,7 @@ bool ScriptModule<LuaScriptCaller>::Init(void)
 	return true;
 }
 
-void ScriptModule<LuaScriptCaller>::Clear(void)
+void ScriptModule<LuaScriptCaller>::ShutDown(void)
 {
 	lua_close(_L);
 }

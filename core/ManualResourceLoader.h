@@ -10,7 +10,7 @@ namespace mye
 
 		class ManualResourceLoader
 		{
-		
+
 		public:
 
 			ManualResourceLoader(void);

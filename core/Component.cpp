@@ -3,7 +3,9 @@
 using namespace mye::core;
 using namespace std;
 
-Component::Component(ComponentTypes type) :
+Component::Component(ComponentTypes type,
+					 const std::string &name) :
+	INamedObject(name),
 	m_type(type)
 {
 }

@@ -32,14 +32,9 @@ namespace mye
 
 			~GameObject(void);
 
-			void AddComponent(const std::string &name, const Component &component);
+			Component* AddComponent(const Component &component);
 			Component* GetComponent(const std::string &name);
 			void RemoveComponent(const std::string &name);
-
-			GameObject* GetParent(void);
-			void SetParent(GameObject *object);
-
-			const ChildrenList& GetChildren(void) const;
 
 			GameObjectsManager* GetOwner(void);
 			GameObjectHandle GetHandle(void);
@@ -54,17 +49,8 @@ namespace mye
 				const GameObjectHandle &handle);
 			void OnDestruction(void);
 
-			void OnParentDestruction(void);
-			void OnChildDestruction(GameObject *child);
-
-			void SetOwner(GameObjectsManager *manager);
-			void SetHandle(const GameObjectHandle &handle);
-
 			std::map<std::string, Component*> m_components;
 			std::string m_name;
-
-			GameObject *m_parent;
-			ChildrenList m_children;
 
 			GameObjectHandle m_handle;
 			GameObjectsManager *m_owner;

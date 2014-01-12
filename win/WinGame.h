@@ -31,6 +31,13 @@ namespace mye
 
 			Window m_mainWindow;
 
+			class MainWindowListener :
+				public Window::Listener
+			{
+			public:
+				void OnDestroy(mye::core::IWindow *window);
+			} m_mainWindowListener;
+
 		};
 
 	}

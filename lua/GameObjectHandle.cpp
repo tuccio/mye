@@ -38,9 +38,8 @@ namespace mye
 					def("GetComponent", &__goh_getcomponent).
 					def("AddComponent", &__goh_addcomponent).
 
-					def("GetParent", &__goh_getparent).
-					def("SetParent", &__goh_setparent).
-					def("GetChildren", &__goh_getchildren).
+					def("Exists", &__goh_exists).
+					def("Destroy", &__goh_destroy).
 
 					def("__tostring", &__goh_tostring)
 
@@ -60,109 +59,24 @@ namespace mye
 
 		object __goh_getcomponent(const GameObjectHandle &hObj, const std::string &name)
 		{
-
 			Component *component = LPGAMEOBJECT(hObj)->GetComponent(name);
-
-			if (component)
-			{
-				switch (component->GetComponentType())
-				{
-
-				case VARIABLE_COMPONENT:
-
-					{
-
-						VariableComponent<char> *vc = (VariableComponent<char>*) component;
-
-						std::type_index type = vc->GetVariableType();
-
-						lua_State *L = LPLUASTATE;
-
-#define VARIABLE_COMPONENT_CAST_BEGIN(__Type) if (type == typeid(__Type)) return object(L, (VariableComponent<__Type>*) component);
-#define VARIABLE_COMPONENT_CAST(__Type) else if (type == typeid(__Type)) return object(L, (VariableComponent<__Type>*) component);
-
-						VARIABLE_COMPONENT_CAST_BEGIN(float)
-						VARIABLE_COMPONENT_CAST(int)
-						VARIABLE_COMPONENT_CAST(bool)
-						VARIABLE_COMPONENT_CAST(std::string)
-						VARIABLE_COMPONENT_CAST(Eigen::Vector3f)
-						VARIABLE_COMPONENT_CAST(Eigen::Vector3i)
-
-					}
-
-					break;
-
-				default:
-					break;
-
-				}
-
-			}
-
-			return object();
-
+			return object(LPLUASTATE, MYE_LUA_COMPONENT_WRAP(component));
 		}
 
 		void __goh_addcomponent(const GameObjectHandle &hObj,
-			const std::string &name,
 			const Component &component)
 		{
-			LPGAMEOBJECT(hObj)->AddComponent(name, component);
+			LPGAMEOBJECT(hObj)->AddComponent(component);
 		}
 
-		luabind::object __goh_getparent(const GameObjectHandle &hObj)
+		void __goh_destroy(const mye::core::GameObjectHandle &hObj)
 		{
-
-			GameObject *parent = LPGAMEOBJECT(hObj)->GetParent();
-
-			if (parent)
-			{
-				return object(LPLUASTATE, parent->GetHandle());
-			}
-			else
-			{
-				return object();
-			}
-
+			Game::GetSingleton().GetGameObjectsModule()->Destroy(hObj);
 		}
 
-		void __goh_setparent(const GameObjectHandle &hObj,
-			const luabind::object &oHandle)
+		bool __goh_exists(const mye::core::GameObjectHandle &hObj)
 		{
-
-			GameObject *parent;
-
-			if (type(oHandle) != LUA_TNIL)
-			{
-				GameObjectHandle handle = object_cast<GameObjectHandle>(oHandle);
-				parent = LPGAMEOBJECT(handle);
-			}
-			else
-			{
-				parent = NULL;
-			}
-
-			LPGAMEOBJECT(hObj)->SetParent(parent);
-			
-
-		}
-
-		luabind::object __goh_getchildren(const GameObjectHandle &hObj)
-		{
-
-			const GameObject::ChildrenList& children = LPGAMEOBJECT(hObj)->GetChildren();
-
-			object table = newtable(LPLUASTATE);
-
-			int i = 1;
-
-			for (auto child : children)
-			{
-				table[i++] = object(table.interpreter(), child->GetHandle());
-			}
-
-			return table;
-
+			return LPGAMEOBJECT(hObj) != NULL;
 		}
 
 		std::string __goh_tostring(const GameObjectHandle &hObj)

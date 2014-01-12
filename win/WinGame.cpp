@@ -17,6 +17,7 @@ Game(input,
 	audio,
 	script)
 {
+	m_mainWindow.AddListener(&m_mainWindowListener);
 	m_mainWindow.Create();
 }
 
@@ -67,4 +68,9 @@ void WinGame::Run(void)
 	}
 	while (msg.message != WM_QUIT);
 
+}
+
+void WinGame::MainWindowListener::OnDestroy(IWindow *window)
+{
+	PostQuitMessage(WM_QUIT);
 }

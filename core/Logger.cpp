@@ -72,16 +72,14 @@ void Logger::OpenErrorLogFile(const std::string &file)
 
 void Logger::LogEvent(const std::string &string)
 {
-
-	
-
 	m_eventStream << GetTimestamp() << " " << string << std::endl;
+	m_lastEvent = string;
 }
 
 void Logger::LogError(const std::string &string)
 {
-	time_t t = time(NULL);
 	m_errorStream << GetTimestamp() << " " << string << std::endl;
+	m_lastError = string;
 }
 
 const char* Logger::GetTimestamp(void)
@@ -95,6 +93,16 @@ const char* Logger::GetTimestamp(void)
 
 	return output;
 
+}
+
+std::string Logger::GetLastEvent(void)
+{
+	return m_lastEvent;
+}
+
+std::string Logger::GetLastError(void)
+{
+	return m_lastError;
 }
 
 bool Logger::LogEventOptional(const std::string &string)

@@ -6,6 +6,8 @@
 
 #include <unordered_map>
 
+#define MYE_DEFAULT_GROUP ""
+
 namespace mye
 {
 
@@ -35,7 +37,6 @@ namespace mye
 
 			Resource(ResourceManager *owner,
 				const std::string &name,
-				const std::string &group,
 				ManualResourceLoader *manual);
 
 			~Resource(void);
@@ -61,14 +62,8 @@ namespace mye
 
 			virtual size_t CalculateSizeImpl(void) = 0;
 
-			void SetSize(size_t size);
-
-		private:
-
 			ResourceManager *m_owner;
 			ManualResourceLoader *m_manual;
-
-			std::string m_group;
 
 			LoadingState m_loadingState;
 			size_t m_size;
