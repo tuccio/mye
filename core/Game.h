@@ -50,6 +50,8 @@ namespace mye
 			AudioModule* GetAudioModule(void);
 			IScriptModule* GetScriptModule(void);
 
+			virtual void RuntimeError(const std::string &error);
+
 		private:
 
 			InputModule *m_input;

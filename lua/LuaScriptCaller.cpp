@@ -1,4 +1,4 @@
-#include <mye/core/Logger.h>
+#include <mye/core/Game.h>
 
 #include <lua.hpp>
 #include <luabind/luabind.hpp>
@@ -141,7 +141,12 @@ namespace mye
 
 			std::string errorMessage = lua_tostring(L, -1);
 
-			mye::core::Logger::LogErrorOptional(std::string("Lua script error: ") + errorMessage);
+			Game *game = Game::GetSingletonPointer();
+
+			if (game)
+			{
+				game->RuntimeError(std::string("Lua script error: ") + errorMessage);
+			}
 
 			luaL_error(L, errorMessage.c_str());
 			lua_settop(L, top);

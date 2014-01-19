@@ -32,11 +32,11 @@ ResourceHandle DX11ShaderManager::CreateImpl(const std::string &name,
 			
 			if (it->second == "vertex")
 			{
-				return ResourceHandle(new DX11VertexShader(this, name, NULL, m_device));
+				return ResourceHandle(new DX11VertexShader(this, name, manual, m_device));
 			}
 			else if (it->second == "pixel")
 			{
-				return ResourceHandle(new DX11PixelShader(this, name, NULL, m_device));
+				return ResourceHandle(new DX11PixelShader(this, name, manual, m_device));
 			}
 
 		}
@@ -49,5 +49,5 @@ ResourceHandle DX11ShaderManager::CreateImpl(const std::string &name,
 
 void DX11ShaderManager::FreeImpl(Resource* resource)
 {
-
+	static_cast<DX11Shader*>(resource)->Destroy();
 }

@@ -43,13 +43,15 @@ namespace mye
 
 		private:
 
+			typedef std::map<std::string, Component*> ComponentsList;
+
 			friend class OpaqueObjectsManager<GameObject>;
 
 			void OnCreation(GameObjectsManager *owner,
 				const GameObjectHandle &handle);
 			void OnDestruction(void);
 
-			std::map<std::string, Component*> m_components;
+			ComponentsList m_components;
 			std::string m_name;
 
 			GameObjectHandle m_handle;

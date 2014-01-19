@@ -22,6 +22,12 @@ namespace mye
 
 			~ResourceHandle(void);
 
+			template <typename T>
+			T* Cast(void)
+			{
+				return static_cast<T*>(get());
+			}
+
 		};
 
 	}

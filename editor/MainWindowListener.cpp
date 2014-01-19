@@ -1,6 +1,7 @@
 #include "MainWindowListener.h"
 #include "Globals.h"
 
+using namespace mye::core;
 using namespace mye::win;
 
 #define MENUSTR_FILE "File"
@@ -11,6 +12,7 @@ using namespace mye::win;
 #define MENUSTR_EXIT "Exit"
 #define MENUSTR_VIEWS "Views"
 #define MENUSTR_SCENEVIEW "Scene View"
+#define MENUSTR_MODELVIEW "Model View"
 
 MainWindowListener::MainWindowListener(void)
 {
@@ -33,6 +35,7 @@ void MainWindowListener::OnCreate(mye::core::IWindow * window)
 
 	WindowMenu &views = g_mainWindowMenu.AddSubMenu(MENUSTR_VIEWS);
 	views.AddSubMenu(MENUSTR_SCENEVIEW);
+	views.AddSubMenu(MENUSTR_MODELVIEW);
 
 	g_mainWindow.AttachMenu(&g_mainWindowMenu);
 
@@ -43,15 +46,9 @@ void MainWindowListener::OnDestroy(mye::core::IWindow * window)
 	PostQuitMessage(WM_QUIT);
 }
 
-void MainWindowListener::OnResize(mye::core::IWindow *window,
-								  const Eigen::Vector2i &size)
+void MainWindowListener::OnCommand(unsigned int id)
 {
-
-	if (g_currentView)
-	{
-		g_currentView->Resize(size);
-	}
-
+	g_mainWindow.DispatchCommand(id);
 }
 
 void MainWindowListener::OnMenuSelected(IDGenerator::ID id)
@@ -61,13 +58,16 @@ void MainWindowListener::OnMenuSelected(IDGenerator::ID id)
 		MENUID_FILE_NEWSOLUTION,
 		MENUID_FILE_EXIT,
 		MENUID_VIEWS_SCENEVIEW,
+		MENUID_VIEWS_MODELVIEW,
 		MENUID_N
 	};
 
 	static IDGenerator::ID ids[MENUID_N] = {
 		g_mainWindowMenu[MENUSTR_FILE][MENUSTR_NEWSOLUTION].GetID(),
 		g_mainWindowMenu[MENUSTR_FILE][MENUSTR_EXIT].GetID(),
-		g_mainWindowMenu[MENUSTR_VIEWS][MENUSTR_SCENEVIEW].GetID()
+		g_mainWindowMenu[MENUSTR_VIEWS][MENUSTR_SCENEVIEW].GetID(),
+		g_mainWindowMenu[MENUSTR_VIEWS][MENUSTR_MODELVIEW].GetID()
+
 	};
 
 	int position = std::find(ids, ids + MENUID_N, id) - ids;
@@ -84,8 +84,17 @@ void MainWindowListener::OnMenuSelected(IDGenerator::ID id)
 		break;
 
 	case MENUID_VIEWS_SCENEVIEW:
-		g_currentView = &g_sceneView;
-		g_currentView->Resize(g_mainWindow.GetSize());
+
+		g_mainWindow.SetSplitScreen(1, 1);
+		g_mainWindow.SetSplitView(0, 0, &g_sceneView);
+		g_mainWindow.ResizeViews();
+		break;
+
+	case MENUID_VIEWS_MODELVIEW:
+
+		g_mainWindow.SetSplitScreen(1, 1);
+		g_mainWindow.SetSplitView(0, 0, &g_modelView);
+		g_mainWindow.ResizeViews();
 		break;
 
 	}

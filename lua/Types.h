@@ -10,14 +10,14 @@
 #define MYE_LUA_GAMEOBJECT_AUX "GameObjectAux"
 #define MYE_LUA_GAMEOBJECT_STATIC_AUX "GameObjectStaticAux"
 
-#define MYE_LUA_FLOAT_COMPONENT "FloatComponent"
-#define MYE_LUA_INT_COMPONENT "IntComponent"
-#define MYE_LUA_BOOL_COMPONENT "BoolComponent"
-#define MYE_LUA_STRING_COMPONENT "StringComponent"
-#define MYE_LUA_VEC3_COMPONENT "Vec3Component"
-#define MYE_LUA_VEC3I_COMPONENT "Vec3iComponent"
-#define MYE_LUA_QUATERNION_COMPONENT "QuaternionComponent"
-#define MYE_LUA_VTRANSFORM_COMPONENT "VTransformComponent"
+#define MYE_LUA_FLOAT_COMPONENT "FloatVar"
+#define MYE_LUA_INT_COMPONENT "IntVar"
+#define MYE_LUA_BOOL_COMPONENT "BoolVar"
+#define MYE_LUA_STRING_COMPONENT "StringVar"
+#define MYE_LUA_VEC3_COMPONENT "Vec3Var"
+#define MYE_LUA_VEC3I_COMPONENT "Vec3iVar"
+#define MYE_LUA_QUATERNION_COMPONENT "QuaternionVar"
+#define MYE_LUA_VTRANSFORM_COMPONENT "TransformVar"
 
 #define MYE_LUA_TRANSFORM_COMPONENT "TransformComponent"
 

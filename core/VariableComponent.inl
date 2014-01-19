@@ -23,7 +23,7 @@ namespace mye
 		}
 
 		template <typename T>
-		T VariableComponent<T>::Get(void) const
+		const T& VariableComponent<T>::Get(void) const
 		{
 			return m_variable;
 		}

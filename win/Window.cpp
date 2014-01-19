@@ -1,11 +1,12 @@
 #include "Window.h"
-#include "Util.h"
+#include "Utils.h"
 
 #include <mye/core/Logger.h>
 
 #include <memory>
 #include <vector>
-#include <deque>>
+#include <deque>
+
 #if !defined(_T)
 #if defined(_UNICODE)
 #define _T(x) L ##x
@@ -41,11 +42,14 @@ WCR::WCR(void)
 	{
 
 		auto logger = mye::core::Logger::GetSingletonPointer();
+		std::string error = GetLastErrorAsString();
 
 		if (logger)
 		{
-			logger->LogError("RegisterClass failed: " + GetLastErrorAsString());
+			logger->LogError("RegisterClass failed: " + error);
 		}
+
+		ShowErrorBox(error);
 
 	}
 
@@ -105,7 +109,7 @@ bool Window::CreateChild(Window &parent, const Properties &p)
 	return _Create(0x0,
 		WINDOW_CLASS_NAME,
 		p.caption.c_str(),
-		WS_CHILD,
+		WS_CHILD | WS_CLIPCHILDREN,
 		(p.x < 0 ? CW_USEDEFAULT : p.x),
 		(p.y < 0 ? CW_USEDEFAULT : p.y),
 		(p.width < 0 ? CW_USEDEFAULT : p.width),
@@ -124,6 +128,19 @@ void Window::Destroy(void)
 	m_hWnd = NULL;
 }
 
+bool Window::DispatchCommand(unsigned int id)
+{
+
+	if (m_menu->Contains(id))
+	{
+		NotifyMenuSelected(id);
+		return true;
+	}
+
+	return false;
+
+}
+
 bool Window::Exists(void) const
 {
 	return IsWindow(m_hWnd);
@@ -132,6 +149,21 @@ bool Window::Exists(void) const
 bool Window::IsVisible(void) const
 {
 	return Exists() && IsWindowVisible(m_hWnd);
+}
+
+void Window::Maximize(void)
+{
+	ShowWindow(m_hWnd, SW_MAXIMIZE);
+}
+
+bool Window::IsMaximized(void) const
+{
+	return (IsZoomed(m_hWnd) ? true : false);
+}
+
+void Window::Minimize(void)
+{
+	ShowWindow(m_hWnd, SW_MINIMIZE);
 }
 
 bool Window::IsMinimized(void) const
@@ -146,7 +178,7 @@ void Window::Show(void)
 
 void Window::Hide(void)
 {
-	ShowWindow(m_hWnd, FALSE);
+	ShowWindow(m_hWnd, SW_HIDE);
 }
 
 bool Window::IsFullScreen(void) const
@@ -316,6 +348,11 @@ bool Window::ReleaseDC(HDC hDC)
 	return ::ReleaseDC(m_hWnd, hDC) != 0;
 }
 
+void Window::Update(void)
+{
+	UpdateWindow(m_hWnd);
+}
+
 bool Window::_Create(DWORD dwExStyle,
 					 LPCTSTR lpClassName,
 					 LPCTSTR lpWindowName,
@@ -445,12 +482,22 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd,
 			Window *window = (Window*) GetWindowLongPtr(hWnd, GWLP_USERDATA);
 			unsigned int optId = LOWORD(wParam);
 
-			if (window &&
-				window->m_menu &&
-				window->m_menu->Contains(optId))
+			if (window)
 			{
-				window->NotifyMenuSelected(optId);
+				window->DispatchCommand(optId);
 			}
+/*
+
+			if (window &&
+				window->m_menu)
+			{
+
+				if (window->m_menu->Contains(optId))
+				{
+					window->NotifyMenuSelected(optId);
+				}
+
+			}*/
 
 		}
 
@@ -472,6 +519,21 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd,
 		break;
 
 	default:
+
+		if (uMsg >= WM_USER)
+		{
+
+			Window *window = (Window*) GetWindowLongPtr(hWnd, GWLP_USERDATA);
+
+			if (window)
+			{
+				window->NotifyUserMessage(uMsg, wParam, (long*) lParam);
+			}
+
+			break;
+
+		}
+
 		return DefWindowProc(hWnd, uMsg, wParam, lParam);
 
 	}

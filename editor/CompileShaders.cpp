@@ -3,6 +3,9 @@
 #include <mye/d3d11/DX11VertexShader.h>
 #include <mye/d3d11/DX11PixelShader.h>
 
+#include <mye/core/ResourceTypeManager.h>
+#include <mye/core/Utils.h>
+
 using namespace mye::core;
 using namespace mye::dx11;
 
@@ -11,9 +14,21 @@ void CompileShaders(void)
 
 	Resource::ParametersList params;
 
-	params["type"] = "vertex";
+	std::vector<D3D11_INPUT_ELEMENT_DESC> vDesc(1);
 
-	ResourceHandle hShader = g_shaderManager.CreateResource(
+	vDesc[0].SemanticName         = "POSITION";
+	vDesc[0].SemanticIndex        = 0;	
+	vDesc[0].Format               = DXGI_FORMAT_R32G32B32_FLOAT;
+	vDesc[0].InputSlot            = 0;
+	vDesc[0].AlignedByteOffset    = 0;
+	vDesc[0].InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
+	vDesc[0].InstanceDataStepRate = 0;
+
+	params["type"] = "vertex";
+	params["inputLayoutVector"] = PointerToString(static_cast<void*>(&vDesc));
+
+	ResourceHandle hShader = ResourceTypeManager::GetSingleton().CreateResource(
+		"DX11Shader",
 		"VertexShader.hlsl",
 		NULL,
 		&params);
@@ -23,16 +38,23 @@ void CompileShaders(void)
 	if (!hShader->Load())
 	{
 
-		MessageBox(NULL,
-			vertexShader->GetCompileError().c_str(),
-			"Vertex shader compile error",
-			MB_OK);
+		const std::string &compileError = vertexShader->GetCompileError();
+
+		if (!compileError.empty())
+		{
+			MessageBox(NULL,
+				compileError.c_str(),
+				"Vertex shader compile error",
+				MB_OK);
+		}
 
 	}
 
+	params.clear();
 	params["type"] = "pixel";
 
-	hShader = g_shaderManager.CreateResource(
+	hShader = ResourceTypeManager::GetSingleton().CreateResource(
+		"DX11Shader",
 		"PixelShader.hlsl",
 		NULL,
 		&params);
@@ -49,14 +71,7 @@ void CompileShaders(void)
 
 	}
 
-	g_device.GetImmediateContext()->VSSetShader(
-		vertexShader->GetVertexShader(),
-		NULL,
-		0);
-
-	g_device.GetImmediateContext()->PSSetShader(
-		pixelShader->GetPixelShader(),
-		NULL,
-		0);
+	vertexShader->Use();
+	pixelShader->Use();
 
 }

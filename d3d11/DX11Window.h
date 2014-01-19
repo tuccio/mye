@@ -29,6 +29,8 @@ namespace mye
 			bool Init(void);
 			void ShutDown(void);
 
+			DX11Device& GetDevice(void);
+
 			bool CreateSwapChain(void);
 			bool CreateRenderTargetView(void);
 			bool CreateDepthStencilBuffers(void);

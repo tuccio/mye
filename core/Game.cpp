@@ -1,5 +1,7 @@
 #include "Game.h"
 
+#include <mye/core/Logger.h>
+
 using namespace mye::core;
 
 Game::Game(InputModule *input,
@@ -78,4 +80,9 @@ AudioModule* Game::GetAudioModule(void)
 IScriptModule* Game::GetScriptModule(void)
 {
 	return m_script;
+}
+
+void Game::RuntimeError(const std::string &error)
+{
+	mye::core::Logger::LogErrorOptional(error);
 }

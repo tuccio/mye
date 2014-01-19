@@ -26,6 +26,10 @@ namespace mye
 
 			~DX11Shader(void);
 
+			virtual void Use(void);
+
+			virtual void Destroy(void);
+
 		protected:
 
 			virtual bool LoadImpl(void);

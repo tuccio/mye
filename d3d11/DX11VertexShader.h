@@ -21,8 +21,12 @@ namespace mye
 
 			~DX11VertexShader(void);
 
+			void Use(void);
+
 			ID3D11VertexShader* GetVertexShader(void);
 			std::string GetCompileError(void);
+
+			void Destroy(void);
 
 		protected:
 
@@ -31,11 +35,10 @@ namespace mye
 			size_t CalculateSizeImpl(void);
 
 			ID3D11VertexShader *m_shader;
+			ID3D11InputLayout *m_inputLayout;
 			std::string m_compileError;
-
-		private:
-
 			DX11Device &m_device;
+			
 
 		};
 

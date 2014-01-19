@@ -8,6 +8,7 @@
 
 #include "WindowMenu.h"
 
+#undef IsMaximized
 #undef IsMinimized
 
 namespace mye
@@ -47,9 +48,15 @@ namespace mye
 
 			virtual void Destroy(void);
 
+			virtual bool DispatchCommand(unsigned int id);
+
 			virtual bool Exists(void) const;
 			virtual bool IsVisible(void) const;
 
+			virtual void Maximize(void);
+			virtual bool IsMaximized(void) const;
+
+			virtual void Minimize(void);
 			virtual bool IsMinimized(void) const;
 
 			virtual void Show(void);
@@ -80,6 +87,8 @@ namespace mye
 
 			HDC GetDC(void);
 			bool ReleaseDC(HDC hDC);
+
+			void Update(void);
 
 			bool _Create(DWORD dwExStyle,
 				LPCTSTR lpClassName,

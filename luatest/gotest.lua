@@ -23,15 +23,15 @@ print(hObj2:Exists())
 hObj2.x = 3
 print(hObj2.x)
 
-hObj2:AddComponent(IntComponent("x"))
+hObj2:AddComponent(IntVar("x"))
 hObj2.x = 3
 print(hObj2.x)
 
-hObj2:AddComponent(StringComponent("sup"))
+hObj2:AddComponent(StringVar("sup"))
 hObj2.sup = "sup brah"
 print(hObj2.sup)
 
-hObj2:AddComponent(Vec3Component("position"))
+hObj2:AddComponent(Vec3Var("position"))
 hObj2.position = vec3(0.42141, 0.12219, 0.2131)
 print(hObj2.position)
 
@@ -48,6 +48,14 @@ print(t.translation)
 print(t.rotation)
 print(t.scale)
 
+hObj2:AddComponent(TransformVar("t"))
+
+hObj2.t = t
+
+print(hObj2.t.translation)
+print(hObj2.t.rotation)
+print(hObj2.t.scale)
+
 os.execute("pause")
 
-Windows.FreeConsole()
+Game:Quit()

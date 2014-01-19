@@ -14,11 +14,9 @@ public:
 	~MainWindowListener(void);
 
 	void OnCreate(mye::core::IWindow * window);
-
 	void OnDestroy(mye::core::IWindow * window);
 
-	void OnResize(mye::core::IWindow *window,
-		const Eigen::Vector2i &size);
+	void OnCommand(unsigned int id);
 
 	void OnMenuSelected(mye::win::IDGenerator::ID id);
 

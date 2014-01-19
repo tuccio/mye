@@ -26,6 +26,7 @@ void IWindow::AddListener(Listener *listener)
 
 void IWindow::RemoveListener(Listener *listener)
 {
+
 	auto it = std::find(m_listeners.begin(),
 		m_listeners.end(),
 		listener);
@@ -34,6 +35,7 @@ void IWindow::RemoveListener(Listener *listener)
 	{
 		m_listeners.erase(it);
 	}
+
 }
 
 void IWindow::ClearListeners(void)

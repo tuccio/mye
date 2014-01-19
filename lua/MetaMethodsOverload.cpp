@@ -14,11 +14,15 @@
 
 #define VARIABLE_COMPONENT_CAST_GET_BEGIN(__Type)\
 	if (type == typeid(__Type))\
-		rvalue = object(L, static_cast<VariableComponent<__Type>*>(MYE_LUA_COMPONENT_UNWRAP(component))->Get());
+		rvalue = object(L, boost::ref(static_cast<VariableComponent<__Type>*>(MYE_LUA_COMPONENT_UNWRAP(component))->Get()));
 
 #define VARIABLE_COMPONENT_CAST_GET_BLOCK(__Type)\
 	else if (type == typeid(__Type)) \
 		rvalue = object(L, static_cast<VariableComponent<__Type>*>(MYE_LUA_COMPONENT_UNWRAP(component))->Get());
+
+#define VARIABLE_COMPONENT_CAST_GET_ALIGNED(__Type)\
+	else if (type == typeid(__Type)) \
+		rvalue = object(L, boost::ref(static_cast<VariableComponent<__Type>*>(MYE_LUA_COMPONENT_UNWRAP(component))->Get()));
 
 #define VARIABLE_COMPONENT_CAST_SET_BEGIN(__Type) \
 	if (type == typeid(__Type))\
@@ -34,8 +38,18 @@
 		static_cast<VariableComponent<__Type>*>(MYE_LUA_COMPONENT_UNWRAP(component))->Set(value);\
 	}
 
+#define VARIABLE_COMPONENT_CAST_SET_ALIGNED(__Type) \
+	else if (type == typeid(__Type))\
+	{\
+		__Type aux;\
+		memcpy(&aux, object_cast<__Type*>(object(from_stack(L, 3))), sizeof(__Type));\
+		static_cast<VariableComponent<__Type>*>(MYE_LUA_COMPONENT_UNWRAP(component))->Set(aux);\
+	}
+
 using namespace luabind;
 using namespace mye::core;
+
+
 
 namespace mye
 {
@@ -69,11 +83,7 @@ namespace mye
 					{
 
 						auto component = object_cast<MYE_LUA_COMPONENT_WRAP_TYPE(Component)>(wrappedComponent);
-						object rvalue;
-
-						//static_cast<VariableComponent<mye::core::TransformComponent>*>(component.get());
-						//auto castedComponent = static_cast<VariableComponent<mye::core::TransformComponent>*>(MYE_LUA_COMPONENT_UNWRAP(component));
-						//rvalue = object(L, castedComponent->Get());
+						object rvalue = object(L, boost::ref(static_cast<VariableComponent<mye::core::Transform>*>(component)->Get()));
 
 						if (component)
 						{
@@ -82,6 +92,7 @@ namespace mye
 							{
 
 							case VARIABLE_COMPONENT:
+
 								{
 
 									auto tmp = static_cast<VariableComponent<char>*>(MYE_LUA_COMPONENT_UNWRAP(component));
@@ -93,17 +104,16 @@ namespace mye
 									VARIABLE_COMPONENT_CAST_GET_BLOCK(std::string)
 									VARIABLE_COMPONENT_CAST_GET_BLOCK(Eigen::Vector3f)
 									VARIABLE_COMPONENT_CAST_GET_BLOCK(Eigen::Vector3i)
-									//VARIABLE_COMPONENT_CAST_GET_BLOCK(mye::core::Transform)
-
-									/*
-
-									rvalue = object(L, static_cast<__Type*>((component).get())->Get());
-
-									*/
+									VARIABLE_COMPONENT_CAST_GET_ALIGNED(mye::core::Transform)
 
 								}
-
 								break;
+
+							case TRANSFORM_COMPONENT:
+
+								rvalue = object(L, boost::ref(static_cast<VariableComponent<mye::core::Transform>*>(MYE_LUA_COMPONENT_UNWRAP(component))->Get()));
+								break;
+
 							default:
 								break;
 							}
@@ -161,6 +171,7 @@ namespace mye
 
 					switch (MYE_LUA_COMPONENT_UNWRAP(component)->GetComponentType())
 					{
+
 					case VARIABLE_COMPONENT:
 						{
 
@@ -173,11 +184,19 @@ namespace mye
 							VARIABLE_COMPONENT_CAST_SET_BLOCK(std::string)
 							VARIABLE_COMPONENT_CAST_SET_BLOCK(Eigen::Vector3f)
 							VARIABLE_COMPONENT_CAST_SET_BLOCK(Eigen::Vector3i)
-							//VARIABLE_COMPONENT_CAST_SET_BLOCK(mye::core::Transform)
+							VARIABLE_COMPONENT_CAST_SET_ALIGNED(mye::core::Transform)
 
 						}
 						
 						break;
+
+					case TRANSFORM_COMPONENT:
+						{
+							mye::core::Transform aux;
+							memcpy(&aux, object_cast<mye::core::Transform*>(object(from_stack(L, 3))), sizeof(mye::core::Transform));
+							static_cast<VariableComponent<mye::core::Transform>*>(MYE_LUA_COMPONENT_UNWRAP(component))->Set(aux);
+						}
+
 					default:
 						break;
 					}

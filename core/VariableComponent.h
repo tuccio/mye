@@ -12,6 +12,9 @@ namespace mye
 	{
 
 		template <typename T>
+		class VariableConstraint;
+
+		template <typename T>
 		class VariableComponent :
 			public Component
 		{
@@ -19,18 +22,27 @@ namespace mye
 		public:
 
 			VariableComponent(const std::string &name);
+/*
+			VariableComponent(const std::string &name,
+				const std::vector<VariableConstraint<T>*> &constraints)*/
 			~VariableComponent(void);
 
 			VariableComponent* Clone(void) const;
 
 			virtual std::type_index GetVariableType(void) const;
 
-			T Get(void) const;
+			const T& Get(void) const;
 			void Set(const T &v);
+
+/*
+			void AddConstraint(const VariableConstraint<T>& constraint);
+			bool FitsConstraints(const T &value) const;
+			void ClearConstraints(void);*/
 
 		private:
 
 			T m_variable;
+			//std::vector<VariableConstraint<T>*> m_constraints;
 
 		};
 
@@ -57,7 +69,56 @@ namespace mye
 
 			Transform m_transform;
 
+			template <typename T>
+			class VariableConstraint
+			{
+
+			public:
+
+				virtual bool fits(const T& value) const;
+
+			};
+
+			template <typename T>
+			class InclusiveMaxConstraint
+			{
+
+			public:
+
+				InclusiveMaxConstraint(const T &max);
+
+				bool fits(const T &value) const
+				{
+					return value <= m_max;
+				}
+
+			private:
+
+				T m_max;
+
+			};
+
+			template <typename T>
+			class InclusiveMinConstraint
+			{
+
+			public:
+
+				InclusiveMinConstraint(const T &min);
+
+				bool fits(const T &value) const
+				{
+					return value >= m_min;
+				}
+
+			private:
+
+				T m_min;
+
+			};
+
 		};
+
 
 	}
 

@@ -70,7 +70,21 @@ void WinGame::Run(void)
 
 }
 
-void WinGame::MainWindowListener::OnDestroy(IWindow *window)
+void Quit(void)
 {
 	PostQuitMessage(WM_QUIT);
 }
+
+void WinGame::RuntimeError(const std::string &error)
+{
+	MessageBox(NULL,
+		error.c_str(),
+		"Runtime Error",
+		MB_OK);
+}
+
+void WinGame::MainWindowListener::OnDestroy(IWindow *window)
+{
+	Game::GetSingleton().Quit();
+}
+

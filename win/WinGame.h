@@ -21,11 +21,13 @@ namespace mye
 				mye::core::AudioModule *audio,
 				mye::core::IScriptModule *script);
 
+			~WinGame(void);
+
 			mye::core::IWindow& GetMainWindow(void);
 
 			void Run(void);
 
-			~WinGame(void);
+			void RuntimeError(const std::string &error);
 
 		private:
 

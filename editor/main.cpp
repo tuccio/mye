@@ -3,7 +3,13 @@
 #include <mye/win/Window.h>
 #include <mye/win/Toolbar.h>
 
+#include <mye/d3d11/DX11ShaderManager.h>
+#include <mye/d3d11/DX11BufferManager.h>
+
 #include <mye/core/Logger.h>
+#include <mye/core/GameObjectsModule.h>
+#include <mye/core/MeshManager.h>
+#include <mye/core/ResourceTypeManager.h>
 
 #include "MainWindowListener.h"
 #include "Globals.h"
@@ -15,6 +21,8 @@ using namespace mye::dx11;
 
 void CompileShaders(void);
 
+void UpdateSolution(void);
+
 int CALLBACK WinMain(HINSTANCE hInstance,
 					 HINSTANCE hPrevInstance,
 					 LPSTR lpCmdLine,
@@ -22,6 +30,14 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 {
 
 	Logger logger;
+
+	ResourceTypeManager resourceTypeManager;
+	DX11ShaderManager shaderManager(g_device);
+	DX11BufferManager vertexBufferManager(g_device);
+	MeshManager MeshManager;
+
+	GameObjectsModule gameObjectsModule;
+
 	MainWindowListener mainWindowListener;
 
 	logger.OpenErrorLogFile("error.log");
@@ -42,24 +58,9 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 	g_mainWindow.Create(p);
 	g_mainWindow.SetCaption("mye Editor");
 
-	g_childWindow.CreateChild(g_mainWindow, p);
-
-	g_childWindow.Show();
-	g_mainWindow.Show();
-
-	if (!g_childWindow.Init())
-	{
-
-		MessageBox(NULL,
-			"Error while initiating rendering window\nConsult logs for more details",
-			"Error", MB_OK);
-
-		exit(1);
-
-	}
+	g_mainWindow.Maximize();
 
 	CompileShaders();
-
 
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
@@ -73,11 +74,8 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 			DispatchMessage(&msg);
 		}
 
-		if (g_currentView)
-		{
-			g_currentView->Update();
-			g_currentView->Render();
-		}
+		g_mainWindow.Update();
+		g_mainWindow.Render();
 
 	}
 	while (msg.message != WM_QUIT);

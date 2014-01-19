@@ -1,10 +1,13 @@
 #include "ResourceManager.h"
+#include "ResourceTypeManager.h"
 
 using namespace mye::core;
 
 ResourceManager::ResourceManager(const std::string &type) :
 	m_type(type)
 {
+	ResourceTypeManager::GetSingleton().
+		RegisterResourceManager(type, this);
 }
 
 
@@ -23,7 +26,7 @@ ResourceHandle ResourceManager::CreateResource(const std::string &name,
 
 	if (it != m_resources.end())
 	{
-		_FreeResource(it);
+		return it->second;
 	}
 	
 	ResourceHandle resource(CreateImpl(name, manual, params));

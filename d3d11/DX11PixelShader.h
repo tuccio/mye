@@ -21,8 +21,12 @@ namespace mye
 
 			~DX11PixelShader(void);
 
+			void Use(void);
+
 			ID3D11PixelShader* GetPixelShader(void);
 			std::string GetCompileError(void);
+
+			void Destroy(void);
 
 		private:
 

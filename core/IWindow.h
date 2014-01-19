@@ -30,6 +30,12 @@ namespace mye
 			virtual bool Exists(void) const = 0;
 			virtual bool IsVisible(void) const = 0;
 
+			virtual bool DispatchCommand(unsigned int id) = 0;
+
+			virtual void Maximize(void) = 0;
+			virtual bool IsMaximized(void) const = 0;
+
+			virtual void Minimize(void) = 0;
 			virtual bool IsMinimized(void) const = 0;
 
 			virtual void Show(void) = 0;
@@ -60,6 +66,7 @@ namespace mye
 			void NotifyCreate(void);
 			void NotifyDestroy(void);
 			void NotifyResize(const Eigen::Vector2i &size);
+			void NotifyCommand(unsigned int id);
 			void NotifyUserMessage(unsigned int msg,
 				unsigned long intArg,
 				long *ptrArg);
@@ -95,6 +102,7 @@ namespace mye
 			virtual inline void OnCreate(IWindow *window) { }
 			virtual inline void OnDestroy(IWindow *window) { }
 			virtual inline void OnResize(IWindow *window, const Eigen::Vector2i &size) { }
+			virtual inline void OnCommand(unsigned int id) { }
 			virtual inline void OnUserMessage(IWindow *window,
 				unsigned int msg,
 				unsigned long intArg,

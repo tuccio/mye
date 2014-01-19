@@ -31,9 +31,11 @@ namespace mye
 
 			module(L)
 			[
+
 				class_<Game>(MYE_LUA_GAME).
 
-					def("GetMainWindow", &Game::GetMainWindow)
+					def("GetMainWindow", &Game::GetMainWindow).
+					def("Quit", &Game::Quit)
 
 			];
 

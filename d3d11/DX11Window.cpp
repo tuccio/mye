@@ -3,6 +3,8 @@
 
 #include <mye/core/Logger.h>
 
+#define CLIENTSIZE_MIN 8
+
 using namespace mye::dx11;
 using namespace mye::core;
 
@@ -46,7 +48,14 @@ bool DX11Window::Init(void)
 	}
 
 	Eigen::Vector2i clientSize = GetSize();
+
+	ResizeBuffers(clientSize.x(), clientSize.y());
 	SetViewport(0, 0, clientSize.x(), clientSize.y());
+
+	/*SetViewport(0,
+		0,
+		(clientSize.x() < CLIENTSIZE_MIN ? CLIENTSIZE_MIN : clientSize.x()),
+		(clientSize.y() < CLIENTSIZE_MIN ? CLIENTSIZE_MIN : clientSize.y()));*/
 
 	return true;
 
@@ -136,34 +145,37 @@ bool DX11Window::CreateSwapChain()
 
 	}
 
-	IDXGIDevice* dxgiDevice = 0;
+	IDXGIDevice* dxgiDevice;
+	IDXGIAdapter* dxgiAdapter;
+	IDXGIFactory* dxgiFactory;
 
-	HRESULT hr1 = m_device.GetDevice()->QueryInterface(__uuidof(IDXGIDevice),
-		(void**)&dxgiDevice);
+	bool success = (
+	!HRTESTFAILED(m_device.GetDevice()->
+		QueryInterface(__uuidof(IDXGIDevice),
+			(void**)&dxgiDevice)) &&
 
-	IDXGIAdapter* dxgiAdapter = 0;
-
-	HRESULT hr2 = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), ((void**) &dxgiAdapter));
-
-	IDXGIFactory* dxgiFactory = 0;
-
-	HRESULT hr3 = dxgiAdapter->GetParent(__uuidof(IDXGIFactory), ((void**) &dxgiFactory));
-
-	HRESULT hr4 = dxgiFactory->CreateSwapChain(m_device.GetDevice(),
+		!HRTESTFAILED(dxgiDevice->GetParent(__uuidof(IDXGIAdapter),
+		((void**) &dxgiAdapter))) &&
+		
+		!HRTESTFAILED(dxgiAdapter->GetParent(__uuidof(IDXGIFactory),
+		((void**) &dxgiFactory))) &&
+		
+		!HRTESTFAILED(dxgiFactory->CreateSwapChain(m_device.GetDevice(),
 		&swapDesc,
-		&m_swapChain);
+		&m_swapChain))
+	);
 
 	ReleaseCOM(dxgiDevice);
 	ReleaseCOM(dxgiAdapter);
 	ReleaseCOM(dxgiFactory);
 
-	HRDEBUG(hr1);
-	HRDEBUG(hr2);
-	HRDEBUG(hr3);
-	HRDEBUG(hr4);
+	return success;
 
-	return !(FAILED(hr1) || FAILED(hr2) || FAILED(hr3) || FAILED(hr4));
+}
 
+DX11Device& DX11Window::GetDevice(void)
+{
+	return m_device;
 }
 
 void DX11Window::SetRefreshRate(DXGI_RATIONAL refresh)
@@ -204,10 +216,12 @@ void DX11Window::SetViewport(int x, int y, int width, int height)
 
 	D3D11_VIEWPORT viewPort;
 
-	viewPort.TopLeftX = x;
-	viewPort.TopLeftY = y;
-	viewPort.Width    = width;
-	viewPort.Height   = height;
+	viewPort.MinDepth = 0.0f;
+	viewPort.MaxDepth = 1.0f;
+	viewPort.TopLeftX = (float) x;
+	viewPort.TopLeftY = (float) y;
+	viewPort.Width    = (float) width;
+	viewPort.Height   = (float) height;
 	
 	m_device.GetImmediateContext()->RSSetViewports(1, &viewPort);
 
@@ -218,22 +232,21 @@ bool DX11Window::CreateRenderTargetView(void)
 
 	ID3D11Texture2D *backBuffer;
 
-	HRESULT hr1 = m_swapChain->GetBuffer(
+	bool success = (
+		!HRTESTFAILED(m_swapChain->GetBuffer(
 		0,
 		__uuidof(ID3D11Texture2D),
-		reinterpret_cast<void**>(&backBuffer));
-
-	HRESULT hr2 = m_device.GetDevice()->CreateRenderTargetView(
+		reinterpret_cast<void**>(&backBuffer))) &&
+		
+		!HRTESTFAILED(m_device.GetDevice()->CreateRenderTargetView(
 		backBuffer,
 		0,
-		&m_renderTargetView);
+		&m_renderTargetView))
+	);
 
 	ReleaseCOM(backBuffer);
 
-	HRDEBUG(hr1);
-	HRDEBUG(hr2);
-
-	return !(FAILED(hr1) || FAILED(hr2));
+	return success;
 
 }
 
@@ -263,7 +276,7 @@ bool DX11Window::CreateDepthStencilBuffers(void)
 
 		m_device.GetDevice()->CheckMultisampleQualityLevels(
 			DXGI_FORMAT_R8G8B8A8_UNORM,
-			8,
+			4,
 			&msaa4xQuality);
 
 		depthStencilDesc.SampleDesc.Count   = 4;
@@ -294,18 +307,17 @@ bool DX11Window::CreateDepthStencilBuffers(void)
 
 	}
 
-	HRESULT hr1 = m_device.GetDevice()->CreateTexture2D(&depthStencilDesc,
+	bool success = (
+		!HRTESTFAILED(m_device.GetDevice()->CreateTexture2D(&depthStencilDesc,
 		0,
-		&m_depthStencilBuffer);
-
-	HRESULT hr2 = m_device.GetDevice()->CreateDepthStencilView(m_depthStencilBuffer,
+		&m_depthStencilBuffer)) &&
+		
+		!HRTESTFAILED(m_device.GetDevice()->CreateDepthStencilView(m_depthStencilBuffer,
 		0,
-		&m_depthStencilView);
+		&m_depthStencilView))
+	);
 
-	HRDEBUG(hr1);
-	HRDEBUG(hr2);
-
-	return !(FAILED(hr1) || FAILED(hr2));
+	return success;
 
 }
 

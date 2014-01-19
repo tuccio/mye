@@ -2,6 +2,8 @@
 
 #include <d3d11.h>
 
+#include <mye/core/ColorRGBA.h>
+
 namespace mye
 {
 

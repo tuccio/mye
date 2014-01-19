@@ -19,6 +19,16 @@ DX11Shader::~DX11Shader(void)
 
 }
 
+void DX11Shader::Destroy(void)
+{
+	m_source.clear();
+}
+
+void DX11Shader::Use(void)
+{
+
+}
+
 bool DX11Shader::LoadImpl(void)
 {
 
@@ -37,7 +47,7 @@ bool DX11Shader::LoadImpl(void)
 
 void DX11Shader::UnloadImpl(void)
 {
-	m_source.clear();
+	Destroy();
 }
 
 size_t DX11Shader::CalculateSizeImpl(void)

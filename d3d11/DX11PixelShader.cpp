@@ -20,6 +20,11 @@ DX11PixelShader::~DX11PixelShader(void)
 {
 }
 
+void DX11PixelShader::Use(void)
+{
+	m_device.GetImmediateContext()->PSSetShader(m_shader, NULL, 0);
+}
+
 ID3D11PixelShader* DX11PixelShader::GetPixelShader(void)
 {
 	return m_shader;
@@ -70,8 +75,11 @@ bool DX11PixelShader::LoadImpl(void)
 			success = true;
 		}
 
-		DX11Shader::UnloadImpl();
+	}
 
+	if (!success)
+	{
+		Destroy();
 	}
 
 	return success;
@@ -81,16 +89,23 @@ bool DX11PixelShader::LoadImpl(void)
 void DX11PixelShader::UnloadImpl(void)
 {
 
-	if (m_shader)
-	{
-		ReleaseCOM(m_shader);
-	}
-
-	m_compileError.clear();
+	Destroy();
 
 }
 
 size_t DX11PixelShader::CalculateSizeImpl(void)
 {
 	return 0;
+}
+
+void DX11PixelShader::Destroy(void)
+{
+	
+	if (m_shader)
+	{
+		ReleaseCOM(m_shader);
+	}
+	
+	m_compileError.clear();
+
 }

@@ -14,7 +14,8 @@ namespace mye
 	{
 
 		class DX11ShaderManager :
-			public mye::core::ResourceManager
+			public mye::core::ResourceManager,
+			public mye::core::Singleton<DX11ShaderManager>
 		{
 
 		public:
