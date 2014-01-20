@@ -4,6 +4,7 @@
 #include "DX11Buffer.h"
 
 #include <mye/core/Mesh.h>
+#include <mye/core/Model.h>
 
 namespace mye
 {
@@ -25,8 +26,11 @@ namespace mye
 			~DX11VertexBuffer(void);
 
 			bool Create(mye::core::Mesh *mesh);
+			bool Create(mye::core::Model *model);
 
 			void Bind(void);
+
+			size_t GetVerticesCount(void) const;
 
 		protected:
 
@@ -37,6 +41,7 @@ namespace mye
 		private:
 
 			UINT m_stride;
+			size_t m_vertices;
 
 		};
 

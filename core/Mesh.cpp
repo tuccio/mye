@@ -9,6 +9,9 @@
 
 #include <cassert>
 
+#undef min
+#undef max
+
 using namespace mye::core;
 
 Mesh::Mesh(ResourceManager *resourceManager,
@@ -113,4 +116,40 @@ void Mesh::UnloadImpl(void)
 size_t Mesh::CalculateSizeImpl(void)
 {
 	return m_data.GetSize();
+}
+
+Mesh::VectorPair Mesh::GetMinMaxVertices(void) const
+{
+	
+	Eigen::Vector3f max = Eigen::Vector3f(
+		std::numeric_limits<float>::min(),
+		std::numeric_limits<float>::min(),
+		std::numeric_limits<float>::min()
+		);
+
+	Eigen::Vector3f min = Eigen::Vector3f(
+		std::numeric_limits<float>::max(),
+		std::numeric_limits<float>::max(),
+		std::numeric_limits<float>::max()
+		);
+
+	for (int i = 0; i < m_data.GetVerticesCount(); i++)
+	{
+
+		Eigen::Vector3f x;
+
+		m_data.GetVertexAttribute(
+			i,
+			VertexDeclaration::VDA_POSITION,
+			VertexDeclaration::VDAT_FLOAT3,
+			&x
+			);
+
+		min = min.cwiseMin(x);
+		max = max.cwiseMax(x);
+
+	}
+
+	return VectorPair(min, max);
+
 }

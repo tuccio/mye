@@ -2,11 +2,11 @@
 
 #include "INamedObject.h"
 #include "Lockable.h"
-#include "ManualResourceLoader.h"
 
 #include <unordered_map>
 
 #define MYE_DEFAULT_GROUP ""
+#define MYE_CONTAINS_PARAMETER(__PARAMSLIST, __PARAM) (__PARAMSLIST.find(__PARAM) != __PARAMSLIST.end())
 
 namespace mye
 {
@@ -14,6 +14,7 @@ namespace mye
 	namespace core
 	{
 
+		class ManualResourceLoader;
 		class ResourceManager;
 
 		class Resource :
@@ -53,6 +54,8 @@ namespace mye
 			ParametersList GetParametersList(void) const;
 
 		protected:
+
+			friend class ManualResourceLoader;
 
 			Resource(void);
 

@@ -25,7 +25,7 @@ Model::~Model(void)
 Mesh* Model::AddMesh(void)
 {
 
-	MeshRef meshRef;
+	SubMesh meshRef;
 	meshRef.mesh = new Mesh(NULL, "", NULL);
 	meshRef.resource = false;
 
@@ -40,20 +40,35 @@ Mesh* Model::AddMesh(const std::string &resourceName)
 	ResourceHandle mesh = ResourceTypeManager::GetSingleton().
 		CreateResource("Mesh", resourceName);
 
-	MeshRef meshRef;
+	mesh->Load();
+
+	SubMesh meshRef;
 	meshRef.handle = mesh;
 	meshRef.mesh = NULL;
 	meshRef.resource = true;
 
 	m_meshes.push_back(meshRef);
-	return meshRef.mesh;
 
+	return meshRef.handle.Cast<Mesh>();
+
+}
+
+Mesh* Model::GetMesh(int i)
+{
+	return (m_meshes[i].resource ?
+		m_meshes[i].handle.Cast<Mesh>() :
+		m_meshes[i].mesh);
+}
+
+size_t Model::GetMeshesCount(void) const
+{
+	return m_meshes.size();
 }
 
 void Model::Free(void)
 {
 
-	for (MeshRef& meshRef : m_meshes)
+	for (SubMesh& meshRef : m_meshes)
 	{
 		if (!meshRef.resource)
 		{
@@ -78,6 +93,7 @@ bool Model::LoadImpl(void)
 	if (scene)
 	{
 		AssimpModelLoader modelLoader(scene);
+		loaded = modelLoader.Load(static_cast<Resource*>(this));
 		importer.FreeScene();
 	}
 
@@ -97,14 +113,56 @@ size_t Model::CalculateSizeImpl(void)
 
 	for (auto meshRef : m_meshes)
 	{
-		size += meshRef.mesh->GetSize();
+
+		if (!meshRef.resource)
+		{
+			size += meshRef.mesh->GetSize();
+		}
+		else
+		{
+			size += meshRef.handle.Cast<Mesh>()->GetSize();
+		}
+
 	}
 
 	return size;
 
 }
 
-const Model::MeshList& Model::GetMeshList(void)
+Mesh::VectorPair Model::GetMinMaxVertices(void) const
 {
-	return m_meshes;
+
+	Eigen::Vector3f max = Eigen::Vector3f(
+		std::numeric_limits<float>::min(),
+		std::numeric_limits<float>::min(),
+		std::numeric_limits<float>::min()
+		);
+
+	Eigen::Vector3f min = Eigen::Vector3f(
+		std::numeric_limits<float>::max(),
+		std::numeric_limits<float>::max(),
+		std::numeric_limits<float>::max()
+		);
+
+	for (auto &meshRef : m_meshes)
+	{
+
+		Mesh::VectorPair localMinMax;
+
+		if (!meshRef.resource)
+		{
+			localMinMax = meshRef.mesh->GetMinMaxVertices();
+		}
+		else
+		{
+			localMinMax = meshRef.handle.Cast<Mesh>()->GetMinMaxVertices();
+		}
+
+		min = min.cwiseMin(localMinMax.first);
+		max = max.cwiseMax(localMinMax.second);
+
+	}
+
+	return Mesh::VectorPair(min, max);
+
 }

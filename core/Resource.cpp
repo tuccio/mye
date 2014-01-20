@@ -1,4 +1,5 @@
 #include "Resource.h"
+#include "ManualResourceLoader.h"
 
 using namespace mye::core;
 

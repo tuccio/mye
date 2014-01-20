@@ -1,4 +1,5 @@
 #include "ManualResourceLoader.h"
+#include "Resource.h"
 
 using namespace mye::core;
 
@@ -23,4 +24,9 @@ bool ManualResourceLoader::Prepare(Resource *resource)
 
 void ManualResourceLoader::Unload(Resource *resource)
 {
+}
+
+void ManualResourceLoader::CalculateSize(Resource *resource)
+{
+	resource->m_size = resource->CalculateSizeImpl();
 }

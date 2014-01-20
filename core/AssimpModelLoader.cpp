@@ -32,7 +32,10 @@ bool AssimpModelLoader::Load(Resource *resource)
 	for (int i = 0; i < m_scene->mNumMeshes; i++)
 	{
 		AssimpMeshLoader meshLoader(m_scene->mMeshes[i]);
-		meshLoader.Load(model->AddMesh());
+		Mesh *mesh = model->AddMesh();
+		mesh->SetParametersList(model->GetParametersList());
+		meshLoader.Load(mesh);
+		CalculateSize(mesh);
 	}
 
 	return true;

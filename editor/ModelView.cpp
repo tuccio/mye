@@ -1,6 +1,7 @@
 #include "ModelView.h"
 #include "Globals.h"
 
+#include <mye/core/ManualLambdaLoader.h>
 #include <mye/core/ResourceTypeManager.h>
 
 #include <mye/d3d11/DX11VertexShader.h>
@@ -22,7 +23,6 @@ ModelView::ModelView(mye::dx11::DX11Device &device) :
 	m_device(device),
 	m_initialized(false),
 	m_toolbar(g_mainWindow, true),
-	m_model(NULL, "", &m_modelLoader),
 	m_bgColor(0.12f, 0.12f, 0.12f, 1.0f),
 	m_vbuffer(NULL, "", NULL, device),
 	m_mvpBuffer(NULL, "", NULL, device),
@@ -36,11 +36,6 @@ ModelView::ModelView(mye::dx11::DX11Device &device) :
 ModelView::~ModelView(void)
 {
 	m_vbuffer.Destroy();
-}
-
-mye::core::Model& ModelView::GetModel(void)
-{
-	return m_model;
 }
 
 void ModelView::Activate(void)
@@ -79,21 +74,41 @@ void ModelView::Activate(void)
 			ofn.hwndOwner       = g_mainWindow.GetHandle();
 			ofn.lpstrFile       = buffer;
 			ofn.nMaxFile        = sizeof(buffer);
-			ofn.lpstrFilter     = "Wavefront OBJ\0*.obj";
+			ofn.lpstrFilter     = "Wavefront OBJ\0*.obj\0\03DS Max\0*.3ds;*.max\0\0";
 			ofn.nFilterIndex    = 1;
 			ofn.lpstrFileTitle  = NULL;
 			ofn.nMaxFileTitle   = 0;
 			ofn.lpstrInitialDir = NULL;
 			ofn.Flags           = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
-			GetOpenFileName(&ofn);
+			if (GetOpenFileName(&ofn))
+			{
 
-			ResourceHandle hMesh = ResourceTypeManager::GetSingleton().
-				CreateResource("Mesh", buffer);
+				if (m_model)
+				{
+					m_model->Unload();
+					m_model.Release();
+				}
 
-			hMesh.get()->Load();
+				Resource::ParametersList params;
 
-			this->GetModel().AddMesh(hMesh.get()->GetName());
+				params["normals"] = "false";
+				params["texcoords"] = "false";
+
+				m_model = ResourceTypeManager::GetSingleton().
+					CreateResource("Model", buffer, NULL, &params);
+
+				m_model->Load();
+
+				Model *model = m_model.Cast<Model>();
+
+				m_vbuffer.Destroy();
+				m_vbuffer.Create(model);
+
+				/*
+				auto minmax = model->GetMinMaxVertices();
+				AABB aabb(minmax.first, minmax.second);*/
+			}
 
 		},
 			"Open");
@@ -108,48 +123,124 @@ void ModelView::Activate(void)
 
 		m_initialized = true;
 
-		m_camera.LookAt(Eigen::Vector3f(0, 0, 0),
+		m_camera.LookAt(
+			Eigen::Vector3f(0.0f, 0.0f, -2.0f),
 			Eigen::Vector3f(0.0f, 1.0f, 0.0f),
 			Eigen::Vector3f(0.0f, 0.0f, 1.0f));
 
 		m_camera.UpdateView();
+		m_camera.UpdateProjection();
 
-		VertexDeclaration decl;
-		decl.AddAttribute(VertexDeclaration::VDA_POSITION,
-			VertexDeclaration::VDAT_FLOAT3);
-
-		Mesh *triangle = m_model.AddMesh();
-		triangle->Allocate(decl, 1);
-
-		DirectX::XMFLOAT3 vertices[3] = {
-			DirectX::XMFLOAT3(0, 0, 2.0f),
-			DirectX::XMFLOAT3(0, 2.0f, 2.0f),
-			DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f)
-		};
-
-		triangle->SetVertexAttribute(
-			0,
-			0,
-			VertexDeclaration::VDA_POSITION,
-			VertexDeclaration::VDAT_FLOAT3,
-			&vertices[0]);
-
-		triangle->SetVertexAttribute(
-			0,
-			1,
-			VertexDeclaration::VDA_POSITION,
-			VertexDeclaration::VDAT_FLOAT3,
-			&vertices[1]);
-
-		triangle->SetVertexAttribute(
-			0,
-			2,
-			VertexDeclaration::VDA_POSITION,
-			VertexDeclaration::VDAT_FLOAT3,
-			&vertices[2]);
-
-		m_vbuffer.Create(triangle);
 		m_mvpBuffer.Create(sizeof(float) * 16, Eigen::Matrix4f(Eigen::Matrix4f::Identity()).data());
+
+
+		ManualLambdaLoader triangleMeshLoader(
+			[this](Resource *resource)->bool
+		{
+
+			VertexDeclaration decl;
+			decl.AddAttribute(VertexDeclaration::VDA_POSITION,
+				VertexDeclaration::VDAT_FLOAT3);
+
+			Mesh *triangle = static_cast<Mesh*>(resource);
+
+			if (!triangle)
+			{
+				return false;
+			}
+
+			triangle->Allocate(decl, 1);
+
+			DirectX::XMFLOAT3 vertices[3] = {
+				DirectX::XMFLOAT3(0, 0, 2.0f),
+				DirectX::XMFLOAT3(0, 2.0f, 2.0f),
+				DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f)
+			};
+
+			triangle->SetVertexAttribute(
+				0,
+				0,
+				VertexDeclaration::VDA_POSITION,
+				VertexDeclaration::VDAT_FLOAT3,
+				&vertices[0]);
+
+			triangle->SetVertexAttribute(
+				0,
+				1,
+				VertexDeclaration::VDA_POSITION,
+				VertexDeclaration::VDAT_FLOAT3,
+				&vertices[1]);
+
+			triangle->SetVertexAttribute(
+				0,
+				2,
+				VertexDeclaration::VDA_POSITION,
+				VertexDeclaration::VDAT_FLOAT3,
+				&vertices[2]);
+
+			return true;
+
+		},
+			[](Resource *resource)->bool
+		{
+			return true;
+		},
+			[](Resource *resource)->void
+		{
+
+			Mesh *triangle = static_cast<Mesh*>(resource);
+
+			if (triangle)
+			{
+				triangle->Free();
+			}
+
+		}
+			);
+
+		ManualLambdaLoader triangleModelLoader(
+				[this](Resource *resource)->bool
+			{
+
+				Model *model = static_cast<Model*>(resource);
+
+				if (!model)
+				{
+					return false;
+				}
+
+				model->AddMesh("ModelViewTriangle");
+
+				return true;
+
+			},
+				[](Resource *resource)->bool
+			{
+				return true;
+			},
+				[](Resource *resource)->void
+			{
+
+				Model *model = static_cast<Model*>(resource);
+
+				if (model)
+				{
+					model->Free();
+				}
+
+			}
+			);
+
+		ResourceTypeManager::GetSingleton().
+			CreateResource("Mesh", "ModelViewTriangle", &triangleMeshLoader);
+
+		m_model = ResourceTypeManager::GetSingleton().
+			CreateResource("Model", "ModelViewModel", &triangleModelLoader);
+
+		m_model->Load();
+
+		Model *model = m_model.Cast<Model>();
+		m_vbuffer.Create(model);
 
 	}
 
@@ -215,23 +306,17 @@ void ModelView::Render(void)
 		1,
 		0);
 
-	const Model::MeshList &meshList = m_model.GetMeshList();
-
-	ID3D11Buffer *buffer = m_vbuffer.GetBuffer();
-
 	UINT stride = sizeof(float) * 3;
 	UINT offset = 0;
 
 	m_mvpBuffer.Bind(PIPELINE_VERTEX_SHADER, 0);
 
-	Eigen::Matrix4f mvp = m_transform * m_camera.GetViewProjectionMatrix();
+	Eigen::Matrix4f mvp = m_camera.GetViewProjectionMatrix() * m_transform;
 	m_mvpBuffer.SetData(reinterpret_cast<const void*>(mvp.data()));
 
 	m_vbuffer.Bind();
 
-	/*context->IASetVertexBuffers(0, 1, &buffer, &stride, &offset);
-	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);*/
-	context->Draw(3, 0);
+	context->Draw(m_vbuffer.GetVerticesCount(), 0);
 
 	m_window.GetSwapChain()->Present(1, 0);
 
@@ -240,4 +325,9 @@ void ModelView::Render(void)
 mye::dx11::DX11Window& ModelView::GetWindow(void)
 {
 	return m_window;
+}
+
+void ModelView::UpdateBuffer(void)
+{
+
 }

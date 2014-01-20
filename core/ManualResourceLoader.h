@@ -20,6 +20,10 @@ namespace mye
 			virtual bool Prepare(Resource *resource);
 			virtual void Unload(Resource *resource);
 
+		protected:
+
+			void CalculateSize(Resource *Resource);
+
 		};
 
 	}

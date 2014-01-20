@@ -18,15 +18,6 @@ namespace mye
 
 		public:
 
-			struct MeshRef
-			{
-				ResourceHandle handle;
-				Mesh *mesh;
-				bool resource;
-			};
-
-			typedef std::vector<MeshRef> MeshList;
-
 			Model(ResourceManager *owner,
 				const std::string &name,
 				ManualResourceLoader *manual);
@@ -36,11 +27,23 @@ namespace mye
 			Mesh* AddMesh(void);
 			Mesh* AddMesh(const std::string &resourceName);
 
-			const MeshList& GetMeshList(void);
+			Mesh* GetMesh(int i);
+			size_t GetMeshesCount(void) const;
 
 			void Free(void);
 
+			Mesh::VectorPair GetMinMaxVertices(void) const;
+
 		protected:
+
+			struct SubMesh
+			{
+				ResourceHandle handle;
+				Mesh *mesh;
+				bool resource;
+			};
+
+			typedef std::vector<SubMesh> MeshList;
 
 			bool LoadImpl(void);
 			void UnloadImpl(void);

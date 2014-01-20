@@ -83,6 +83,7 @@ namespace mye
 		const Eigen::Matrix4f Camera::GetViewProjectionMatrix(void) const
 		{
 			return m_viewMatrix * m_projectionMatrix;
+			//return m_projectionMatrix * m_viewMatrix;
 		}
 
 	}

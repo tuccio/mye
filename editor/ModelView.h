@@ -23,8 +23,6 @@ public:
 	ModelView(mye::dx11::DX11Device &device);
 	~ModelView(void);
 
-	mye::core::Model& GetModel(void);
-
 	void Activate(void);
 	void Deactivate(void);
 
@@ -40,6 +38,8 @@ public:
 
 private:
 
+	void UpdateBuffer(void);
+
 	/* View members */
 
 	mye::dx11::DX11Window m_window;
@@ -54,7 +54,7 @@ private:
 	/* Content members */
 
 	mye::core::AssimpModelLoader m_modelLoader;
-	mye::core::Model m_model;
+	mye::core::ResourceHandle m_model;
 	Eigen::Matrix4f m_transform;
 	mye::dx11::DX11VertexBuffer m_vbuffer;
 

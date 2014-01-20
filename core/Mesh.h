@@ -2,6 +2,8 @@
 
 #include "VertexData.h"
 #include "Resource.h"
+#include <Eigen/Eigen>
+#include <utility>
 
 namespace mye
 {
@@ -14,6 +16,8 @@ namespace mye
 		{
 
 		public:
+
+			typedef std::pair<Eigen::Vector3f, Eigen::Vector3f> VectorPair;
 
 			Mesh(ResourceManager *resourceManager,
 				const std::string &name,
@@ -45,6 +49,8 @@ namespace mye
 				VertexDeclaration::AttributeSemantic semantic,
 				VertexDeclaration::AttributeType type,
 				void *data) const;
+
+			VectorPair GetMinMaxVertices(void) const;
 
 		protected:
 

@@ -33,8 +33,16 @@ bool AssimpMeshLoader::Load(Resource *resource)
 		return false;
 	}
 
-	bool normals = m_mesh->HasNormals();
-	bool texcoords = m_mesh->HasTextureCoords(0);
+	Resource::ParametersList params = mesh->GetParametersList();
+
+	bool normals = m_mesh->HasNormals() &&
+		MYE_CONTAINS_PARAMETER(params, "normals") &&
+		params["normals"] == "true";
+
+	bool texcoords = m_mesh->HasTextureCoords(0) &&
+		MYE_CONTAINS_PARAMETER(params, "texcoords") &&
+		params["texcoords"] == "true";
+
 	//int colorChannels = mesh->GetNumColorChannels();
 
 	VertexDeclaration vDecl;
@@ -105,6 +113,8 @@ bool AssimpMeshLoader::Load(Resource *resource)
 		}
 
 	}
+
+	CalculateSize(mesh);
 
 	return true;
 

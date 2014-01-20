@@ -28,6 +28,17 @@ namespace mye
 				return static_cast<T*>(get());
 			}
 
+			template <typename T>
+			const T* Cast(void) const
+			{
+				return static_cast<const T*>(get());
+			}
+			
+			inline void Release(void)
+			{
+				reset();
+			}
+
 		};
 
 	}

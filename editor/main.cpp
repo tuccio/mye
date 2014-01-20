@@ -9,6 +9,7 @@
 #include <mye/core/Logger.h>
 #include <mye/core/GameObjectsModule.h>
 #include <mye/core/MeshManager.h>
+#include <mye/core/ModelManager.h>
 #include <mye/core/ResourceTypeManager.h>
 
 #include "MainWindowListener.h"
@@ -34,7 +35,8 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 	ResourceTypeManager resourceTypeManager;
 	DX11ShaderManager shaderManager(g_device);
 	DX11BufferManager vertexBufferManager(g_device);
-	MeshManager MeshManager;
+	MeshManager meshManager;
+	ModelManager modelManager;
 
 	GameObjectsModule gameObjectsModule;
 
