@@ -311,7 +311,10 @@ void ModelView::Render(void)
 
 	m_mvpBuffer.Bind(PIPELINE_VERTEX_SHADER, 0);
 
-	Eigen::Matrix4f mvp = m_camera.GetViewProjectionMatrix() * m_transform;
+	Eigen::Matrix4f mvp = m_camera.GetProjectionMatrix() *
+		m_camera.GetViewMatrix() *
+		m_transform;
+
 	m_mvpBuffer.SetData(reinterpret_cast<const void*>(mvp.data()));
 
 	m_vbuffer.Bind();

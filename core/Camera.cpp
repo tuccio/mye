@@ -125,25 +125,24 @@ void Camera::UpdateView(void)
 	float twoWX = 2 * m_orientation.w() * m_orientation.x();
 
 	m_viewMatrix(0, 0) = 1 - twoYSquared - twoZSquared;
-	m_viewMatrix(0, 1) = twoXY + twoWZ;
-	m_viewMatrix(0, 2) = twoXZ - twoWY;
-	m_viewMatrix(1, 0) = twoXY - twoWZ;
+	m_viewMatrix(0, 2) = twoXZ + twoWY;
+	m_viewMatrix(0, 1) = twoXY - twoWZ;
+	m_viewMatrix(0, 3) = - Eigen::Vector3f(m_viewMatrix(0, 0),
+		m_viewMatrix(0, 1),
+		m_viewMatrix(0, 2)).dot(m_position);
+
+	m_viewMatrix(1, 0) = twoXY + twoWZ;
 	m_viewMatrix(1, 1) = 1 - twoXSquared - twoZSquared;
-	m_viewMatrix(1, 2) = twoYZ + twoWX;
-	m_viewMatrix(2, 0) = twoXZ + twoWY;
-	m_viewMatrix(2, 1) = twoYZ - twoWX;
-	m_viewMatrix(2, 2) = 1 - twoXSquared - twoYSquared;
-
-	m_viewMatrix(3, 0) = - Eigen::Vector3f(m_viewMatrix(0, 0),
-		m_viewMatrix(1, 0),
-		m_viewMatrix(2, 0)).dot(m_position);
-
-	m_viewMatrix(3, 1) = - Eigen::Vector3f(m_viewMatrix(0, 1),
+	m_viewMatrix(1, 2) = twoYZ - twoWX;
+	m_viewMatrix(1, 3) = - Eigen::Vector3f(m_viewMatrix(1, 0),
 		m_viewMatrix(1, 1),
-		m_viewMatrix(2, 1)).dot(m_position);
+		m_viewMatrix(1, 2)).dot(m_position);
 
-	m_viewMatrix(3, 2) = - Eigen::Vector3f(m_viewMatrix(0, 2),
-		m_viewMatrix(1, 2),
+	m_viewMatrix(2, 0) = twoXZ - twoWY;
+	m_viewMatrix(2, 1) = twoYZ + twoWX;
+	m_viewMatrix(2, 2) = 1 - twoXSquared - twoYSquared;
+	m_viewMatrix(2, 3) = - Eigen::Vector3f(m_viewMatrix(2, 0),
+		m_viewMatrix(2, 1),
 		m_viewMatrix(2, 2)).dot(m_position);
 
 }
@@ -214,7 +213,7 @@ void Camera::UpdateProjection(void)
 	m_projectionMatrix(0, 0) = xScale;
 	m_projectionMatrix(1, 1) = yScale;
 	m_projectionMatrix(2, 2) = m_farClipDistance * invDepth;
-	m_projectionMatrix(2, 3) = 1;
-	m_projectionMatrix(3, 2) = - m_nearClipDistance * m_farClipDistance * invDepth;
+	m_projectionMatrix(2, 3) = - m_nearClipDistance * m_farClipDistance * invDepth;
+	m_projectionMatrix(3, 2) = 1;
 
 }

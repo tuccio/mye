@@ -1,3 +1,6 @@
+#include <cassert>
+#define __MYE_MATRIX_ACCESS(__MATRIX, __COLS, __I, __J) (*(__MATRIX + ((__COLS) * (__I) + (__J))))
+
 namespace mye
 {
 	namespace math
@@ -11,10 +14,21 @@ namespace mye
 
 			Matrix(void);
 
+			void Fill(T x);
+
 			inline T& operator() (int i, int j);
 			inline const T& operator() (int i, int j) const;
 
-		protected:
+			template <int N>
+			Matrix<T, ROWS, N> operator* (const Matrix<T, COLS, N> &b);
+
+			Matrix<T, ROWS, COLS> operator+ (const Matrix<T, ROWS, COLS> &b);
+			Matrix<T, ROWS, COLS> operator- (const Matrix<T, ROWS, COLS> &b);
+
+			inline T* Data(void);
+			inline const T* Data(void) const;
+
+		private:
 
 			T m_data[ROWS * COLS];
 

@@ -53,7 +53,6 @@ namespace mye
 
 			inline const Eigen::Matrix4f& GetViewMatrix(void) const;
 			inline const Eigen::Matrix4f& GetProjectionMatrix(void) const;
-			inline const Eigen::Matrix4f GetViewProjectionMatrix(void) const;
 
 		private:
 
@@ -78,12 +77,6 @@ namespace mye
 		const Eigen::Matrix4f& Camera::GetProjectionMatrix(void) const
 		{
 			return m_projectionMatrix;
-		}
-
-		const Eigen::Matrix4f Camera::GetViewProjectionMatrix(void) const
-		{
-			return m_viewMatrix * m_projectionMatrix;
-			//return m_projectionMatrix * m_viewMatrix;
 		}
 
 	}
