@@ -88,7 +88,7 @@ void SceneView::Render(void)
 
 	m_device.GetImmediateContext()->ClearRenderTargetView(
 		m_window.GetRenderTargetView(),
-		m_bgColor.GetData());
+		m_bgColor.Data());
 
 	m_device.GetImmediateContext()->ClearDepthStencilView(
 		m_window.GetDepthStencilView(),

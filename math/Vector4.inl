@@ -105,6 +105,17 @@ namespace mye
 		}
 
 		template <typename T>
+		Matrix<T, 4, 1> Matrix<T, 4, 1>::operator- (void) const
+		{
+			return Matrix<T, 4, 1>(
+				- m_data[0],
+				- m_data[1],
+				- m_data[2],
+				- m_data[3]
+			);
+		}
+
+		template <typename T>
 		inline Matrix<T, 4, 1> Matrix<T, 4, 1>::operator/ (const Matrix<T, 4, 1> &v) const
 		{
 			return Matrix<T, 4, 1>(

@@ -13,12 +13,12 @@ namespace mye
 			float twoXSquared = 2 * q.x() * q.x();
 			float twoYSquared = 2 * q.y() * q.y();
 			float twoZSquared = 2 * q.z() * q.z();
-			float twoXY = 2 * q.x() * q.y();
-			float twoWZ = 2 * q.w() * q.z();
-			float twoXZ = 2 * q.x() * q.z();
-			float twoWY = 2 * q.w() * q.y();
-			float twoYZ = 2 * q.y() * q.z();
-			float twoWX = 2 * q.w() * q.x();
+			float twoXY       = 2 * q.x() * q.y();
+			float twoWZ       = 2 * q.w() * q.z();
+			float twoXZ       = 2 * q.x() * q.z();
+			float twoWY       = 2 * q.w() * q.y();
+			float twoYZ       = 2 * q.y() * q.z();
+			float twoWX       = 2 * q.w() * q.x();
 
 			r(0, 0) = T(1) - twoYSquared - twoZSquared;
 			r(0, 1) = twoXY - twoWZ;
@@ -45,12 +45,12 @@ namespace mye
 			float twoXSquared = 2 * q.x() * q.x();
 			float twoYSquared = 2 * q.y() * q.y();
 			float twoZSquared = 2 * q.z() * q.z();
-			float twoXY = 2 * q.x() * q.y();
-			float twoWZ = 2 * q.w() * q.z();
-			float twoXZ = 2 * q.x() * q.z();
-			float twoWY = 2 * q.w() * q.y();
-			float twoYZ = 2 * q.y() * q.z();
-			float twoWX = 2 * q.w() * q.x();
+			float twoXY       = 2 * q.x() * q.y();
+			float twoWZ       = 2 * q.w() * q.z();
+			float twoXZ       = 2 * q.x() * q.z();
+			float twoWY       = 2 * q.w() * q.y();
+			float twoYZ       = 2 * q.y() * q.z();
+			float twoWX       = 2 * q.w() * q.x();
 
 			r(0, 0) = T(1) - twoYSquared - twoZSquared;
 			r(0, 1) = twoXY - twoWZ;

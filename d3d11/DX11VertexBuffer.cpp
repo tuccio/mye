@@ -159,7 +159,6 @@ void DX11VertexBuffer::Bind(void)
 {
 	UINT offset = 0;
 	m_device.GetImmediateContext()->IASetVertexBuffers(0, 1, &m_buffer, &m_stride, &offset);
-	m_device.GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 size_t DX11VertexBuffer::GetVerticesCount(void) const

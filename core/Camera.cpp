@@ -15,8 +15,8 @@ Camera::Camera(void) :
 
 	SetFrustum(90.0f, 1.0f, 1.0f, 100.0f);
 
-	m_viewMatrixUptodate       = true;
-	m_projectionMatrixUptodate = true;
+	m_viewMatrixUptodate       = false;
+	m_projectionMatrixUptodate = false;
 
 }
 

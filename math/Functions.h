@@ -27,9 +27,63 @@ namespace mye
 		}
 
 		template <typename T>
+		inline T Min(T a, T b, T c)
+		{
+			if (a < b)
+			{
+				if (a < c)
+				{
+					return a;
+				}
+				else
+				{
+					return c;
+				}
+			}
+			else
+			{
+				if (b < c)
+				{
+					return b;
+				}
+				else
+				{
+					return c;
+				}
+			}
+		}
+
+		template <typename T>
 		inline T Max(T a, T b)
 		{
 			return (a > b ? a : b);
+		}
+
+		template <typename T>
+		inline T Max(T a, T b, T c)
+		{
+			if (a > b)
+			{
+				if (a > c)
+				{
+					return a;
+				}
+				else
+				{
+					return c;
+				}
+			}
+			else
+			{
+				if (b > c)
+				{
+					return b;
+				}
+				else
+				{
+					return c;
+				}
+			}
 		}
 
 	}

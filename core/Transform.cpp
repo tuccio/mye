@@ -43,7 +43,8 @@ mye::math::Matrix4f Transform::GetMatrix(void) const
 	T(1, 3) = m_translation.y();
 	T(2, 3) = m_translation.z();
 
-	return S * R * T;
+	//return S * R * T;
+	return T * R * S;
 }
 
 const mye::math::Vector3f& Transform::GetScale(void) const

@@ -21,40 +21,17 @@ namespace mye
 
 			~ColorRGB(void);
 
-			inline const float* GetData(void) const
-			{
-				return m_data;
-			}
+			inline const float* Data(void) const;
+			inline float* Data(void);
 
-			inline float& r(void)
-			{
-				return m_data[0];
-			}
+			inline const float& r(void) const;
+			inline float& r(void);
 
-			inline const float& r(void) const
-			{
-				return m_data[0];
-			}
+			inline const float& g(void) const;
+			inline float& g(void);
 
-			inline float& g(void)
-			{
-				return m_data[1];
-			}
-
-			inline const float& g(void) const
-			{
-				return m_data[1];
-			}
-
-			inline float& b(void)
-			{
-				return m_data[2];
-			}
-
-			inline const float& b(void) const
-			{
-				return m_data[2];
-			}
+			inline const float& b(void) const;
+			inline float& b(void);
 
 		private:
 
@@ -65,3 +42,5 @@ namespace mye
 	}
 
 }
+
+#include "ColorRGB.inl"

@@ -34,6 +34,8 @@ namespace mye
 
 			inline Matrix<T, 3, 1> operator* (T x) const;
 
+			inline Matrix<T, 3, 1> operator- (void) const;
+
 			inline Matrix<T, 3, 1>& Normalize(void);
 			inline Matrix<T, 3, 1> Normalized(void) const;
 			inline T Length(void) const;

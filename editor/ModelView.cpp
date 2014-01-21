@@ -3,6 +3,7 @@
 
 #include <mye/core/ManualLambdaLoader.h>
 #include <mye/core/ResourceTypeManager.h>
+#include <mye/core/Transform.h>
 
 #include <mye/d3d11/DX11VertexShader.h>
 #include <mye/d3d11/DX11Utils.h>
@@ -106,9 +107,26 @@ void ModelView::Activate(void)
 				m_vbuffer.Destroy();
 				m_vbuffer.Create(model);
 
-				/*
 				auto minmax = model->GetMinMaxVertices();
-				AABB aabb(minmax.first, minmax.second);*/
+				AABB aabb(minmax.first, minmax.second);
+
+				Vector3f halfExtents = aabb.GetHalfExtents();
+				float scale = 1.0f / (2.0f * Max(halfExtents.x(), halfExtents.y()));
+
+				Vector3f center = aabb.GetCenter();
+
+				Matrix4f S(1.0f);
+				S(0, 0) = scale;
+				S(1, 1) = scale;
+				S(2, 2) = scale;
+
+				Matrix4f T(1.0f);
+				T(0, 3) = - center.x();
+				T(1, 3) = - center.y();
+				T(2, 3) = - center.z();
+
+				m_transform = S * T;
+
 			}
 
 		},
@@ -125,10 +143,15 @@ void ModelView::Activate(void)
 		m_initialized = true;
 
 		m_camera.LookAt(
-			Vector3f(2.0f, 1.0f, -10.0f),
+			Vector3f(0.0f, 0.0f, -2.0f),
 			Vector3f(0.0f, 1.0f, 0.0f),
-			Vector3f(0.0f, 0.0f, 1.0f));
+			Vector3f(0.0f, 0.0f, 0.0f));
 
+		m_camera.SetNearClipDistance(0.1f);
+
+		m_mvpBuffer.Create(sizeof(float) * 16, Matrix4f(1.0f).Data());
+
+/*
 		m_camera.UpdateView();
 		m_camera.UpdateProjection();
 
@@ -240,7 +263,7 @@ void ModelView::Activate(void)
 		m_model->Load();
 
 		Model *model = m_model.Cast<Model>();
-		m_vbuffer.Create(model);
+		m_vbuffer.Create(model);*/
 
 	}
 
@@ -298,7 +321,7 @@ void ModelView::Render(void)
 
 	context->ClearRenderTargetView(
 		m_window.GetRenderTargetView(),
-		m_bgColor.GetData());
+		m_bgColor.Data());
 
 	context->ClearDepthStencilView(
 		m_window.GetDepthStencilView(),
@@ -311,14 +334,15 @@ void ModelView::Render(void)
 
 	m_mvpBuffer.Bind(PIPELINE_VERTEX_SHADER, 0);
 
-	Matrix4f mvp = m_camera.GetViewMatrix()*
-		m_camera.GetProjectionMatrix() *
-		m_transform;
+	Matrix4f mvp = m_transform *
+		m_camera.GetViewMatrix() *
+		m_camera.GetProjectionMatrix();
 
 	m_mvpBuffer.SetData(reinterpret_cast<const void*>(mvp.Data()));
 
 	m_vbuffer.Bind();
 
+	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	context->Draw(m_vbuffer.GetVerticesCount(), 0);
 
 	m_window.GetSwapChain()->Present(1, 0);

@@ -101,6 +101,15 @@ namespace mye
 		}
 
 		template <typename T>
+		Matrix<T, 2, 1> Matrix<T, 2, 1>::operator- (void) const
+		{
+			return Matrix<T, 2, 1>(
+				- m_data[0],
+				- m_data[1]
+				);
+		}
+
+		template <typename T>
 		Matrix<T, 2, 1>& Matrix<T, 2, 1>::Normalize(void)
 		{
 			T invNorm = T(1) / Length();
