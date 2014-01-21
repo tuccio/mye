@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Eigen/Eigen>
+#include <mye/math/Math.h>
 #include <vector>
 
 namespace mye
@@ -27,24 +27,24 @@ namespace mye
 			};
 
 			AABB(void);
-			AABB::AABB(const Eigen::Vector3f &min,
-				const Eigen::Vector3f &max);
+			AABB::AABB(const mye::math::Vector3f &min,
+				const mye::math::Vector3f &max);
 			~AABB(void);
 
-			Eigen::Vector3f GetCenter(void) const;
-			Eigen::Vector3f GetHalfExtents(void) const;
+			mye::math::Vector3f GetCenter(void) const;
+			mye::math::Vector3f GetHalfExtents(void) const;
 
-			Eigen::Vector3f GetMinimum(void) const;
-			Eigen::Vector3f GetMaximum(void) const;
+			mye::math::Vector3f GetMinimum(void) const;
+			mye::math::Vector3f GetMaximum(void) const;
 
-			std::vector<Eigen::Vector3f> GetCorners(void) const;
+			std::vector<mye::math::Vector3f> GetCorners(void) const;
 
-			AABB TransformAffine(const Eigen::Matrix4f &t);
+			AABB TransformAffine(const mye::math::Matrix4f &t);
 
 		private:
 
-			Eigen::Vector3f m_min;
-			Eigen::Vector3f m_max;
+			mye::math::Vector3f m_min;
+			mye::math::Vector3f m_max;
 
 		};
 

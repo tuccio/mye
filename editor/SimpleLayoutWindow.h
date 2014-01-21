@@ -23,14 +23,14 @@ public:
 	mye::win::Toolbar* GetToolbar(void);
 	void SetToolbar(mye::win::Toolbar *toolbar);
 
-	Eigen::Vector2i GetScreenSplits(void) const;
+	mye::math::Vector2i GetScreenSplits(void) const;
 	void SetSplitScreen(int x, int y);
 
 	View* GetSplitView(int i, int j) const;
 	void SetSplitView(int i, int j, View *view);
 
-	Eigen::Vector2i GetSplitPosition(int i, int j);
-	Eigen::Vector2i GetSplitSize(int i, int j);
+	mye::math::Vector2i GetSplitPosition(int i, int j);
+	mye::math::Vector2i GetSplitSize(int i, int j);
 
 	void Update(void);
 	void Render(void);
@@ -39,10 +39,10 @@ public:
 
 private:
 
-	Eigen::Vector2i _ComputeSplitPosition(int i, int j);
-	Eigen::Vector2i _ComputeSplitSize(int i, int j);
+	mye::math::Vector2i _ComputeSplitPosition(int i, int j);
+	mye::math::Vector2i _ComputeSplitSize(int i, int j);
 
-	Eigen::Vector2i m_splits;
+	mye::math::Vector2i m_splits;
 	ViewsList m_views;
 	mye::win::Toolbar *m_toolbar;
 
@@ -52,7 +52,7 @@ private:
 
 	public:
 
-		void OnResize(IWindow *window, const Eigen::Vector2i &size)
+		void OnResize(IWindow *window, const mye::math::Vector2i &size)
 		{
 			static_cast<SimpleLayoutWindow*>(window)->ResizeViews();
 		}

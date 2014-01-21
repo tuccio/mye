@@ -143,6 +143,18 @@ namespace mye
 		}
 
 		template <typename T>
+		T& Quaternion<T>::operator[] (int i)
+		{
+			return m_data[i];
+		}
+
+		template <typename T>
+		const T& Quaternion<T>::operator[] (int i) const
+		{
+			return m_data[i];
+		}
+
+		template <typename T>
 		T& Quaternion<T>::x(void)
 		{
 			return m_data[0];

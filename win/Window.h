@@ -3,7 +3,7 @@
 #include <mye/core/IWindow.h>
 #include <mye/core/Singleton.h>
 
-#include <Eigen/Eigen>
+#include <mye/math/Math.h>
 #include <Windows.h>
 
 #include "WindowMenu.h"
@@ -68,11 +68,11 @@ namespace mye
 			virtual void SetCaption(const std::string &caption);
 			virtual std::string GetCaption(void) const;
 
-			virtual void SetSize(const Eigen::Vector2i &size);
-			virtual Eigen::Vector2i GetSize(void) const;
+			virtual void SetSize(const mye::math::Vector2i &size);
+			virtual mye::math::Vector2i GetSize(void) const;
 
-			virtual void SetPosition(const Eigen::Vector2i &position);
-			virtual Eigen::Vector2i GetPosition(void) const;
+			virtual void SetPosition(const mye::math::Vector2i &position);
+			virtual mye::math::Vector2i GetPosition(void) const;
 
 			void AttachMenu(WindowMenu *menu);
 			void _CreateMenu(WindowMenu *menu, HMENU hMenu);

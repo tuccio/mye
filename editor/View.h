@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Eigen/Eigen>
+#include <mye/math/Math.h>
 #include <mye/core/IWindow.h>
 
 class View
@@ -14,19 +14,19 @@ public:
 	virtual void Activate(void) { }
 	virtual void Deactivate(void) { }
 
-	virtual Eigen::Vector2i GetPosition(void) const;
-	virtual void SetPosition(const Eigen::Vector2i &position);
+	virtual mye::math::Vector2i GetPosition(void) const;
+	virtual void SetPosition(const mye::math::Vector2i &position);
 
-	virtual Eigen::Vector2i GetSize(void) const;
-	virtual void SetSize(const Eigen::Vector2i &size);
+	virtual mye::math::Vector2i GetSize(void) const;
+	virtual void SetSize(const mye::math::Vector2i &size);
 
 	virtual void Update(void) { }
 	virtual void Render(void) { }
 
 private:
 
-	Eigen::Vector2i m_size;
-	Eigen::Vector2i m_position;
+	mye::math::Vector2i m_size;
+	mye::math::Vector2i m_position;
 
 };
 

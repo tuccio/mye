@@ -19,10 +19,10 @@ public:
 	void Activate(void);
 	void Deactivate(void);
 
-	void SetPosition(const Eigen::Vector2i &position);
-	void SetSize(const Eigen::Vector2i &size);
+	void SetPosition(const mye::math::Vector2i &position);
+	void SetSize(const mye::math::Vector2i &size);
 
-	void Resize(const Eigen::Vector2i &size);
+	void Resize(const mye::math::Vector2i &size);
 
 	void SetBackgroundColor(const mye::core::ColorRGBA &rgba);
 

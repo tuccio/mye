@@ -1,9 +1,9 @@
 #include "Math.h"
 #include "Types.h"
 
-#include "EigenWrappers.h"
+#include "MathWrappers.h"
 
-#include <Eigen/Eigen>
+#include <mye/math/Math.h>
 
 #include <luabind/luabind.hpp>
 #include <luabind/operator.hpp>
@@ -13,7 +13,7 @@
 #include <sstream>
 
 using namespace luabind;
-using namespace Eigen;
+using namespace mye::math;
 
 namespace mye
 {
@@ -25,7 +25,7 @@ namespace mye
 		void BindVector4(lua_State *L, const char *classname)
 		{
 
-			typedef Eigen::Matrix<T, 4, 1, 0, 4, 1> VectorType;
+			typedef mye::math::Matrix<T, 4, 1> VectorType;
 
 			module(L)
 				[
@@ -33,7 +33,9 @@ namespace mye
 					class_<VectorType>(classname).
 
 					def(constructor<>()).
+					def(constructor<T>()).
 					def(constructor<T, T, T, T>()).
+					def(constructor<const mye::math::Matrix<T, 3, 1>&, T>()).
 					def(constructor<const VectorType&>()).
 
 					def("__add", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_add<4, T>).
@@ -62,7 +64,7 @@ namespace mye
 		void BindVector3(lua_State *L, const char *classname)
 		{
 
-			typedef Eigen::Matrix<T, 3, 1, 0, 3, 1> VectorType;
+			typedef mye::math::Matrix<T, 3, 1> VectorType;
 
 			module(L)
 			[
@@ -70,7 +72,9 @@ namespace mye
 				class_<VectorType>(classname).
 
 				def(constructor<>()).
+				def(constructor<T>()).
 				def(constructor<T, T, T>()).
+				def(constructor<const mye::math::Matrix<T, 2, 1>&, T>()).
 				def(constructor<const VectorType&>()).
 
 				def("__add", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_add<3, T>).
@@ -98,7 +102,7 @@ namespace mye
 		void BindVector2(lua_State *L, const char *classname)
 		{
 
-			typedef Eigen::Matrix<T, 2, 1, 0, 2, 1> VectorType;
+			typedef mye::math::Matrix<T, 2, 1> VectorType;
 
 			module(L)
 				[
@@ -106,6 +110,7 @@ namespace mye
 					class_<VectorType>(classname).
 
 					def(constructor<>()).
+					def(constructor<T>()).
 					def(constructor<T, T>()).
 					def(constructor<const VectorType&>()).
 
@@ -123,7 +128,7 @@ namespace mye
 					def("__tostring", &__vec_tostring<2, T>).
 
 					property("x", &__vec_get<2, T, 0>, &__vec_set<2, T, 0>).
-					property("y", &__vec_get<2, T, 1>, &__vec_set<2, T, 1>).
+					property("y", &__vec_get<2, T, 1>, &__vec_set<2, T, 1>)
 
 				];
 
@@ -135,7 +140,7 @@ namespace mye
 			module(L)
 			[
 
-				class_<Eigen::Quaternionf>(classname).
+				class_<mye::math::Quaternionf>(classname).
 
 					def(constructor<>()).
 					def(constructor<float, float, float, float>()).
@@ -173,8 +178,14 @@ namespace mye
 		void BindMath(lua_State *L)
 		{
 
+			BindVector2<float>(L, MYE_LUA_VEC2);
+			BindVector2<int>(L, MYE_LUA_VEC2I);
+
 			BindVector3<float>(L, MYE_LUA_VEC3);
 			BindVector3<int>(L, MYE_LUA_VEC3I);
+
+			BindVector4<float>(L, MYE_LUA_VEC4);
+			BindVector4<int>(L, MYE_LUA_VEC4I);
 
 			BindQuaternion(L, MYE_LUA_QUATERNION);
 

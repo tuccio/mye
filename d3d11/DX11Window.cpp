@@ -47,7 +47,7 @@ bool DX11Window::Init(void)
 		return false;
 	}
 
-	Eigen::Vector2i clientSize = GetSize();
+	mye::math::Vector2i clientSize = GetSize();
 
 	ResizeBuffers(clientSize.x(), clientSize.y());
 	SetViewport(0, 0, clientSize.x(), clientSize.y());
@@ -90,7 +90,7 @@ bool DX11Window::CreateSwapChain()
 	UINT msaa4xQuality, msaa8xQuality;
 
 	DXGI_SWAP_CHAIN_DESC swapDesc;
-	Eigen::Vector2i clientSize = GetSize();
+	mye::math::Vector2i clientSize = GetSize();
 
 	swapDesc.BufferDesc.RefreshRate      = m_refresh;
 	swapDesc.BufferDesc.Width            = clientSize.x();
@@ -255,7 +255,7 @@ bool DX11Window::CreateDepthStencilBuffers(void)
 
 	UINT msaa4xQuality, msaa8xQuality;
 
-	Eigen::Vector2i clientSize = GetSize();
+	mye::math::Vector2i clientSize = GetSize();
 	D3D11_TEXTURE2D_DESC depthStencilDesc;
 
 	depthStencilDesc.Width          = (clientSize.x() ? clientSize.x() : 1);
@@ -322,7 +322,7 @@ bool DX11Window::CreateDepthStencilBuffers(void)
 }
 
 void DX11Window::ResizeListener::OnResize(IWindow *window,
-										  const Eigen::Vector2i &size)
+										  const mye::math::Vector2i &size)
 {
 	DX11Window *dx11window = ((DX11Window*) window);
 	dx11window->ResizeBuffers(size.x(), size.y());

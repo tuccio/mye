@@ -55,7 +55,7 @@ namespace mye
 			void ShowText(void);
 			void HideText(void);
 
-			Eigen::Vector2i GetSize(void) const;
+			mye::math::Vector2i GetSize(void) const;
 			void AutoSize(void);
 
 			inline bool IsVertical(void) const 
@@ -66,8 +66,8 @@ namespace mye
 			void Show(void);
 			void Hide(void);
 
-			Eigen::Vector2i GetIconSize(void);
-			void SetIconSize(const Eigen::Vector2i &iconSize);
+			mye::math::Vector2i GetIconSize(void);
+			void SetIconSize(const mye::math::Vector2i &iconSize);
 
 		private:
 
@@ -107,7 +107,7 @@ namespace mye
 			Window &m_parent;
 
 			HIMAGELIST m_hImageList;
-			Eigen::Vector2i m_iconSize;
+			mye::math::Vector2i m_iconSize;
 
 			bool m_showText;
 			bool m_vertical;

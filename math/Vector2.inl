@@ -10,6 +10,13 @@ namespace mye
 		}
 
 		template <typename T>
+		Matrix<T, 2, 1>::Matrix(T v)
+		{
+			m_data[0] = v;
+			m_data[1] = v;
+		}
+
+		template <typename T>
 		Matrix<T, 2, 1>::Matrix(T x, T y)
 		{
 			m_data[0] = x;
@@ -53,17 +60,44 @@ namespace mye
 		template <typename T>
 		Matrix<T, 2, 1> Matrix<T, 2, 1>::operator+ (const Matrix<T, 2, 1> &b) const
 		{
-			Matrix<T, 2, 1>(
-				m_data[0] + b.m_data[0] +
+			return Matrix<T, 2, 1>(
+				m_data[0] + b.m_data[0],
 				m_data[1] + b.m_data[1]);
 		}
 
 		template <typename T>
 		Matrix<T, 2, 1> Matrix<T, 2, 1>::operator- (const Matrix<T, 2, 1> &b) const
 		{
-			Matrix<T, 2, 1>(
-				m_data[0] - b.m_data[0] +
+			return Matrix<T, 2, 1>(
+				m_data[0] - b.m_data[0],
 				m_data[1] - b.m_data[1]);
+		}
+
+		template <typename T>
+		Matrix<T, 2, 1> Matrix<T, 2, 1>::operator* (const Matrix<T, 2, 1> &v) const
+		{
+			return Matrix<T, 2, 1>(
+				m_data[0] * v.m_data[0],
+				m_data[1] * v.m_data[1]
+				);
+		}
+
+		template <typename T>
+		inline Matrix<T, 2, 1> Matrix<T, 2, 1>::operator/ (const Matrix<T, 2, 1> &v) const
+		{
+			return Matrix<T, 2, 1>(
+				m_data[0] / v.m_data[0],
+				m_data[1] / v.m_data[1]
+			);
+		}
+
+		template <typename T>
+		Matrix<T, 2, 1> Matrix<T, 2, 1>::operator* (T x) const
+		{
+			return Matrix<T, 2, 1>(
+				m_data[0] * x,
+				m_data[1] * x
+				);
 		}
 
 		template <typename T>
@@ -89,6 +123,33 @@ namespace mye
 		T Matrix<T, 2, 1>::Length(void) const
 		{
 			return Sqrt(m_data[0] * m_data[0] + m_data[1] * m_data[1]);
+		}
+
+		template <typename T>
+		Matrix<T, 2, 1> Matrix<T, 2, 1>::CwiseAbs(void) const
+		{
+			return Matrix<T, 2, 1>(
+				Abs(m_data[0]),
+				Abs(m_data[1])
+				);
+		}
+
+		template <typename T>
+		Matrix<T, 2, 1> Matrix<T, 2, 1>::CwiseMin(const Matrix<T, 2, 1> &v) const
+		{
+			return Matrix<T, 3, 1>(
+				Min(m_data[0], v.m_data[0]),
+				Min(m_data[1], v.m_data[1])
+				);
+		}
+
+		template <typename T>
+		Matrix<T, 2, 1> Matrix<T, 2, 1>::CwiseMax(const Matrix<T, 2, 1> &v) const
+		{
+			return Matrix<T, 2, 1>(
+				Max(m_data[0], v.m_data[0]),
+				Max(m_data[1], v.m_data[1])
+				);
 		}
 
 		template <typename T>

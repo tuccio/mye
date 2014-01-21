@@ -2,7 +2,7 @@
 
 #include <string>
 #include <vector>
-#include <Eigen/Eigen>
+#include <mye/math/Math.h>
 
 namespace mye
 {
@@ -47,11 +47,11 @@ namespace mye
 			virtual void SetCaption(const std::string &caption) = 0;
 			virtual std::string GetCaption(void) const = 0;
 
-			virtual void SetSize(const Eigen::Vector2i &size) = 0;
-			virtual Eigen::Vector2i GetSize(void) const = 0;
+			virtual void SetSize(const mye::math::Vector2i &size) = 0;
+			virtual mye::math::Vector2i GetSize(void) const = 0;
 
-			virtual void SetPosition(const Eigen::Vector2i &position) = 0;
-			virtual Eigen::Vector2i GetPosition(void) const = 0;
+			virtual void SetPosition(const mye::math::Vector2i &position) = 0;
+			virtual mye::math::Vector2i GetPosition(void) const = 0;
 
 			void SendUserMessage(unsigned int msg,
 				unsigned int intArg,
@@ -65,7 +65,7 @@ namespace mye
 
 			void NotifyCreate(void);
 			void NotifyDestroy(void);
-			void NotifyResize(const Eigen::Vector2i &size);
+			void NotifyResize(const mye::math::Vector2i &size);
 			void NotifyCommand(unsigned int id);
 			void NotifyUserMessage(unsigned int msg,
 				unsigned long intArg,
@@ -101,7 +101,7 @@ namespace mye
 
 			virtual inline void OnCreate(IWindow *window) { }
 			virtual inline void OnDestroy(IWindow *window) { }
-			virtual inline void OnResize(IWindow *window, const Eigen::Vector2i &size) { }
+			virtual inline void OnResize(IWindow *window, const mye::math::Vector2i &size) { }
 			virtual inline void OnCommand(unsigned int id) { }
 			virtual inline void OnUserMessage(IWindow *window,
 				unsigned int msg,

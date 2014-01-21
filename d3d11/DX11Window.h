@@ -63,7 +63,7 @@ namespace mye
 				public IWindow::Listener
 			{
 			public:
-				void OnResize(IWindow *window, const Eigen::Vector2i &size);
+				void OnResize(IWindow *window, const mye::math::Vector2i &size);
 			} m_resizeListener;
 
 		};

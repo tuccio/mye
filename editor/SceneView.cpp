@@ -62,12 +62,12 @@ void SceneView::Deactivate(void)
 	m_window.Hide();
 }
 
-void SceneView::SetPosition(const Eigen::Vector2i &position)
+void SceneView::SetPosition(const mye::math::Vector2i &position)
 {
 	m_window.SetPosition(position);
 }
 
-void SceneView::SetSize(const Eigen::Vector2i &size)
+void SceneView::SetSize(const mye::math::Vector2i &size)
 {
 	View::SetSize(size);
 	m_window.SetSize(size);

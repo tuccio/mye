@@ -243,7 +243,7 @@ void Toolbar::HideText(void)
 	m_showText = false;
 }
 
-Eigen::Vector2i Toolbar::GetSize(void) const
+mye::math::Vector2i Toolbar::GetSize(void) const
 {
 
 	RECT rect;
@@ -252,20 +252,20 @@ Eigen::Vector2i Toolbar::GetSize(void) const
 	
 	if (!success)
 	{
-		return Eigen::Vector2i::Zero();
+		return mye::math::Vector2i(0, 0);
 	}
 
-	return Eigen::Vector2i(rect.right - rect.left,
+	return mye::math::Vector2i(rect.right - rect.left,
 		rect.bottom - rect.top);
 
 }
 
-Eigen::Vector2i Toolbar::GetIconSize(void)
+mye::math::Vector2i Toolbar::GetIconSize(void)
 {
 	return m_iconSize;
 }
 
-void Toolbar::SetIconSize(const Eigen::Vector2i &iconSize)
+void Toolbar::SetIconSize(const mye::math::Vector2i &iconSize)
 {
 	m_iconSize = iconSize;
 }

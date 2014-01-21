@@ -46,7 +46,7 @@ namespace mye
 
 		};
 
-		template <>
+		/*template <>
 		class __declspec(align(16)) VariableComponent<Transform> :
 			public Component
 		{
@@ -62,8 +62,6 @@ namespace mye
 
 			const Transform& Get(void) const;
 			void Set(const Transform &t);
-
-			EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
 		private:
 
@@ -117,7 +115,7 @@ namespace mye
 
 			};
 
-		};
+		};*/
 
 
 	}

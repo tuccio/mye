@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Eigen/Eigen>
+#include <mye/math/Math.h>
 
 namespace mye
 {
@@ -34,8 +34,8 @@ namespace mye
 
 		private:
 
-			Eigen::Vector3f m_halfExtents;
-			Eigen::Vector3f m_center;
+			mye::math::Vector3f m_halfExtents;
+			mye::math::Vector3f m_center;
 
 		};
 

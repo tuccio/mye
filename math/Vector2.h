@@ -13,6 +13,7 @@ namespace mye
 		public:
 
 			Matrix(void);
+			Matrix(T v);
 			Matrix(T x, T y);
 
 			inline T& operator[] (int i);
@@ -26,9 +27,18 @@ namespace mye
 			inline Matrix<T, 2, 1> operator+ (const Matrix<T, 2, 1> &b) const;
 			inline Matrix<T, 2, 1> operator- (const Matrix<T, 2, 1> &b) const;
 
+			inline Matrix<T, 2, 1> operator* (const Matrix<T, 2, 1> &v) const;
+			inline Matrix<T, 2, 1> operator/ (const Matrix<T, 2, 1> &v) const;
+
+			inline Matrix<T, 2, 1> operator* (T x) const;
+
 			inline Matrix<T, 2, 1>& Normalize(void);
 			inline Matrix<T, 2, 1> Normalized(void) const;
 			inline T Length(void) const;
+
+			inline Matrix<T, 2, 1> CwiseAbs(void) const;
+			inline Matrix<T, 2, 1> CwiseMin(const Matrix<T, 2, 1> &v) const;
+			inline Matrix<T, 2, 1> CwiseMax(const Matrix<T, 2, 1> &v) const;
 
 			inline T& x(void);
 			inline const T& x(void) const;

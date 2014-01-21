@@ -208,7 +208,7 @@ std::string Window::GetCaption(void) const
 
 }
 
-void Window::SetSize(const Eigen::Vector2i &size)
+void Window::SetSize(const mye::math::Vector2i &size)
 {
 
 	SetWindowPos(m_hWnd,
@@ -221,7 +221,7 @@ void Window::SetSize(const Eigen::Vector2i &size)
 
 }
 
-Eigen::Vector2i Window::GetSize(void) const
+mye::math::Vector2i Window::GetSize(void) const
 {
 
 	RECT rect;
@@ -229,12 +229,12 @@ Eigen::Vector2i Window::GetSize(void) const
 	BOOL success = GetClientRect(m_hWnd, &rect);
 	assert(success);
 
-	return Eigen::Vector2i(rect.right - rect.left,
+	return mye::math::Vector2i(rect.right - rect.left,
 		rect.bottom - rect.top);
 
 }
 
-void Window::SetPosition(const Eigen::Vector2i &position)
+void Window::SetPosition(const mye::math::Vector2i &position)
 {
 
 	SetWindowPos(m_hWnd,
@@ -247,13 +247,13 @@ void Window::SetPosition(const Eigen::Vector2i &position)
 
 }
 
-Eigen::Vector2i Window::GetPosition(void) const
+mye::math::Vector2i Window::GetPosition(void) const
 {
 
 	RECT rect;
 	GetWindowRect(m_hWnd, &rect);
 
-	return Eigen::Vector2i(rect.left, rect.top);
+	return mye::math::Vector2i(rect.left, rect.top);
 
 }
 
@@ -511,7 +511,7 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd,
 
 			if (window)
 			{
-				window->NotifyResize(Eigen::Vector2i(LOWORD(lParam), HIWORD(lParam)));
+				window->NotifyResize(mye::math::Vector2i(LOWORD(lParam), HIWORD(lParam)));
 			}
 
 		}

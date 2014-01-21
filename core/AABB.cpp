@@ -8,8 +8,8 @@ AABB::AABB(void) :
 {
 }
 
-AABB::AABB(const Eigen::Vector3f &min,
-		   const Eigen::Vector3f &max) :
+AABB::AABB(const mye::math::Vector3f &min,
+		   const mye::math::Vector3f &max) :
 	m_min(min),
 	m_max(max)
 {
@@ -19,30 +19,30 @@ AABB::~AABB(void)
 {
 }
 
-Eigen::Vector3f AABB::GetCenter(void) const
+mye::math::Vector3f AABB::GetCenter(void) const
 {
 	return (m_max + m_min) * 0.5f;
 }
 
-Eigen::Vector3f AABB::GetHalfExtents(void) const
+mye::math::Vector3f AABB::GetHalfExtents(void) const
 {
 	return (m_max - m_min) * 0.5f;
 }
 
-Eigen::Vector3f AABB::GetMinimum(void) const
+mye::math::Vector3f AABB::GetMinimum(void) const
 {
 	return m_min;
 }
 
-Eigen::Vector3f AABB::GetMaximum(void) const
+mye::math::Vector3f AABB::GetMaximum(void) const
 {
 	return m_max;
 }
 
-std::vector<Eigen::Vector3f> AABB::GetCorners(void) const
+std::vector<mye::math::Vector3f> AABB::GetCorners(void) const
 {
 
-	std::vector<Eigen::Vector3f> corners(8);
+	std::vector<mye::math::Vector3f> corners(8);
 
 	corners[FAR_LEFT_BOTTOM] = m_min;
 
@@ -76,21 +76,17 @@ std::vector<Eigen::Vector3f> AABB::GetCorners(void) const
 
 }
 
-AABB AABB::TransformAffine(const Eigen::Matrix4f &t)
+AABB AABB::TransformAffine(const mye::math::Matrix4f &t)
 {
 	
-	Eigen::Vector3f center = GetCenter();
-	Eigen::Vector3f halfExtents = GetHalfExtents();
+	mye::math::Vector3f center = GetCenter();
+	mye::math::Vector3f halfExtents = GetHalfExtents();
 
-	Eigen::Vector3f transformedCenter = 
-		(t * Eigen::Vector4f(
-		center.x(),
-		center.y(),
-		center.z(),
-		1.0f)).block<3, 1>(0, 0);
+	mye::math::Vector3f transformedCenter = 
+		t * center;
 
-	Eigen::Vector3f transformedHalfExtents = 
-		t.cwiseAbs().block<3, 3>(0, 0) * halfExtents;
+	mye::math::Vector3f transformedHalfExtents = 
+		(t * halfExtents).CwiseAbs();
 
 	return AABB(transformedCenter - transformedHalfExtents,
 		transformedCenter + transformedHalfExtents);

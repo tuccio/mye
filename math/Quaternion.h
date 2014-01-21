@@ -30,6 +30,9 @@ namespace mye
 			inline Quaternion operator- (const Quaternion &q) const;
 			inline Quaternion operator* (const Quaternion &q) const;
 
+			inline T& operator[] (int i);
+			inline const T& operator[] (int i) const;
+
 			inline T& x(void);
 			inline const T& x(void) const;
 

@@ -6,7 +6,7 @@
 
 #include <mye/core/Components.h>
 
-#include <Eigen/Eigen>
+#include <mye/math/Math.h>
 #include <luabind/luabind.hpp>
 
 #define LPGAMEOBJECT(__hObj) (Game::GetSingleton().GetGameObjectsModule()->Get(__hObj))

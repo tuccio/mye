@@ -59,7 +59,7 @@ void IWindow::NotifyDestroy(void)
 	}
 }
 
-void IWindow::NotifyResize(const Eigen::Vector2i &size)
+void IWindow::NotifyResize(const mye::math::Vector2i &size)
 {
 	for (auto listener : m_listeners)
 	{

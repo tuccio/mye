@@ -132,13 +132,13 @@ size_t Model::CalculateSizeImpl(void)
 Mesh::VectorPair Model::GetMinMaxVertices(void) const
 {
 
-	Eigen::Vector3f max = Eigen::Vector3f(
+	mye::math::Vector3f max = mye::math::Vector3f(
 		std::numeric_limits<float>::min(),
 		std::numeric_limits<float>::min(),
 		std::numeric_limits<float>::min()
 		);
 
-	Eigen::Vector3f min = Eigen::Vector3f(
+	mye::math::Vector3f min = mye::math::Vector3f(
 		std::numeric_limits<float>::max(),
 		std::numeric_limits<float>::max(),
 		std::numeric_limits<float>::max()
@@ -158,8 +158,8 @@ Mesh::VectorPair Model::GetMinMaxVertices(void) const
 			localMinMax = meshRef.handle.Cast<Mesh>()->GetMinMaxVertices();
 		}
 
-		min = min.cwiseMin(localMinMax.first);
-		max = max.cwiseMax(localMinMax.second);
+		min = min.CwiseMin(localMinMax.first);
+		max = max.CwiseMax(localMinMax.second);
 
 	}
 

@@ -2,7 +2,7 @@
 
 #include "VertexData.h"
 #include "Resource.h"
-#include <Eigen/Eigen>
+#include <mye/math/Math.h>
 #include <utility>
 
 namespace mye
@@ -17,7 +17,7 @@ namespace mye
 
 		public:
 
-			typedef std::pair<Eigen::Vector3f, Eigen::Vector3f> VectorPair;
+			typedef std::pair<mye::math::Vector3f, mye::math::Vector3f> VectorPair;
 
 			Mesh(ResourceManager *resourceManager,
 				const std::string &name,

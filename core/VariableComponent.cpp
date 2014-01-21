@@ -3,6 +3,7 @@
 using namespace mye::core;
 
 /* Transform specialization */
+/*
 
 VariableComponent<Transform>::VariableComponent(const std::string &name) :
 	Component(ComponentTypes::VARIABLE_COMPONENT,
@@ -32,4 +33,4 @@ void VariableComponent<Transform>::Set(const Transform &t)
 std::type_index VariableComponent<Transform>::GetVariableType(void) const
 {
 	return typeid(Transform);
-}
+}*/

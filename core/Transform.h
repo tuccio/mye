@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Eigen/Eigen>
+#include <mye/math/Math.h>
 
 
 namespace mye
@@ -9,7 +9,7 @@ namespace mye
 	namespace core
 	{
 
-		class __declspec(align(16)) Transform
+		class Transform
 		{
 
 		public:
@@ -17,34 +17,32 @@ namespace mye
 			static const Transform& Identity(void);
 
 			Transform(void);
-			Transform(const Eigen::Vector3f &scale,
-				const Eigen::Quaternionf &rotation,
-				const Eigen::Vector3f &translation);
+			Transform(const mye::math::Vector3f &scale,
+				const mye::math::Quaternionf &rotation,
+				const mye::math::Vector3f &translation);
 
 			~Transform(void);
 
-			Eigen::Matrix4f GetMatrix(void) const;
+			mye::math::Matrix4f GetMatrix(void) const;
 
 			Transform Combine(const Transform &transform) const;
 
-			const Eigen::Vector3f& GetScale(void) const;
-			void SetScale(const Eigen::Vector3f &scale);
+			const mye::math::Vector3f& GetScale(void) const;
+			void SetScale(const mye::math::Vector3f &scale);
 
-			const Eigen::Quaternionf& GetRotation(void) const;
-			void SetRotation(const Eigen::Quaternionf &rotation);
+			const mye::math::Quaternionf& GetRotation(void) const;
+			void SetRotation(const mye::math::Quaternionf &rotation);
 
-			const Eigen::Vector3f& GetTranslation(void) const;
-			void SetTranslation(const Eigen::Vector3f &translation);
-
-			EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+			const mye::math::Vector3f& GetTranslation(void) const;
+			void SetTranslation(const mye::math::Vector3f &translation);
 
 		private:
 
 			static const Transform IDENTITY;
 
-			Eigen::Quaternionf m_rotation;
-			Eigen::Vector3f m_scale;
-			Eigen::Vector3f m_translation;
+			mye::math::Quaternionf m_rotation;
+			mye::math::Vector3f m_scale;
+			mye::math::Vector3f m_translation;
 
 		};
 

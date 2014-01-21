@@ -48,7 +48,7 @@ void SimpleLayoutWindow::SetToolbar(mye::win::Toolbar *toolbar)
 	m_toolbar = toolbar;
 }
 
-Eigen::Vector2i SimpleLayoutWindow::GetScreenSplits(void) const
+mye::math::Vector2i SimpleLayoutWindow::GetScreenSplits(void) const
 {
 	return m_splits;
 }
@@ -56,7 +56,7 @@ Eigen::Vector2i SimpleLayoutWindow::GetScreenSplits(void) const
 void SimpleLayoutWindow::SetSplitScreen(int x, int y)
 {
 	assert(x >= 0 && y >= 0);
-	m_splits = Eigen::Vector2i(x, y);
+	m_splits = mye::math::Vector2i(x, y);
 	m_views.resize(m_splits.x() * m_splits.y(), NULL);
 }
 
@@ -84,10 +84,10 @@ void SimpleLayoutWindow::SetSplitView(int i, int j, View *view)
 
 }
 
-Eigen::Vector2i SimpleLayoutWindow::_ComputeSplitPosition(int i, int j)
+mye::math::Vector2i SimpleLayoutWindow::_ComputeSplitPosition(int i, int j)
 {
 
-	Eigen::Vector2i base(0, 0);
+	mye::math::Vector2i base(0, 0);
 
 	if (m_toolbar)
 	{
@@ -101,7 +101,7 @@ Eigen::Vector2i SimpleLayoutWindow::_ComputeSplitPosition(int i, int j)
 		}
 	}
 
-	Eigen::Vector2i position(base);
+	mye::math::Vector2i position(base);
 
 	for (int x = 0; x < j; x++)
 	{
@@ -117,10 +117,10 @@ Eigen::Vector2i SimpleLayoutWindow::_ComputeSplitPosition(int i, int j)
 
 }
 
-Eigen::Vector2i SimpleLayoutWindow::_ComputeSplitSize(int i, int j)
+mye::math::Vector2i SimpleLayoutWindow::_ComputeSplitSize(int i, int j)
 {
 
-	Eigen::Vector2i size = GetSize();
+	mye::math::Vector2i size = GetSize();
 
 	if (m_toolbar)
 	{
@@ -134,7 +134,7 @@ Eigen::Vector2i SimpleLayoutWindow::_ComputeSplitSize(int i, int j)
 		}
 	}
 
-	return Eigen::Vector2i((float) size.x() / m_splits[SLW_COLS],
+	return mye::math::Vector2i((float) size.x() / m_splits[SLW_COLS],
 		(float) size.y() / m_splits[SLW_ROWS]);
 
 }
@@ -165,16 +165,16 @@ void SimpleLayoutWindow::Render(void)
 
 }
 
-Eigen::Vector2i SimpleLayoutWindow::GetSplitSize(int i, int j)
+mye::math::Vector2i SimpleLayoutWindow::GetSplitSize(int i, int j)
 {
 	View *view = GetSplitView(i, j);
-	return (view ? view->GetSize() : Eigen::Vector2i::Zero());
+	return (view ? view->GetSize() : mye::math::Vector2i(0, 0));
 }
 
-Eigen::Vector2i SimpleLayoutWindow::GetSplitPosition(int i, int j)
+mye::math::Vector2i SimpleLayoutWindow::GetSplitPosition(int i, int j)
 {
 	View *view = GetSplitView(i, j);
-	return (view ? view->GetPosition() : Eigen::Vector2i(-1, -1));
+	return (view ? view->GetPosition() : mye::math::Vector2i(-1, -1));
 }
 
 void SimpleLayoutWindow::ResizeViews(void)

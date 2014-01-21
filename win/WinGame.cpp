@@ -1,4 +1,5 @@
 #include "WinGame.h"
+#include "Utils.h"
 
 using namespace std;
 using namespace mye::core;
@@ -77,10 +78,7 @@ void Quit(void)
 
 void WinGame::RuntimeError(const std::string &error)
 {
-	MessageBox(NULL,
-		error.c_str(),
-		"Runtime Error",
-		MB_OK);
+	ShowErrorBox(error);
 }
 
 void WinGame::MainWindowListener::OnDestroy(IWindow *window)

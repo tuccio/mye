@@ -5,7 +5,7 @@
 #include <mye/core/Transform.h>
 #include <mye/core/VariableComponent.h>
 
-#include <Eigen/Eigen>
+#include <mye/math/Math.h>
 #include <Eigen/Geometry>
 
 #include <luabind/luabind.hpp>
@@ -41,9 +41,9 @@ namespace mye
 			BindVariableComponent<int>(L, MYE_LUA_INT_COMPONENT);
 			BindVariableComponent<bool>(L, MYE_LUA_BOOL_COMPONENT);
 			BindVariableComponent<std::string>(L, MYE_LUA_STRING_COMPONENT);
-			BindVariableComponent<Eigen::Vector3f>(L, MYE_LUA_VEC3_COMPONENT);
-			BindVariableComponent<Eigen::Vector3i>(L, MYE_LUA_VEC3I_COMPONENT);
-			BindVariableComponent<Eigen::Quaternionf>(L, MYE_LUA_QUATERNION_COMPONENT);
+			BindVariableComponent<mye::math::Vector3f>(L, MYE_LUA_VEC3_COMPONENT);
+			BindVariableComponent<mye::math::Vector3i>(L, MYE_LUA_VEC3I_COMPONENT);
+			BindVariableComponent<mye::math::Quaternionf>(L, MYE_LUA_QUATERNION_COMPONENT);
 			BindVariableComponent<mye::core::Transform>(L, MYE_LUA_VTRANSFORM_COMPONENT);
 
 			//BindTransformComponent(L, MYE_LUA_TRANSFORM_COMPONENT);

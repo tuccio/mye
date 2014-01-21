@@ -6,7 +6,7 @@
 #include <mye/core/Components.h>
 #include <mye/core/GameObjectsModule.h>
 #include <mye/core/GameObject.h>
-#include <Eigen/Eigen>
+#include <mye/math/Math.h>
 
 #include <lua.hpp>
 #include <luabind/luabind.hpp>
@@ -102,8 +102,8 @@ namespace mye
 									VARIABLE_COMPONENT_CAST_GET_BLOCK(int)
 									VARIABLE_COMPONENT_CAST_GET_BLOCK(bool)
 									VARIABLE_COMPONENT_CAST_GET_BLOCK(std::string)
-									VARIABLE_COMPONENT_CAST_GET_BLOCK(Eigen::Vector3f)
-									VARIABLE_COMPONENT_CAST_GET_BLOCK(Eigen::Vector3i)
+									VARIABLE_COMPONENT_CAST_GET_BLOCK(mye::math::Vector3f)
+									VARIABLE_COMPONENT_CAST_GET_BLOCK(mye::math::Vector3i)
 									VARIABLE_COMPONENT_CAST_GET_ALIGNED(mye::core::Transform)
 
 								}
@@ -182,8 +182,8 @@ namespace mye
 							VARIABLE_COMPONENT_CAST_SET_BLOCK(int)
 							VARIABLE_COMPONENT_CAST_SET_BLOCK(bool)
 							VARIABLE_COMPONENT_CAST_SET_BLOCK(std::string)
-							VARIABLE_COMPONENT_CAST_SET_BLOCK(Eigen::Vector3f)
-							VARIABLE_COMPONENT_CAST_SET_BLOCK(Eigen::Vector3i)
+							VARIABLE_COMPONENT_CAST_SET_BLOCK(mye::math::Vector3f)
+							VARIABLE_COMPONENT_CAST_SET_BLOCK(mye::math::Vector3i)
 							VARIABLE_COMPONENT_CAST_SET_ALIGNED(mye::core::Transform)
 
 						}
