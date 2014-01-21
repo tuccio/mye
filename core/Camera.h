@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Eigen/Eigen>
+#include <mye/math/Math.h>
 
 #include "AABB.h"
 
@@ -18,15 +18,15 @@ namespace mye
 			Camera(void);
 			~Camera(void);
 
-			void LookAt(const Eigen::Vector3f &position,
-				const Eigen::Vector3f &up,
-				const Eigen::Vector3f &target);
+			void LookAt(const mye::math::Vector3f &position,
+				const mye::math::Vector3f &up,
+				const mye::math::Vector3f &target);
 
-			Eigen::Quaternionf GetOrientation(void) const;
-			void SetOrientation(const Eigen::Quaternionf &orientation);
+			mye::math::Quaternionf GetOrientation(void) const;
+			void SetOrientation(const mye::math::Quaternionf &orientation);
 
-			Eigen::Vector3f GetPosition(void) const;
-			void SetPosition(const Eigen::Vector3f &position);
+			mye::math::Vector3f GetPosition(void) const;
+			void SetPosition(const mye::math::Vector3f &position);
 
 			void SetFrustum(float fovy, float aspect, float zNear, float zFar);
 
@@ -51,35 +51,32 @@ namespace mye
 			void UpdateView(void);
 			void UpdateProjection(void);
 
-			inline const Eigen::Matrix4f& GetViewMatrix(void) const;
-			inline const Eigen::Matrix4f& GetProjectionMatrix(void) const;
+			inline mye::math::Matrix4f GetViewMatrix(void) const;
+			inline mye::math::Matrix4f GetProjectionMatrix(void) const;
+
+			inline const mye::math::Matrix4f& GetViewMatrix(void);
+			inline const mye::math::Matrix4f& GetProjectionMatrix(void);
 
 		private:
 
-			Eigen::Quaternionf m_orientation;
-			Eigen::Vector3f m_position;
+			mye::math::Quaternionf m_orientation;
+			mye::math::Vector3f m_position;
 
 			float m_fovY;
 			float m_aspectRatio;
 			float m_nearClipDistance;
 			float m_farClipDistance;
 
-			Eigen::Matrix4f m_viewMatrix;
-			Eigen::Matrix4f m_projectionMatrix;
+			mye::math::Matrix4f m_viewMatrix;
+			mye::math::Matrix4f m_projectionMatrix;
+
+			bool m_viewMatrixUptodate;
+			bool m_projectionMatrixUptodate;
 
 		};
-
-		const Eigen::Matrix4f& Camera::GetViewMatrix(void) const
-		{
-			return m_viewMatrix;
-		}
-
-		const Eigen::Matrix4f& Camera::GetProjectionMatrix(void) const
-		{
-			return m_projectionMatrix;
-		}
 
 	}
 
 }
 
+#include "Camera.inl"

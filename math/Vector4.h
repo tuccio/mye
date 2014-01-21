@@ -23,10 +23,11 @@ namespace mye
 
 			inline T Dot(const Matrix<T, 4, 1> &v) const;
 
-			inline Matrix<T, 4, 1> operator+ (const Matrix<T, 4, 1> &b);
-			inline Matrix<T, 4, 1> operator- (const Matrix<T, 4, 1> &b);
+			inline Matrix<T, 4, 1> operator+ (const Matrix<T, 4, 1> &b) const;
+			inline Matrix<T, 4, 1> operator- (const Matrix<T, 4, 1> &b) const;
 
-			inline Matrix<T, 4, 1> Normalize(void) const;
+			inline Matrix<T, 4, 1>& Normalize(void);
+			inline Matrix<T, 4, 1> Normalized(void) const;
 			inline T Length(void) const;
 
 			inline T& x(void);
@@ -48,12 +49,7 @@ namespace mye
 
 			T m_data[4];
 
-		};
-
-		typedef Matrix<double, 4, 1> Vector4d;
-		typedef Matrix<float, 4, 1> Vector4f;
-		typedef Matrix<int, 4, 1> Vector4i;
-		typedef Matrix<unsigned int, 4, 1> Vector4u;
+		};		
 
 	}
 

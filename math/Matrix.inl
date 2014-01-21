@@ -41,7 +41,7 @@ namespace mye
 
 		template <typename T, int ROWS, int COLS>
 		template <int N>
-		Matrix<T, ROWS, N> Matrix<T, ROWS, COLS>::operator* (const Matrix<T, COLS, N> &b)
+		Matrix<T, ROWS, N> Matrix<T, ROWS, COLS>::operator* (const Matrix<T, COLS, N> &b) const
 		{
 
 			Matrix<T, ROWS, N> r;
@@ -100,7 +100,7 @@ namespace mye
 		}
 
 		template <typename T, int ROWS, int COLS>
-		Matrix<T, ROWS, COLS> operator+ (const Matrix<T, ROWS, COLS> &b)
+		Matrix<T, ROWS, COLS> Matrix<T, ROWS, COLS>::operator+ (const Matrix<T, ROWS, COLS> &b) const
 		{
 			Matrix<T, ROWS, COLS> r;
 			for (int i = 0; i < ROWS; i++)
@@ -116,7 +116,7 @@ namespace mye
 		}
 
 		template <typename T, int ROWS, int COLS>
-		Matrix<T, ROWS, COLS> operator- (const Matrix<T, ROWS, COLS> &b)
+		Matrix<T, ROWS, COLS> Matrix<T, ROWS, COLS>::operator- (const Matrix<T, ROWS, COLS> &b) const
 		{
 			Matrix<T, ROWS, COLS> r;
 			for (int i = 0; i < ROWS; i++)

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Declarations.h"
+
 #include "Functions.h"
 #include "Trigonometry.h"
 
@@ -12,3 +14,6 @@
 #include "Vector4.h"
 
 #include "MatrixOperations.h"
+
+#include "Quaternion.h"
+#include "QuaternionOperations.h"

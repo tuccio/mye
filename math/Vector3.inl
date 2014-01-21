@@ -69,25 +69,35 @@ namespace mye
 		}
 
 		template <typename T>
-		Matrix<T, 3, 1> Matrix<T, 3, 1>::operator+ (const Matrix<T, 3, 1> &b)
+		Matrix<T, 3, 1> Matrix<T, 3, 1>::operator+ (const Matrix<T, 3, 1> &b) const
 		{
-			Matrix<T, 3, 1>(
+			return Matrix<T, 3, 1>(
 				m_data[0] + b.m_data[0] +
 				m_data[1] + b.m_data[1],
 				m_data[2] + b.m_data[2]);
 		}
 
 		template <typename T>
-		Matrix<T, 3, 1> Matrix<T, 3, 1>::operator- (const Matrix<T, 3, 1> &b)
+		Matrix<T, 3, 1> Matrix<T, 3, 1>::operator- (const Matrix<T, 3, 1> &b) const
 		{
-			Matrix<T, 3, 1>(
-				m_data[0] - b.m_data[0] +
+			return Matrix<T, 3, 1>(
+				m_data[0] - b.m_data[0],
 				m_data[1] - b.m_data[1],
 				m_data[2] - b.m_data[2]);
 		}
 
 		template <typename T>
-		Matrix<T, 3, 1> Matrix<T, 3, 1>::Normalize(void) const
+		Matrix<T, 3, 1>& Matrix<T, 3, 1>::Normalize(void)
+		{
+			T invNorm = T(1) / Length();
+			m_data[0] *= invNorm;
+			m_data[1] *= invNorm;
+			m_data[2] *= invNorm;
+			return *this;
+		}
+
+		template <typename T>
+		Matrix<T, 3, 1> Matrix<T, 3, 1>::Normalized(void) const
 		{
 			T norm = Length();
 			return Matrix<T, 3, 1>(

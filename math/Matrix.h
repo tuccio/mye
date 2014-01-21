@@ -20,10 +20,10 @@ namespace mye
 			inline const T& operator() (int i, int j) const;
 
 			template <int N>
-			Matrix<T, ROWS, N> operator* (const Matrix<T, COLS, N> &b);
+			Matrix<T, ROWS, N> operator* (const Matrix<T, COLS, N> &b) const;
 
-			Matrix<T, ROWS, COLS> operator+ (const Matrix<T, ROWS, COLS> &b);
-			Matrix<T, ROWS, COLS> operator- (const Matrix<T, ROWS, COLS> &b);
+			Matrix<T, ROWS, COLS> operator+ (const Matrix<T, ROWS, COLS> &b) const;
+			Matrix<T, ROWS, COLS> operator- (const Matrix<T, ROWS, COLS> &b) const;
 
 			inline T* Data(void);
 			inline const T* Data(void) const;

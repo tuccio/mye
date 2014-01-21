@@ -14,6 +14,8 @@
 #include <mye/core/Camera.h>
 #include <mye/core/Model.h>
 
+#include <mye/math/Math.h>
+
 class ModelView :
 	public View
 {
@@ -55,7 +57,7 @@ private:
 
 	mye::core::AssimpModelLoader m_modelLoader;
 	mye::core::ResourceHandle m_model;
-	Eigen::Matrix4f m_transform;
+	mye::math::Matrix4f m_transform;
 	mye::dx11::DX11VertexBuffer m_vbuffer;
 
 	mye::core::Camera m_camera;

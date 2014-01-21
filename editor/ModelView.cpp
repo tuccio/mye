@@ -13,6 +13,7 @@
 
 using namespace mye::core;
 using namespace mye::dx11;
+using namespace mye::math;
 using namespace mye::win;
 
 #define MVIEW_OPEN 0x0
@@ -26,7 +27,7 @@ ModelView::ModelView(mye::dx11::DX11Device &device) :
 	m_bgColor(0.12f, 0.12f, 0.12f, 1.0f),
 	m_vbuffer(NULL, "", NULL, device),
 	m_mvpBuffer(NULL, "", NULL, device),
-	m_transform(Eigen::Matrix4f::Identity())
+	m_transform(1.0f)
 {
 	m_toolbar.SetIconSize(Eigen::Vector2i(24, 24));
 	m_window.SetMSAA(DX11Window::MSAA_4x);
@@ -124,14 +125,14 @@ void ModelView::Activate(void)
 		m_initialized = true;
 
 		m_camera.LookAt(
-			Eigen::Vector3f(0.0f, 0.0f, -2.0f),
-			Eigen::Vector3f(0.0f, 1.0f, 0.0f),
-			Eigen::Vector3f(0.0f, 0.0f, 1.0f));
+			Vector3f(0.0f, 0.0f, -5.0f),
+			Vector3f(0.0f, 1.0f, 0.0f),
+			Vector3f(0.0f, 0.0f, 1.0f));
 
 		m_camera.UpdateView();
 		m_camera.UpdateProjection();
 
-		m_mvpBuffer.Create(sizeof(float) * 16, Eigen::Matrix4f(Eigen::Matrix4f::Identity()).data());
+		m_mvpBuffer.Create(sizeof(float) * 16, Matrix4f(1.0f).Data());
 
 
 		ManualLambdaLoader triangleMeshLoader(
@@ -311,11 +312,11 @@ void ModelView::Render(void)
 
 	m_mvpBuffer.Bind(PIPELINE_VERTEX_SHADER, 0);
 
-	Eigen::Matrix4f mvp = m_camera.GetProjectionMatrix() *
+	Matrix4f mvp = m_camera.GetProjectionMatrix() *
 		m_camera.GetViewMatrix() *
 		m_transform;
 
-	m_mvpBuffer.SetData(reinterpret_cast<const void*>(mvp.data()));
+	m_mvpBuffer.SetData(reinterpret_cast<const void*>(mvp.Data()));
 
 	m_vbuffer.Bind();
 

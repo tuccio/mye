@@ -13,14 +13,14 @@ namespace mye
 		public:
 
 			Matrix(void);
+			Matrix(T d);
 
 			inline void Fill(T x);
 
 			inline T& operator() (int i, int j);
 			inline const T& operator() (int i, int j) const;
 
-			inline Matrix<T, 4, 4> operator* (
-				const Matrix<T, 4, 4> &a);
+			inline Matrix<T, 4, 4> operator* (const Matrix<T, 4, 4> &a) const;
 
 			inline T* Data(void);
 			inline const T* Data(void) const;
@@ -30,11 +30,6 @@ namespace mye
 			T m_data[16];
 
 		};
-
-		typedef Matrix<double, 4, 4> Matrix4d;
-		typedef Matrix<float, 4, 4> Matrix4f;
-		typedef Matrix<int, 4, 4> Matrix4i;
-		typedef Matrix<unsigned int, 4, 4> Matrix4u;
 
 	}
 
