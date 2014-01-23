@@ -43,6 +43,8 @@ void WinGame::Run(void)
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
 
+	m_timer.Start();
+
 	do
 	{
 
@@ -52,22 +54,19 @@ void WinGame::Run(void)
 			DispatchMessage(&msg);
 		}
 
-		static unsigned int _lastTime = GetTickCount();
-		unsigned int currentTime = GetTickCount();
-
-		float dt = (currentTime  - _lastTime) / 1000.0f;
+		FloatSeconds dt(m_timer.Lap());
 
 		/*
 		Update(dt);
 		Render();
 		*/
 
-		_lastTime = currentTime;
-
 
 
 	}
 	while (msg.message != WM_QUIT);
+
+	m_timer.Stop();
 
 }
 

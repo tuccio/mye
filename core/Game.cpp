@@ -44,11 +44,12 @@ bool Game::Init(void)
 
 void Game::Run(void)
 {
-
+	m_timer.Start();
 }
 
 void Game::Quit(void)
 {
+	m_timer.Stop();
 	exit(0);
 }
 

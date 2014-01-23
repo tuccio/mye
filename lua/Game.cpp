@@ -3,6 +3,7 @@
 #include "Types.h"
 
 #include <mye/core/Game.h>
+#include <mye/core/InputModule.h>
 
 #include <luabind/luabind.hpp>
 
@@ -11,6 +12,7 @@
 #include "GameObjectHandle.h"
 #include "VariableComponent.h"
 #include "WindowsFunctions.h"
+#include "InputModule.h"
 
 #include "LuaModule.h"
 #include "LuaScriptCaller.h"
@@ -50,6 +52,9 @@ namespace mye
 					def("Find", &GameObjectsModule::Find)
 
 			];
+
+			BindInputModule(L);
+			BindKeyboard(L);
 
 			BindScripts(L);
 			BindVariableComponent(L);

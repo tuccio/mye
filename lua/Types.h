@@ -4,6 +4,7 @@
 
 #define MYE_LUA_GAME "__Game"
 #define MYE_LUA_GAMEOBJECTSMODULE "__GameObjectsModule"
+#define MYE_LUA_INPUTMODULE "__InputModule"
 
 #define MYE_LUA_GAMEOBJECTHANDLE "GameObjectHandle"
 #define MYE_LUA_GAMEOBJECT "GameObject"
@@ -38,3 +39,6 @@
 
 #define MYE_LUA_WIN "Windows"
 #define MYE_LUA_WINDOW "Window"
+
+#define MYE_LUA_KEYBOARD "Keyboard"
+#define MYE_LUA_MOUSE "Mouse"

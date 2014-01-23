@@ -6,6 +6,14 @@ namespace mye
 	namespace math
 	{
 
+		/* Transform */
+
+		template <typename T>
+		Matrix<T, 4, 4> ScaleMatrix4(const Matrix<T, 3, 1> &scale);
+
+		template <typename T>
+		Matrix<T, 4, 4> TranslationMatrix4(const Matrix<T, 3, 1> &translation);
+
 		/* Equals */
 
 		template <typename T, int ROWS, int COLS>

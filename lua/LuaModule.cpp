@@ -83,6 +83,7 @@ bool ScriptModule<LuaScriptCaller>::Init(void)
 	luabind::globals(_L)["Game"] = boost::ref(game);
 	luabind::globals(_L)["GameObjects"] = boost::ref(*game.GetGameObjectsModule());
 	luabind::globals(_L)["Script"] = boost::ref(*this);
+	luabind::globals(_L)["Input"] = boost::ref(*game.GetInputModule());
 
 	return true;
 }

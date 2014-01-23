@@ -1,4 +1,5 @@
 #include "Window.h"
+#include "VirtualKeyMap.h"
 #include "Utils.h"
 
 #include <mye/core/Logger.h>
@@ -19,6 +20,8 @@
 
 #define WINDOW_LONG_PTR_INDEX 1
 
+using namespace mye::math;
+using namespace mye::core;
 using namespace mye::win;
 
 /* Window class registerer */
@@ -512,6 +515,48 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd,
 			if (window)
 			{
 				window->NotifyResize(mye::math::Vector2i(LOWORD(lParam), HIWORD(lParam)));
+			}
+
+		}
+
+		break;
+
+	case WM_KEYDOWN:
+
+		{
+
+			Window *window = (Window*) GetWindowLongPtr(hWnd, GWLP_USERDATA);
+
+			if (window->m_keyboard)
+			{
+				KeyboardVK key = VirtualKeyMap(wParam, lParam);
+				
+				if (key != MYE_VK_COUNT)
+				{
+					window->m_keyboard->Press(key);
+				}
+				
+			}
+
+		}
+
+		break;
+
+	case WM_KEYUP:
+
+		{
+
+			Window *window = (Window*) GetWindowLongPtr(hWnd, GWLP_USERDATA);
+
+			if (window->m_keyboard)
+			{
+				KeyboardVK key = VirtualKeyMap(wParam, lParam);
+
+				if (key != MYE_VK_COUNT)
+				{
+					window->m_keyboard->Release(key);
+				}
+
 			}
 
 		}

@@ -106,18 +106,18 @@ namespace mye
 
 		private:
 
+			friend class WCR;
+			static LRESULT CALLBACK WindowProc(HWND hWnd,
+				UINT uMsg,
+				WPARAM wParam,
+				LPARAM lParam);
+
 			void NotifyMenuSelected(IDGenerator::ID id);
 
 			HWND m_hWnd;
 			WindowMenu *m_menu;
 
 			std::vector<WindowMenu::Listener*> m_menuListeners;
-
-			friend class WCR;
-			static LRESULT CALLBACK WindowProc(HWND hWnd,
-				UINT uMsg,
-				WPARAM wParam,
-				LPARAM lParam);
 
 		};
 

@@ -1,4 +1,5 @@
 #include <mye/core/Logger.h>
+#include <mye/core/MouseKeyboardInput.h>
 #include <mye/core/ResourceManager.h>
 
 #include <mye/lua/LuaScriptCaller.h>
@@ -29,7 +30,7 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 	logger.OpenErrorLogFile("error.log");
 	logger.OpenEventLogFile("event.log");
 
-	InputModule input;
+	MouseKeyboardInput input;
 	GameObjectsModule gameobjects;
 	SceneModule scene;
 	GraphicsModule graphics;

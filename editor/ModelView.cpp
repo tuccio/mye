@@ -3,7 +3,6 @@
 
 #include <mye/core/ManualLambdaLoader.h>
 #include <mye/core/ResourceTypeManager.h>
-#include <mye/core/Transform.h>
 
 #include <mye/d3d11/DX11VertexShader.h>
 #include <mye/d3d11/DX11Utils.h>

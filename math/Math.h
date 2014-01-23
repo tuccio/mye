@@ -17,3 +17,5 @@
 
 #include "Quaternion.h"
 #include "QuaternionOperations.h"
+
+#include "Transform.h"

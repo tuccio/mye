@@ -11,7 +11,9 @@ const IWindow::Properties IWindow::DefaultWindowProperties = {
 	false
 };
 
-IWindow::IWindow(void)
+IWindow::IWindow(void) :
+	m_keyboard(NULL),
+	m_mouse(NULL)
 {
 }
 
@@ -41,6 +43,16 @@ void IWindow::RemoveListener(Listener *listener)
 void IWindow::ClearListeners(void)
 {
 	m_listeners.clear();
+}
+
+void IWindow::AttachKeyboard(Keyboard *keyboard)
+{
+	m_keyboard = keyboard;
+}
+
+void IWindow::AttachMouse(Mouse *mouse)
+{
+	m_mouse = mouse;
 }
 
 void IWindow::NotifyCreate(void)

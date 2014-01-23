@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Transform.h"
 #include "VariableComponent.h"
+#include <mye/math/Math.h>
 
 namespace mye
 {
@@ -9,7 +9,7 @@ namespace mye
 	namespace core
 	{
 		class TransformComponent :
-			public VariableComponent<Transform>
+			public VariableComponent<mye::math::Transformf>
 		{
 
 		public:

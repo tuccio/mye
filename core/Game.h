@@ -11,6 +11,7 @@
 
 #include "IWindow.h"
 #include "Singleton.h"
+#include "Time.h"
 
 #include <typeindex>
 #include <exception>
@@ -52,7 +53,7 @@ namespace mye
 
 			virtual void RuntimeError(const std::string &error);
 
-		private:
+		protected:
 
 			InputModule *m_input;
 			GameObjectsModule *m_gameobjects;
@@ -60,6 +61,8 @@ namespace mye
 			GraphicsModule *m_graphics;
 			AudioModule *m_audio;
 			IScriptModule *m_script;
+
+			LapStopWatch m_timer;
 
 		};
 

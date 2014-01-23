@@ -83,7 +83,7 @@ namespace mye
 					{
 
 						auto component = object_cast<MYE_LUA_COMPONENT_WRAP_TYPE(Component)>(wrappedComponent);
-						object rvalue = object(L, boost::ref(static_cast<VariableComponent<mye::core::Transform>*>(component)->Get()));
+						object rvalue = object(L, boost::ref(static_cast<VariableComponent<mye::math::Transformf>*>(component)->Get()));
 
 						if (component)
 						{
@@ -104,14 +104,14 @@ namespace mye
 									VARIABLE_COMPONENT_CAST_GET_BLOCK(std::string)
 									VARIABLE_COMPONENT_CAST_GET_BLOCK(mye::math::Vector3f)
 									VARIABLE_COMPONENT_CAST_GET_BLOCK(mye::math::Vector3i)
-									VARIABLE_COMPONENT_CAST_GET_ALIGNED(mye::core::Transform)
+									VARIABLE_COMPONENT_CAST_GET_ALIGNED(mye::math::Transformf)
 
 								}
 								break;
 
 							case TRANSFORM_COMPONENT:
 
-								rvalue = object(L, boost::ref(static_cast<VariableComponent<mye::core::Transform>*>(MYE_LUA_COMPONENT_UNWRAP(component))->Get()));
+								rvalue = object(L, boost::ref(static_cast<VariableComponent<mye::math::Transformf>*>(MYE_LUA_COMPONENT_UNWRAP(component))->Get()));
 								break;
 
 							default:
@@ -184,7 +184,7 @@ namespace mye
 							VARIABLE_COMPONENT_CAST_SET_BLOCK(std::string)
 							VARIABLE_COMPONENT_CAST_SET_BLOCK(mye::math::Vector3f)
 							VARIABLE_COMPONENT_CAST_SET_BLOCK(mye::math::Vector3i)
-							VARIABLE_COMPONENT_CAST_SET_ALIGNED(mye::core::Transform)
+							VARIABLE_COMPONENT_CAST_SET_ALIGNED(mye::math::Transformf)
 
 						}
 						
@@ -192,9 +192,9 @@ namespace mye
 
 					case TRANSFORM_COMPONENT:
 						{
-							mye::core::Transform aux;
-							memcpy(&aux, object_cast<mye::core::Transform*>(object(from_stack(L, 3))), sizeof(mye::core::Transform));
-							static_cast<VariableComponent<mye::core::Transform>*>(MYE_LUA_COMPONENT_UNWRAP(component))->Set(aux);
+							mye::math::Transformf aux;
+							memcpy(&aux, object_cast<mye::math::Transformf*>(object(from_stack(L, 3))), sizeof(mye::math::Transformf));
+							static_cast<VariableComponent<mye::math::Transformf>*>(MYE_LUA_COMPONENT_UNWRAP(component))->Set(aux);
 						}
 
 					default:

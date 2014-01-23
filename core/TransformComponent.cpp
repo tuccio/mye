@@ -1,9 +1,10 @@
 #include "TransformComponent.h"
 
 using namespace mye::core;
+using namespace mye::math;
 
 TransformComponent::TransformComponent(void) :
-	VariableComponent<Transform>("transform")
+	VariableComponent<Transformf>("transform")
 {
 	m_type = TRANSFORM_COMPONENT;
 }

@@ -82,7 +82,7 @@ void GameObject::OnCreation(GameObjectsManager *owner,
 	m_handle = handle;
 
 	TransformComponent *t = static_cast<TransformComponent*>(AddComponent(TransformComponent()));
-	t->Set(Transform::Identity());
+	t->Set(mye::math::Transformf::Identity());
 
 }
 

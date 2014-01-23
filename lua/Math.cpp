@@ -8,8 +8,6 @@
 #include <luabind/luabind.hpp>
 #include <luabind/operator.hpp>
 
-#include <mye/core/Transform.h>
-
 #include <sstream>
 
 using namespace luabind;
@@ -163,13 +161,13 @@ namespace mye
 			[
 
 				//class_<AlignmentWrapper<mye::core::Transform>>(classname).
-				class_<mye::core::Transform>(classname).
+				class_<mye::math::Transformf>(classname).
 
 					def(constructor<>()).
 
-					property("rotation", &mye::core::Transform::GetRotation, &mye::core::Transform::SetRotation).
-					property("translation", &mye::core::Transform::GetTranslation, &mye::core::Transform::SetTranslation).
-					property("scale", &mye::core::Transform::GetScale, &mye::core::Transform::SetScale)
+					property("orientation", &mye::math::Transformf::GetOrientation, &mye::math::Transformf::SetOrientation).
+					property("position", &mye::math::Transformf::GetPosition, &mye::math::Transformf::SetPosition).
+					property("scale", &mye::math::Transformf::GetScale, &mye::math::Transformf::SetScale)
 
 			];
 

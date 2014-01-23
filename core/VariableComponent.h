@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Component.h"
-#include "Transform.h"
+#include <mye/math/Math.h>
 
 #include <typeindex>
 

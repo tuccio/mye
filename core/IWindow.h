@@ -1,7 +1,11 @@
 #pragma once
 
+#include "Mouse.h"
+#include "Keyboard.h"
+
 #include <string>
 #include <vector>
+
 #include <mye/math/Math.h>
 
 namespace mye
@@ -53,6 +57,9 @@ namespace mye
 			virtual void SetPosition(const mye::math::Vector2i &position) = 0;
 			virtual mye::math::Vector2i GetPosition(void) const = 0;
 
+			void AttachKeyboard(mye::core::Keyboard *keyboard);
+			void AttachMouse(mye::core::Mouse *mouse);
+
 			void SendUserMessage(unsigned int msg,
 				unsigned int intArg,
 				long *ptrArg);
@@ -71,11 +78,14 @@ namespace mye
 				unsigned long intArg,
 				long *ptrArg);
 
-		private:
+		protected:
 
 			typedef std::vector<Listener*> ListenerList;
 
 			ListenerList m_listeners;
+
+			mye::core::Keyboard *m_keyboard;
+			mye::core::Mouse *m_mouse;
 
 		};
 
