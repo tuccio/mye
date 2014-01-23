@@ -99,7 +99,7 @@ namespace mye
 		private:
 
 			Milliseconds m_startTime;
-			bool m_active;
+			bool m_running;
 
 		};
 
@@ -123,7 +123,7 @@ namespace mye
 
 			Milliseconds m_startTime;
 			Milliseconds m_lastLap;
-			bool m_active;
+			bool m_running;
 
 		};
 

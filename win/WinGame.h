@@ -19,11 +19,9 @@ namespace mye
 				mye::core::SceneModule *scene,
 				mye::core::GraphicsModule *graphics,
 				mye::core::AudioModule *audio,
-				mye::core::IScriptModule *script);
+				mye::core::ScriptModule *script);
 
 			~WinGame(void);
-
-			mye::core::IWindow& GetMainWindow(void);
 
 			void Run(void);
 

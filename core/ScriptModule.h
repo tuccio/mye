@@ -2,6 +2,24 @@
 
 #include "Module.h"
 
+namespace mye
+{
+
+	namespace core
+	{
+
+		class ScriptModule :
+			public Module
+		{
+
+		};
+
+	}
+
+}
+
+/*
+
 #include <string>
 
 namespace mye
@@ -35,3 +53,4 @@ namespace mye
 }
 
 #include "ScriptModule.inl"
+*/

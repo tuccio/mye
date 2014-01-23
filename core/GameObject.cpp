@@ -1,6 +1,9 @@
 #include "GameObject.h"
 
+#include "ScriptComponent.h"
 #include "TransformComponent.h"
+
+#include <mye/lua/LuaScript.h>
 
 using namespace mye::core;
 using namespace std;
@@ -101,4 +104,16 @@ GameObjectsManager* GameObject::GetOwner(void)
 GameObjectHandle GameObject::GetHandle(void)
 {
 	return m_handle;
+}
+
+void GameObject::Update(FloatSeconds dt)
+{
+
+	auto it = m_components.find("script");
+
+	if (it != m_components.end())
+	{
+		static_cast<ScriptComponent*>(it->second)->Script().Call<void, float>("Update", dt);
+	}
+
 }

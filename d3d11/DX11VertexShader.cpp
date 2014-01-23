@@ -21,8 +21,8 @@ DX11Shader(owner, name, manual),
 
 void DX11VertexShader::Use(void)
 {
-	m_device.GetImmediateContext()->VSSetShader(m_shader, NULL, 0);
 	m_device.GetImmediateContext()->IASetInputLayout(m_inputLayout);
+	m_device.GetImmediateContext()->VSSetShader(m_shader, NULL, 0);
 }
 
 

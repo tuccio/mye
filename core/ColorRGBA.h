@@ -37,6 +37,8 @@ namespace mye
 			inline const float& a(void) const;
 			inline float& a(void);
 
+			inline ColorRGBA operator+ (const ColorRGBA &color) const;
+
 		private:
 
 			float m_data[4];

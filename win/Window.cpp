@@ -146,7 +146,7 @@ bool Window::DispatchCommand(unsigned int id)
 
 bool Window::Exists(void) const
 {
-	return IsWindow(m_hWnd);
+	return (IsWindow(m_hWnd) ? true : false);
 }
 
 bool Window::IsVisible(void) const

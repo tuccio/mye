@@ -1,5 +1,7 @@
 #pragma once
 
+#include <mye/core/Game.h>
+
 namespace mye
 {
 

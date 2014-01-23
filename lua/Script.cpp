@@ -4,6 +4,7 @@
 #include "Types.h"
 
 #include <mye/core/Game.h>
+#include <mye/core/ScriptComponent.h>
 
 #include <luabind/luabind.hpp>
 
@@ -31,17 +32,16 @@ namespace mye
 
 				class_<LuaModule>(MYE_LUA_LUAMODULE).
 
-					def("LoadClass", &LuaModule::LoadClass).
-					def("LoadProcedure", &LuaModule::LoadProcedure)
-
-			];
-
-			module(L)
-			[
+					def("LoadBehaviour", &LuaModule::LoadBehaviour).
+					def("LoadProcedure", &LuaModule::LoadProcedure),
 
 				class_<LuaScript>(MYE_LUA_SCRIPT).
 
-					def("Run", &LuaScript::Run)
+					def("Run", &LuaScript::Run),
+
+				class_<ScriptComponent, Component>(MYE_LUA_SCRIPT_COMPONENT).
+
+					def(constructor<LuaScript>())
 
 			];
 

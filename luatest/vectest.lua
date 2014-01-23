@@ -38,3 +38,5 @@ print("v5 / 2 : " .. tostring(v5 / 2))
 
 os.execute("pause")
 Windows.FreeConsole()
+
+Game:Quit()

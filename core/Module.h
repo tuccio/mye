@@ -19,12 +19,6 @@ namespace mye
 
 		};
 
-		class IScriptModule :
-			public Module
-		{
-
-		};
-
 	}
 
 }

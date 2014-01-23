@@ -42,7 +42,7 @@ namespace mye
 			MYE_VK_V,
 			MYE_VK_W,
 			MYE_VK_X,
-			MYE_WK_Y,
+			MYE_VK_Y,
 			MYE_VK_Z,
 			MYE_VK_SPACE,
 			MYE_VK_ENTER,

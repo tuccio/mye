@@ -60,6 +60,8 @@ namespace mye
 		int IndexOverload(lua_State *L)
 		{
 
+			int returnValues = 0;
+
 			lua_pushvalue(L, lua_upvalueindex(1));
 			lua_pushvalue(L, 1);
 			lua_pushvalue(L, 2);
@@ -120,6 +122,29 @@ namespace mye
 
 							lua_pop(L, 2);
 							rvalue.push(L);
+							returnValues = 1;
+
+						}
+
+					}
+					else
+					{
+
+						object wrappedScript = __goh_getcomponent(hObj.get(), "script");
+
+						if (wrappedScript)
+						{
+
+							auto script = object_cast<MYE_LUA_COMPONENT_WRAP_TYPE(ScriptComponent)>(wrappedScript);
+
+							if (script)
+							{
+								int ref = *script->Script().GetReference();
+								lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
+								lua_remove(L, -2);
+								lua_getfield(L, -1, field);
+								returnValues = 1;
+							}
 
 						}
 
@@ -128,17 +153,12 @@ namespace mye
 				}
 
 			}
+			else
+			{
+				returnValues = 1;
+			}
 
-			return 1;
-
-		}
-
-		int NewIndexActualOverload(lua_State *L)
-		{
-
-			int n = lua_gettop(L);
-
-			return 0;
+			return returnValues;
 
 		}
 

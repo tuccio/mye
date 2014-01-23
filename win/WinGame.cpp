@@ -10,7 +10,7 @@ WinGame::WinGame(InputModule *input,
 	SceneModule *scene,
 	GraphicsModule *graphics,
 	AudioModule *audio,
-	IScriptModule *script) :
+	ScriptModule *script) :
 Game(input,
 	gameobjects,
 	scene,
@@ -25,11 +25,6 @@ Game(input,
 WinGame::~WinGame(void)
 {
 	m_mainWindow.Destroy();
-}
-
-mye::core::IWindow& WinGame::GetMainWindow(void)
-{
-	return m_mainWindow;
 }
 
 void WinGame::Run(void)
@@ -56,12 +51,10 @@ void WinGame::Run(void)
 
 		FloatSeconds dt(m_timer.Lap());
 
-		/*
-		Update(dt);
-		Render();
-		*/
-
-
+		m_gameobjects->Update(dt);
+		//m_physics->Update(dt);
+		//m_scene->Update();
+		m_graphics->Render();
 
 	}
 	while (msg.message != WM_QUIT);

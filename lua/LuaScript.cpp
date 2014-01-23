@@ -5,45 +5,72 @@
 #include <lua.hpp>
 
 using namespace mye::lua;
-using namespace mye::core;
 
-Script<LuaScriptCaller>::Script(mye::core::ScriptModule<LuaScriptCaller> &module,
-								Type type) :
+LuaScript::LuaScript(LuaModule &module,
+					 Type type) :
 	m_module(module),
 	m_type(type),
 	m_ref(new LuaRegistryReference(module.GetLuaState()))
 {
 }
 
-Script<LuaScriptCaller>::Script(mye::core::ScriptModule<LuaScriptCaller> &module,
-								Type type,
-								int index) :
+LuaScript::LuaScript(LuaModule &module,
+					 Type type,
+					 int index) :
 	m_module(module),
 	m_type(type),
 	m_ref(new LuaRegistryReference(module.GetLuaState(), index))
 {
 }
 
-Script<LuaScriptCaller>::~LuaScript(void)
+LuaScript::~LuaScript(void)
 {
 }
 
-std::shared_ptr<const mye::lua::LuaRegistryReference> Script<LuaScriptCaller>::GetReference(void) const
+LuaScript::Reference LuaScript::GetReference(void) const
 {
 	return m_ref;
 }
 
-ScriptModule<mye::lua::LuaScriptCaller> Script<LuaScriptCaller>::GetModule(void) const
+/*
+LuaModule LuaScript::GetModule(void) const
 {
 	return m_module;
-}
+}*/
 
-Script<LuaScriptCaller>::Type Script<LuaScriptCaller>::GetType(void) const
+LuaScript::Type LuaScript::GetType(void) const
 {
 	return m_type;
 }
 
-bool Script<LuaScriptCaller>::Run(void) const
+bool LuaScript::Run(void) const
 {
-	return LuaScriptCaller::Run(m_module, *this);;
+	
+	lua_State *L = m_module.GetLuaState();
+	int top = lua_gettop(L);
+
+	if (m_type == LuaScript::Type::PROCEDURE)
+	{
+
+		int ref = *GetReference();
+
+		lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
+
+		if (!lua_pcall(L, 0, 0, 0))
+		{
+			lua_settop(L, top);
+			return true;
+		}
+
+	}
+
+	std::string errorMessage = lua_tostring(L, -1);
+
+	mye::core::Game::GetSingletonPointer()->RuntimeError(errorMessage);
+
+	luaL_error(L, errorMessage.c_str());
+	lua_settop(L, top);
+
+	return false;
+
 }

@@ -14,17 +14,17 @@ MouseKeyboardInput::~MouseKeyboardInput(void)
 
 bool MouseKeyboardInput::Init(void)
 {
-	IWindow &window = Game::GetSingleton().GetMainWindow();
-	window.AttachKeyboard(&m_keyboard);
-	window.AttachMouse(&m_mouse);
+	IWindow *window = Game::GetSingleton().GetGraphicsModule()->GetWindow();
+	window->AttachKeyboard(&m_keyboard);
+	window->AttachMouse(&m_mouse);
 	return true;
 }
 
 void MouseKeyboardInput::ShutDown(void)
 {
-	IWindow &window = Game::GetSingleton().GetMainWindow();
-	window.AttachKeyboard(NULL);
-	window.AttachMouse(NULL);
+	IWindow *window = Game::GetSingleton().GetGraphicsModule()->GetWindow();
+	window->AttachKeyboard(NULL);
+	window->AttachMouse(NULL);
 }
 
 bool MouseKeyboardInput::HasKeyboard(void) const

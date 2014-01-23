@@ -8,6 +8,7 @@
 #include <luabind/luabind.hpp>
 
 #include "Game.h"
+#include "DirectX11.h"
 #include "Script.h"
 #include "GameObjectHandle.h"
 #include "VariableComponent.h"
@@ -17,14 +18,21 @@
 #include "LuaModule.h"
 #include "LuaScriptCaller.h"
 
+#include <mye/d3d11/DX11Module.h>
+
 using namespace luabind;
 using namespace mye::core;
+using namespace mye::dx11;
 
 namespace mye
 {
 
 	namespace lua
 	{
+
+		IWindow* __game_get_window(Game &game);
+
+		void __graphics_module_reinterpret(const std::string &type);
 
 		void BindGame(lua_State *L)
 		{
@@ -36,20 +44,21 @@ namespace mye
 
 				class_<Game>(MYE_LUA_GAME).
 
-					def("GetMainWindow", &Game::GetMainWindow).
-					def("Quit", &Game::Quit)
-
-			];
-
-			module(L)
-			[
+					def("GetMainWindow", &__game_get_window).
+					def("Quit", &Game::Quit),
 
 				class_<GameObjectsModule>(MYE_LUA_GAMEOBJECTSMODULE).
 
 					def("Create", (GameObjectHandle (GameObjectsModule::*) (void)) &GameObjectsModule::Create).
 					def("Create", (GameObjectHandle (GameObjectsModule::*) (const std::string&)) &GameObjectsModule::Create).
 
-					def("Find", &GameObjectsModule::Find)
+					def("Find", &GameObjectsModule::Find),
+
+				class_<GraphicsModule>(MYE_LUA_GRAPHICSMODULE).
+
+					def("GetWindow", (IWindow* (GraphicsModule::*) (void)) &GraphicsModule::GetWindow).
+					def("HasWindow", &GraphicsModule::HasWindow).
+					def("Reinterpret", &__graphics_module_reinterpret)
 
 			];
 
@@ -61,6 +70,8 @@ namespace mye
 
 			BindWindow(L);
 			BindWindowsFunctions(L);
+
+			BindDirectX11(L);
 
 		}
 
@@ -88,6 +99,25 @@ namespace mye
 					def("SetPosition", &IWindow::SetPosition)
 
 			];
+
+		}
+
+		IWindow* __game_get_window(Game &game)
+		{
+			return game.GetGraphicsModule()->GetWindow();
+		}
+
+		void __graphics_module_reinterpret(const std::string &type)
+		{
+
+			Game& game = Game::GetSingleton();
+			lua_State *L = static_cast<LuaModule*>(game.GetScriptModule())->GetLuaState();
+
+			if (type == "DX11")
+			{
+				DX11Module &dx11 = *static_cast<DX11Module*>(game.GetGraphicsModule());
+				globals(L)["Graphics"] = object(L, boost::ref(dx11));
+			}
 
 		}
 

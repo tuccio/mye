@@ -13,6 +13,10 @@ namespace mye
 								  public GameObjectsManager
 		{
 
+		public:
+
+			void Update(FloatSeconds dt);
+
 		};
 
 	}

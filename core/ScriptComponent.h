@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Component.h"
-#include "Script.h"
+
+#include <mye/lua/LuaScript.h>
 
 namespace mye
 {
@@ -15,10 +16,19 @@ namespace mye
 
 		public:
 
-			ScriptComponent(const std::string &name);
+			ScriptComponent(mye::lua::LuaScript script);
 			~ScriptComponent(void);
 
-			//const Script& Get(void);
+			Cloneable* Clone(void) const;
+
+			inline mye::lua::LuaScript& Script(void);
+			inline const mye::lua::LuaScript& Script(void) const;
+
+		private:
+
+			mye::lua::LuaScript m_script;
+
+/*			const Script& Get(void);*/
 
 		};
 
@@ -26,3 +36,4 @@ namespace mye
 
 }
 
+#include "ScriptComponent.inl"

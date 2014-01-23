@@ -34,7 +34,7 @@ namespace mye
 				 SceneModule *scene,
 				 GraphicsModule *graphics,
 				 AudioModule *audio,
-				 IScriptModule *script);
+				 ScriptModule *script);
 
 			~Game(void);
 
@@ -42,14 +42,12 @@ namespace mye
 			virtual void Run(void);
 			virtual void Quit(void);
 
-			virtual IWindow& GetMainWindow(void) = 0;
-
 			InputModule* GetInputModule(void);
 			GameObjectsModule* GetGameObjectsModule(void);
 			SceneModule* GetSceneModule(void);
 			GraphicsModule* GetGraphicsModule(void);
 			AudioModule* GetAudioModule(void);
-			IScriptModule* GetScriptModule(void);
+			ScriptModule* GetScriptModule(void);
 
 			virtual void RuntimeError(const std::string &error);
 
@@ -60,7 +58,7 @@ namespace mye
 			SceneModule *m_scene;
 			GraphicsModule *m_graphics;
 			AudioModule *m_audio;
-			IScriptModule *m_script;
+			ScriptModule *m_script;
 
 			LapStopWatch m_timer;
 

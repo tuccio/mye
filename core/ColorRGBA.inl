@@ -54,6 +54,16 @@ namespace mye
 			return m_data[3];
 		}
 
+		ColorRGBA ColorRGBA::operator+ (const ColorRGBA &color) const
+		{
+			return ColorRGBA(
+				m_data[0] + color.m_data[0],
+				m_data[1] + color.m_data[1],
+				m_data[2] + color.m_data[2],
+				m_data[3] + color.m_data[3]
+				);
+		}
+
 	}
 
 }

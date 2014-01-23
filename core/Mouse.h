@@ -2,7 +2,6 @@
 
 #include <mye/math/Math.h>
 
-#include "Time.h"
 #include "VirtualKeys.h"
 
 namespace mye
@@ -20,8 +19,7 @@ namespace mye
 			~Mouse(void);
 
 			inline void Press(MouseVK key);
-			inline Milliseconds PressTime(MouseVK key) const;
-			inline Milliseconds Release(MouseVK key);
+			inline void Release(MouseVK key);
 
 			inline bool IsPressed(MouseVK key) const;
 
@@ -32,7 +30,7 @@ namespace mye
 
 		private:
 
-			StopWatch m_keys[MYE_VK_MOUSE_COUNT];
+			bool m_keys[MYE_VK_MOUSE_COUNT];
 
 			mye::math::Vector2f m_position;
 			mye::math::Vector2f m_delta;

@@ -6,22 +6,17 @@ namespace mye
 
 		void Mouse::Press(MouseVK key)
 		{
-			m_keys[key].Start();
+			m_keys[key] = true;
 		}
 
-		Milliseconds Mouse::PressTime(MouseVK key) const
+		void Mouse::Release(MouseVK key)
 		{
-			return m_keys[key].GetElapsedTime();
-		}
-
-		Milliseconds Mouse::Release(MouseVK key)
-		{
-			return m_keys[key].Stop();
+			m_keys[key] = false;
 		}
 
 		bool Mouse::IsPressed(MouseVK key) const
 		{
-			m_keys->IsRunning();
+			return m_keys[key];
 		}
 
 		void Mouse::Move(const mye::math::Vector2f &position)

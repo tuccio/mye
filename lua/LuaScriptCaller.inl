@@ -1,3 +1,5 @@
+
+/*
 namespace mye
 {
 
@@ -24,4 +26,4 @@ namespace mye
 
 	}
 
-}
+}*/

@@ -2,6 +2,8 @@
 #include <mye/core/MouseKeyboardInput.h>
 #include <mye/core/ResourceManager.h>
 
+#include <mye/d3d11/DX11Module.h>
+
 #include <mye/lua/LuaScriptCaller.h>
 #include <mye/lua/LuaScript.h>
 #include <mye/lua/LuaModule.h>
@@ -16,6 +18,7 @@
 
 using namespace std;
 using namespace mye::core;
+using namespace mye::dx11;
 using namespace mye::lua;
 using namespace mye::win;
 
@@ -33,7 +36,7 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 	MouseKeyboardInput input;
 	GameObjectsModule gameobjects;
 	SceneModule scene;
-	GraphicsModule graphics;
+	DX11Module graphics;
 	AudioModule audio;
 	LuaModule lua;
 

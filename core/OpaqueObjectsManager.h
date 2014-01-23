@@ -63,7 +63,7 @@ namespace mye
 			T* Get(const OpaqueObjectHandle<T> &hObj);
 			OpaqueObjectHandle<T> Find(const std::string &name);
 
-		private:
+		protected:
 
 			struct Allocation
 			{

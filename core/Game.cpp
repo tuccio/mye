@@ -9,7 +9,7 @@ Game::Game(InputModule *input,
 		   SceneModule *scene,
 		   GraphicsModule *graphics,
 		   AudioModule *audio,
-		   IScriptModule *script) :
+		   ScriptModule *script) :
 m_input(input),
 	m_gameobjects(gameobjects),
 	m_scene(scene),
@@ -29,11 +29,11 @@ bool Game::Init(void)
 
 #define __TRY_INIT(x) if (!(x)->Init()) return false;
 
-	__TRY_INIT(m_input)
 	__TRY_INIT(m_gameobjects)
 	__TRY_INIT(m_scene)
 	__TRY_INIT(m_graphics)
 	__TRY_INIT(m_audio)
+	__TRY_INIT(m_input)
 	__TRY_INIT(m_script)
 
 #undef __TRY_INIT
@@ -78,7 +78,7 @@ AudioModule* Game::GetAudioModule(void)
 	return m_audio;
 }
 
-IScriptModule* Game::GetScriptModule(void)
+ScriptModule* Game::GetScriptModule(void)
 {
 	return m_script;
 }

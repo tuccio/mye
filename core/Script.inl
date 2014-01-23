@@ -1,3 +1,4 @@
+/*
 namespace mye
 {
 
@@ -39,3 +40,4 @@ namespace mye
 	}
 
 }
+*/

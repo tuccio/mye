@@ -1,10 +1,7 @@
---[[Windows.AllocConsole()
+Windows.AllocConsole()
 
-print(Input:Keyboard():IsPressed(Keyboard.A))
+local inputScript = Script:LoadBehaviour("scripts/InputListener.lua")
 
+local hObj  = GameObjects:Create()
 
-os.execute("pause")
-
-Windows.FreeConsole()
-
-Game:Quit()]]--
+hObj:AddComponent(ScriptComponent(inputScript))

@@ -1,12 +1,14 @@
 #pragma once
 
 #include <map>
+#include <unordered_map>
 #include <string>
 #include <vector>
 
 #include "Component.h"
 #include "INamedObject.h"
 #include "OpaqueObjectsManager.h"
+#include "Time.h"
 
 namespace mye
 {
@@ -39,11 +41,13 @@ namespace mye
 			GameObjectsManager* GetOwner(void);
 			GameObjectHandle GetHandle(void);
 
+			void Update(FloatSeconds dt);
+
 			void Clear(void);
 
 		private:
 
-			typedef std::map<std::string, Component*> ComponentsList;
+			typedef std::unordered_map<std::string, Component*> ComponentsList;
 
 			friend class OpaqueObjectsManager<GameObject>;
 

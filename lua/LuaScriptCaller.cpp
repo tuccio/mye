@@ -1,3 +1,4 @@
+/*
 #include <mye/core/Game.h>
 
 #include <lua.hpp>
@@ -52,7 +53,7 @@ namespace mye
 
 					if (!lua_pcall(_L, 0, 0, 0))
 					{
-						LuaScript rvalue(module, LuaScript::CLASS, -1);
+						LuaScript rvalue(module, LuaScript::BEHAVIOUR, -1);
 						lua_settop(_L, top);
 						return rvalue;
 					}
@@ -65,7 +66,7 @@ namespace mye
 
 			lua_settop(_L, top);
 
-			LuaScript rvalue(module, LuaScript::CLASS);
+			LuaScript rvalue(module, LuaScript::BEHAVIOUR);
 			return rvalue;
 
 		}
@@ -158,3 +159,4 @@ namespace mye
 	}
 
 }
+*/

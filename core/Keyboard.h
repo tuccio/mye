@@ -1,7 +1,6 @@
 #pragma once
 
 #include "VirtualKeys.h"
-#include "Time.h"
 
 namespace mye
 {
@@ -18,14 +17,13 @@ namespace mye
 			~Keyboard(void);
 
 			inline void Press(KeyboardVK key);
-			inline Milliseconds PressTime(KeyboardVK key) const;
-			inline Milliseconds Release(KeyboardVK key);
+			inline void Release(KeyboardVK key);
 
 			inline bool IsPressed(KeyboardVK key) const;
 
 		private:
 
-			StopWatch m_keys[MYE_VK_COUNT];
+			bool m_keys[MYE_VK_COUNT];
 
 		};
 

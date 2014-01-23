@@ -6,6 +6,7 @@ using namespace mye::core;
 
 Keyboard::Keyboard(void)
 {
+	memset(m_keys, 0, sizeof(m_keys));
 }
 
 

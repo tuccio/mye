@@ -6,12 +6,12 @@ using namespace mye::core;
 
 StopWatch::StopWatch(void)
 {
-	m_active = false;
+	m_running = false;
 }
 
 LapStopWatch::LapStopWatch(void)
 {
-	m_active = false;
+	m_running = false;
 }
 
 /* Float seconds */

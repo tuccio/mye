@@ -6,22 +6,17 @@ namespace mye
 
 		void Keyboard::Press(KeyboardVK key)
 		{
-			m_keys[key].Start();
+			m_keys[key] = true;
 		}
 
-		Milliseconds Keyboard::PressTime(KeyboardVK key) const
+		void Keyboard::Release(KeyboardVK key)
 		{
-			return m_keys[key].GetElapsedTime();
-		}
-
-		Milliseconds Keyboard::Release(KeyboardVK key)
-		{
-			return m_keys[key].Stop();
+			m_keys[key] = false;
 		}
 
 		bool Keyboard::IsPressed(KeyboardVK key) const
 		{
-			return m_keys->IsRunning();
+			return m_keys[key];
 		}
 
 	}

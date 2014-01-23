@@ -1,3 +1,4 @@
+/*
 #pragma once
 
 #include <string>
@@ -24,7 +25,7 @@ namespace mye
 			};
 
 			Script(ScriptModule<ConcreteFunctionCaller> &module, Type type);
-			virtual ~Script(void);
+			~Script(void);
 
 			Type GetType(void) const;
 
@@ -42,8 +43,16 @@ namespace mye
 
 		};
 
+		class Script
+		{
+
+		public:
+
+		};
+
 	}
 
 }
 
 #include "Script.inl"
+*/

@@ -1,3 +1,4 @@
+/*
 #pragma once
 
 #include <mye/core/Script.h>
@@ -40,4 +41,4 @@ namespace mye
 
 }
 
-#include "LuaScriptCaller.inl"
+#include "LuaScriptCaller.inl"*/

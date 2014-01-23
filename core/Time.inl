@@ -13,19 +13,19 @@ namespace mye
 		void StopWatch::Start(void)
 		{
 			m_startTime = __MYE_GET_MS_TIME();
-			m_active = true;
+			m_running = true;
 		}
 
 		Milliseconds StopWatch::Stop(void)
 		{
 			Milliseconds elapsed = GetElapsedTime();
-			m_active = false;
+			m_running = false;
 			return elapsed;
 		}
 
 		bool StopWatch::IsRunning(void) const
 		{
-			return m_active;
+			return m_running;
 		}
 
 		Milliseconds StopWatch::GetElapsedTime(void) const
@@ -38,19 +38,19 @@ namespace mye
 		{
 			m_startTime = __MYE_GET_MS_TIME();
 			m_lastLap = m_startTime;
-			m_active = true;
+			m_running = true;
 		}
 
 		Milliseconds LapStopWatch::Stop(void)
 		{
 			Milliseconds elapsed = GetElapsedTime();
-			m_active = false;
+			m_running = false;
 			return elapsed;
 		}
 
 		bool LapStopWatch::IsRunning(void) const
 		{
-			return m_active;
+			return m_running;
 		}
 
 		Milliseconds LapStopWatch::GetElapsedTime(void) const

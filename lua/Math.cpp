@@ -23,7 +23,7 @@ namespace mye
 		void BindVector4(lua_State *L, const char *classname)
 		{
 
-			typedef mye::math::Matrix<T, 4, 1> VectorType;
+			typedef Matrix<T, 4, 1> VectorType;
 
 			module(L)
 				[
@@ -33,7 +33,7 @@ namespace mye
 					def(constructor<>()).
 					def(constructor<T>()).
 					def(constructor<T, T, T, T>()).
-					def(constructor<const mye::math::Matrix<T, 3, 1>&, T>()).
+					def(constructor<const Matrix<T, 3, 1>&, T>()).
 					def(constructor<const VectorType&>()).
 
 					def("__add", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_add<4, T>).
@@ -62,7 +62,7 @@ namespace mye
 		void BindVector3(lua_State *L, const char *classname)
 		{
 
-			typedef mye::math::Matrix<T, 3, 1> VectorType;
+			typedef Matrix<T, 3, 1> VectorType;
 
 			module(L)
 			[
@@ -72,7 +72,7 @@ namespace mye
 				def(constructor<>()).
 				def(constructor<T>()).
 				def(constructor<T, T, T>()).
-				def(constructor<const mye::math::Matrix<T, 2, 1>&, T>()).
+				def(constructor<const Matrix<T, 2, 1>&, T>()).
 				def(constructor<const VectorType&>()).
 
 				def("__add", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_add<3, T>).
@@ -100,7 +100,7 @@ namespace mye
 		void BindVector2(lua_State *L, const char *classname)
 		{
 
-			typedef mye::math::Matrix<T, 2, 1> VectorType;
+			typedef Matrix<T, 2, 1> VectorType;
 
 			module(L)
 				[
@@ -138,7 +138,7 @@ namespace mye
 			module(L)
 			[
 
-				class_<mye::math::Quaternionf>(classname).
+				class_<Quaternionf>(classname).
 
 					def(constructor<>()).
 					def(constructor<float, float, float, float>()).
@@ -160,18 +160,17 @@ namespace mye
 			module(L)
 			[
 
-				//class_<AlignmentWrapper<mye::core::Transform>>(classname).
-				class_<mye::math::Transformf>(classname).
+				class_<Transformf>(classname).
 
 					def(constructor<>()).
 
-					property("orientation", &mye::math::Transformf::GetOrientation, &mye::math::Transformf::SetOrientation).
-					property("position", &mye::math::Transformf::GetPosition, &mye::math::Transformf::SetPosition).
-					property("scale", &mye::math::Transformf::GetScale, &mye::math::Transformf::SetScale)
+					property("orientation", &Transformf::GetOrientation, &Transformf::SetOrientation).
+					property("position", &Transformf::GetPosition, &Transformf::SetPosition).
+					property("scale", &Transformf::GetScale, &Transformf::SetScale)
 
 			];
 
-		}
+		}		
 
 		void BindMath(lua_State *L)
 		{

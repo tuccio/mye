@@ -5,6 +5,8 @@
 #define MYE_LUA_GAME "__Game"
 #define MYE_LUA_GAMEOBJECTSMODULE "__GameObjectsModule"
 #define MYE_LUA_INPUTMODULE "__InputModule"
+#define MYE_LUA_GRAPHICSMODULE "__GraphicsModule"
+#define MYE_LUA_DX11MODULE "__DX11Module"
 
 #define MYE_LUA_GAMEOBJECTHANDLE "GameObjectHandle"
 #define MYE_LUA_GAMEOBJECT "GameObject"
@@ -22,8 +24,13 @@
 
 #define MYE_LUA_TRANSFORM_COMPONENT "TransformComponent"
 
+#define MYE_LUA_SCRIPT_COMPONENT "ScriptComponent"
+
 #define MYE_LUA_LUAMODULE "LuaModule"
 #define MYE_LUA_SCRIPT "Script"
+
+#define MYE_LUA_COLORRGB "ColorRGB"
+#define MYE_LUA_COLORRGBA "ColorRGBA"
 
 #define MYE_LUA_VEC2 "vec2"
 #define MYE_LUA_VEC2I "vec2i"
@@ -39,6 +46,8 @@
 
 #define MYE_LUA_WIN "Windows"
 #define MYE_LUA_WINDOW "Window"
+
+#define MYE_LUA_DX11WINDOW "DX11Window"
 
 #define MYE_LUA_KEYBOARD "Keyboard"
 #define MYE_LUA_MOUSE "Mouse"
