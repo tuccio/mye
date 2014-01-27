@@ -35,6 +35,22 @@ namespace mye
 			return m_delta;
 		}
 
+		void Mouse::ResetDelta(void)
+		{
+			m_delta.x() = 0;
+			m_delta.y() = 0;
+		}
+
+		int Mouse::GetWheelDelta(void) const
+		{
+			return m_wheelDelta;
+		}
+
+		void Mouse::SetWheelDelta(int wheelDelta)
+		{
+			m_wheelDelta = wheelDelta;
+		}
+
 	}
 
 }

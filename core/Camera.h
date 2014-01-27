@@ -2,8 +2,6 @@
 
 #include <mye/math/Math.h>
 
-#include "AABB.h"
-
 namespace mye
 {
 
@@ -48,8 +46,8 @@ namespace mye
 			void Pitch(float angle);
 			void Yaw(float angle);
 
-			void UpdateView(void);
-			void UpdateProjection(void);
+			inline void UpdateView(void);
+			inline void UpdateProjection(void);
 
 			inline mye::math::Matrix4f GetViewMatrix(void) const;
 			inline mye::math::Matrix4f GetProjectionMatrix(void) const;

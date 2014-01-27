@@ -62,6 +62,8 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 
 	g_mainWindow.Maximize();
 
+	g_input.Init();
+
 	CompileShaders();
 
 	MSG msg;
@@ -69,6 +71,8 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 
 	do
 	{
+
+		g_input.ResetDeltas();
 
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{

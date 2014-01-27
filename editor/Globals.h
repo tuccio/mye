@@ -1,6 +1,7 @@
 #pragma once
 
 #include <mye/win/Toolbar.h>
+#include <mye/win/MouseKeyboardInput.h>
 #include <mye/win/Window.h>
 #include <mye/win/WindowMenu.h>
 
@@ -24,7 +25,11 @@ extern int g_leftToolbarWidth;
 extern mye::dx11::DX11Device g_device;
 
 extern SceneView g_sceneView;
-
 extern ModelView g_modelView;
 
 extern Solution g_currentSolution;
+
+extern mye::win::MouseKeyboardInput g_input;
+
+// extern mye::win::WinKeyboard g_keyboard;
+//extern mye::win::WinMouse g_mouse;

@@ -529,7 +529,7 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd,
 
 			if (window->m_keyboard)
 			{
-				KeyboardVK key = VirtualKeyMap(wParam, lParam);
+				KeyboardVK key = VirtualKeyMap(wParam);
 				
 				if (key != MYE_VK_COUNT)
 				{
@@ -550,7 +550,7 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd,
 
 			if (window->m_keyboard)
 			{
-				KeyboardVK key = VirtualKeyMap(wParam, lParam);
+				KeyboardVK key = VirtualKeyMap(wParam);
 
 				if (key != MYE_VK_COUNT)
 				{

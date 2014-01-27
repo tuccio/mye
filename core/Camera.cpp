@@ -43,6 +43,7 @@ void Camera::LookAt(const mye::math::Vector3f &position,
 	cam.SetColumn(2, z);
 
 	m_orientation = Quaternionf(cam);
+
 	m_position = position;
 
 	m_viewMatrixUptodate = false;
@@ -118,27 +119,6 @@ void Camera::Roll(float angle)
 
 }
 
-void Camera::UpdateView(void)
-{
-	
-	m_viewMatrix = RotationMatrix4(m_orientation);
-
-	m_viewMatrix(3, 0) = - Vector3f(m_viewMatrix(0, 0),
-		m_viewMatrix(0, 1),
-		m_viewMatrix(0, 2)).Dot(m_position);
-
-	m_viewMatrix(3, 1) = - Vector3f(m_viewMatrix(1, 0),
-		m_viewMatrix(1, 1),
-		m_viewMatrix(1, 2)).Dot(m_position);
-
-	m_viewMatrix(3, 2) = - Vector3f(m_viewMatrix(2, 0),
-		m_viewMatrix(2, 1),
-		m_viewMatrix(2, 2)).Dot(m_position);
-
-	m_viewMatrixUptodate = true;
-
-}
-
 /* Projection */
 
 void Camera::SetFrustum(float fovy, float aspect, float zNear, float zFar)
@@ -197,21 +177,4 @@ float Camera::GetFovY(void) const
 float Camera::GetFovX(void) const
 {
 	return Degrees(2.0f * Arctangent(m_aspectRatio * Tangent(0.5f * m_fovY)));
-}
-
-void Camera::UpdateProjection(void)
-{
-
-	float yScale = 1.0f / Tangent(m_fovY * 0.5f);
-	float xScale = yScale / m_aspectRatio;
-	float invDepth = 1.0f / (m_farClipDistance - m_nearClipDistance);
-
-	m_projectionMatrix(0, 0) = xScale;
-	m_projectionMatrix(1, 1) = yScale;
-	m_projectionMatrix(2, 2) = m_farClipDistance * invDepth;
-	m_projectionMatrix(3, 2) = - m_nearClipDistance * m_farClipDistance * invDepth;
-	m_projectionMatrix(2, 3) = 1;
-
-	m_projectionMatrixUptodate = true;
-
 }

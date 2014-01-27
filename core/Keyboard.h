@@ -21,6 +21,8 @@ namespace mye
 
 			inline bool IsPressed(KeyboardVK key) const;
 
+			bool Hook(void);
+
 		private:
 
 			bool m_keys[MYE_VK_COUNT];

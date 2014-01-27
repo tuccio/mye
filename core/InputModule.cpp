@@ -31,3 +31,16 @@ const Mouse* InputModule::GetMouse(void) const
 {
 	return NULL;
 }
+
+void InputModule::ResetDeltas(void)
+{
+
+	Mouse *mouse = GetMouse();
+
+	if (mouse)
+	{
+		mouse->ResetDelta();
+		mouse->SetWheelDelta(0);
+	}
+
+}

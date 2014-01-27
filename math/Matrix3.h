@@ -28,6 +28,12 @@ namespace mye
 
 			inline Matrix<T, 3, 3> operator* (const Matrix<T, 3, 3> &a) const;
 
+			inline Matrix<T, 3, 3>& ScaleInPlace(T s);
+
+			inline Matrix<T, 3, 3> Transpose(void) const;
+			inline T Determinant(void) const;
+			inline Matrix<T, 3, 3> Inverse(void) const;
+
 			inline T* Data(void);
 			inline const T* Data(void) const;
 

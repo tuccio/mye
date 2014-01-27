@@ -31,7 +31,8 @@ namespace mye
 			inline const Matrix<T, 3, 1>& GetScale(void) const;
 			inline void SetScale(const Matrix<T, 3, 1> &scale);
 
-			inline Matrix<T, 4, 4> GetMatrix(void) const;
+			inline Matrix<T, 4, 4> GetSRTMatrix(void) const;
+
 			inline Transform<T> Combine(const Transform<T> &transform);
 
 		private:

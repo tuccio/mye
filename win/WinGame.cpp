@@ -56,6 +56,8 @@ void WinGame::Run(void)
 		//m_scene->Update();
 		m_graphics->Render();
 
+		m_input->ResetDeltas();
+
 	}
 	while (msg.message != WM_QUIT);
 

@@ -20,8 +20,8 @@ namespace mye
 
 			~Singleton(void);
 
-			static T& GetSingleton(void);
-			static T* GetSingletonPointer(void);
+			inline static T& GetSingleton(void);
+			inline static T* GetSingletonPointer(void);
 
 		protected:
 

@@ -62,6 +62,14 @@ namespace mye
 		typedef Transform<float> Transformf;
 		typedef Transform<double> Transformd;
 
+		class AABB;
+
+		template <typename T>
+		class Ray;
+
+		typedef Ray<float> Rayf;
+		typedef Ray<double> Rayd;
+
 	}
 
 }

@@ -1,5 +1,5 @@
 #include <mye/core/Logger.h>
-#include <mye/core/MouseKeyboardInput.h>
+#include <mye/win/MouseKeyboardInput.h>
 #include <mye/core/ResourceManager.h>
 
 #include <mye/d3d11/DX11Module.h>

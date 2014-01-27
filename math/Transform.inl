@@ -71,13 +71,13 @@ namespace mye
 		{
 			m_scale = scale;
 		}
-		
+
 		template <typename T>
-		Matrix<T, 4, 4> Transform<T>::GetMatrix(void) const
+		Matrix<T, 4, 4> Transform<T>::GetSRTMatrix(void) const
 		{
-			return RotationMatrix4(m_orientation) *
-			ScaleMatrix4(m_scale) *
-			TranslationMatrix4(m_position);
+			return ScaleMatrix4(m_scale) *
+				RotationMatrix4(m_orientation) *
+				TranslationMatrix4(m_position);
 		}
 
 		template <typename T>

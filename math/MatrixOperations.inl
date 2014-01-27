@@ -86,6 +86,58 @@ namespace mye
 				);
 		}
 
+		/* Matrix scalar */
+
+		template <typename T>
+		Matrix<T, 2, 1> operator* (T s, const Matrix<T, 2, 1> &v)
+		{
+			return Matrix<T, 2, 1>(
+				s * v.x(),
+				s * v.y()
+				);
+		}
+
+		template <typename T>
+		Matrix<T, 3, 1> operator* (T s, const Matrix<T, 3, 1> &v)
+		{
+			return Matrix<T, 3, 1>(
+				s * v.x(),
+				s * v.y(),
+				s * v.z()
+				);
+		}
+
+		template <typename T>
+		Matrix<T, 4, 1> operator* (T s, const Matrix<T, 4, 1> &v)
+		{
+			return Matrix<T, 4, 1>(
+				s * v.x(),
+				s * v.y(),
+				s * v.z(),
+				s * v.w()
+				);
+		}
+
+		template <typename T>
+		Matrix<T, 4, 4> ScaleMatrix4(const Matrix<T, 3, 1> &scale)
+		{
+			Matrix<T, 4, 4> smatrix(1.0f);
+			smatrix(0, 0) = scale.x();
+			smatrix(1, 1) = scale.y();
+			smatrix(2, 2) = scale.z();
+			return smatrix;
+		}
+
+		template <typename T>
+		Matrix<T, 4, 4> TranslationMatrix4(const Matrix<T, 3, 1> &translation)
+		{
+			Matrix<T, 4, 4> tmatrix(1.0f);
+			tmatrix(0, 3) = translation.x();
+			tmatrix(1, 3) = translation.y();
+			tmatrix(2, 3) = translation.z();
+			return tmatrix;
+		}
+
 	}
 
 }

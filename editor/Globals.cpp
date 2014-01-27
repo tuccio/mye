@@ -12,7 +12,8 @@ int g_leftToolbarWidth = 40;
 dx11::DX11Device g_device;
 
 SceneView g_sceneView(g_device);
-
 ModelView g_modelView(g_device);
 
 Solution g_currentSolution;
+
+mye::win::MouseKeyboardInput g_input;

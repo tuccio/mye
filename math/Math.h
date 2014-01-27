@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "Declarations.h"
 
 #include "Functions.h"
@@ -19,3 +21,6 @@
 #include "QuaternionOperations.h"
 
 #include "Transform.h"
+
+#include "AABB.h"
+#include "Ray.h"

@@ -53,11 +53,21 @@ private:
 
 	bool m_initialized;
 
+	/* Input */
+
+	enum InputMode
+	{
+		MODELVIEW_INPUT_TRANSFORM
+	} m_inputMode;
+
 	/* Content members */
 
 	mye::core::AssimpModelLoader m_modelLoader;
+
 	mye::core::ResourceHandle m_model;
-	mye::math::Matrix4f m_transform;
+	mye::math::Transformf m_localTransform;
+	mye::math::Transformf m_worldTransform;
+
 	mye::dx11::DX11VertexBuffer m_vbuffer;
 
 	mye::core::Camera m_camera;

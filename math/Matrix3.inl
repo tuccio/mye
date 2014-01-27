@@ -1,3 +1,13 @@
+#define _00(__m) *((__m))
+#define _01(__m) *((__m) + 1)
+#define _02(__m) *((__m) + 2)
+#define _10(__m) *((__m) + 3)
+#define _11(__m) *((__m) + 4)
+#define _12(__m) *((__m) + 5)
+#define _20(__m) *((__m) + 6)
+#define _21(__m) *((__m) + 7)
+#define _22(__m) *((__m) + 8)
+
 namespace mye
 {
 
@@ -12,29 +22,29 @@ namespace mye
 		template <typename T>
 		Matrix<T, 3, 3>::Matrix(T d)
 		{
-			__MYE_MATRIX_ACCESS(m_data, 3, 0, 0) = d;
-			__MYE_MATRIX_ACCESS(m_data, 3, 0, 1) = T(0);
-			__MYE_MATRIX_ACCESS(m_data, 3, 0, 2) = T(0);
-			__MYE_MATRIX_ACCESS(m_data, 3, 1, 0) = T(0);
-			__MYE_MATRIX_ACCESS(m_data, 3, 1, 1) = d;
-			__MYE_MATRIX_ACCESS(m_data, 3, 1, 2) = T(0);
-			__MYE_MATRIX_ACCESS(m_data, 3, 2, 0) = T(0);
-			__MYE_MATRIX_ACCESS(m_data, 3, 2, 1) = T(0);
-			__MYE_MATRIX_ACCESS(m_data, 3, 2, 2) = d;
+			_00(m_data) = d;
+			_01(m_data) = T(0);
+			_02(m_data) = T(0);
+			_10(m_data) = T(0);
+			_11(m_data) = d;
+			_12(m_data) = T(0);
+			_20(m_data) = T(0);
+			_21(m_data) = T(0);
+			_22(m_data) = d;
 		}
 
 		template <typename T>
 		void Matrix<T, 3, 3>::Fill(T x)
 		{
-			__MYE_MATRIX_ACCESS(m_data, 3, 0, 0) = x;
-			__MYE_MATRIX_ACCESS(m_data, 3, 0, 1) = x;
-			__MYE_MATRIX_ACCESS(m_data, 3, 0, 2) = x;
-			__MYE_MATRIX_ACCESS(m_data, 3, 1, 0) = x;
-			__MYE_MATRIX_ACCESS(m_data, 3, 1, 1) = x;
-			__MYE_MATRIX_ACCESS(m_data, 3, 1, 2) = x;
-			__MYE_MATRIX_ACCESS(m_data, 3, 2, 0) = x;
-			__MYE_MATRIX_ACCESS(m_data, 3, 2, 1) = x;
-			__MYE_MATRIX_ACCESS(m_data, 3, 2, 2) = x;
+			_00(m_data) = x;
+			_01(m_data) = x;
+			_02(m_data) = x;
+			_10(m_data) = x;
+			_11(m_data) = x;
+			_12(m_data) = x;
+			_20(m_data) = x;
+			_21(m_data) = x;
+			_22(m_data) = x;
 		}
 
 		template <typename T>
@@ -92,7 +102,7 @@ namespace mye
 		}
 
 		template <typename T>
-		inline Matrix<T, 3, 3> Matrix<T, 3, 3>::operator* (
+		Matrix<T, 3, 3> Matrix<T, 3, 3>::operator* (
 			const Matrix<T, 3, 3> &b) const
 		{
 
@@ -100,56 +110,154 @@ namespace mye
 
 			// First row
 
-			__MYE_MATRIX_ACCESS(r.m_data, 3, 0, 0) = 
-				__MYE_MATRIX_ACCESS(m_data, 3, 0, 0) * __MYE_MATRIX_ACCESS(b.m_data, 3, 0, 0) +
-				__MYE_MATRIX_ACCESS(m_data, 3, 0, 1) * __MYE_MATRIX_ACCESS(b.m_data, 3, 1, 0) +
-				__MYE_MATRIX_ACCESS(m_data, 3, 0, 2) * __MYE_MATRIX_ACCESS(b.m_data, 3, 2, 0);
+			_00(r.m_data) = 
+				_00(m_data) * _00(b.m_data) +
+				_01(m_data) * _10(b.m_data) +
+				_02(m_data) * _20(b.m_data);
 
-			__MYE_MATRIX_ACCESS(r.m_data, 3, 0, 1) = 
-				__MYE_MATRIX_ACCESS(m_data, 3, 0, 0) * __MYE_MATRIX_ACCESS(b.m_data, 3, 0, 1) +
-				__MYE_MATRIX_ACCESS(m_data, 3, 0, 1) * __MYE_MATRIX_ACCESS(b.m_data, 3, 1, 1) +
-				__MYE_MATRIX_ACCESS(m_data, 3, 0, 2) * __MYE_MATRIX_ACCESS(b.m_data, 3, 2, 1);
+			_01(r.m_data) = 
+				_00(m_data) * _01(b.m_data) +
+				_01(m_data) * _11(b.m_data) +
+				_02(m_data) * _21(b.m_data);
 
-			__MYE_MATRIX_ACCESS(r.m_data, 3, 0, 2) = 
-				__MYE_MATRIX_ACCESS(m_data, 3, 0, 0) * __MYE_MATRIX_ACCESS(b.m_data, 3, 0, 2) +
-				__MYE_MATRIX_ACCESS(m_data, 3, 0, 1) * __MYE_MATRIX_ACCESS(b.m_data, 3, 1, 2) +
-				__MYE_MATRIX_ACCESS(m_data, 3, 0, 2) * __MYE_MATRIX_ACCESS(b.m_data, 3, 2, 2);
+			_02(r.m_data) = 
+				_00(m_data) * _02(b.m_data) +
+				_01(m_data) * _12(b.m_data) +
+				_02(m_data) * _22(b.m_data);
 
 			// Second row
 
-			__MYE_MATRIX_ACCESS(r.m_data, 3, 1, 0) = 
-				__MYE_MATRIX_ACCESS(m_data, 3, 1, 0) * __MYE_MATRIX_ACCESS(b.m_data, 3, 0, 0) +
-				__MYE_MATRIX_ACCESS(m_data, 3, 1, 1) * __MYE_MATRIX_ACCESS(b.m_data, 3, 1, 0) +
-				__MYE_MATRIX_ACCESS(m_data, 3, 1, 2) * __MYE_MATRIX_ACCESS(b.m_data, 3, 2, 0);
+			_10(r.m_data) = 
+				_10(m_data) * _00(b.m_data) +
+				_11(m_data) * _10(b.m_data) +
+				_12(m_data) * _20(b.m_data);
 
-			__MYE_MATRIX_ACCESS(r.m_data, 3, 1, 1) = 
-				__MYE_MATRIX_ACCESS(m_data, 3, 1, 0) * __MYE_MATRIX_ACCESS(b.m_data, 3, 0, 1) +
-				__MYE_MATRIX_ACCESS(m_data, 3, 1, 1) * __MYE_MATRIX_ACCESS(b.m_data, 3, 1, 1) +
-				__MYE_MATRIX_ACCESS(m_data, 3, 1, 2) * __MYE_MATRIX_ACCESS(b.m_data, 3, 2, 1);
+			_11(r.m_data) = 
+				_10(m_data) * _01(b.m_data) +
+				_11(m_data) * _11(b.m_data) +
+				_12(m_data) * _21(b.m_data);
 
-			__MYE_MATRIX_ACCESS(r.m_data, 3, 1, 2) = 
-				__MYE_MATRIX_ACCESS(m_data, 3, 1, 0) * __MYE_MATRIX_ACCESS(b.m_data, 3, 0, 2) +
-				__MYE_MATRIX_ACCESS(m_data, 3, 1, 1) * __MYE_MATRIX_ACCESS(b.m_data, 3, 1, 2) +
-				__MYE_MATRIX_ACCESS(m_data, 3, 1, 2) * __MYE_MATRIX_ACCESS(b.m_data, 3, 2, 2);
+			_12(r.m_data) = 
+				_10(m_data) * _02(b.m_data) +
+				_11(m_data) * _12(b.m_data) +
+				_12(m_data) * _22(b.m_data);
 
 			// Third row
 
-			__MYE_MATRIX_ACCESS(r.m_data, 3, 2, 0) = 
-				__MYE_MATRIX_ACCESS(m_data, 3, 2, 0) * __MYE_MATRIX_ACCESS(b.m_data, 3, 0, 0) +
-				__MYE_MATRIX_ACCESS(m_data, 3, 2, 1) * __MYE_MATRIX_ACCESS(b.m_data, 3, 1, 0) +
-				__MYE_MATRIX_ACCESS(m_data, 3, 2, 2) * __MYE_MATRIX_ACCESS(b.m_data, 3, 2, 0);
+			_20(r.m_data) = 
+				_20(m_data) * _00(b.m_data) +
+				_21(m_data) * _10(b.m_data) +
+				_22(m_data) * _20(b.m_data);
 
-			__MYE_MATRIX_ACCESS(r.m_data, 3, 2, 1) = 
-				__MYE_MATRIX_ACCESS(m_data, 3, 2, 0) * __MYE_MATRIX_ACCESS(b.m_data, 3, 0, 1) +
-				__MYE_MATRIX_ACCESS(m_data, 3, 2, 1) * __MYE_MATRIX_ACCESS(b.m_data, 3, 1, 1) +
-				__MYE_MATRIX_ACCESS(m_data, 3, 2, 2) * __MYE_MATRIX_ACCESS(b.m_data, 3, 2, 1);
+			_21(r.m_data) = 
+				_20(m_data) * _01(b.m_data) +
+				_21(m_data) * _11(b.m_data) +
+				_22(m_data) * _21(b.m_data);
 
-			__MYE_MATRIX_ACCESS(r.m_data, 3, 2, 2) = 
-				__MYE_MATRIX_ACCESS(m_data, 3, 2, 0) * __MYE_MATRIX_ACCESS(b.m_data, 3, 0, 2) +
-				__MYE_MATRIX_ACCESS(m_data, 3, 2, 1) * __MYE_MATRIX_ACCESS(b.m_data, 3, 1, 2) +
-				__MYE_MATRIX_ACCESS(m_data, 3, 2, 2) * __MYE_MATRIX_ACCESS(b.m_data, 3, 2, 2);
+			_22(r.m_data) = 
+				_20(m_data) * _02(b.m_data) +
+				_21(m_data) * _12(b.m_data) +
+				_22(m_data) * _22(b.m_data);
 
 			return r;
+
+		}
+
+		template <typename T>
+		Matrix<T, 3, 3>& Matrix<T, 3, 3>::ScaleInPlace(T s)
+		{
+			_00(m_data) *= s;
+			_01(m_data) *= s;
+			_02(m_data) *= s;
+			_10(m_data) *= s;
+			_11(m_data) *= s;
+			_12(m_data) *= s;
+			_20(m_data) *= s;
+			_21(m_data) *= s;
+			_22(m_data) *= s;
+			_30(m_data) *= s;
+			_31(m_data) *= s;
+			_32(m_data) *= s;
+			return *this;
+		}
+
+		template <typename T>
+		Matrix<T, 3, 3> Matrix<T, 3, 3>::Transpose(void) const
+		{
+			Matrix<T, 3, 3> r;
+
+			_00(r.m_data) = _00(m_data);
+			_01(r.m_data) = _10(m_data);
+			_02(r.m_data) = _20(m_data);
+
+			_10(r.m_data) = _01(m_data);
+			_11(r.m_data) = _11(m_data);
+			_12(r.m_data) = _21(m_data);
+
+			_20(r.m_data) = _02(m_data);
+			_21(r.m_data) = _12(m_data);
+			_22(r.m_data) = _22(m_data);
+
+			return r;
+
+		}
+
+		template <typename T>
+		T Matrix<T, 3, 3>::Determinant(void) const
+		{
+
+			return _00(m_data) * _11(m_data) * _22(m_data)
+				+ _01(m_data) * _12(m_data) * _20(m_data)
+				+ _02(m_data) * _10(m_data) * _21(m_data)
+				- _00(m_data) * _12(m_data) * _21(m_data)
+				- _01(m_data) * _10(m_data) * _22(m_data)
+				- _02(m_data) * _11(m_data) * _20(m_data);
+
+		}
+
+		template <typename T>
+		Matrix<T, 3, 3> Matrix<T, 3, 3>::Inverse(void) const
+		{
+
+			Matrix<T, 3, 3> r;
+
+			_00(r.m_data) =
+				_11(m_data) * _22(m_data)
+				- _12(m_data) * _21(m_data);
+
+			_01(r.m_data) =
+				_02(m_data) * _21(m_data)
+				- _01(m_data) * _22(m_data);
+
+			_02(r.m_data) =
+				_01(m_data) * _12(m_data)
+				- _02(m_data) * _11(m_data);
+
+			_10(r.m_data) =
+				_12(m_data) * _20(m_data)
+				- _10(m_data) * _22(m_data);
+
+			_11(r.m_data) =
+				_00(m_data) * _22(m_data)
+				- _02(m_data) * _20(m_data);
+
+			_12(r.m_data) =
+				_02(m_data) * _10(m_data)
+				- _00(m_data) * _12(m_data);
+
+			_20(r.m_data) =
+				_10(m_data) * _21(m_data)
+				- _11(m_data) * _20(m_data);
+
+			_21(r.m_data) =
+				_01(m_data) * _20(m_data)
+				- _00(m_data) * _21(m_data);
+
+			_22(r.m_data) =
+				_00(m_data) * _11(m_data)
+				- _01(m_data) * _10(m_data);
+
+			return r.ScaleInPlace(1.0f / r.Determinant());
 
 		}
 
@@ -168,3 +276,13 @@ namespace mye
 	}
 
 }
+
+#undef _00
+#undef _01
+#undef _02
+#undef _10
+#undef _11
+#undef _12
+#undef _20
+#undef _21
+#undef _22

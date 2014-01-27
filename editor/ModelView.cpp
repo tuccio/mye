@@ -27,7 +27,8 @@ ModelView::ModelView(mye::dx11::DX11Device &device) :
 	m_bgColor(0.12f, 0.12f, 0.12f, 1.0f),
 	m_vbuffer(NULL, "", NULL, device),
 	m_mvpBuffer(NULL, "", NULL, device),
-	m_transform(1.0f)
+	m_localTransform(Transformf::Identity()),
+	m_worldTransform(Transformf::Identity())
 {
 	m_toolbar.SetIconSize(mye::math::Vector2i(24, 24));
 	m_window.SetMSAA(DX11Window::MSAA_4x);
@@ -114,17 +115,12 @@ void ModelView::Activate(void)
 
 				Vector3f center = aabb.GetCenter();
 
-				Matrix4f S(1.0f);
-				S(0, 0) = scale;
-				S(1, 1) = scale;
-				S(2, 2) = scale;
+				m_localTransform = Transformf::Identity();
+				m_worldTransform = Transformf::Identity();
 
-				Matrix4f T(1.0f);
-				T(0, 3) = - center.x();
-				T(1, 3) = - center.y();
-				T(2, 3) = - center.z();
-
-				m_transform = S * T;
+				m_localTransform.SetScale(Vector3f(scale));
+				m_localTransform.SetPosition(-center);
+				m_localTransform.SetOrientation(Quaternionf(1, 0, 0, 0));
 
 			}
 
@@ -132,11 +128,14 @@ void ModelView::Activate(void)
 			"Open");
 
 		m_toolbar.AddButton("icons/gear.bmp",
-			[](void)->void { /*MessageBox(NULL, "sup2", "sup2", MB_OK);*/ },
+			[this](void)->void
+		{
+
+			m_inputMode = MODELVIEW_INPUT_TRANSFORM;
+
+		},
 			"Tune");
 
-		//m_toolbar.SetVertical(false);
-		//m_toolbar.ShowText();
 		m_toolbar.Create();
 
 		m_initialized = true;
@@ -149,120 +148,6 @@ void ModelView::Activate(void)
 		m_camera.SetNearClipDistance(0.1f);
 
 		m_mvpBuffer.Create(sizeof(float) * 16, Matrix4f(1.0f).Data());
-
-/*
-		m_camera.UpdateView();
-		m_camera.UpdateProjection();
-
-		m_mvpBuffer.Create(sizeof(float) * 16, Matrix4f(1.0f).Data());
-
-		ManualLambdaLoader triangleMeshLoader(
-			[this](Resource *resource)->bool
-		{
-
-			VertexDeclaration decl;
-			decl.AddAttribute(VertexDeclaration::VDA_POSITION,
-				VertexDeclaration::VDAT_FLOAT3);
-
-			Mesh *triangle = static_cast<Mesh*>(resource);
-
-			if (!triangle)
-			{
-				return false;
-			}
-
-			triangle->Allocate(decl, 1);
-
-			DirectX::XMFLOAT3 vertices[3] = {
-				DirectX::XMFLOAT3(0, 0, 2.0f),
-				DirectX::XMFLOAT3(0, 2.0f, 2.0f),
-				DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f)
-			};
-
-			triangle->SetVertexAttribute(
-				0,
-				0,
-				VertexDeclaration::VDA_POSITION,
-				VertexDeclaration::VDAT_FLOAT3,
-				&vertices[0]);
-
-			triangle->SetVertexAttribute(
-				0,
-				1,
-				VertexDeclaration::VDA_POSITION,
-				VertexDeclaration::VDAT_FLOAT3,
-				&vertices[1]);
-
-			triangle->SetVertexAttribute(
-				0,
-				2,
-				VertexDeclaration::VDA_POSITION,
-				VertexDeclaration::VDAT_FLOAT3,
-				&vertices[2]);
-
-			return true;
-
-		},
-			[](Resource *resource)->bool
-		{
-			return true;
-		},
-			[](Resource *resource)->void
-		{
-
-			Mesh *triangle = static_cast<Mesh*>(resource);
-
-			if (triangle)
-			{
-				triangle->Free();
-			}
-
-		}
-			);
-
-		ManualLambdaLoader triangleModelLoader(
-				[this](Resource *resource)->bool
-			{
-
-				Model *model = static_cast<Model*>(resource);
-
-				if (!model)
-				{
-					return false;
-				}
-
-				model->AddMesh("ModelViewTriangle");
-
-				return true;
-
-			},
-				[](Resource *resource)->bool
-			{
-				return true;
-			},
-				[](Resource *resource)->void
-			{
-
-				Model *model = static_cast<Model*>(resource);
-
-				if (model)
-				{
-					model->Free();
-				}
-
-			}
-			);
-
-		ResourceTypeManager::GetSingleton().
-			CreateResource("Mesh", "ModelViewTriangle", &triangleMeshLoader);
-
-		m_model = ResourceTypeManager::GetSingleton().
-			CreateResource("Model", "ModelViewModel", &triangleModelLoader);
-
-		m_model->Load();
-
-		Model *model = m_model.Cast<Model>();
-		m_vbuffer.Create(model);*/
 
 	}
 
@@ -311,6 +196,94 @@ void ModelView::SetBackgroundColor(const mye::core::ColorRGBA &rgba)
 void ModelView::Update(void)
 {
 
+	switch (m_inputMode)
+	{
+
+	case MODELVIEW_INPUT_TRANSFORM:
+
+		{
+
+			const Mouse *mouse = g_input.GetMouse();
+			const Keyboard *keyboard = g_input.GetKeyboard();
+
+			if (mouse->GetWheelDelta() != 0)
+			{
+
+				Vector3f scale = m_localTransform.GetScale();
+				
+				if (mouse->GetWheelDelta() > 0)
+				{
+					m_localTransform.SetScale(1.075f * scale);
+				}
+				else
+				{
+					m_localTransform.SetScale(0.925f * scale);
+				}
+
+			}
+
+			if (mouse->IsPressed(MYE_VK_MOUSE_LEFT))
+			{
+
+				Vector2f delta = mouse->GetDelta();
+
+// 				Matrix4f matrix = (m_camera.GetViewMatrix() *
+// 					RotationMatrix4(m_transform.GetOrientation()));
+
+// 				Quaternionf yAxisRotation(
+// 					matrix * Vector3f(0, 1, 0),
+// 					- delta.x() * 0.15f);
+// 
+// 				Quaternionf xAxisRotation(
+// 					matrix * Vector3f(1, 0, 0),
+// 					- delta.y() * 0.15);
+
+				Quaternionf yAxisRotation(
+					Vector3f(0, 1, 0),
+					- delta.x() * 0.15f);
+
+				Quaternionf xAxisRotation(
+					Vector3f(1, 0, 0),
+					- delta.y() * 0.15);
+
+				m_localTransform.SetOrientation(
+					yAxisRotation *
+					xAxisRotation *
+					m_localTransform.GetOrientation());
+
+			}
+			
+			if (mouse->IsPressed(MYE_VK_MOUSE_MIDDLE))
+			{
+
+				Vector2f delta = mouse->GetDelta();
+
+// 				Matrix4f matrix = (m_camera.GetViewMatrix() *
+// 					RotationMatrix4(m_transform.GetOrientation()));
+// 
+// 				Vector3f yAxisTranslation =
+// 					matrix * (Vector3f(0, -0.025f, 0) * delta.y());
+// 				
+// 				Vector3f xAxisTranslation =
+// 					matrix * (Vector3f(0.025f, 0, 0) * delta.x());
+
+				m_worldTransform.SetPosition(
+					m_worldTransform.GetPosition() +
+					Vector3f(0, - 0.025 * delta.y(), 0) +
+					Vector3f(0.025 * delta.x(), 0, 0));
+
+			}
+
+			
+		}
+
+		break;
+
+	default:
+			break;
+
+	}
+
 }
 
 void ModelView::Render(void)
@@ -328,14 +301,16 @@ void ModelView::Render(void)
 		1,
 		0);
 
-	UINT stride = sizeof(float) * 3;
-	UINT offset = 0;
-
 	m_mvpBuffer.Bind(PIPELINE_VERTEX_SHADER, 0);
 
-	Matrix4f mvp = m_transform *
+	Matrix4f projection = m_camera.GetProjectionMatrix();
+	Matrix4f view = m_camera.GetViewMatrix();
+
+	Matrix4f mvp = m_camera.GetProjectionMatrix() *
 		m_camera.GetViewMatrix() *
-		m_camera.GetProjectionMatrix();
+		m_worldTransform.GetSRTMatrix() *
+		m_localTransform.GetSRTMatrix();
+//		m_worldTransform.Combine(m_localTransform).GetSRTMatrix();
 
 	m_mvpBuffer.SetData(reinterpret_cast<const void*>(mvp.Data()));
 

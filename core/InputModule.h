@@ -24,6 +24,8 @@ namespace mye
 			virtual Mouse* GetMouse(void);
 			virtual const Mouse* GetMouse(void) const;
 
+			virtual void ResetDeltas(void);
+
 		};
 
 	}

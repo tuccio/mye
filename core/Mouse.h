@@ -24,9 +24,13 @@ namespace mye
 			inline bool IsPressed(MouseVK key) const;
 
 			inline void Move(const mye::math::Vector2f &position);
-
 			inline mye::math::Vector2f GetPosition(void) const;
+
 			inline mye::math::Vector2f GetDelta(void) const;
+			inline void ResetDelta(void);
+
+			inline int GetWheelDelta(void) const;
+			inline void SetWheelDelta(int wheelDelta);
 
 		private:
 
@@ -34,6 +38,8 @@ namespace mye
 
 			mye::math::Vector2f m_position;
 			mye::math::Vector2f m_delta;
+
+			int m_wheelDelta;
 
 		};
 

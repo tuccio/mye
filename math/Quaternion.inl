@@ -22,8 +22,8 @@ namespace mye
 		Quaternion<T>::Quaternion(const Matrix<T, 3, 1> &axis, T angle)
 		{
 			float angleRadians = Radians(angle);
-			float sinHalfAngle = Sin(angleRadians * 0.5f);
-			m_data[3] = Cos(angleRadians * 0.5f);
+			float sinHalfAngle = Sine(angleRadians * 0.5f);
+			m_data[3] = Cosine(angleRadians * 0.5f);
 			m_data[0] = axis.x() * sinHalfAngle;
 			m_data[1] = axis.y() * sinHalfAngle;
 			m_data[2] = axis.z() * sinHalfAngle;
