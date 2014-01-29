@@ -46,9 +46,9 @@ void MainWindowListener::OnDestroy(mye::core::IWindow * window)
 	PostQuitMessage(WM_QUIT);
 }
 
-void MainWindowListener::OnCommand(unsigned int id)
+void MainWindowListener::OnCommand(unsigned int id, unsigned int code)
 {
-	g_mainWindow.DispatchCommand(id);
+	g_mainWindow.DispatchCommand(id, code);
 }
 
 void MainWindowListener::OnMenuSelected(IDGenerator::ID id)

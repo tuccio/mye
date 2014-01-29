@@ -44,7 +44,6 @@ namespace mye
 			template <typename R, typename T1>
 			R Call(const std::string &f, T1 arg1) const;
 
-
 		private:
 
 			LuaModule &m_module;
@@ -53,55 +52,6 @@ namespace mye
 
 		};
 
-
-	}
-}
-
-namespace mye
-{
-
-	namespace core
-	{
-
-		/*
-		template <>
-		class ScriptModule<mye::lua::LuaScriptCaller>;
-
-		template <>
-		class Script<mye::lua::LuaScriptCaller>
-		{
-
-		public:
-
-			enum Type
-			{
-				CLASS,
-				PROCEDURE
-			};
-
-			Script(mye::core::ScriptModule<mye::lua::LuaScriptCaller> &module, Type type);
-			Script(mye::core::ScriptModule<mye::lua::LuaScriptCaller> &module, Type type, int index);
-
-			ScriptModule<mye::lua::LuaScriptCaller> GetModule(void) const;
-
-			Type GetType(void) const;
-
-			~Script(void);
-
-			std::shared_ptr<const mye::lua::LuaRegistryReference> GetReference(void) const;	
-
-			bool Run(void) const;
-
-			template <typename R>
-			R Call(const std::string &f) const;
-
-		private:
-
-			ScriptModule<mye::lua::LuaScriptCaller> &m_module;
-			Type m_type;
-			std::shared_ptr<mye::lua::LuaRegistryReference> m_ref;
-
-		};*/
 
 	}
 }

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <mye/core/Game.h>
 #include <mye/core/ScriptModule.h>
 
 #include <lua.hpp>

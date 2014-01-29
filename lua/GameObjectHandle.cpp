@@ -5,6 +5,7 @@
 #include "MetaMethodsOverload.h"
 
 #include <mye/core/Components.h>
+#include <mye/core/Game.h>
 
 #include <mye/math/Math.h>
 #include <luabind/luabind.hpp>

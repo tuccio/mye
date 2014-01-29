@@ -6,20 +6,18 @@
 #include <vector>
 
 #include "Component.h"
+#include "Components.h"
+#include "GameObjectsManager.h"
 #include "INamedObject.h"
-#include "OpaqueObjectsManager.h"
 #include "Time.h"
+
+#include "PoolAllocator.h"
 
 namespace mye
 {
 
 	namespace core
 	{
-
-		class GameObject;
-
-		typedef OpaqueObjectHandle<GameObject> GameObjectHandle;
-		typedef OpaqueObjectsManager<GameObject> GameObjectsManager;
 
 		class GameObject :
 			public INamedObject
@@ -38,6 +36,9 @@ namespace mye
 			Component* GetComponent(const std::string &name);
 			void RemoveComponent(const std::string &name);
 
+			TransformComponent* GetTransformComponent(void);
+			ScriptComponent* GetScriptComponent(void);
+
 			GameObjectsManager* GetOwner(void);
 			GameObjectHandle GetHandle(void);
 
@@ -45,11 +46,13 @@ namespace mye
 
 			void Clear(void);
 
+			MYE_USE_POOL_ALLOCATOR(GameObject)
+
 		private:
 
 			typedef std::unordered_map<std::string, Component*> ComponentsList;
 
-			friend class OpaqueObjectsManager<GameObject>;
+			friend class GameObjectsManager;
 
 			void OnCreation(GameObjectsManager *owner,
 				const GameObjectHandle &handle);
@@ -60,6 +63,9 @@ namespace mye
 
 			GameObjectHandle m_handle;
 			GameObjectsManager *m_owner;
+
+			TransformComponent *m_transform;
+			ScriptComponent *m_script;
 
 		};
 

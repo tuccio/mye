@@ -17,3 +17,4 @@ ModelView g_modelView(g_device);
 Solution g_currentSolution;
 
 mye::win::MouseKeyboardInput g_input;
+mye::core::GameObjectsModule g_gameObjectsModule;

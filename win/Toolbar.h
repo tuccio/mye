@@ -50,7 +50,7 @@ namespace mye
 				const CallbackType &f,
 				const std::string &text = std::string());
 
-			bool DispatchCommand(unsigned int id);
+			bool DispatchCommand(unsigned int id, unsigned int code);
 
 			void ShowText(void);
 			void HideText(void);

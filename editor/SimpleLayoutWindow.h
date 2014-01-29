@@ -18,7 +18,7 @@ public:
 	SimpleLayoutWindow(void);
 	~SimpleLayoutWindow(void);
 
-	bool DispatchCommand(unsigned int id);
+	bool DispatchCommand(unsigned int id, unsigned int code);
 
 	mye::win::Toolbar* GetToolbar(void);
 	void SetToolbar(mye::win::Toolbar *toolbar);

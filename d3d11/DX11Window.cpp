@@ -101,7 +101,7 @@ bool DX11Window::CreateSwapChain()
 
 	swapDesc.BufferCount                 = 1;
 	swapDesc.BufferUsage                 = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	swapDesc.OutputWindow                = GetHandle();
+	swapDesc.OutputWindow                = m_hWnd;
 /*	swapDesc.Windowed                    = !IsFullScreen();*/
 	swapDesc.Windowed                    = true;
 	swapDesc.SwapEffect                  = DXGI_SWAP_EFFECT_DISCARD;

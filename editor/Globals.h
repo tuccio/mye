@@ -1,5 +1,7 @@
 #pragma once
 
+#include <mye/core/GameObjectsModule.h>
+
 #include <mye/win/Toolbar.h>
 #include <mye/win/MouseKeyboardInput.h>
 #include <mye/win/Window.h>
@@ -30,6 +32,7 @@ extern ModelView g_modelView;
 extern Solution g_currentSolution;
 
 extern mye::win::MouseKeyboardInput g_input;
+extern mye::core::GameObjectsModule g_gameObjectsModule;
 
 // extern mye::win::WinKeyboard g_keyboard;
 //extern mye::win::WinMouse g_mouse;

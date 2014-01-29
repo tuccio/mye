@@ -4,6 +4,8 @@
 
 #include <lua.hpp>
 
+#include <mye/core/Game.h>
+
 using namespace mye::lua;
 
 LuaScript::LuaScript(LuaModule &module,

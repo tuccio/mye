@@ -5,14 +5,9 @@ using namespace mye::core;
 void GameObjectsModule::Update(FloatSeconds dt)
 {
 
-	for (Allocation a : m_objects)
+	for (auto &o : m_objects)
 	{
-
-		if (a.object)
-		{
-			a.object->Update(dt);
-		}
-
+		o.second->Update(dt);
 	}
 
 }

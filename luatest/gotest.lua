@@ -20,6 +20,9 @@ print(hObj:Exists())
 print(hObj_copy:Exists())
 print(hObj2:Exists())
 
+local hObj3 = GameObjects:Create()
+print(hObj:Exists())
+
 hObj2.x = 3
 print(hObj2.x)
 

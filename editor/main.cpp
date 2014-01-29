@@ -38,8 +38,6 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 	MeshManager meshManager;
 	ModelManager modelManager;
 
-	GameObjectsModule gameObjectsModule;
-
 	MainWindowListener mainWindowListener;
 
 	logger.OpenErrorLogFile("error.log");

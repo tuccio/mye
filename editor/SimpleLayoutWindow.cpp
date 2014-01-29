@@ -21,13 +21,13 @@ SimpleLayoutWindow::~SimpleLayoutWindow(void)
 {
 }
 
-bool SimpleLayoutWindow::DispatchCommand(unsigned int id)
+bool SimpleLayoutWindow::DispatchCommand(unsigned int id, unsigned int code)
 {
 
-	if (!Window::DispatchCommand(id))
+	if (!Window::DispatchCommand(id, code))
 	{
 		
-		if (m_toolbar && m_toolbar->DispatchCommand(id))
+		if (m_toolbar && m_toolbar->DispatchCommand(id, code))
 		{
 			return true;
 		}
@@ -80,9 +80,9 @@ void SimpleLayoutWindow::SetSplitView(int i, int j, View *view)
 
 	viewPtr = view;
 	
+	viewPtr->Activate();
 	viewPtr->SetPosition(_ComputeSplitPosition(i, j));
 	viewPtr->SetSize(_ComputeSplitSize(i, j));
-	viewPtr->Activate();
 
 }
 

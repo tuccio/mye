@@ -1,6 +1,6 @@
 #pragma once
 
-#include <mye/math/Math.h>
+#include <mye/math/Geometry.h>
 
 namespace mye
 {

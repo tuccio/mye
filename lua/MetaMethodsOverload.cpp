@@ -93,7 +93,7 @@ namespace mye
 							switch (MYE_LUA_COMPONENT_UNWRAP(component)->GetComponentType())
 							{
 
-							case VARIABLE_COMPONENT:
+							case COMPONENT_VARIABLE:
 
 								{
 
@@ -111,7 +111,7 @@ namespace mye
 								}
 								break;
 
-							case TRANSFORM_COMPONENT:
+							case COMPONENT_TRANSFORM:
 
 								rvalue = object(L, boost::ref(static_cast<VariableComponent<mye::math::Transformf>*>(MYE_LUA_COMPONENT_UNWRAP(component))->Get()));
 								break;
@@ -192,7 +192,7 @@ namespace mye
 					switch (MYE_LUA_COMPONENT_UNWRAP(component)->GetComponentType())
 					{
 
-					case VARIABLE_COMPONENT:
+					case COMPONENT_VARIABLE:
 						{
 
 							auto tmp = static_cast<VariableComponent<char>*>(MYE_LUA_COMPONENT_UNWRAP(component));
@@ -210,7 +210,7 @@ namespace mye
 						
 						break;
 
-					case TRANSFORM_COMPONENT:
+					case COMPONENT_TRANSFORM:
 						{
 							mye::math::Transformf aux;
 							memcpy(&aux, object_cast<mye::math::Transformf*>(object(from_stack(L, 3))), sizeof(mye::math::Transformf));

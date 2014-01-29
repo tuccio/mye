@@ -9,8 +9,6 @@
 
 #include <mye/win/Utils.h>
 
-#include <DirectXMath.h>
-
 using namespace mye::core;
 using namespace mye::dx11;
 using namespace mye::math;
@@ -26,9 +24,9 @@ ModelView::ModelView(mye::dx11::DX11Device &device) :
 	m_toolbar(g_mainWindow, true),
 	m_bgColor(0.12f, 0.12f, 0.12f, 1.0f),
 	m_vbuffer(NULL, "", NULL, device),
+	m_planeBuffer(NULL, "", NULL, device),
 	m_mvpBuffer(NULL, "", NULL, device),
-	m_localTransform(Transformf::Identity()),
-	m_worldTransform(Transformf::Identity())
+	m_transform(Transformf::Identity())
 {
 	m_toolbar.SetIconSize(mye::math::Vector2i(24, 24));
 	m_window.SetMSAA(DX11Window::MSAA_4x);
@@ -115,12 +113,11 @@ void ModelView::Activate(void)
 
 				Vector3f center = aabb.GetCenter();
 
-				m_localTransform = Transformf::Identity();
-				m_worldTransform = Transformf::Identity();
+				m_transform = Transformf::Identity();
 
-				m_localTransform.SetScale(Vector3f(scale));
-				m_localTransform.SetPosition(-center);
-				m_localTransform.SetOrientation(Quaternionf(1, 0, 0, 0));
+				m_transform.SetScale(Vector3f(scale));
+				m_transform.SetPosition(-center);
+				m_transform.SetOrientation(Quaternionf(1, 0, 0, 0));
 
 			}
 
@@ -145,9 +142,25 @@ void ModelView::Activate(void)
 			Vector3f(0.0f, 1.0f, 0.0f),
 			Vector3f(0.0f, 0.0f, 0.0f));
 
-		m_camera.SetNearClipDistance(0.1f);
+		Vector2i size = m_window.GetSize();
+
+		m_camera.SetFrustum(75.0f,
+			(float) size.x() / size.y(),
+			0.1f,
+			100.0f);
 
 		m_mvpBuffer.Create(sizeof(float) * 16, Matrix4f(1.0f).Data());
+
+// 		Mesh plane(NULL, "plane", NULL);
+// 
+// 		VertexDeclaration vd;
+// 
+// 		vd.AddAttribute(VertexDeclaration::VDA_POSITION,
+// 			VertexDeclaration::VDAT_FLOAT3);
+// 
+// 		plane.Allocate(vd, 2);
+// 
+// 		m_planeBuffer.Create(&plane);
 
 	}
 
@@ -209,15 +222,15 @@ void ModelView::Update(void)
 			if (mouse->GetWheelDelta() != 0)
 			{
 
-				Vector3f scale = m_localTransform.GetScale();
+				Vector3f scale = m_transform.GetScale();
 				
 				if (mouse->GetWheelDelta() > 0)
 				{
-					m_localTransform.SetScale(1.075f * scale);
+					m_transform.SetScale(1.075f * scale);
 				}
 				else
 				{
-					m_localTransform.SetScale(0.925f * scale);
+					m_transform.SetScale(0.925f * scale);
 				}
 
 			}
@@ -244,12 +257,12 @@ void ModelView::Update(void)
 
 				Quaternionf xAxisRotation(
 					Vector3f(1, 0, 0),
-					- delta.y() * 0.15);
+					- delta.y() * 0.15f);
 
-				m_localTransform.SetOrientation(
+				m_transform.SetOrientation(
 					yAxisRotation *
 					xAxisRotation *
-					m_localTransform.GetOrientation());
+					m_transform.GetOrientation());
 
 			}
 			
@@ -267,8 +280,8 @@ void ModelView::Update(void)
 // 				Vector3f xAxisTranslation =
 // 					matrix * (Vector3f(0.025f, 0, 0) * delta.x());
 
-				m_worldTransform.SetPosition(
-					m_worldTransform.GetPosition() +
+				m_transform.SetPosition(
+					m_transform.GetPosition() +
 					Vector3f(0, - 0.025 * delta.y(), 0) +
 					Vector3f(0.025 * delta.x(), 0, 0));
 
@@ -308,9 +321,7 @@ void ModelView::Render(void)
 
 	Matrix4f mvp = m_camera.GetProjectionMatrix() *
 		m_camera.GetViewMatrix() *
-		m_worldTransform.GetSRTMatrix() *
-		m_localTransform.GetSRTMatrix();
-//		m_worldTransform.Combine(m_localTransform).GetSRTMatrix();
+		m_transform.GetTRSMatrix();
 
 	m_mvpBuffer.SetData(reinterpret_cast<const void*>(mvp.Data()));
 

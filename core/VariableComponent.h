@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Component.h"
-#include <mye/math/Math.h>
+#include <mye/math/Geometry.h>
 
 #include <typeindex>
 

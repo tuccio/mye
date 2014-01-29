@@ -8,6 +8,12 @@
 
 #include "WindowMenu.h"
 
+#include "Control.h"
+#include "Tabs.h"
+
+#include <vector>
+#include <unordered_map>
+
 #undef IsMaximized
 #undef IsMinimized
 
@@ -45,10 +51,11 @@ namespace mye
 
 			virtual bool Create(const Properties &p = IWindow::DefaultWindowProperties);
 			virtual bool CreateChild(Window &parent, const Properties &p = IWindow::DefaultWindowProperties);
+			virtual bool CreateChild(HWND parent, const Properties &p = IWindow::DefaultWindowProperties);
 
 			virtual void Destroy(void);
 
-			virtual bool DispatchCommand(unsigned int id);
+			virtual bool DispatchCommand(unsigned int id, unsigned int code);
 
 			virtual bool Exists(void) const;
 			virtual bool IsVisible(void) const;
@@ -75,11 +82,21 @@ namespace mye
 			virtual mye::math::Vector2i GetPosition(void) const;
 
 			void AttachMenu(WindowMenu *menu);
-			void _CreateMenu(WindowMenu *menu, HMENU hMenu);
 
 			void AddMenuListener(WindowMenu::Listener *listener);
 			void RemoveMenuListener(WindowMenu::Listener *listener);
 			void ClearMenuListeners(void);
+
+			void AttachTabs(Tabs *tabs);
+
+			void AddTabsListener(Tabs::Listener *listener);
+			void RemoveTabsListener(Tabs::Listener *listener);
+			void ClearTabsListeners(void);
+
+			void RegisterControl(Control *control);
+			Control* FindControl(IDGenerator::ID id);
+			void UnregisterControl(Control *control);
+			void ClearControls(void);
 
 			void SendUserMessage(unsigned int message);
 
@@ -90,7 +107,11 @@ namespace mye
 
 			void Update(void);
 
-			bool _Create(DWORD dwExStyle,
+		protected:
+
+			virtual void _CreateMenu(WindowMenu *menu, HMENU hMenu);
+
+			virtual bool _Create(DWORD dwExStyle,
 				LPCTSTR lpClassName,
 				LPCTSTR lpWindowName,
 				DWORD dwStyle,
@@ -103,9 +124,6 @@ namespace mye
 				HINSTANCE hInstance,
 				LPVOID lpParam);
 
-
-		private:
-
 			friend class WCR;
 			static LRESULT CALLBACK WindowProc(HWND hWnd,
 				UINT uMsg,
@@ -114,10 +132,17 @@ namespace mye
 
 			void NotifyMenuSelected(IDGenerator::ID id);
 
+			void NotifyShowTab(int index);
+			void NotifyHideTab(int index);
+
 			HWND m_hWnd;
+
 			WindowMenu *m_menu;
+			Tabs *m_tabs;
+			std::unordered_map<IDGenerator::ID, Control*> m_controls;
 
 			std::vector<WindowMenu::Listener*> m_menuListeners;
+			std::vector<Tabs::Listener*> m_tabsListeners;
 
 		};
 

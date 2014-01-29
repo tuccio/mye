@@ -16,7 +16,7 @@ public:
 	void OnCreate(mye::core::IWindow * window);
 	void OnDestroy(mye::core::IWindow * window);
 
-	void OnCommand(unsigned int id);
+	void OnCommand(unsigned int id, unsigned int code);
 
 	void OnMenuSelected(mye::win::IDGenerator::ID id);
 

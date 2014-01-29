@@ -2,6 +2,7 @@
 
 #include "Module.h"
 #include "GameObject.h"
+#include "GameObjectsManager.h"
 
 namespace mye
 {
@@ -13,7 +14,7 @@ namespace mye
 								  public GameObjectsManager
 		{
 
-		public:
+		public:			
 
 			void Update(FloatSeconds dt);
 

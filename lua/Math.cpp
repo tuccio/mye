@@ -4,6 +4,7 @@
 #include "MathWrappers.h"
 
 #include <mye/math/Math.h>
+#include <mye/math/Geometry.h>
 
 #include <luabind/luabind.hpp>
 #include <luabind/operator.hpp>

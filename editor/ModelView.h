@@ -14,7 +14,7 @@
 #include <mye/core/Camera.h>
 #include <mye/core/Model.h>
 
-#include <mye/math/Math.h>
+#include <mye/math/Geometry.h>
 
 class ModelView :
 	public View
@@ -65,10 +65,10 @@ private:
 	mye::core::AssimpModelLoader m_modelLoader;
 
 	mye::core::ResourceHandle m_model;
-	mye::math::Transformf m_localTransform;
-	mye::math::Transformf m_worldTransform;
+	mye::math::Transformf m_transform;
 
 	mye::dx11::DX11VertexBuffer m_vbuffer;
+	mye::dx11::DX11VertexBuffer m_planeBuffer;
 
 	mye::core::Camera m_camera;
 	mye::dx11::DX11ConstantBuffer m_mvpBuffer;

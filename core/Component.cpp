@@ -15,7 +15,7 @@ Component::~Component(void)
 
 }
 
-ComponentTypes Component::GetComponentType(void)
+ComponentTypes Component::GetComponentType(void) const
 {
 	return m_type;
 }

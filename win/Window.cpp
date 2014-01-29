@@ -4,9 +4,15 @@
 
 #include <mye/core/Logger.h>
 
+#include "CommCtrl.h"
+
+#include "Button.h"
+#include "ListView.h"
+
 #include <memory>
 #include <vector>
 #include <deque>
+#include <algorithm>
 
 #if !defined(_T)
 #if defined(_UNICODE)
@@ -77,7 +83,8 @@ bool WCR::IsRegistered(void) const
 
 Window::Window(void) :
 	m_hWnd(0x0),
-	m_menu(0x0)
+	m_menu(0x0),
+	m_tabs(0x0)
 {
 }
 
@@ -125,19 +132,55 @@ bool Window::CreateChild(Window &parent, const Properties &p)
 
 }
 
+bool Window::CreateChild(HWND parent, const Properties &p)
+{
+
+	return _Create(0x0,
+		WINDOW_CLASS_NAME,
+		p.caption.c_str(),
+		WS_CHILD | WS_CLIPCHILDREN,
+		(p.x < 0 ? CW_USEDEFAULT : p.x),
+		(p.y < 0 ? CW_USEDEFAULT : p.y),
+		(p.width < 0 ? CW_USEDEFAULT : p.width),
+		(p.height < 0 ? CW_USEDEFAULT : p.height),
+		parent,
+		NULL,
+		GetModuleHandle(NULL),
+		this
+		);
+
+}
+
 void Window::Destroy(void)
 {
 	DestroyWindow(m_hWnd);
 	m_hWnd = NULL;
 }
 
-bool Window::DispatchCommand(unsigned int id)
+bool Window::DispatchCommand(unsigned int id, unsigned int code)
 {
 
-	if (m_menu->Contains(id))
+	if (m_menu && m_menu->Contains(id))
 	{
 		NotifyMenuSelected(id);
 		return true;
+	}
+
+	if (Control *control = FindControl(id))
+	{
+		
+		switch (control->GetControlType())
+		{
+
+		case CT_BUTTON:
+			static_cast<Button*>(control)->m_function();
+			return true;
+
+		default:
+			break;
+
+		}
+
 	}
 
 	return false;
@@ -328,11 +371,76 @@ void Window::ClearMenuListeners(void)
 	m_menuListeners.clear();
 }
 
+void Window::AttachTabs(Tabs *tabs)
+{
+	m_tabs = tabs;
+}
+
+void Window::AddTabsListener(Tabs::Listener *listener)
+{
+	m_tabsListeners.push_back(listener);
+}
+
+void Window::RemoveTabsListener(Tabs::Listener *listener)
+{
+	auto it = std::find(m_tabsListeners.begin(),
+		m_tabsListeners.end(),
+		listener);
+
+	if (it != m_tabsListeners.end())
+	{
+		m_tabsListeners.erase(it);
+	}
+}
+
+void Window::ClearTabsListeners(void)
+{
+	m_tabsListeners.clear();
+}
+
+void Window::RegisterControl(Control *control)
+{
+	m_controls[control->GetID()] = static_cast<Control*>(control);
+}
+
+Control* Window::FindControl(IDGenerator::ID id)
+{
+	auto it = m_controls.find(id);
+	return (it != m_controls.end() ? it->second : NULL);
+}
+
+void Window::UnregisterControl(Control *control)
+{
+	m_controls.erase(
+		m_controls.find(control->GetID())
+	);
+}
+void Window::ClearControls(void)
+{
+	m_controls.clear();
+}
+
 void Window::NotifyMenuSelected(IDGenerator::ID id)
 {
 	for (auto listener : m_menuListeners)
 	{
 		listener->OnMenuSelected(id);
+	}
+}
+
+void Window::NotifyShowTab(int index)
+{
+	for (auto listener : m_tabsListeners)
+	{
+		listener->OnTabShow(index);
+	}
+}
+
+void Window::NotifyHideTab(int index)
+{
+	for (auto listener : m_tabsListeners)
+	{
+		listener->OnTabHide(index);
 	}
 }
 
@@ -354,6 +462,7 @@ bool Window::ReleaseDC(HDC hDC)
 void Window::Update(void)
 {
 	UpdateWindow(m_hWnd);
+	RedrawWindow(m_hWnd, NULL, NULL, RDW_UPDATENOW | RDW_ALLCHILDREN);
 }
 
 bool Window::_Create(DWORD dwExStyle,
@@ -447,10 +556,6 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd,
 	case WM_CREATE:
 
 		break;
-/*
-
-		((Window*) lParam)->NotifyCreate();*/
-		break;
 
 	case WM_DESTROY:
 
@@ -487,7 +592,7 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd,
 
 			if (window)
 			{
-				window->DispatchCommand(optId);
+				window->DispatchCommand(optId, 0x0);
 			}
 /*
 
@@ -562,6 +667,41 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd,
 		}
 
 		break;
+
+	case WM_NOTIFY:
+
+		{
+
+			Window *window = (Window*) GetWindowLongPtr(hWnd, GWLP_USERDATA);
+			LPNMHDR nmh = (LPNMHDR) lParam;
+
+			if (window->m_tabs && window->m_tabs->GetHandle() == nmh->hwndFrom)
+			{
+
+				if (nmh->code == TCN_SELCHANGING)
+				{
+					window->NotifyHideTab(TabCtrl_GetCurSel(window->m_tabs->GetHandle()));
+				}
+				else if (nmh->code == TCN_SELCHANGE)
+				{
+					window->NotifyShowTab(TabCtrl_GetCurSel(window->m_tabs->GetHandle()));
+				}
+			}
+			else 
+			{
+
+				Control *control = window->FindControl(nmh->idFrom);
+				
+				if (control)
+				{
+					control->Notify(nmh->code, lParam);
+				}
+
+			}
+
+			break;
+
+		}
 
 	default:
 

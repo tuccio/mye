@@ -71,6 +71,14 @@ void IWindow::NotifyDestroy(void)
 	}
 }
 
+void IWindow::NotifyCommand(unsigned int id, unsigned int code)
+{
+	for (auto listener : m_listeners)
+	{
+		listener->OnCommand(id, code);
+	}
+}
+
 void IWindow::NotifyResize(const mye::math::Vector2i &size)
 {
 	for (auto listener : m_listeners)

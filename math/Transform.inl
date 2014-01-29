@@ -81,6 +81,22 @@ namespace mye
 		}
 
 		template <typename T>
+		Matrix<T, 4, 4> Transform<T>::GetSTRMatrix(void) const
+		{
+			return ScaleMatrix4(m_scale) *
+				TranslationMatrix4(m_position) *
+				RotationMatrix4(m_orientation);
+		}
+
+		template <typename T>
+		Matrix<T, 4, 4> Transform<T>::GetTRSMatrix(void) const
+		{
+			return TranslationMatrix4(m_position) *
+				RotationMatrix4(m_orientation) *
+				ScaleMatrix4(m_scale);
+		}
+
+		template <typename T>
 		Transform<T> Transform<T>::Combine(const Transform<T> &transform)
 		{
 			return Transform<T>(

@@ -23,7 +23,7 @@ namespace mye
 				const std::string &name);
 			virtual ~Component(void) = 0;
 
-			ComponentTypes GetComponentType(void);
+			ComponentTypes GetComponentType(void) const;
 
 		protected:
 

@@ -98,7 +98,7 @@ void Toolbar::Create(void)
 		0,
 		0,
 		m_parent.GetHandle(),
-		NULL,
+		(HMENU) IDGenerator::GetSingleton().Generate(),
 		NULL,
 		NULL);
 
@@ -217,7 +217,7 @@ void Toolbar::AddButton(const std::string &icon,
 	m_buttons[IDGenerator::GetSingleton().Generate()] = Button(icon, f, text);
 }
 
-bool Toolbar::DispatchCommand(unsigned int id)
+bool Toolbar::DispatchCommand(unsigned int id, unsigned int code)
 {
 	
 	auto it = m_buttons.find(id);

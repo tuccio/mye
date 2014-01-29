@@ -6,7 +6,7 @@ using namespace mye::math;
 TransformComponent::TransformComponent(void) :
 	VariableComponent<Transformf>("transform")
 {
-	m_type = TRANSFORM_COMPONENT;
+	m_type = COMPONENT_TRANSFORM;
 }
 
 

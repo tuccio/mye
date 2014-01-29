@@ -8,18 +8,25 @@
 using namespace mye::core;
 using namespace std;
 
-GameObject::GameObject(void)
+GameObject::GameObject(void) :
+	m_owner(NULL),
+	m_transform(NULL),
+	m_script(NULL)
 {
 }
 
 GameObject::GameObject(const std::string &name) :
-	m_name(name)
+	m_name(name),
+	m_owner(NULL),
+	m_transform(NULL),
+	m_script(NULL)
 {
 }
 
 
 GameObject::~GameObject(void)
 {
+	Clear();
 }
 
 /* Components */
@@ -29,18 +36,28 @@ Component* GameObject::AddComponent(const Component &component)
 
 	auto it = m_components.find(component.GetName());
 
-	Component *newComponent = static_cast<Component*>(component.Clone());
-
 	if (it != m_components.end() && it->second != NULL)
 	{
 		return NULL;
 	}
 	else
 	{
-		m_components[component.GetName()] = newComponent;
-	}
 
-	return newComponent;
+		Component *newComponent = static_cast<Component*>(component.Clone());
+		m_components[component.GetName()] = newComponent;
+
+		switch (component.GetComponentType())
+		{
+		case COMPONENT_TRANSFORM:
+			m_transform = static_cast<TransformComponent*>(newComponent);
+			break;
+		case COMPONENT_SCRIPT:
+			m_script = static_cast<ScriptComponent*>(newComponent);
+		}
+
+		return newComponent;
+
+	}
 
 }
 
@@ -67,15 +84,48 @@ void GameObject::RemoveComponent(const std::string &name)
 
 	if (it != m_components.end())
 	{
+
+		switch (it->second->GetComponentType())
+		{
+		case COMPONENT_TRANSFORM:
+			m_transform = NULL;
+			break;
+		case COMPONENT_SCRIPT:
+			m_script = NULL;
+		}
+
 		delete it->second;
 		m_components.erase(it);
+
 	}
 
 }
 void GameObject::Clear(void)
 {
+
+	for (auto it : m_components)
+	{
+		delete it.second;
+	}
+
 	m_components.clear();
+
+	m_owner     = NULL;
+
+	m_transform = NULL;
+	m_script    = NULL;
+
 }
+
+// void* GameObject::operator new (std::size_t size)
+// {
+// 	return PoolAllocator<GameObject>::GetSingleton().Allocate();
+// }
+// 
+// void GameObject::operator delete (void *p)
+// {
+// 	PoolAllocator<GameObject>::GetSingleton().Free(p);
+// }
 
 void GameObject::OnCreation(GameObjectsManager *owner,
 							const GameObjectHandle &handle)
@@ -109,11 +159,9 @@ GameObjectHandle GameObject::GetHandle(void)
 void GameObject::Update(FloatSeconds dt)
 {
 
-	auto it = m_components.find("script");
-
-	if (it != m_components.end())
+	if (m_script)
 	{
-		static_cast<ScriptComponent*>(it->second)->Script().Call<void, float>("Update", dt);
+		m_script->Script().Call<void, float>("Update", dt);
 	}
 
 }
