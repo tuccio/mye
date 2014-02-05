@@ -9,6 +9,12 @@ namespace mye
 			return *m_camera;
 		}
 
+
+		mye::core::Camera* SceneModule::GetCamera(void)
+		{
+			return m_camera;
+		}
+
 		const mye::core::Camera* SceneModule::GetCamera(void) const
 		{
 			return m_camera;

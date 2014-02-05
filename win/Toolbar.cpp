@@ -145,6 +145,8 @@ void Toolbar::Create(void)
 
 			static int i = 0;
 
+			SetLastError(0);
+
 			HBITMAP hImage = (HBITMAP) LoadImage(NULL,
 				it.second.icon.c_str(),
 				IMAGE_BITMAP,

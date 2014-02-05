@@ -48,7 +48,7 @@
 
 using namespace luabind;
 using namespace mye::core;
-
+using namespace mye::math;
 
 
 namespace mye
@@ -104,9 +104,9 @@ namespace mye
 									VARIABLE_COMPONENT_CAST_GET_BLOCK(int)
 									VARIABLE_COMPONENT_CAST_GET_BLOCK(bool)
 									VARIABLE_COMPONENT_CAST_GET_BLOCK(std::string)
-									VARIABLE_COMPONENT_CAST_GET_BLOCK(mye::math::Vector3f)
-									VARIABLE_COMPONENT_CAST_GET_BLOCK(mye::math::Vector3i)
-									VARIABLE_COMPONENT_CAST_GET_ALIGNED(mye::math::Transformf)
+									VARIABLE_COMPONENT_CAST_GET_BLOCK(Vector3f)
+									VARIABLE_COMPONENT_CAST_GET_BLOCK(Vector3i)
+									VARIABLE_COMPONENT_CAST_GET_BLOCK(Transformf)
 
 								}
 								break;
@@ -202,20 +202,20 @@ namespace mye
 							VARIABLE_COMPONENT_CAST_SET_BLOCK(int)
 							VARIABLE_COMPONENT_CAST_SET_BLOCK(bool)
 							VARIABLE_COMPONENT_CAST_SET_BLOCK(std::string)
-							VARIABLE_COMPONENT_CAST_SET_BLOCK(mye::math::Vector3f)
-							VARIABLE_COMPONENT_CAST_SET_BLOCK(mye::math::Vector3i)
-							VARIABLE_COMPONENT_CAST_SET_ALIGNED(mye::math::Transformf)
+							VARIABLE_COMPONENT_CAST_SET_BLOCK(Vector3f)
+							VARIABLE_COMPONENT_CAST_SET_BLOCK(Vector3i)
+							VARIABLE_COMPONENT_CAST_SET_BLOCK(Transformf)
 
 						}
 						
 						break;
 
-					case COMPONENT_TRANSFORM:
-						{
-							mye::math::Transformf aux;
-							memcpy(&aux, object_cast<mye::math::Transformf*>(object(from_stack(L, 3))), sizeof(mye::math::Transformf));
-							static_cast<VariableComponent<mye::math::Transformf>*>(MYE_LUA_COMPONENT_UNWRAP(component))->Set(aux);
-						}
+// 					case COMPONENT_TRANSFORM:
+// 						{
+// 							auto value = object_cast<Transformf>(object(from_stack(L, 3)));
+// 							static_cast<MYE_LUA_COMPONENT_WRAP_TYPE(TransformComponent)>(MYE_LUA_COMPONENT_UNWRAP(component))->Set(value);
+// 							break;
+// 						}
 
 					default:
 						break;

@@ -12,8 +12,9 @@ SimpleLayoutWindow::SimpleLayoutWindow(void) :
 {
 	m_views[0] = NULL;
 	AddListener(&m_listener);
+/*
 	AttachKeyboard(&m_keyboard);
-	AttachMouse(&m_mouse);
+	AttachMouse(&m_mouse);*/
 }
 
 
@@ -202,6 +203,7 @@ void SimpleLayoutWindow::ResizeViews(void)
 	}
 }
 
+/*
 const mye::core::Keyboard& SimpleLayoutWindow::Keyboard(void) const
 {
 	return m_keyboard;
@@ -210,4 +212,4 @@ const mye::core::Keyboard& SimpleLayoutWindow::Keyboard(void) const
 const  mye::core::Mouse& SimpleLayoutWindow::Mouse(void) const
 {
 	return m_mouse;
-}
+}*/

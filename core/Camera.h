@@ -46,6 +46,10 @@ namespace mye
 			void Pitch(float angle);
 			void Yaw(float angle);
 
+			inline mye::math::Vector3f Up(void) const;
+			inline mye::math::Vector3f Right(void) const;
+			inline mye::math::Vector3f Forward(void) const;
+
 			inline void UpdateView(void);
 			inline void UpdateProjection(void);
 

@@ -273,6 +273,114 @@ namespace mye
 			return m_data;
 		}
 
+		template <typename T>
+		T& Matrix<T, 3, 3>::m00(void)
+		{
+			return _00(m_data);
+		}
+
+		template <typename T>
+		const T& Matrix<T, 3, 3>::m00(void) const
+		{
+			return _00(m_data);
+		}
+
+		template <typename T>
+		T& Matrix<T, 3, 3>::m01(void)
+		{
+			return _01(m_data);
+		}
+
+		template <typename T>
+		const T& Matrix<T, 3, 3>::m01(void) const
+		{
+			return _01(m_data);
+		}
+
+		template <typename T>
+		T& Matrix<T, 3, 3>::m02(void)
+		{
+			return _02(m_data);
+		}
+
+		template <typename T>
+		const T& Matrix<T, 3, 3>::m02(void) const
+		{
+			return _02(m_data);
+		}
+
+		template <typename T>
+		T& Matrix<T, 3, 3>::m10(void)
+		{
+			return _10(m_data);
+		}
+
+		template <typename T>
+		const T& Matrix<T, 3, 3>::m10(void) const
+		{
+			return _10(m_data);
+		}
+
+		template <typename T>
+		T& Matrix<T, 3, 3>::m11(void)
+		{
+			return _11(m_data);
+		}
+
+		template <typename T>
+		const T& Matrix<T, 3, 3>::m11(void) const
+		{
+			return _11(m_data);
+		}
+
+		template <typename T>
+		T& Matrix<T, 3, 3>::m12(void)
+		{
+			return _12(m_data);
+		}
+
+		template <typename T>
+		const T& Matrix<T, 3, 3>::m12(void) const
+		{
+			return _12(m_data);
+		}
+
+		template <typename T>
+		T& Matrix<T, 3, 3>::m20(void)
+		{
+			return _20(m_data);
+		}
+
+		template <typename T>
+		const T& Matrix<T, 3, 3>::m20(void) const
+		{
+			return _20(m_data);
+		}
+
+		template <typename T>
+		T& Matrix<T, 3, 3>::m21(void)
+		{
+			return _21(m_data);
+		}
+
+		template <typename T>
+		const T& Matrix<T, 3, 3>::m21(void) const
+		{
+			return _21(m_data);
+		}
+
+		template <typename T>
+		T& Matrix<T, 3, 3>::m22(void)
+		{
+			return _22(m_data);
+		}
+
+		template <typename T>
+		const T& Matrix<T, 3, 3>::m22(void) const
+		{
+			return _22(m_data);
+		}
+
 	}
 
 }

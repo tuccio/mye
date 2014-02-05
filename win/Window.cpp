@@ -6,7 +6,9 @@
 
 #include "CommCtrl.h"
 
+#include "Checkbox.h"
 #include "Button.h"
+#include "Edit.h"
 #include "ListView.h"
 
 #include <memory>
@@ -176,6 +178,12 @@ bool Window::DispatchCommand(unsigned int id, unsigned int code)
 			static_cast<Button*>(control)->m_function();
 			return true;
 
+		case CT_CHECKBOX:
+			{
+				Checkbox *cb = static_cast<Checkbox*>(control);
+				cb->SetCheck(!cb->IsChecked());
+			}
+
 		default:
 			break;
 
@@ -263,7 +271,7 @@ void Window::SetSize(const mye::math::Vector2i &size)
 		NULL,
 		size.x(),
 		size.y(),
-		SWP_NOMOVE | SWP_NOZORDER | SWP_NOREDRAW);
+		SWP_NOMOVE | SWP_NOZORDER);
 
 }
 
@@ -289,7 +297,7 @@ void Window::SetPosition(const mye::math::Vector2i &position)
 		position.y(),
 		NULL,
 		NULL,
-		SWP_NOSIZE | SWP_NOZORDER | SWP_NOREDRAW);
+		SWP_NOSIZE | SWP_NOZORDER);
 
 }
 
@@ -553,6 +561,21 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd,
 	switch (uMsg)
 	{
 
+	case WM_ACTIVATE:
+
+		if (wParam == WA_ACTIVE)
+		{
+
+			Window *window = (Window*) GetWindowLongPtr(hWnd, GWLP_USERDATA);
+
+			if (window)
+			{
+				window->Update();
+			}
+
+		}
+		break;
+
 	case WM_CREATE:
 
 		break;
@@ -725,4 +748,9 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd,
 
 	return 0;
 
+}
+
+void SendQuitOnClose::OnDestroy(IWindow *window)
+{
+	PostQuitMessage(WM_QUIT);
 }

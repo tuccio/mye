@@ -20,17 +20,17 @@ namespace mye
 			float twoYZ       = 2 * q.y() * q.z();
 			float twoWX       = 2 * q.w() * q.x();
 
-			r(0, 0) = T(1) - twoYSquared - twoZSquared;
-			r(0, 1) = twoXY - twoWZ;
-			r(0, 2) = twoXZ + twoWY;
+			r.m00() = T(1) - twoYSquared - twoZSquared;
+			r.m01() = twoXY - twoWZ;
+			r.m02() = twoXZ + twoWY;
 
-			r(1, 0) = twoXY + twoWZ;
-			r(1, 1) = T(1) - twoXSquared - twoZSquared;
-			r(1, 2) = twoYZ - twoWX;
+			r.m10() = twoXY + twoWZ;
+			r.m11() = T(1) - twoXSquared - twoZSquared;
+			r.m12() = twoYZ - twoWX;
 
-			r(2, 0) = twoXZ - twoWY;
-			r(2, 1) = twoYZ + twoWX;
-			r(2, 2) = T(1) - twoXSquared - twoYSquared;
+			r.m20() = twoXZ - twoWY;
+			r.m21() = twoYZ + twoWX;
+			r.m22() = T(1) - twoXSquared - twoYSquared;
 
 			return r;
 
@@ -52,25 +52,25 @@ namespace mye
 			float twoYZ       = 2 * q.y() * q.z();
 			float twoWX       = 2 * q.w() * q.x();
 
-			r(0, 0) = T(1) - twoYSquared - twoZSquared;
-			r(0, 1) = twoXY - twoWZ;
-			r(0, 2) = twoXZ + twoWY;
-			r(0, 3) = T(0);
+			r.m00() = T(1) - twoYSquared - twoZSquared;
+			r.m01() = twoXY - twoWZ;
+			r.m02() = twoXZ + twoWY;
+			r.m03() = T(0);
 
-			r(1, 0) = twoXY + twoWZ;
-			r(1, 1) = T(1) - twoXSquared - twoZSquared;
-			r(1, 2) = twoYZ - twoWX;
-			r(1, 3) = T(0);
+			r.m10() = twoXY + twoWZ;
+			r.m11() = T(1) - twoXSquared - twoZSquared;
+			r.m12() = twoYZ - twoWX;
+			r.m13() = T(0);
 
-			r(2, 0) = twoXZ - twoWY;
-			r(2, 1) = twoYZ + twoWX;
-			r(2, 2) = T(1) - twoXSquared - twoYSquared;
-			r(2, 3) = T(0);
+			r.m20() = twoXZ - twoWY;
+			r.m21() = twoYZ + twoWX;
+			r.m22() = T(1) - twoXSquared - twoYSquared;
+			r.m23() = T(0);
 
-			r(3, 0) = T(0);
-			r(3, 1) = T(0);
-			r(3, 2) = T(0);
-			r(3, 3) = T(1);
+			r.m30() = T(0);
+			r.m31() = T(0);
+			r.m32() = T(0);
+			r.m33() = T(1);
 
 			return r;
 

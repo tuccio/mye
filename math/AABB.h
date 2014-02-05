@@ -16,14 +16,14 @@ namespace mye
 
 			enum Corners
 			{
-				NEAR_LEFT_BOTTOM = 0,
-				NEAR_RIGHT_BOTTOM = 1,
-				NEAR_RIGHT_TOP = 2,
-				NEAR_LEFT_TOP = 3,
-				FAR_LEFT_TOP = 4,
-				FAR_RIGHT_TOP = 5,
-				FAR_RIGHT_BOTTOM = 6,
-				FAR_LEFT_BOTTOM = 7
+				FRONT_LEFT_BOTTOM = 0,
+				FRONT_RIGHT_BOTTOM = 1,
+				FRONT_RIGHT_TOP = 2,
+				FRONT_LEFT_TOP = 3,
+				BACK_LEFT_TOP = 4,
+				BACK_RIGHT_TOP = 5,
+				BACK_RIGHT_BOTTOM = 6,
+				BACK_LEFT_BOTTOM = 7
 			};
 
 			AABB::AABB(void) :
@@ -32,16 +32,17 @@ namespace mye
 			{
 			}
 
-			AABB::AABB(const Matrix<float, 3, 1> &min,
-				const Matrix<float, 3, 1> &max) :
-			m_min(min),
-				m_max(max)
-			{
-			}
-
 			AABB::~AABB(void)
 			{
 			}
+
+			static inline AABB FromMinMax(
+				const mye::math::Vector3f &min,
+				const mye::math::Vector3f &max);
+
+			static inline AABB FromCenterHalfExtents(
+				const mye::math::Vector3f &center,
+				const mye::math::Vector3f &halfExtents);
 
 			inline Matrix<float, 3, 1> GetCenter(void) const;
 			inline Matrix<float, 3, 1> GetHalfExtents(void) const;
@@ -52,6 +53,8 @@ namespace mye
 			inline std::vector<Matrix<float, 3, 1>> GetCorners(void) const;
 
 			inline AABB TransformAffine(const Matrix<float, 4, 4> &t);
+
+			inline bool Contains(const Matrix<float, 3, 1> &x) const;
 
 		private:
 

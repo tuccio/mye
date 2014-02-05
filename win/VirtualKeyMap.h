@@ -26,10 +26,30 @@ namespace mye
 			switch (vkCode)
 			{
 
+			case VK_LSHIFT:
+			case VK_SHIFT:
+				return mye::core::KeyboardVK::MYE_VK_LSHIFT;
+
+			case VK_RSHIFT:
+				return mye::core::KeyboardVK::MYE_VK_RSHIFT;
+
 			case VK_LMENU:
 			case VK_MENU:
 				return mye::core::KeyboardVK::MYE_VK_LALT;
-				break;
+
+			case VK_RMENU:
+
+				return mye::core::KeyboardVK::MYE_VK_RALT;
+
+			case VK_LCONTROL:
+			case VK_CONTROL:
+				return mye::core::KeyboardVK::MYE_VK_LCTRL;
+
+			case VK_RCONTROL:
+				return mye::core::KeyboardVK::MYE_VK_RCTRL;
+
+			case VK_SPACE:
+				return mye::core::KeyboardVK::MYE_VK_SPACE;
 
 			default:
 				return mye::core::KeyboardVK::MYE_VK_COUNT;

@@ -72,7 +72,7 @@ namespace mye
 
 		public:
 
-			virtual void OnListViewEvent(unsigned int code, LPARAM lParam) = 0;
+			virtual void OnListViewEvent(ListView *listView, unsigned int code, LPARAM lParam) = 0;
 
 		};
 

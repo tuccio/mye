@@ -9,3 +9,6 @@
 
 #include "AABB.h"
 #include "Ray.h"
+#include "Sphere.h"
+
+#include "Intersection.h"

@@ -37,16 +37,16 @@ public:
 
 	void ResizeViews(void);
 
-	const mye::core::Keyboard& Keyboard(void) const;
-	const mye::core::Mouse& Mouse(void) const;
+// 	const mye::core::Keyboard& Keyboard(void) const;
+// 	const mye::core::Mouse& Mouse(void) const;
 
 private:
 
 	mye::math::Vector2i _ComputeSplitPosition(int i, int j);
 	mye::math::Vector2i _ComputeSplitSize(int i, int j);
 
-	mye::core::Keyboard m_keyboard;
-	mye::core::Mouse m_mouse;
+// 	mye::core::Keyboard m_keyboard;
+// 	mye::core::Mouse m_mouse;
 
 	mye::math::Vector2i m_splits;
 	ViewsList m_views;

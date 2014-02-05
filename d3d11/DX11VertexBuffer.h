@@ -25,6 +25,7 @@ namespace mye
 
 			~DX11VertexBuffer(void);
 
+			bool Create(void *data, size_t n, const mye::core::VertexDeclaration &vDecl);
 			bool Create(mye::core::Mesh *mesh);
 			bool Create(mye::core::Model *model);
 

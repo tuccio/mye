@@ -18,22 +18,24 @@ Game(input,
 	audio,
 	script)
 {
-	m_mainWindow.AddListener(&m_mainWindowListener);
-	m_mainWindow.Create();
+// 	m_mainWindow.AddListener(&m_mainWindowListener);
+// 	m_mainWindow.Create();
 }
 
 WinGame::~WinGame(void)
 {
-	m_mainWindow.Destroy();
+/*	m_mainWindow.Destroy();*/
 }
 
 void WinGame::Run(void)
 {
 
-	if (m_mainWindow.Exists())
-	{
-		m_mainWindow.Create();
-	}
+// 	if (m_mainWindow.Exists())
+// 	{
+// 		m_mainWindow.Create();
+// 	}
+// 
+// 	m_mainWindow.Show();
 
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));

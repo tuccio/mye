@@ -37,6 +37,33 @@ namespace mye
 			inline T* Data(void);
 			inline const T* Data(void) const;
 
+			inline T& m00(void);
+			inline const T& m00(void) const;
+
+			inline T& m01(void);
+			inline const T& m01(void) const;
+
+			inline T& m02(void);
+			inline const T& m02(void) const;
+
+			inline T& m10(void);
+			inline const T& m10(void) const;
+
+			inline T& m11(void);
+			inline const T& m11(void) const;
+
+			inline T& m12(void);
+			inline const T& m12(void) const;
+
+			inline T& m20(void);
+			inline const T& m20(void) const;
+
+			inline T& m21(void);
+			inline const T& m21(void) const;
+
+			inline T& m22(void);
+			inline const T& m22(void) const;
+
 		private:
 
 			T m_data[9];

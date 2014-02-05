@@ -4,9 +4,24 @@ namespace mye
 	namespace core
 	{
 
+		mye::math::Vector3f Camera::Up(void) const
+		{
+			return m_orientation.Rotate(mye::math::Vector3f(0, 1, 0));
+		}
+
+		mye::math::Vector3f Camera::Right(void) const
+		{
+			return m_orientation.Rotate(mye::math::Vector3f(1, 0, 0));
+		}
+
+		mye::math::Vector3f Camera::Forward(void) const
+		{
+			return m_orientation.Rotate(mye::math::Vector3f(0, 0, 1));
+		}
+
 		void Camera::UpdateView(void)
 		{
-			m_viewMatrix = ((const Camera*) this)->GetViewMatrix();
+			m_viewMatrix = (const_cast<const Camera*>(this))->GetViewMatrix();
 			m_viewMatrixUptodate = true;
 		}
 

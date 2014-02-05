@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <cfloat>
 
 namespace mye
 {
@@ -9,15 +10,45 @@ namespace mye
 	{
 
 		template <typename T>
-		inline T Sqrt(T x)
-		{
-			return ::sqrt(x);
-		}
-
-		template <typename T>
 		inline T Abs(T x)
 		{
 			return (x < 0 ? - x : x);
+		}
+
+		template <typename T>
+		inline T Epsilon(void)
+		{
+			return std::numeric_limits<T>::epsilon();
+		}
+
+		template <>
+		inline float Epsilon<float>(void)
+		{
+			return FLT_EPSILON;
+		}
+
+		template <>
+		inline double Epsilon<double>(void)
+		{
+			return DBL_EPSILON;
+		}
+
+		template <typename T>
+		inline bool EpsilonEqual(T a, T b, T epsilon = Epsilon<T>())
+		{
+			return Abs(a - b) <= epsilon;
+		}
+
+		template <typename T>
+		inline bool EpsilonLessEqual(T a, T b, T epsilon = Epsilon<T>())
+		{
+			return a <= b + epsilon;
+		}
+
+		template <typename T>
+		inline T Sqrt(T x)
+		{
+			return ::sqrt(x);
 		}
 
 		template <typename T>

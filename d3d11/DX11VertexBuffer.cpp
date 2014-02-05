@@ -46,6 +46,39 @@ size_t DX11VertexBuffer::CalculateSizeImpl(void)
 	return m_size;
 }
 
+bool DX11VertexBuffer::Create(void *data, size_t n, const VertexDeclaration &vDecl)
+{
+
+	if (m_buffer)
+	{
+		Destroy();
+	}
+
+	D3D11_BUFFER_DESC vertexBufferDesc;
+
+	vertexBufferDesc.Usage               = D3D11_USAGE_DEFAULT;
+	vertexBufferDesc.ByteWidth           = vDecl.GetSize() * n;
+	vertexBufferDesc.BindFlags           = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDesc.CPUAccessFlags      = 0;
+	vertexBufferDesc.MiscFlags           = 0;
+	vertexBufferDesc.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
+	vertexBufferData.pSysMem = data;
+
+	m_stride = vDecl.GetSize();
+	m_vertices = n;
+
+	bool success =
+		!HRTESTFAILED(m_device.GetDevice()->CreateBuffer(
+		&vertexBufferDesc,
+		&vertexBufferData,
+		&m_buffer));
+
+	return success;
+
+}
+
 bool DX11VertexBuffer::Create(Mesh *mesh)
 {
 

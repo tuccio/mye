@@ -146,5 +146,15 @@ namespace mye
 
 		};
 
+		class SendQuitOnClose :
+			public mye::core::IWindow::Listener
+		{
+
+		public:
+
+			void OnDestroy(mye::core::IWindow *window);			
+
+		};
+
 	}
 }

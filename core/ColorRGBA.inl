@@ -64,6 +64,31 @@ namespace mye
 				);
 		}
 
+		ColorRGBA ColorRGBA::White(void)
+		{
+			return ColorRGBA(1, 1, 1, 1);
+		}
+
+		ColorRGBA ColorRGBA::Black(void)
+		{
+			return ColorRGBA(0, 0, 0, 1);
+		}
+
+		ColorRGBA ColorRGBA::Red(void)
+		{
+			return ColorRGBA(1, 0, 0, 1);
+		}
+
+		ColorRGBA ColorRGBA::Green(void)
+		{
+			return ColorRGBA(0, 1, 0, 1);
+		}
+
+		ColorRGBA ColorRGBA::Blue(void)
+		{
+			return ColorRGBA(0, 0, 1, 1);
+		}
+
 	}
 
 }

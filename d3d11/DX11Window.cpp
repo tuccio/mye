@@ -188,6 +188,22 @@ void DX11Window::SetMSAA(MSAA msaa)
 	m_msaa = msaa;
 }
 
+void DX11Window::ClearColorBuffer(const mye::core::ColorRGBA &color)
+{
+	m_device.GetImmediateContext()->ClearRenderTargetView(
+		m_renderTargetView,
+		color.Data());
+}
+
+void DX11Window::ClearDepthBuffer(float depth)
+{
+	m_device.GetImmediateContext()->ClearDepthStencilView(
+		m_depthStencilView,
+		D3D11_CLEAR_DEPTH,
+		depth,
+		0);
+}
+
 void DX11Window::ResizeBuffers(int width, int height)
 {
 

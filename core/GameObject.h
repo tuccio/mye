@@ -36,17 +36,18 @@ namespace mye
 			Component* GetComponent(const std::string &name);
 			void RemoveComponent(const std::string &name);
 
-			TransformComponent* GetTransformComponent(void);
-			ScriptComponent* GetScriptComponent(void);
+			inline TransformComponent* GetTransformComponent(void);
+			inline ScriptComponent* GetScriptComponent(void);
+			inline RenderComponent* GetRenderComponent(void);
 
-			GameObjectsManager* GetOwner(void);
-			GameObjectHandle GetHandle(void);
+			inline GameObjectsManager* GetOwner(void);
+			inline GameObjectHandle GetHandle(void);
 
 			void Update(FloatSeconds dt);
 
 			void Clear(void);
 
-			MYE_USE_POOL_ALLOCATOR(GameObject)
+			MYE_DECLARE_POOL_ALLOCATOR(GameObject)
 
 		private:
 
@@ -66,6 +67,7 @@ namespace mye
 
 			TransformComponent *m_transform;
 			ScriptComponent *m_script;
+			RenderComponent *m_render;
 
 		};
 
@@ -74,3 +76,5 @@ namespace mye
 	}
 
 }
+
+#include "GameObject.inl"

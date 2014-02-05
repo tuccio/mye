@@ -28,7 +28,7 @@ void Button::Create(Window &parent,
 	m_function = f;
 	
 	m_hButton = CreateWindow( 
-		"BUTTON",
+		WC_BUTTON,
 		text.c_str(),
 		WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
 		position.x(),

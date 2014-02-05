@@ -73,37 +73,11 @@ namespace mye
 		}
 
 		template <typename T>
-		Matrix<T, 4, 4> Transform<T>::GetSRTMatrix(void) const
-		{
-			return ScaleMatrix4(m_scale) *
-				RotationMatrix4(m_orientation) *
-				TranslationMatrix4(m_position);
-		}
-
-		template <typename T>
-		Matrix<T, 4, 4> Transform<T>::GetSTRMatrix(void) const
-		{
-			return ScaleMatrix4(m_scale) *
-				TranslationMatrix4(m_position) *
-				RotationMatrix4(m_orientation);
-		}
-
-		template <typename T>
 		Matrix<T, 4, 4> Transform<T>::GetTRSMatrix(void) const
 		{
 			return TranslationMatrix4(m_position) *
 				RotationMatrix4(m_orientation) *
 				ScaleMatrix4(m_scale);
-		}
-
-		template <typename T>
-		Transform<T> Transform<T>::Combine(const Transform<T> &transform)
-		{
-			return Transform<T>(
-				m_position + transform.m_position,
-				transform.m_orientation * m_orientation,
-				m_scale * transform.m_scale
-				);
 		}
 
 	}

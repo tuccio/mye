@@ -8,10 +8,13 @@
 using namespace mye::core;
 using namespace std;
 
+MYE_DEFINE_POOL_ALLOCATOR(GameObject)
+
 GameObject::GameObject(void) :
 	m_owner(NULL),
 	m_transform(NULL),
-	m_script(NULL)
+	m_script(NULL),
+	m_render(NULL)
 {
 }
 
@@ -19,7 +22,8 @@ GameObject::GameObject(const std::string &name) :
 	m_name(name),
 	m_owner(NULL),
 	m_transform(NULL),
-	m_script(NULL)
+	m_script(NULL),
+	m_render(NULL)
 {
 }
 
@@ -53,6 +57,10 @@ Component* GameObject::AddComponent(const Component &component)
 			break;
 		case COMPONENT_SCRIPT:
 			m_script = static_cast<ScriptComponent*>(newComponent);
+			break;
+		case COMPONENT_RENDER:
+			m_render = static_cast<RenderComponent*>(newComponent);
+			break;
 		}
 
 		return newComponent;
@@ -92,6 +100,10 @@ void GameObject::RemoveComponent(const std::string &name)
 			break;
 		case COMPONENT_SCRIPT:
 			m_script = NULL;
+			break;
+		case COMPONENT_RENDER:
+			m_render = NULL;
+			break;
 		}
 
 		delete it->second;
@@ -117,16 +129,6 @@ void GameObject::Clear(void)
 
 }
 
-// void* GameObject::operator new (std::size_t size)
-// {
-// 	return PoolAllocator<GameObject>::GetSingleton().Allocate();
-// }
-// 
-// void GameObject::operator delete (void *p)
-// {
-// 	PoolAllocator<GameObject>::GetSingleton().Free(p);
-// }
-
 void GameObject::OnCreation(GameObjectsManager *owner,
 							const GameObjectHandle &handle)
 {
@@ -135,7 +137,6 @@ void GameObject::OnCreation(GameObjectsManager *owner,
 	m_handle = handle;
 
 	TransformComponent *t = static_cast<TransformComponent*>(AddComponent(TransformComponent()));
-	t->Set(mye::math::Transformf::Identity());
 
 }
 
@@ -144,16 +145,6 @@ void GameObject::OnDestruction(void)
 
 	Clear();
 
-}
-
-GameObjectsManager* GameObject::GetOwner(void)
-{
-	return m_owner;
-}
-
-GameObjectHandle GameObject::GetHandle(void)
-{
-	return m_handle;
 }
 
 void GameObject::Update(FloatSeconds dt)

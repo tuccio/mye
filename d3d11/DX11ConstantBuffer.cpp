@@ -1,5 +1,7 @@
 #include "DX11ConstantBuffer.h"
 
+#include <cassert>
+
 using namespace mye::dx11;
 using namespace mye::core;
 
@@ -53,7 +55,7 @@ bool DX11ConstantBuffer::Create(size_t size,
 	bool success =
 		!HRTESTFAILED(m_device.GetDevice()->CreateBuffer(
 		&vertexBufferDesc,
-		&vertexBufferData,
+		(initiationData ? &vertexBufferData : 0x0),
 		&m_buffer));
 
 	return success;
@@ -70,7 +72,12 @@ void DX11ConstantBuffer::Bind(PipelineStages stage, int index)
 		m_device.GetImmediateContext()->VSSetConstantBuffers(index, 1, &m_buffer);
 		break;
 
+	case PIPELINE_PIXEL_SHADER:
+		m_device.GetImmediateContext()->PSSetConstantBuffers(index, 1, &m_buffer);
+		break;
+
 	default:
+		assert(false);
 		break;
 
 	}

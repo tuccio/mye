@@ -12,7 +12,9 @@ namespace mye
 		enum ControlType
 		{
 			CT_BUTTON,
-			CT_LISTVIEW
+			CT_LISTVIEW,
+			CT_EDIT,
+			CT_CHECKBOX
 		};
 
 		class Control

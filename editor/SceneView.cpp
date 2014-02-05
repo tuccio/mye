@@ -2,6 +2,8 @@
 #include "Globals.h"
 
 #include <mye/win/Button.h>
+#include <mye/win/Checkbox.h>
+#include <mye/win/Edit.h>
 #include <mye/win/ListView.h>
 #include <mye/win/Utils.h>
 
@@ -12,7 +14,7 @@
 #define TAB_GAME_OBJECTS 0
 #define TAB_PROPERTIES 1
 #define TAB_TRANSFORM 2
-#define TAB_RENDERER 3
+#define TAB_RENDER 3
 #define TAB_BEHAVIOUR 4
 
 using namespace mye::dx11;
@@ -20,15 +22,21 @@ using namespace mye::win;
 using namespace mye::math;
 using namespace mye::core;
 
-SceneView::SceneView(DX11Device &device) :
-	m_window(device),
-	m_device(device),
+SceneView::SceneView(void) :
 	m_bgColor(0.12f, 0.12f, 0.12f, 1.0f),
 	m_initialized(false),
 	m_tabs(m_tabsWindow),
 	m_selected(NULL),
-	m_activeTab(-1)
+	m_activeTab(-1),
+	m_sensitivity(1.2f),
+	m_dragSpeed(1.5f)
 {
+
+	m_camera.LookAt(
+		Vector3f(0, 0, -5),
+		Vector3f(0, 1, 0),
+		Vector3f(0, 0, 0));
+
 }
 
 
@@ -49,24 +57,7 @@ void SceneView::Activate(void)
 	if (!m_initialized)
 	{
 
-		Window::Properties p;
-
-		p.caption    = "Scene View";
-		p.fullscreen = false;
-		p.width      = -1;
-		p.height     = -1;
-		p.x          = -1;
-		p.y          = -1;
-
-		m_window.CreateChild(g_mainWindow, p);
-		
-		if (!m_window.Init())
-		{
-			ShowErrorBox("Error while initiating rendering window\nConsult logs for more details");
-			exit(1);
-		}
-
-		m_tabsWindow.CreateChild(g_mainWindow, p);
+		m_tabsWindow.CreateChild(g_mainWindow);
 		m_tabs.Create();
 
 		m_tabsWindow.AddTabsListener(this);
@@ -74,12 +65,19 @@ void SceneView::Activate(void)
 		m_tabs.AddTab(TAB_GAME_OBJECTS, "Game Objects");
 		m_tabs.AddTab(TAB_PROPERTIES, "Properties");
 		m_tabs.AddTab(TAB_TRANSFORM, "Transform");
-		m_tabs.AddTab(TAB_RENDERER, "Renderer");
+		m_tabs.AddTab(TAB_RENDER, "Render");
 		m_tabs.AddTab(TAB_BEHAVIOUR, "Behaviour");
 
 		_CreateGameObjectsTab();
+		_CreateRenderTab();
 
 		m_tabs.SelectTab(-1);
+
+		SelectGameObject(NULL);
+
+		g_game.Init();
+
+		g_scene.SetCamera(&m_camera);
 
 		m_initialized = true;
 
@@ -89,20 +87,20 @@ void SceneView::Activate(void)
 
 	m_tabs.Show();
 	m_tabsWindow.Show();
-	m_window.Show();
+	g_renderWindow.Show();
 
 }
 
 void SceneView::Deactivate(void)
 {
-	m_window.Hide();
+	g_renderWindow.Hide();
 	m_tabsWindow.Hide();
 	m_tabs.Hide();
 }
 
 void SceneView::SetPosition(const mye::math::Vector2i &position)
 {
-	m_window.SetPosition(position);
+	g_renderWindow.SetPosition(position);
 }
 
 void SceneView::SetSize(const mye::math::Vector2i &size)
@@ -117,7 +115,8 @@ void SceneView::SetSize(const mye::math::Vector2i &size)
 	Vector2i rightPanel(rightPanelWidth, size.y());
 	Vector2i leftPanel(size.x() - rightPanelWidth, size.y());
 
-	m_window.SetSize(leftPanel);
+	g_renderWindow.SetSize(leftPanel);
+	m_camera.SetClipAspectRatio(leftPanel.x() / (leftPanel.y() > 0.0f ? leftPanel.y() : 1.0f));
 
  	m_tabsWindow.SetPosition(Vector2i(leftPanel.x(), 0));
  	m_tabsWindow.SetSize(rightPanel);
@@ -127,6 +126,9 @@ void SceneView::SetSize(const mye::math::Vector2i &size)
 
 	m_gameObjectsTab.SetSize(tabSize);
 	m_gameObjectsTab.SetPosition(tabPosition);
+
+	m_renderTab.SetSize(tabSize);
+	m_renderTab.SetPosition(tabPosition);
 
 	auto goList = m_controls.find("GOTGameObjectsList");
 
@@ -146,6 +148,11 @@ void SceneView::SetBackgroundColor(const mye::core::ColorRGBA &rgba)
 	m_bgColor = rgba;
 }
 
+DX11Window& SceneView::GetRenderWindow(void)
+{
+	return g_renderWindow;
+}
+
 void SceneView::OnTabShow(int index)
 {
 
@@ -163,7 +170,8 @@ void SceneView::OnTabShow(int index)
 	case TAB_TRANSFORM:
 		break;
 
-	case TAB_RENDERER:
+	case TAB_RENDER:
+		m_renderTab.Show();
 		break;
 
 	case TAB_BEHAVIOUR:
@@ -193,7 +201,8 @@ void SceneView::OnTabHide(int index)
 	case TAB_TRANSFORM:
 		break;
 
-	case TAB_RENDERER:
+	case TAB_RENDER:
+		m_renderTab.Hide();
 		break;
 
 	case TAB_BEHAVIOUR:
@@ -208,14 +217,98 @@ void SceneView::OnTabHide(int index)
 void SceneView::Update(void)
 {
 
-	switch (m_activeTab)
+	const Mouse *mouse = g_input.GetMouse();
+	const Keyboard *keyboard = g_input.GetKeyboard();
+
+	Vector2f mousePosition = mouse->GetPosition();
+	Vector2i windowLeftTop = g_renderWindow.GetPosition();
+	Vector2i windowRightBottom = windowLeftTop + g_renderWindow.GetSize();
+
+	if (mousePosition.x() >= windowLeftTop.x() &&
+		mousePosition.x() <= windowRightBottom.x() &&
+		mousePosition.y() >= windowLeftTop.y() &&
+		mousePosition.y() <= windowRightBottom.y())
 	{
 
-	case TAB_GAME_OBJECTS:
-		break;
+		if (keyboard->IsPressed(MYE_VK_LCTRL))
+		{
 
-	default:
-		break;
+			if (mouse->IsPressed(MYE_VK_MOUSE_LEFT))
+			{
+
+				Vector2f delta = mouse->GetDelta() * m_sensitivity;
+
+				m_camera.Yaw(Arctangent(delta.x()));
+				m_camera.Pitch(Arctangent(delta.y()));
+
+			}
+			else if (mouse->IsPressed(MYE_VK_MOUSE_RIGHT))
+			{
+
+				Vector2f delta = mouse->GetDelta() * m_dragSpeed * .015f;
+
+				Vector3f p = m_camera.GetPosition()
+					+ m_camera.Right() * delta.x()
+					+ m_camera.Up() * (- delta.y());
+
+				m_camera.SetPosition(p);
+
+			}
+			else if (mouse->IsPressed(MYE_VK_MOUSE_MIDDLE))
+			{
+
+				Vector2f delta = mouse->GetDelta() * m_dragSpeed * 0.015f;
+
+				Vector3f p = m_camera.GetPosition()
+					+ m_camera.Right() * delta.x()
+					+ m_camera.Forward() * (- delta.y());
+
+				m_camera.SetPosition(p);
+
+			}
+
+		}
+		else if (keyboard->IsPressed(MYE_VK_LALT) && m_selected)
+		{
+
+			TransformComponent *tc = m_selected->GetTransformComponent();
+
+			if (mouse->IsPressed(MYE_VK_MOUSE_LEFT))
+			{
+
+				Vector2f delta = mouse->GetDelta() * m_sensitivity;
+
+
+				tc->GetOrientation();
+
+
+			}
+			else if (mouse->IsPressed(MYE_VK_MOUSE_RIGHT))
+			{
+
+				Vector2f delta = mouse->GetDelta() * m_dragSpeed * .015f;
+
+				Vector3f p = tc->GetPosition()
+					+ tc->Right() * delta.x()
+					+ tc->Up() * (- delta.y());
+
+				tc->SetPosition(p);
+
+			}
+			else if (mouse->IsPressed(MYE_VK_MOUSE_MIDDLE))
+			{
+
+				Vector2f delta = mouse->GetDelta() * m_dragSpeed * .015f;
+
+				Vector3f p = tc->GetPosition()
+					+ tc->Right() * delta.x()
+					+ tc->Forward() * (- delta.y());
+
+				tc->SetPosition(p);
+
+			}
+
+		}
 
 	}
 
@@ -224,17 +317,77 @@ void SceneView::Update(void)
 void SceneView::Render(void)
 {
 
-	m_device.GetImmediateContext()->ClearRenderTargetView(
-		m_window.GetRenderTargetView(),
+	g_device.GetImmediateContext()->ClearRenderTargetView(
+		g_renderWindow.GetRenderTargetView(),
 		m_bgColor.Data());
 
-	m_device.GetImmediateContext()->ClearDepthStencilView(
-		m_window.GetDepthStencilView(),
+	g_device.GetImmediateContext()->ClearDepthStencilView(
+		g_renderWindow.GetDepthStencilView(),
 		D3D11_CLEAR_DEPTH,
 		1,
 		0);
 
-	m_window.GetSwapChain()->Present(1, 0);
+	Camera *camera = g_scene.GetCamera();
+
+	if (camera)
+	{
+
+		DX11ConstantBuffer mvpBuffer(NULL, "", NULL, g_renderWindow.GetDevice());
+		mvpBuffer.Create(sizeof(float) * 16, Matrix4f(1.0f).Data());
+
+		SceneModule::ObjectsList objects = g_scene.GetVisibleObjects();
+
+		Matrix4f viewProjection = camera->GetProjectionMatrix() *
+			camera->GetViewMatrix();
+
+		for (GameObject *object : objects)
+		{
+
+			RenderComponent *rc = object->GetRenderComponent();
+
+			if (rc)
+			{
+
+				TransformComponent *tc = object->GetTransformComponent();
+				Model *model = rc->GetModel().Cast<Model>();
+
+				if (model)
+				{
+
+					model->Load();
+
+					mvpBuffer.Bind(PIPELINE_VERTEX_SHADER, 0);
+					mvpBuffer.SetData((viewProjection *
+						tc->GetWorldMatrix()).Data());
+
+					DX11VertexBuffer vertexBuffer(NULL, "", NULL, g_renderWindow.GetDevice());
+
+					vertexBuffer.Create(model);
+					vertexBuffer.Bind();
+
+					g_renderWindow.GetDevice().GetImmediateContext()->
+						IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+					g_renderWindow.GetDevice().GetImmediateContext()->
+						Draw(vertexBuffer.GetVerticesCount(), 0);
+
+					vertexBuffer.Destroy();
+
+				}
+
+			}
+
+		}
+
+		mvpBuffer.Destroy();
+
+	}
+
+	
+
+	g_renderWindow.GetSwapChain()->Present(1, 0);
+
+	//g_game.GetGraphicsModule()->Render();
 
 }
 
@@ -250,7 +403,7 @@ void SceneView::_CreateGameObjectsTab(void)
 
 	gameObjectsList->Create(
 		m_gameObjectsTab,
-		Vector2i(0, 32));
+		Vector2i(0, 28));
 
 	Button *createButton = new Button;
 	m_controls["GOTCreateButton"] = createButton;
@@ -258,24 +411,32 @@ void SceneView::_CreateGameObjectsTab(void)
 	createButton->Create(
 		m_gameObjectsTab,
 		"Create",
-		[gameObjectsList] (void) -> void
+		[this, gameObjectsList] (void) -> void
 		{
 
 			GameObjectHandle hObj = g_gameObjectsModule.Create();
+			int i = ListView_GetItemCount(gameObjectsList->GetHandle());
 
 			LV_ITEM item;
 			ZeroMemory(&item, sizeof(LV_ITEM));
+			item.iItem = i;
 			item.cchTextMax = 64;
 			item.mask = LVIF_TEXT | LVIF_PARAM;
 			item.pszText = "<Anon>";
 			item.lParam = (LPARAM) g_gameObjectsModule.Get(hObj);
 
 			ListView_InsertItem(gameObjectsList->GetHandle(), &item);
+			SelectGameObject((GameObject*) (item.lParam));
+			g_scene.AddGameObject(hObj);
+			
+// 			ListView_SetItemState(gameObjectsList->GetHandle(), i, LVIS_SELECTED, LVIS_SELECTED);
+// 			ListView_SetSelectionMark(gameObjectsList->GetHandle(), i);
+
 			//ListView_SetItemText(gameObjectsList->GetHandle(), 0, 1, TEXT("<None>"));
 
 		},
 		Vector2i(0, 0),
-		Vector2i(120, 28));
+		Vector2i(130, 24));
 
 	Button *deleteButton = new Button;
 		m_controls["GOTDeleteButton"] = deleteButton;
@@ -283,7 +444,7 @@ void SceneView::_CreateGameObjectsTab(void)
 	deleteButton->Create(
 			m_gameObjectsTab,
 			"Delete",
-			[gameObjectsList] (void) -> void
+			[this, gameObjectsList] (void) -> void
 		{
 
 			int selected = ListView_GetNextItem(gameObjectsList->GetHandle(), -1, LVNI_SELECTED);
@@ -302,14 +463,16 @@ void SceneView::_CreateGameObjectsTab(void)
 				{
 					GameObjectHandle hObj = ((GameObject*) (item.lParam))->GetHandle();
 					g_gameObjectsModule.Destroy(hObj);
+					g_scene.RemoveGameObject(hObj);
 					ListView_DeleteItem(gameObjectsList->GetHandle(), selected);
+					SelectGameObject(NULL);
 				}
 
 			}
 
 		},
-			Vector2i(128, 0),
-			Vector2i(120, 28));
+			Vector2i(134, 0),
+			Vector2i(130, 24));
 
 	LV_COLUMN nameCol;
 	nameCol.mask = LVCF_TEXT | LVCF_WIDTH | LVCF_SUBITEM;
@@ -329,4 +492,58 @@ void SceneView::_CreateGameObjectsTab(void)
 	m_gameObjectsTab.RegisterControl(deleteButton);
 	m_gameObjectsTab.RegisterControl(gameObjectsList);
 
+	gameObjectsList->AddListener(this);
+
 }
+
+void SceneView::OnListViewEvent(ListView *listView, unsigned int code, LPARAM lParam)
+{
+
+	switch (code)
+	{
+
+	case NM_DBLCLK:
+
+		{
+			int selected = ListView_GetNextItem(listView->GetHandle(), -1, LVNI_SELECTED);
+
+			if (selected >= 0)
+			{
+
+				LV_ITEM item;
+				ZeroMemory(&item, sizeof(LV_ITEM));
+				item.mask = LVIF_PARAM;
+				item.iItem = selected;
+
+				BOOL itemSelected = ListView_GetItem(listView->GetHandle(), &item);
+
+				if (itemSelected && item.lParam)
+				{
+					GameObject *selectedObject = ((GameObject*) (item.lParam));
+					SelectGameObject(selectedObject);
+				}
+
+			}
+		}
+		break;
+
+	default:
+		break;
+
+	}
+
+}
+
+void SceneView::SelectGameObject(GameObject *selectedObject)
+{
+	
+	/* Update tabs */
+
+	/* Update render tab */
+
+	_FillRenderTab(selectedObject);
+
+	m_selected = selectedObject;
+
+}
+

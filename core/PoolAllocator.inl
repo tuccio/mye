@@ -61,17 +61,43 @@ namespace mye
 
 }
 
-#define MYE_USE_POOL_ALLOCATOR(__TYPE)\
-void* operator new (std::size_t size)\
+#define MYE_DECLARE_POOL_ALLOCATOR(__TYPE)\
+static mye::core::PoolAllocator<__TYPE> m_myePoolAllocator;\
+\
+void* operator new (std::size_t size);\
+void* operator new (std::size_t size, const std::nothrow_t);\
+void operator delete (void *p);
+
+#define MYE_DEFINE_POOL_ALLOCATOR(__TYPE)\
+mye::core::PoolAllocator<__TYPE> __TYPE::m_myePoolAllocator;\
+\
+void* __TYPE::operator new (std::size_t size)\
 {\
 	return mye::core::PoolAllocator<__TYPE>::GetSingleton().Allocate();\
 }\
-void* operator new (std::size_t size, const std::nothrow_t)\
+void* __TYPE::operator new (std::size_t size, const std::nothrow_t)\
+{\
+return mye::core::PoolAllocator<__TYPE>::GetSingleton().AllocateNoThrow();\
+}\
+\
+void __TYPE::operator delete (void *p)\
+{\
+	return mye::core::PoolAllocator<__TYPE>::GetSingleton().Free(p);\
+}
+
+#define MYE_DEFINE_TEMPLATE_POOL_ALLOCATOR(__TEMPLATE, __TYPE)\
+__TEMPLATE mye::core::PoolAllocator<__TYPE> __TYPE::m_myePoolAllocator;\
+\
+__TEMPLATE void* __TYPE::operator new (std::size_t size)\
+{\
+	return mye::core::PoolAllocator<__TYPE>::GetSingleton().Allocate();\
+}\
+__TEMPLATE void* __TYPE::operator new (std::size_t size, const std::nothrow_t)\
 {\
 	return mye::core::PoolAllocator<__TYPE>::GetSingleton().AllocateNoThrow();\
 }\
 \
-void operator delete (void *p)\
+__TEMPLATE void __TYPE::operator delete (void *p)\
 {\
 	return mye::core::PoolAllocator<__TYPE>::GetSingleton().Free(p);\
 }

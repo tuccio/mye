@@ -2,6 +2,7 @@
 
 #include <mye/win/Window.h>
 #include <mye/win/Toolbar.h>
+#include <mye/win/Utils.h>
 
 #include <mye/d3d11/DX11ShaderManager.h>
 #include <mye/d3d11/DX11BufferManager.h>
@@ -60,7 +61,21 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 
 	g_mainWindow.Maximize();
 
-	g_input.Init();
+	p.caption    = "Render window";
+	p.fullscreen = false;
+	p.width      = -1;
+	p.height     = -1;
+	p.x          = -1;
+	p.y          = -1;
+
+	g_renderWindow.SetMSAA(DX11Window::MSAA_4x);
+	g_renderWindow.CreateChild(g_mainWindow, p);
+
+	if (!g_renderWindow.Init())
+	{
+		ShowErrorBox("Error while initiating rendering window\nConsult logs for more details");
+		exit(1);
+	}
 
 	CompileShaders();
 

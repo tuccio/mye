@@ -24,8 +24,12 @@ namespace mye
 
 			virtual ObjectsList GetVisibleObjects(void);
 
+			virtual void AddGameObject(const GameObjectHandle &hObj);
+			virtual void RemoveGameObject(const GameObjectHandle &hObj);
+
 			inline mye::core::Camera& Camera(void);
 
+			inline mye::core::Camera* GetCamera(void);
 			inline const mye::core::Camera* GetCamera(void) const;
 			inline const void SetCamera(mye::core::Camera *camera);
 

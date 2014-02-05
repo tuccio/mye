@@ -22,7 +22,7 @@ class ModelView :
 
 public:
 
-	ModelView(mye::dx11::DX11Device &device);
+	ModelView(void);
 	~ModelView(void);
 
 	void Activate(void);
@@ -43,9 +43,6 @@ private:
 	void UpdateBuffer(void);
 
 	/* View members */
-
-	mye::dx11::DX11Window m_window;
-	mye::dx11::DX11Device &m_device;
 
 	mye::core::ColorRGBA m_bgColor;
 

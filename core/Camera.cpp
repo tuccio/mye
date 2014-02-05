@@ -57,7 +57,8 @@ mye::math::Quaternionf Camera::GetOrientation(void) const
 
 void Camera::SetOrientation(const mye::math::Quaternionf &direction)
 {
-	m_orientation = direction;
+	m_orientation        = direction;
+	m_viewMatrixUptodate = false;
 }
 
 mye::math::Vector3f Camera::GetPosition(void) const
@@ -74,13 +75,15 @@ void Camera::SetPosition(const mye::math::Vector3f &position)
 void Camera::Pitch(float angle)
 {
 
-	float cosHalfAngle = Cosine(Radians(angle) * 0.5f);
-	float sinHalfAngle = Sine(Radians(angle) * 0.5f);
+// 	float cosHalfAngle = Cosine(Radians(angle) * 0.5f);
+// 	float sinHalfAngle = Sine(Radians(angle) * 0.5f);
 
-	Quaternionf pitchQuaternion(cosHalfAngle,
+	Quaternionf pitchQuaternion(Right(), angle);
+		
+		/*(cosHalfAngle,
 		sinHalfAngle,
 		0,
-		0);
+		0);*/
 
 	m_orientation        = pitchQuaternion * m_orientation;
 	m_viewMatrixUptodate = false;
@@ -90,13 +93,16 @@ void Camera::Pitch(float angle)
 void Camera::Yaw(float angle)
 {
 
-	float cosHalfAngle = Cosine(Radians(angle) * 0.5f);
-	float sinHalfAngle = Sine(Radians(angle) * 0.5f);
+// 	float cosHalfAngle = Cosine(Radians(angle) * 0.5f);
+// 	float sinHalfAngle = Sine(Radians(angle) * 0.5f);
 
-	Quaternionf yawQuaternion(cosHalfAngle,
+	Quaternionf yawQuaternion(Up(), angle);
+		
+/*
+		(cosHalfAngle,
 		0,
 		sinHalfAngle,
-		0);
+		0);*/
 
 	m_orientation        = yawQuaternion * m_orientation;
 	m_viewMatrixUptodate = false;
@@ -106,13 +112,16 @@ void Camera::Yaw(float angle)
 void Camera::Roll(float angle)
 {
 
-	float cosHalfAngle = Cosine(Radians(angle) * 0.5f);
-	float sinHalfAngle = Sine(Radians(angle) * 0.5f);
+// 	float cosHalfAngle = Cosine(Radians(angle) * 0.5f);
+// 	float sinHalfAngle = Sine(Radians(angle) * 0.5f);
 
-	Quaternionf rollQuaternion(cosHalfAngle,
+	Quaternionf rollQuaternion(Forward(), angle);
+		
+		
+	/*(cosHalfAngle,
 		0,
 		0,
-		sinHalfAngle);
+		sinHalfAngle);*/
 
 	m_orientation        = rollQuaternion * m_orientation;
 	m_viewMatrixUptodate = false;

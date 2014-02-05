@@ -17,19 +17,16 @@ using namespace mye::win;
 #define MVIEW_OPEN 0x0
 #define MVIEW_TUNE 0x1
 
-ModelView::ModelView(mye::dx11::DX11Device &device) :
-	m_window(device),
-	m_device(device),
+ModelView::ModelView(void) :
 	m_initialized(false),
 	m_toolbar(g_mainWindow, true),
 	m_bgColor(0.12f, 0.12f, 0.12f, 1.0f),
-	m_vbuffer(NULL, "", NULL, device),
-	m_planeBuffer(NULL, "", NULL, device),
-	m_mvpBuffer(NULL, "", NULL, device),
+	m_vbuffer(NULL, "", NULL, g_device),
+	m_planeBuffer(NULL, "", NULL, g_device),
+	m_mvpBuffer(NULL, "", NULL, g_device),
 	m_transform(Transformf::Identity())
 {
 	m_toolbar.SetIconSize(mye::math::Vector2i(24, 24));
-	m_window.SetMSAA(DX11Window::MSAA_4x);
 }
 
 
@@ -43,23 +40,6 @@ void ModelView::Activate(void)
 
 	if (!m_initialized)
 	{
-
-		Window::Properties p;
-
-		p.caption    = "Model View";
-		p.fullscreen = false;
-		p.width      = -1;
-		p.height     = -1;
-		p.x          = -1;
-		p.y          = -1;
-
-		m_window.CreateChild(g_mainWindow, p);
-
-		if (!m_window.Init())
-		{
-			ShowErrorBox("Error while initiating rendering window\nConsult logs for more details");
-			exit(1);
-		}
 
 		m_toolbar.AddButton("icons/folder.bmp",
 			[this]()->void
@@ -86,14 +66,13 @@ void ModelView::Activate(void)
 
 				if (m_model)
 				{
-					m_model->Unload();
 					m_model.Release();
 				}
 
 				Resource::ParametersList params;
 
-				params["normals"] = "false";
-				params["texcoords"] = "false";
+				params["normals"] = "true";
+				params["texcoords"] = "true";
 
 				m_model = ResourceTypeManager::GetSingleton().
 					CreateResource("Model", buffer, NULL, &params);
@@ -106,7 +85,7 @@ void ModelView::Activate(void)
 				m_vbuffer.Create(model);
 
 				auto minmax = model->GetMinMaxVertices();
-				AABB aabb(minmax.first, minmax.second);
+				AABB aabb = AABB::FromMinMax(minmax.first, minmax.second);
 
 				Vector3f halfExtents = aabb.GetHalfExtents();
 				float scale = 1.0f / (2.0f * Max(halfExtents.x(), halfExtents.y()));
@@ -142,7 +121,7 @@ void ModelView::Activate(void)
 			Vector3f(0.0f, 1.0f, 0.0f),
 			Vector3f(0.0f, 0.0f, 0.0f));
 
-		Vector2i size = m_window.GetSize();
+		Vector2i size = g_renderWindow.GetSize();
 
 		m_camera.SetFrustum(75.0f,
 			(float) size.x() / size.y(),
@@ -167,7 +146,7 @@ void ModelView::Activate(void)
 	g_mainWindow.SetToolbar(&m_toolbar);
 	g_mainWindow.ResizeViews();
 
-	m_window.Show();
+	g_renderWindow.Show();
 	m_toolbar.Show();
 
 
@@ -175,21 +154,21 @@ void ModelView::Activate(void)
 
 void ModelView::Deactivate(void)
 {
-	m_window.Hide();
+	g_renderWindow.Hide();
 	m_toolbar.Hide();
 	g_mainWindow.SetToolbar(NULL);
 }
 
 void ModelView::SetPosition(const mye::math::Vector2i &position)
 {
-	m_window.SetPosition(position);
+	g_renderWindow.SetPosition(position);
 }
 
 void ModelView::SetSize(const mye::math::Vector2i &size)
 {
 
 	View::SetSize(size);
-	m_window.SetSize(size);
+	g_renderWindow.SetSize(size);
 	m_toolbar.AutoSize();
 
 	float ratio = (float) size.x() / (size.y() == 0 ? 1 : size.y());
@@ -293,7 +272,7 @@ void ModelView::Update(void)
 		break;
 
 	default:
-			break;
+		break;
 
 	}
 
@@ -302,14 +281,14 @@ void ModelView::Update(void)
 void ModelView::Render(void)
 {
 
-	ID3D11DeviceContext *context = m_device.GetImmediateContext();
+	ID3D11DeviceContext *context = g_device.GetImmediateContext();
 
 	context->ClearRenderTargetView(
-		m_window.GetRenderTargetView(),
+		g_renderWindow.GetRenderTargetView(),
 		m_bgColor.Data());
 
 	context->ClearDepthStencilView(
-		m_window.GetDepthStencilView(),
+		g_renderWindow.GetDepthStencilView(),
 		D3D11_CLEAR_DEPTH,
 		1,
 		0);
@@ -330,13 +309,13 @@ void ModelView::Render(void)
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	context->Draw(m_vbuffer.GetVerticesCount(), 0);
 
-	m_window.GetSwapChain()->Present(1, 0);
+	g_renderWindow.GetSwapChain()->Present(1, 0);
 
 }
 
 mye::dx11::DX11Window& ModelView::GetWindow(void)
 {
-	return m_window;
+	return g_renderWindow;
 }
 
 void ModelView::UpdateBuffer(void)

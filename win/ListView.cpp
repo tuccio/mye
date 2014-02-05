@@ -122,7 +122,7 @@ bool ListView::Notify(unsigned int code, LPARAM lParam)
 
 	for (Listener *listener : m_listeners)
 	{
-		listener->OnListViewEvent(code, lParam);
+		listener->OnListViewEvent(this, code, lParam);
 	}
 
 	return true;

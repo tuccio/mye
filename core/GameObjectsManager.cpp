@@ -18,12 +18,6 @@ GameObjectHandle::GameObjectHandle(int id, int allocation)
 GameObjectsManager::GameObjectsManager(void) :
 	m_lastId(-1)
 {
-
-	if (!PoolAllocator<GameObject>::GetSingletonPointer())
-	{
-		new PoolAllocator<GameObject>();
-	}
-
 }
 
 

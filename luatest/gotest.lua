@@ -43,20 +43,20 @@ q.w = -1
 print(q)
 
 t = transform()
-t.translation = hObj2.position
-t.rotation = q
+t.position = hObj2.position
+t.orientation = q
 t.scale = vec3(1, 1, 1)
 
-print(t.translation)
-print(t.rotation)
+print(t.position)
+print(t.orientation)
 print(t.scale)
 
 hObj2:AddComponent(TransformVar("t"))
 
 hObj2.t = t
 
-print(hObj2.t.translation)
-print(hObj2.t.rotation)
+print(hObj2.t.position)
+print(hObj2.t.orientation)
 print(hObj2.t.scale)
 
 os.execute("pause")

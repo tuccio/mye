@@ -39,6 +39,12 @@ namespace mye
 
 			inline ColorRGBA operator+ (const ColorRGBA &color) const;
 
+			inline static ColorRGBA White(void);
+			inline static ColorRGBA Black(void);
+			inline static ColorRGBA Red(void);
+			inline static ColorRGBA Green(void);
+			inline static ColorRGBA Blue(void);
+
 		private:
 
 			float m_data[4];

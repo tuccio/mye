@@ -29,7 +29,7 @@ namespace mye
 
 		private:
 
-			Window m_mainWindow;
+			/*Window m_mainWindow;*/
 
 			class MainWindowListener :
 				public Window::Listener

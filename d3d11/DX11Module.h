@@ -19,6 +19,8 @@ namespace mye
 		public:
 
 			DX11Module(void);
+			DX11Module(DX11Window *window);
+
 			~DX11Module(void);
 
 			bool Init(void);
@@ -26,10 +28,15 @@ namespace mye
 
 			void Render(void);
 
+			void NewWindow(void);
+			void SetWindow(DX11Window *window);
+			void FreeWindow(void);
+
 		private:
 
-			DX11Device m_device;
-			DX11Window m_window;
+			DX11Device *m_device;
+			DX11Window *m_window;
+			bool m_ownedDevice;
 
 		};
 
