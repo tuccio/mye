@@ -26,7 +26,7 @@ SceneView::SceneView(void) :
 	m_bgColor(0.12f, 0.12f, 0.12f, 1.0f),
 	m_initialized(false),
 	m_tabs(m_tabsWindow),
-	m_selected(NULL),
+	m_selected(nullptr),
 	m_activeTab(-1),
 	m_sensitivity(1.2f),
 	m_dragSpeed(1.5f)
@@ -73,7 +73,7 @@ void SceneView::Activate(void)
 
 		m_tabs.SelectTab(-1);
 
-		SelectGameObject(NULL);
+		SelectGameObject(nullptr);
 
 		g_game.Init();
 
@@ -332,7 +332,7 @@ void SceneView::Render(void)
 	if (camera)
 	{
 
-		DX11ConstantBuffer mvpBuffer(NULL, "", NULL, g_renderWindow.GetDevice());
+		DX11ConstantBuffer mvpBuffer(nullptr, "", nullptr, g_renderWindow.GetDevice());
 		mvpBuffer.Create(sizeof(float) * 16, Matrix4f(1.0f).Data());
 
 		SceneModule::ObjectsList objects = g_scene.GetVisibleObjects();
@@ -360,7 +360,7 @@ void SceneView::Render(void)
 					mvpBuffer.SetData((viewProjection *
 						tc->GetWorldMatrix()).Data());
 
-					DX11VertexBuffer vertexBuffer(NULL, "", NULL, g_renderWindow.GetDevice());
+					DX11VertexBuffer vertexBuffer(nullptr, "", nullptr, g_renderWindow.GetDevice());
 
 					vertexBuffer.Create(model);
 					vertexBuffer.Bind();
@@ -465,7 +465,7 @@ void SceneView::_CreateGameObjectsTab(void)
 					g_gameObjectsModule.Destroy(hObj);
 					g_scene.RemoveGameObject(hObj);
 					ListView_DeleteItem(gameObjectsList->GetHandle(), selected);
-					SelectGameObject(NULL);
+					SelectGameObject(nullptr);
 				}
 
 			}

@@ -5,7 +5,7 @@ namespace mye
 	{
 
 		template <typename T>
-		T* Singleton<T>::m_singleton = NULL;
+		T* Singleton<T>::m_singleton = nullptr;
 
 		template <typename T>
 		Singleton<T>::Singleton(void)
@@ -17,7 +17,7 @@ namespace mye
 		template <typename T>
 		Singleton<T>::~Singleton(void)
 		{
-			m_singleton = NULL;
+			m_singleton = nullptr;
 		}
 
 		template <typename T>

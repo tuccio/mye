@@ -49,7 +49,7 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 
 	if (!game.Init())
 	{
-		MessageBox(NULL, "Initialization failed", "Error", MB_OK | MB_ICONERROR);
+		MessageBox(nullptr, "Initialization failed", "Error", MB_OK | MB_ICONERROR);
 		return 1;
 	}
 

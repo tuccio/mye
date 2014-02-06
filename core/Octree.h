@@ -117,7 +117,8 @@ namespace mye
 		public:
 
 			Octree(const mye::math::Vector3f &center,
-				const mye::math::Vector3f &size);
+				const mye::math::Vector3f &size,
+				unsigned int maxDepth);
 
 			~Octree(void);
 
@@ -128,7 +129,8 @@ namespace mye
 			void Relocate(T &object,
 				const mye::math::Vector3f &xOld);
 			
-			void Remove(T &object);
+			inline bool Remove(T &object);
+			bool Remove(T &object, const mye::math::Vector3f &x);
 
 			OctreeTraverser<T> Traverse(const mye::math::Vector3f &x);
 
@@ -137,10 +139,13 @@ namespace mye
 
 			const mye::math::AABB& GetBounds(void) const;
 
+			unsigned int GetMaxDepth(void) const;
+
 		private:
 
 			OctreeInternalNode m_root;
 			mye::math::AABB m_bounds;
+			unsigned int m_maxDepth;
 
 		};
 
@@ -160,22 +165,30 @@ namespace mye
 			inline OctreeNode* GetCurrent(void);
 			inline const OctreeNode* GetCurrent(void) const;
 
-			inline OctreeNode* GetParent(void);
-			inline const OctreeNode* GetParent(void) const;
+			inline OctreeInternalNode* GetParent(void);
+			inline const OctreeInternalNode* GetParent(void) const;
 
-			inline void MoveToChild(OctreeInternalNode::Children child);
-			inline void MoveToParent(void);
+			inline OctreeInternalNode::Children GetChildSide(void) const;
+
+			inline bool Traverse(const mye::math::Vector3f &x);
+
+			inline bool MoveToChild(OctreeInternalNode::Children child);
+			inline OctreeInternalNode* MoveToParent(void);
+			inline OctreeInternalNode* MoveToRoot(void);
+
+			inline unsigned int GetDepth(void) const;
 
 		private:
 
 			struct NodeInfo
 			{
 				OctreeNode *node;
-				mye::math::AABB bounds;
+				OctreeInternalNode::Children child;
 			};
 
 			Octree<T> *m_octree;
 			std::deque<NodeInfo> m_path;
+			mye::math::AABB m_bounds;
 
 		};
 
@@ -184,6 +197,10 @@ namespace mye
 			const mye::math::Vector3f &x);
 
 		inline mye::math::AABB __SplitAABB(
+			const mye::math::AABB &aabb,
+			OctreeInternalNode::Children child);
+
+		inline mye::math::AABB __InverseSplitAABB(
 			const mye::math::AABB &aabb,
 			OctreeInternalNode::Children child);
 

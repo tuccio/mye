@@ -117,7 +117,7 @@ LuaScript LuaModule::LoadBehaviour(const std::string &filename)
 
 		const char *upvalue = lua_setupvalue(m_L, -2, 1);
 
-		if (upvalue != NULL)
+		if (upvalue != nullptr)
 		{
 
 			assert(strncmp(upvalue, "_ENV", 4) == 0);
@@ -166,7 +166,7 @@ LuaScript LuaModule::LoadProcedure(const std::string &filename)
 
 		const char *upvalue = lua_setupvalue(m_L, -2, 1);
 
-		if (upvalue != NULL)
+		if (upvalue != nullptr)
 		{
 
 			assert(strncmp(upvalue, "_ENV", 4) == 0);

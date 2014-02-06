@@ -41,7 +41,7 @@ LRESULT __stdcall __mye_winkeyboard_llhook(int nCode,
 
 	}
 
-	return CallNextHookEx(NULL, nCode, wParam, lParam);
+	return CallNextHookEx(nullptr, nCode, wParam, lParam);
 
 }
 
@@ -68,7 +68,7 @@ LRESULT __stdcall __mye_winkeyboard_hook(int nCode,
 
 	}
 
-	return CallNextHookEx(NULL, nCode, wParam, lParam);
+	return CallNextHookEx(nullptr, nCode, wParam, lParam);
 
 }
 
@@ -82,7 +82,7 @@ bool WinKeyboard::Hook(void)
 	m_hHook = SetWindowsHookEx(
 		WH_KEYBOARD_LL,
 		&__mye_winkeyboard_llhook,
-		NULL,
+		nullptr,
 		0);
 
 #else
@@ -90,12 +90,12 @@ bool WinKeyboard::Hook(void)
 	m_hHook = SetWindowsHookEx(
 		WH_KEYBOARD,
 		&__mye_winkeyboard_hook,
-		NULL,
+		nullptr,
 		GetCurrentThreadId());
 
 #endif
 
-	return (m_hHook == NULL ? false : true);
+	return (m_hHook == nullptr ? false : true);
 
 }
 

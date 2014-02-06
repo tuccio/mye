@@ -93,7 +93,7 @@ namespace mye
 				if (m_children[i])
 				{
 					delete m_children[i];
-					m_children[i] = NULL;
+					m_children[i] = nullptr;
 				}
 
 			}
@@ -116,7 +116,9 @@ namespace mye
 
 		template <typename T>
 		Octree<T>::Octree(const mye::math::Vector3f &center,
-			const mye::math::Vector3f &size)
+			const mye::math::Vector3f &size,
+			unsigned int maxDepth) :
+		m_maxDepth(maxDepth)
 		{
 			m_bounds = mye::math::AABB::FromCenterHalfExtents(center, size * 0.5f);
 		}
@@ -136,55 +138,46 @@ namespace mye
 		template <typename T>
 		void Octree<T>::Insert(T &object)
 		{
+			
+			mye::math::Vector3f x = OctreePositionGrabber<T>()(object);
 
-			OctreePositionGrabber<T> positionGrabber;
+			OctreeTraverser<T> traverser(*this);
 
-			mye::math::Vector3f x = positionGrabber(object);
-
-			if (!m_bounds.Contains(object))
+			if (!traverser.Traverse(x))
 			{
 				return;
 			}
 
-			AABB bounds = m_bounds;
+			AABB bounds = traverser.GetBounds();
 
-			OctreeInternalNode *previous = NULL;
-			OctreeNode *current = &m_root;
-			OctreeInternalNode::Children child;
+			OctreeInternalNode *previous = traverser.GetParent();
+			OctreeNode *current = traverser.GetCurrent();
 
-			do
+			if (!current->IsLeaf())
 			{
 
-				child = __PickSide(bounds, x);
-
-				previous = static_cast<OctreeInternalNode*>(current);
-				current = static_cast<OctreeInternalNode*>(current)->GetChild(child);
-
-				bounds = __SplitAABB(bounds, child);
-
-			} while (current && !current->IsLeaf());
-
-			if (!current)
-			{
+				OctreeInternalNode::Children child = __PickSide(traverser.GetBounds(), x);
 				OctreeLeaf<T>* leaf = new OctreeLeaf<T>;
-				previous->m_children[child] = leaf;
-				previous->m_childrenCount++;
+				OctreeInternalNode *node = static_cast<OctreeInternalNode*>(current);
+				node->m_children[child] = leaf;
+				node->m_childrenCount++;
 				leaf->m_objects.push_back(object);
+
 			}
 			else
 			{
 
 				OctreeLeaf<T> *leaf = static_cast<OctreeLeaf<T>*>(current);
-				mye::math::Vector3f leafX = positionGrabber(leaf->m_objects.front());
-
-				if (leafX == x)
+				mye::math::Vector3f leafX = OctreePositionGrabber<T>()(leaf->m_objects.front());
+				 
+				if (leafX == x || traverser.GetDepth() == m_maxDepth)
 				{
 					leaf->m_objects.push_back(object);
 				}
 				else
 				{
 
-					// Split until the objects are in different splits
+					OctreeInternalNode::Children child = traverser.GetChildSide();
 
 					current = static_cast<OctreeNode*>(new OctreeInternalNode);
 					previous->m_children[child] = current;
@@ -229,8 +222,6 @@ namespace mye
 
 					} while (true);
 
-					
-
 				}
 
 			}
@@ -241,19 +232,90 @@ namespace mye
 		void Octree<T>::Relocate(T &object,
 			const mye::math::Vector3f &xOld)
 		{
+		}
+
+		template <typename T>
+		bool Octree<T>::Remove(T &object)
+		{
+			return Remove(object, OctreePositionGrabber<T>()(object));
+		}
+
+		template <typename T>
+		bool Octree<T>::Remove(T &object, const mye::math::Vector3f &x)
+		{
+
+			bool removed = false;
+			
+			OctreeTraverser<T> traverser(*this);
+
+			if (traverser.Traverse(x) &&
+				traverser.GetCurrent()->IsLeaf())
+			{
+				
+				OctreeLeaf<T> *leaf = static_cast<OctreeLeaf<T>*>(traverser.GetCurrent());
+				unsigned int elements = leaf->m_objects.size();
+
+				leaf->m_objects.erase(
+					std::remove_if(
+						leaf->m_objects.begin(),
+						leaf->m_objects.end(),
+						[object](T& o)->bool
+						{
+							return object == o;
+						}),
+					leaf->m_objects.end()
+				);
+
+				unsigned int newSize = leaf->m_objects.size();
+
+				if (elements != newSize)
+				{
+
+					removed = true;
+
+					if (newSize == 0)
+					{
+
+						// Find the first anchestor we need to destroy
+
+						OctreeInternalNode *parent = traverser.GetParent();
+						OctreeInternalNode::Children childSide = traverser.GetChildSide();
+
+						while (parent && parent->m_childrenCount == 1)
+						{
+
+							traverser.MoveToParent();
+							parent = traverser.GetParent();
+							childSide = traverser.GetChildSide();
+
+						}
+
+						if (!parent)
+						{
+							Clear();
+						}
+						else
+						{
+							delete parent->m_children[childSide];
+							parent->m_children[childSide] = nullptr;
+							parent->m_childrenCount--;
+						}
+
+					}
+
+				}
+				
+
+			}
+			
+			return removed;
 
 		}
 
 		template <typename T>
-		void Octree<T>::Remove(T &object)
+		unsigned int Octree<T>::GetMaxDepth(void) const
 		{
-
-		}
-
-		template <typename T>
-		OctreeTraverser<T> Octree<T>::Traverse(const mye::math::Vector3f &x)
-		{
-
+			return m_maxDepth;
 		}
 
 		template <typename T>
@@ -277,15 +339,14 @@ namespace mye
 		/* Octree Traverser */
 
 		template <typename T>
-		OctreeTraverser<T>::OctreeTraverser(Octree<T> &octree)
+		OctreeTraverser<T>::OctreeTraverser(Octree<T> &octree) :
+			m_octree(&octree),
+			m_bounds(octree.GetBounds())			
 		{
-
-			m_octree = &octree;
 
 			NodeInfo info =
 			{
-				static_cast<OctreeNode*>(m_octree->GetRoot()),
-				m_octree->GetBounds()
+				static_cast<OctreeNode*>(m_octree->GetRoot())
 			};
 
 			m_path.push_front(info);
@@ -307,7 +368,13 @@ namespace mye
 		template <typename T>
 		const mye::math::AABB& OctreeTraverser<T>::GetBounds(void) const
 		{
-			return m_path.front().bounds;
+			return m_bounds;
+		}
+
+		template <typename T>
+		unsigned int OctreeTraverser<T>::GetDepth(void) const
+		{
+			return m_path.size() - 1;
 		}
 
 		template <typename T>
@@ -323,33 +390,61 @@ namespace mye
 		}
 
 		template <typename T>
-		OctreeNode* OctreeTraverser<T>::GetParent(void)
+		OctreeInternalNode* OctreeTraverser<T>::GetParent(void)
 		{
-			if (m_path == 1)
+			if (m_path.size() == 1)
 			{
-				return NULL;
+				return nullptr;
 			}
 			else
 			{
-				return m_path[1];
+				return static_cast<OctreeInternalNode*>(m_path[1].node);
 			}
 		}
 
 		template <typename T>
-		const OctreeNode* OctreeTraverser<T>::GetParent(void) const
+		const OctreeInternalNode* OctreeTraverser<T>::GetParent(void) const
 		{
-			if (m_path == 1)
+			if (m_path.size() == 1)
 			{
-				return NULL;
+				return nullptr;
 			}
 			else
 			{
-				return m_path[1];
+				return static_cast<const OctreeInternalNode*>(m_path[1].node);
 			}
 		}
 
 		template <typename T>
-		void OctreeTraverser<T>::MoveToChild(OctreeInternalNode::Children child)
+		OctreeInternalNode::Children OctreeTraverser<T>::GetChildSide(void) const
+		{
+			return m_path.front().child;
+		}
+
+		template <typename T>
+		bool OctreeTraverser<T>::Traverse(const mye::math::Vector3f &x)
+		{
+			
+			if (!m_octree->GetBounds().Contains(x))
+			{
+				return false;
+			}
+
+			MoveToRoot();
+
+			OctreeInternalNode::Children child;
+
+			do 
+			{
+				child = __PickSide(m_bounds, x);
+			} while (MoveToChild(child));
+
+			return true;
+
+		}
+
+		template <typename T>
+		bool OctreeTraverser<T>::MoveToChild(OctreeInternalNode::Children child)
 		{
 			
 			if (!m_path.front().node->IsLeaf())
@@ -358,19 +453,53 @@ namespace mye
 				NodeInfo info =
 				{
 					static_cast<OctreeNode*>(static_cast<OctreeInternalNode*>(m_path.front().node)->GetChild(child)),
-					__SplitAABB(GetBounds(), child)
+					child
 				};
 
-				m_path.push_front(info);
+				if (info.node)
+				{
+					m_path.push_front(info);
+					m_bounds = __SplitAABB(GetBounds(), child);
+					return true;
+				}
 
 			}
+
+			return false;
 
 		}
 
 		template <typename T>
-		void OctreeTraverser<T>::MoveToParent(void)
+		OctreeInternalNode* OctreeTraverser<T>::MoveToParent(void)
 		{
-			m_path.pop_front();
+
+			if (m_path.size() > 1)
+			{
+				m_bounds = __InverseSplitAABB(GetBounds(), m_path.front().child);
+				m_path.pop_front();
+				return static_cast<OctreeInternalNode*>(m_path.front().node);
+			}
+			
+			return nullptr;
+
+		}
+
+		template <typename T>
+		OctreeInternalNode* OctreeTraverser<T>::MoveToRoot(void)
+		{
+
+			m_bounds = m_octree->GetBounds();
+			m_path.clear();
+
+			NodeInfo info =
+			{
+				static_cast<OctreeNode*>(m_octree->GetRoot())
+			};
+
+			m_path.push_front(info);
+
+			return static_cast<OctreeInternalNode*>(info.node);
+
 		}
 
 		OctreeInternalNode::Children __PickSide(
@@ -521,6 +650,89 @@ namespace mye
 					oldCenter.x() - halfExtents.x(),
 					oldCenter.y() - halfExtents.y(),
 					oldCenter.z() + halfExtents.z()),
+					halfExtents);
+				break;
+
+			}
+
+			return aabb;
+
+		}
+
+		mye::math::AABB __InverseSplitAABB(const mye::math::AABB &bounds, OctreeInternalNode::Children child)
+		{
+
+			mye::math::AABB aabb;
+
+			mye::math::Vector3f oldCenter = bounds.GetCenter();
+			mye::math::Vector3f dCenter = bounds.GetHalfExtents();
+			mye::math::Vector3f halfExtents = bounds.GetHalfExtents() * 2.0f;
+
+			switch (child)
+			{
+
+			case OctreeInternalNode::FRONT_LEFT_BOTTOM:
+				aabb = mye::math::AABB::FromCenterHalfExtents(
+					mye::math::Vector3f(
+					oldCenter.x() + dCenter.x(),
+					oldCenter.y() + dCenter.y(),
+					oldCenter.z() + dCenter.z()),
+					halfExtents);
+				break;
+			case OctreeInternalNode::FRONT_RIGHT_BOTTOM:
+				aabb = mye::math::AABB::FromCenterHalfExtents(
+					mye::math::Vector3f(
+					oldCenter.x() - dCenter.x(),
+					oldCenter.y() + dCenter.y(),
+					oldCenter.z() + dCenter.z()),
+					halfExtents);
+				break;
+			case OctreeInternalNode::FRONT_RIGHT_TOP:
+				aabb = mye::math::AABB::FromCenterHalfExtents(
+					mye::math::Vector3f(
+					oldCenter.x() - dCenter.x(),
+					oldCenter.y() - dCenter.y(),
+					oldCenter.z() + dCenter.z()),
+					halfExtents);
+				break;
+			case OctreeInternalNode::FRONT_LEFT_TOP:
+				aabb = mye::math::AABB::FromCenterHalfExtents(
+					mye::math::Vector3f(
+					oldCenter.x() + dCenter.x(),
+					oldCenter.y() - dCenter.y(),
+					oldCenter.z() + dCenter.z()),
+					halfExtents);
+				break;
+			case OctreeInternalNode::BACK_LEFT_TOP:
+				aabb = mye::math::AABB::FromCenterHalfExtents(
+					mye::math::Vector3f(
+					oldCenter.x() + dCenter.x(),
+					oldCenter.y() - dCenter.y(),
+					oldCenter.z() - dCenter.z()),
+					halfExtents);
+				break;
+			case OctreeInternalNode::BACK_RIGHT_TOP:
+				aabb = mye::math::AABB::FromCenterHalfExtents(
+					mye::math::Vector3f(
+					oldCenter.x() - dCenter.x(),
+					oldCenter.y() - dCenter.y(),
+					oldCenter.z() - dCenter.z()),
+					halfExtents);
+				break;
+			case OctreeInternalNode::BACK_RIGHT_BOTTOM:
+				aabb = mye::math::AABB::FromCenterHalfExtents(
+					mye::math::Vector3f(
+					oldCenter.x() - dCenter.x(),
+					oldCenter.y() + dCenter.y(),
+					oldCenter.z() - dCenter.z()),
+					halfExtents);
+				break;
+			case OctreeInternalNode::BACK_LEFT_BOTTOM:
+				aabb = mye::math::AABB::FromCenterHalfExtents(
+					mye::math::Vector3f(
+					oldCenter.x() + dCenter.x(),
+					oldCenter.y() + dCenter.y(),
+					oldCenter.z() - dCenter.z()),
 					halfExtents);
 				break;
 

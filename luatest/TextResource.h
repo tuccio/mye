@@ -14,7 +14,7 @@ public:
 
 	TextResource(mye::core::ResourceManager *owner,
 		const std::string &name,
-		mye::core::ManualResourceLoader *manual = NULL) :
+		mye::core::ManualResourceLoader *manual = nullptr) :
 		Resource(owner, name, manual)
 	{
 	}

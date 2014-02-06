@@ -43,7 +43,7 @@ ResourceHandle DX11BufferManager::CreateImpl(const std::string &name,
 
 	}
 
-	return ResourceHandle(NULL);
+	return ResourceHandle(nullptr);
 
 }
 

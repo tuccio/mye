@@ -9,7 +9,7 @@ DX11Buffer::DX11Buffer(mye::core::ResourceManager *owner,
 					   DX11Device &device) :
 Resource(owner, name, manual),
 m_device(device),
-m_buffer(NULL)
+m_buffer(nullptr)
 {
 }
 

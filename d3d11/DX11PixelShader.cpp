@@ -12,7 +12,7 @@ DX11PixelShader::DX11PixelShader(mye::core::ResourceManager *owner,
 DX11Shader(owner, name, manual),
 	m_device(device)
 {
-	m_shader = NULL;
+	m_shader = nullptr;
 }
 
 
@@ -22,7 +22,7 @@ DX11PixelShader::~DX11PixelShader(void)
 
 void DX11PixelShader::Use(void)
 {
-	m_device.GetImmediateContext()->PSSetShader(m_shader, NULL, 0);
+	m_device.GetImmediateContext()->PSSetShader(m_shader, nullptr, 0);
 }
 
 ID3D11PixelShader* DX11PixelShader::GetPixelShader(void)
@@ -55,7 +55,7 @@ bool DX11PixelShader::LoadImpl(void)
 			m_source.c_str(),
 			m_source.length(),
 			m_name.c_str(),
-			NULL,
+			nullptr,
 			D3D_COMPILE_STANDARD_FILE_INCLUDE,
 			"main",
 			"ps_5_0",
@@ -69,7 +69,7 @@ bool DX11PixelShader::LoadImpl(void)
 		else if (!FAILED(m_device.GetDevice()->CreatePixelShader(
 			code->GetBufferPointer(),
 			code->GetBufferSize(),
-			NULL,
+			nullptr,
 			&m_shader)))
 		{
 			success = true;

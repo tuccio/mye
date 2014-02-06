@@ -91,5 +91,5 @@ void DX11ConstantBuffer::GetData(void *data) const
 
 void DX11ConstantBuffer::SetData(const void *data)
 {
-	m_device.GetImmediateContext()->UpdateSubresource(m_buffer, 0, NULL, data, 0, 0);
+	m_device.GetImmediateContext()->UpdateSubresource(m_buffer, 0, nullptr, data, 0, 0);
 }

@@ -8,9 +8,9 @@
 SimpleLayoutWindow::SimpleLayoutWindow(void) :
 	m_splits(1, 1),
 	m_views(1),
-	m_toolbar(NULL)
+	m_toolbar(nullptr)
 {
-	m_views[0] = NULL;
+	m_views[0] = nullptr;
 	AddListener(&m_listener);
 /*
 	AttachKeyboard(&m_keyboard);
@@ -60,7 +60,7 @@ void SimpleLayoutWindow::SetSplitScreen(int x, int y)
 {
 	assert(x >= 0 && y >= 0);
 	m_splits = mye::math::Vector2i(x, y);
-	m_views.resize(m_splits.x() * m_splits.y(), NULL);
+	m_views.resize(m_splits.x() * m_splits.y(), nullptr);
 }
 
 View* SimpleLayoutWindow::GetSplitView(int i, int j) const

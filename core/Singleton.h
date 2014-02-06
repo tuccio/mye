@@ -2,8 +2,8 @@
 
 #include <cassert>
 
-#ifndef NULL
-#define NULL 0x0
+#ifndef nullptr
+#define nullptr 0x0
 #endif
 
 namespace mye

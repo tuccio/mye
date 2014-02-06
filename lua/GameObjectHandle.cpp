@@ -77,7 +77,7 @@ namespace mye
 
 		bool __goh_exists(const mye::core::GameObjectHandle &hObj)
 		{
-			return LPGAMEOBJECT(hObj) != NULL;
+			return LPGAMEOBJECT(hObj) != nullptr;
 		}
 
 		std::string __goh_tostring(const GameObjectHandle &hObj)

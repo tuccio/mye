@@ -5,7 +5,7 @@
 using namespace mye::core;
 
 AssimpModelLoader::AssimpModelLoader(void) :
-	m_scene(NULL)
+	m_scene(nullptr)
 {
 }
 

@@ -8,7 +8,7 @@ namespace mye
 		PoolAllocator<T>::PoolAllocator(void)
 		{
 			assert(sizeof(void*) >= sizeof(void*));
-			m_free = NULL;
+			m_free = nullptr;
 		}
 
 		template <typename T>

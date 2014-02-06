@@ -20,8 +20,8 @@ Resource::Resource(ResourceManager *owner,
 Resource::Resource(void)
 {
 
-	m_owner = NULL;
-	m_manual = NULL;
+	m_owner = nullptr;
+	m_manual = nullptr;
 
 	m_size = 0;
 	m_loadingState = RESOURCE_NOTLOADED;

@@ -15,14 +15,14 @@ DX11VertexShader::DX11VertexShader(mye::core::ResourceManager *owner,
 DX11Shader(owner, name, manual),
 	m_device(device)
 {
-	m_shader = NULL;
-	m_inputLayout = NULL;
+	m_shader = nullptr;
+	m_inputLayout = nullptr;
 }
 
 void DX11VertexShader::Use(void)
 {
 	m_device.GetImmediateContext()->IASetInputLayout(m_inputLayout);
-	m_device.GetImmediateContext()->VSSetShader(m_shader, NULL, 0);
+	m_device.GetImmediateContext()->VSSetShader(m_shader, nullptr, 0);
 }
 
 
@@ -60,7 +60,7 @@ bool DX11VertexShader::LoadImpl(void)
 			m_source.c_str(),
 			m_source.length(),
 			m_name.c_str(),
-			NULL,
+			nullptr,
 			D3D_COMPILE_STANDARD_FILE_INCLUDE,
 			"main",
 			"vs_5_0",
@@ -74,7 +74,7 @@ bool DX11VertexShader::LoadImpl(void)
 		else if (!HRTESTFAILED(m_device.GetDevice()->CreateVertexShader(
 			code->GetBufferPointer(),
 			code->GetBufferSize(),
-			NULL,
+			nullptr,
 			&m_shader)))
 		{
 

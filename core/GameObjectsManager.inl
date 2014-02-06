@@ -27,7 +27,7 @@ namespace mye
 				return it->second;
 			}
 
-			return NULL;
+			return nullptr;
 
 		}
 

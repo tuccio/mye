@@ -72,7 +72,7 @@ LRESULT __stdcall __mye_winmouse_hook(int nCode,
 
 	}
 
-	return CallNextHookEx(NULL, nCode, wParam, lParam);
+	return CallNextHookEx(nullptr, nCode, wParam, lParam);
 
 }
 
@@ -82,10 +82,10 @@ bool WinMouse::Hook(void)
 	m_hHook = SetWindowsHookEx(
 		WH_MOUSE,
 		&__mye_winmouse_hook,
-		NULL,
+		nullptr,
 		GetCurrentThreadId());
 
-	return (m_hHook == NULL ? false : true);
+	return (m_hHook == nullptr ? false : true);
 
 }
 

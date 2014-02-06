@@ -43,7 +43,7 @@ namespace mye
 
 				const char *upvalue = lua_setupvalue(_L, -2, 1);
 
-				if (upvalue != NULL)
+				if (upvalue != nullptr)
 				{
 
 					assert(strncmp(upvalue, "_ENV", 4) == 0);
@@ -96,7 +96,7 @@ namespace mye
 
 				const char *upvalue = lua_setupvalue(L, -2, 1);
 
-				if (upvalue != NULL)
+				if (upvalue != nullptr)
 				{
 
 					assert(strncmp(upvalue, "_ENV", 4) == 0);

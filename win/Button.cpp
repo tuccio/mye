@@ -37,8 +37,8 @@ void Button::Create(Window &parent,
 		size.y(),
 		parent.GetHandle(),
 		(HMENU) m_id,
-		NULL,
-		NULL);
+		nullptr,
+		nullptr);
 
 	SendMessage(m_hButton, WM_SETFONT, (WPARAM) GetStockObject(DEFAULT_GUI_FONT), (LPARAM) TRUE);
 
@@ -52,7 +52,7 @@ void Button::Create(Window &parent,
 void Button::Destroy(void)
 {
 	DestroyWindow(m_hButton);
-	m_hButton = NULL;
+	m_hButton = nullptr;
 }
 
 void Button::Show(void)
@@ -69,11 +69,11 @@ void Button::SetPosition(const Vector2i &position)
 {
 
 	SetWindowPos(m_hButton,
-		NULL,
+		nullptr,
 		position.x(),
 		position.y(),
-		NULL,
-		NULL,
+		nullptr,
+		nullptr,
 		SWP_NOSIZE | SWP_NOZORDER | SWP_NOREDRAW);
 
 }
@@ -82,9 +82,9 @@ void Button::SetSize(const Vector2i &size)
 {
 
 	SetWindowPos(m_hButton,
-		NULL,
-		NULL,
-		NULL,
+		nullptr,
+		nullptr,
+		nullptr,
 		size.x(),
 		size.y(),
 		SWP_NOMOVE | SWP_NOZORDER | SWP_NOREDRAW);

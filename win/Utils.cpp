@@ -12,18 +12,18 @@ namespace mye
 		std::string GetLastErrorAsString(void)
 		{
 
-			LPTSTR error = NULL;
+			LPTSTR error = nullptr;
 			std::string rError;
 
 			FormatMessage(
 				FORMAT_MESSAGE_ALLOCATE_BUFFER |
 				FORMAT_MESSAGE_FROM_SYSTEM,
-				NULL,
+				nullptr,
 				GetLastError(),
 				LANG_NEUTRAL,
 				(LPTSTR) &error,
 				0,
-				NULL);
+				nullptr);
 
 			if (error)
 			{
@@ -50,7 +50,7 @@ namespace mye
 				TIME_FORCE24HOURFORMAT,
 				lpTime,
 				format.c_str(),
-				NULL,
+				nullptr,
 				0);
 
 			char *str = new char[len + 1];
@@ -72,7 +72,7 @@ namespace mye
 
 		void ShowErrorBox(const std::string &message)
 		{
-			MessageBox(NULL,
+			MessageBox(nullptr,
 				message.c_str(),
 				"Error",
 				MB_OK | MB_ICONERROR);

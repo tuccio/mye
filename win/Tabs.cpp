@@ -71,7 +71,7 @@ void Tabs::Create(void)
 	m_hTabs = CreateWindowEx(
 		0,
 		WC_TABCONTROL,
-		NULL,
+		nullptr,
 		WS_VISIBLE | WS_CHILD | WS_CLIPSIBLINGS | TCS_MULTILINE,
 		0,
 		0,
@@ -79,8 +79,8 @@ void Tabs::Create(void)
 		parentSize.y(),
 		m_parent.GetHandle(),
 		(HMENU) IDGenerator::GetSingleton().Generate(),
-		NULL,
-		NULL);
+		nullptr,
+		nullptr);
 
 	m_parent.AttachTabs(this);
 
@@ -96,9 +96,9 @@ void Tabs::Create(void)
 
 void Tabs::Destroy(void)
 {
-	m_parent.AttachTabs(NULL);
+	m_parent.AttachTabs(nullptr);
 	CloseWindow(m_hTabs);
-	m_hTabs = NULL;
+	m_hTabs = nullptr;
 }
 
 void Tabs::Show(void)
@@ -115,11 +115,11 @@ void Tabs::SetPosition(const Vector2i &position)
 {
 
 	SetWindowPos(m_hTabs,
-		NULL,
+		nullptr,
 		position.x(),
 		position.y(),
-		NULL,
-		NULL,
+		nullptr,
+		nullptr,
 		SWP_NOSIZE | SWP_NOZORDER | SWP_NOREDRAW);
 
 }
@@ -128,9 +128,9 @@ void Tabs::SetSize(const Vector2i &size)
 {
 	
 	SetWindowPos(m_hTabs,
-		NULL,
-		NULL,
-		NULL,
+		nullptr,
+		nullptr,
+		nullptr,
 		size.x(),
 		size.y(),
 		SWP_NOMOVE | SWP_NOZORDER | SWP_NOREDRAW);

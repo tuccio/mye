@@ -5,7 +5,7 @@ using namespace mye::win;
 WindowMenu::WindowMenu(void)
 {
 	m_id = 0x0;
-	m_parent = NULL;
+	m_parent = nullptr;
 }
 
 

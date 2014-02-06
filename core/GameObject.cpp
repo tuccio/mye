@@ -11,19 +11,19 @@ using namespace std;
 MYE_DEFINE_POOL_ALLOCATOR(GameObject)
 
 GameObject::GameObject(void) :
-	m_owner(NULL),
-	m_transform(NULL),
-	m_script(NULL),
-	m_render(NULL)
+	m_owner(nullptr),
+	m_transform(nullptr),
+	m_script(nullptr),
+	m_render(nullptr)
 {
 }
 
 GameObject::GameObject(const std::string &name) :
 	m_name(name),
-	m_owner(NULL),
-	m_transform(NULL),
-	m_script(NULL),
-	m_render(NULL)
+	m_owner(nullptr),
+	m_transform(nullptr),
+	m_script(nullptr),
+	m_render(nullptr)
 {
 }
 
@@ -40,9 +40,9 @@ Component* GameObject::AddComponent(const Component &component)
 
 	auto it = m_components.find(component.GetName());
 
-	if (it != m_components.end() && it->second != NULL)
+	if (it != m_components.end() && it->second != nullptr)
 	{
-		return NULL;
+		return nullptr;
 	}
 	else
 	{
@@ -80,7 +80,7 @@ Component* GameObject::GetComponent(const std::string &name)
 	}
 	else
 	{
-		return NULL;
+		return nullptr;
 	}
 
 }
@@ -96,13 +96,13 @@ void GameObject::RemoveComponent(const std::string &name)
 		switch (it->second->GetComponentType())
 		{
 		case COMPONENT_TRANSFORM:
-			m_transform = NULL;
+			m_transform = nullptr;
 			break;
 		case COMPONENT_SCRIPT:
-			m_script = NULL;
+			m_script = nullptr;
 			break;
 		case COMPONENT_RENDER:
-			m_render = NULL;
+			m_render = nullptr;
 			break;
 		}
 
@@ -122,10 +122,10 @@ void GameObject::Clear(void)
 
 	m_components.clear();
 
-	m_owner     = NULL;
+	m_owner     = nullptr;
 
-	m_transform = NULL;
-	m_script    = NULL;
+	m_transform = nullptr;
+	m_script    = nullptr;
 
 }
 

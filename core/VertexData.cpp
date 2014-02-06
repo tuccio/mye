@@ -3,14 +3,14 @@
 using namespace mye::core;
 
 VertexData::VertexData(void) :
-	m_data(NULL),
+	m_data(nullptr),
 	m_verticesCount(0)
 {
 }
 
 VertexData::VertexData(const VertexDeclaration &declaration) :
 	m_declaration(declaration),
-	m_data(NULL),
+	m_data(nullptr),
 	m_verticesCount(0)
 {
 }
@@ -40,7 +40,7 @@ void VertexData::Free(void)
 	if (m_data)
 	{
 		delete m_data;
-		m_data = NULL;
+		m_data = nullptr;
 	}
 }
 

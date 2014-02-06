@@ -24,7 +24,7 @@ namespace mye
 			~DX11ConstantBuffer(void);
 
 			bool Create(size_t size,
-				const void *initiationData = NULL);
+				const void *initiationData = nullptr);
 
 			void Bind(PipelineStages stage, int index);
 

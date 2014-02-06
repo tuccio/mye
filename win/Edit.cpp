@@ -9,7 +9,7 @@ using namespace mye::win;
 
 Edit::Edit(void) :
 	Control(CT_EDIT),
-	m_hEdit(NULL)
+	m_hEdit(nullptr)
 {
 }
 
@@ -26,7 +26,7 @@ void Edit::Create(Window &parent,
 	m_hEdit = CreateWindowEx(
 		WS_EX_STATICEDGE,
 		WC_EDIT,
-		NULL,
+		nullptr,
 		WS_VISIBLE | WS_CHILD | ES_LEFT | ES_AUTOHSCROLL,
 		position.x(),
 		position.y(),
@@ -34,8 +34,8 @@ void Edit::Create(Window &parent,
 		size.y(),
 		parent.GetHandle(),
 		(HMENU) m_id,
-		NULL,
-		NULL);
+		nullptr,
+		nullptr);
 
 	SendMessage(m_hEdit, WM_SETFONT, (WPARAM) GetStockObject(DEFAULT_GUI_FONT), (LPARAM) TRUE);
 
@@ -49,7 +49,7 @@ void Edit::Create(Window &parent,
 void Edit::Destroy(void)
 {
 	DestroyWindow(m_hEdit);
-	m_hEdit = NULL;
+	m_hEdit = nullptr;
 }
 
 void Edit::SetText(const std::string text)
@@ -90,7 +90,7 @@ void Edit::SetBorder(bool border)
 	SetWindowLong(m_hEdit, GWL_EXSTYLE, dwExStyle);
 
 	SetWindowPos(m_hEdit,
-		NULL,
+		nullptr,
 		0,
 		0,
 		0,
@@ -102,20 +102,20 @@ void Edit::SetBorder(bool border)
 void Edit::SetPosition(const mye::math::Vector2i &position)
 {
 	SetWindowPos(m_hEdit,
-		NULL,
+		nullptr,
 		position.x(),
 		position.y(),
-		NULL,
-		NULL,
+		nullptr,
+		nullptr,
 		SWP_NOSIZE | SWP_NOZORDER | SWP_NOREDRAW);
 }
 
 void Edit::SetSize(const mye::math::Vector2i &size)
 {
 	SetWindowPos(m_hEdit,
-		NULL,
-		NULL,
-		NULL,
+		nullptr,
+		nullptr,
+		nullptr,
 		size.x(),
 		size.y(),
 		SWP_NOMOVE | SWP_NOZORDER | SWP_NOREDRAW);

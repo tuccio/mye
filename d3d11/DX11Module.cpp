@@ -86,8 +86,8 @@ void DX11Module::FreeWindow(void)
 		delete m_device;
 	}
 
-	m_window = NULL;
-	m_device = NULL;
+	m_window = nullptr;
+	m_device = nullptr;
 	m_ownedDevice = false;
 
 }

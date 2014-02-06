@@ -5,7 +5,7 @@ using namespace mye::core;
 GraphicsModule::GraphicsModule(void) :
 	m_clearColor(0.0f, 0.0f, 0.0f, 1.0f)
 {
-	m_mainWindowPointer = NULL;
+	m_mainWindowPointer = nullptr;
 }
 
 const ColorRGBA& GraphicsModule::GetClearColor(void) const

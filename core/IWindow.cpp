@@ -12,8 +12,8 @@ const IWindow::Properties IWindow::DefaultWindowProperties = {
 };
 
 IWindow::IWindow(void) :
-	m_keyboard(NULL),
-	m_mouse(NULL)
+	m_keyboard(nullptr),
+	m_mouse(nullptr)
 {
 }
 

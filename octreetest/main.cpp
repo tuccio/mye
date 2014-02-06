@@ -31,7 +31,7 @@ struct CameraRatioAdjuster :
 
 	CameraRatioAdjuster(void)
 	{
-		camera = NULL;
+		camera = nullptr;
 	}
 
 	void OnResize(IWindow *window, const Vector2i &size)
@@ -47,36 +47,70 @@ struct CameraRatioAdjuster :
 void CompileShaders(void);
 
 template <typename T>
-void DrawOctree(DX11Window &window,
-				OctreeTraverser<T> &traverser);
+void CreateOctree(std::list<DX11VertexBuffer> &list,
+				  DX11Window &window,
+				  OctreeTraverser<T> &traverser);
 
-void DrawAABB(DX11Window &window,
-			  const AABB &aabb);
+void CreateAABB(std::list<DX11VertexBuffer> &list,
+				DX11Window &window,const AABB &aabb);
 
-void DrawQuad(DX11Window &window,
-			  const Vector3f &a,
-			  const Vector3f &b,
-			  const Vector3f &c,
-			  const Vector3f &d);
+void CreateQuad(std::list<DX11VertexBuffer> &list,
+				DX11Window &window,
+				const Vector3f &a,
+				const Vector3f &b,
+				const Vector3f &c,
+				const Vector3f &d);
+
+void DrawQuadList(std::list<DX11VertexBuffer> &list,
+				  DX11Window &window)
+{
+	
+	for (DX11VertexBuffer& b : list)
+	{
+		b.Bind();
+		window.GetDevice().GetImmediateContext()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP);
+		window.GetDevice().GetImmediateContext()->Draw(5, 0);
+	}
+
+}
 
 int main(int argc, char *argv[])
 {
 
-	float size = 32;
-	float n = 256;
+	float size = 1024;
+	int n = 5000;
+
+	float removeProbability = 0.0f;
 
 	std::vector<Vector3f> points(n);
+	std::list<int> removePoints;
 	
 	Octree<Vector3f> octree(
 		Vector3f(0),
-		Vector3f(size));
+		Vector3f(size),
+		256);
 
 	for (int i = 0; i < n; i++)
 	{
+
 		Vector3f p(rand(), rand(), rand());
 		p = p * (size / RAND_MAX) - Vector3f(size * 0.5f);
 		octree.Insert(p);
 		points[i] = p;
+
+		if ((float) rand() / RAND_MAX > 1.0f - removeProbability)
+		{
+			removePoints.push_back(i);
+		}
+
+	}
+
+	for (auto i : removePoints)
+	{
+		static int k = 0;
+		octree.Remove(points[i - k]);
+		points.erase(points.begin() + (i - k));
+		k++;
 	}
 
 	MouseKeyboardInput input;
@@ -102,6 +136,14 @@ int main(int argc, char *argv[])
 	ps->Use();
 
 	Camera camera;
+
+	camera.LookAt(
+		Vector3f(0, 0, - (size * 1.5f)),
+		Vector3f(0, 1, 0),
+		Vector3f(0));
+
+	camera.SetFarClipDistance(3 * size);
+
 	cameraRatioAdjuster.camera = &camera;
 
 	window.Create();
@@ -116,27 +158,27 @@ int main(int argc, char *argv[])
 	window.AddListener(&cameraRatioAdjuster);
 	window.Show();
 
-	DX11ConstantBuffer mvpBuffer(NULL, "", NULL, device);
+	DX11ConstantBuffer mvpBuffer(nullptr, "", nullptr, device);
 	mvpBuffer.Create(sizeof(float) * 16, Matrix4f(1.0f).Data());
 
-	DX11ConstantBuffer colorBuffer(NULL, "", NULL, device);
+	DX11ConstantBuffer colorBuffer(nullptr, "", nullptr, device);
 	colorBuffer.Create(sizeof(float) * 4);
 
-	DX11VertexBuffer verticesBuffer(NULL, "", NULL, device);
+	DX11VertexBuffer verticesBuffer(nullptr, "", nullptr, device);
 
 	VertexDeclaration vDecl;
 	vDecl.AddAttribute(VertexDeclaration::VDA_POSITION, VertexDeclaration::VDAT_FLOAT3);
 
-	if (!verticesBuffer.Create(&points[0], n, vDecl))
+	if (points.size() > 0 &&
+		!verticesBuffer.Create(&points[0], points.size(), vDecl))
 	{
 		ShowErrorBox("D3D11 Error");
 		return 1;
 	}
 
-	camera.LookAt(
-		Vector3f(0, 0, - (size + 8)),
-		Vector3f(0, 1, 0),
-		Vector3f(0));
+	OctreeTraverser<Vector3f> traverser(octree);
+	std::list<DX11VertexBuffer> list;
+	CreateOctree<Vector3f>(list, window, traverser);
 
 	Transformf cameraTransform = Transformf::Identity();
 
@@ -149,7 +191,9 @@ int main(int argc, char *argv[])
 	do
 	{
 
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		input.GetMouse()->SetWheelDelta(0);
+
+		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
@@ -170,6 +214,16 @@ int main(int argc, char *argv[])
 		static ColorRGBA octreeColor(1.0f, 0.0f, 0.2f, 1.0f);
 		colorBuffer.SetData(octreeColor.Data());
 
+		if (input.GetKeyboard()->IsPressed(MYE_VK_W))
+		{
+			camera.SetPosition(camera.GetPosition() + Vector3f(0, 0, size * 0.01f));
+		}
+
+		if (input.GetKeyboard()->IsPressed(MYE_VK_S))
+		{
+			camera.SetPosition(camera.GetPosition() + Vector3f(0, 0, - size * 0.01f));
+		}
+
 		if (input.GetKeyboard()->IsPressed(MYE_VK_D))
 		{
 			Quaternionf q = cameraTransform.GetOrientation();
@@ -180,20 +234,23 @@ int main(int argc, char *argv[])
 		{
 			Quaternionf q = cameraTransform.GetOrientation();
 			cameraTransform.SetOrientation(Quaternionf(Vector3f(0, 1, 0), -1.5f) * q);
+		}		
+
+		if (input.GetKeyboard()->IsPressed(MYE_VK_E))
+		{
+			camera.SetPosition(camera.GetPosition() + Vector3f(0, size * 0.01f, 0));
 		}
 
-		if (input.GetKeyboard()->IsPressed(MYE_VK_S))
+		if (input.GetKeyboard()->IsPressed(MYE_VK_Q))
+		{
+			camera.SetPosition(camera.GetPosition() + Vector3f(0, - size * 0.01f, 0));
+		}
+
+		if (float delta = input.GetMouse()->GetWheelDelta())
 		{
 			Quaternionf q = cameraTransform.GetOrientation();
-			cameraTransform.SetOrientation(Quaternionf(Vector3f(1, 0, 0), -1.5f) * q);
+			cameraTransform.SetOrientation(Quaternionf(Vector3f(1, 0, 0), delta * 1.5f) * q);
 		}
-
-		if (input.GetKeyboard()->IsPressed(MYE_VK_W))
-		{
-			Quaternionf q = cameraTransform.GetOrientation();
-			cameraTransform.SetOrientation(Quaternionf(Vector3f(1, 0, 0), 1.5f) * q);
-		}
-
 
 		if (input.GetKeyboard()->IsPressed(MYE_VK_1))
 		{
@@ -217,25 +274,29 @@ int main(int argc, char *argv[])
 
 		/* Draw Octree */
 
-		OctreeTraverser<Vector3f> traverser(octree);
-		DrawOctree<Vector3f>(window, traverser);
+		DrawQuadList(list, window);
 
 		/* Draw Points */
 
-		static ColorRGBA pointsColor(0.85f, 0.8f, 0.25f, 1.0f);
-		colorBuffer.SetData(pointsColor.Data());
-
-		verticesBuffer.Bind();
-
-		device.GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
-
-		if (drawOnlyOnePoint)
+		if (points.size() > 0)
 		{
-			device.GetImmediateContext()->Draw(1, pointToDraw);
-		}
-		else
-		{
-			device.GetImmediateContext()->Draw(n, 0);
+
+			static ColorRGBA pointsColor(0.85f, 0.8f, 0.25f, 1.0f);
+			colorBuffer.SetData(pointsColor.Data());
+
+			verticesBuffer.Bind();
+
+			device.GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+
+			if (drawOnlyOnePoint)
+			{
+				device.GetImmediateContext()->Draw(1, pointToDraw);
+			}
+			else
+			{
+				device.GetImmediateContext()->Draw(points.size(), 0);
+			}
+
 		}
 
 		window.GetSwapChain()->Present(1, 0);
@@ -244,129 +305,6 @@ int main(int argc, char *argv[])
 	while (msg.message != WM_QUIT);
 
 	return 0;
-
-}
-
-template <typename T>
-void DrawOctree(DX11Window &window,
-				OctreeTraverser<T> &traverser)
-{
-
-	OctreeNode *node = traverser.GetCurrent();
-
-	if (node)
-	{
-
-		DrawAABB(window, traverser.GetBounds());
-
-		if (!node->IsLeaf())
-		{
-
-			OctreeInternalNode *internalNode = static_cast<OctreeInternalNode*>(node);
-
-			traverser.MoveToChild(OctreeInternalNode::FRONT_LEFT_BOTTOM);
-			DrawOctree<Vector3f>(window, traverser);
-			traverser.MoveToParent();
-
-			traverser.MoveToChild(OctreeInternalNode::FRONT_RIGHT_BOTTOM);
-			DrawOctree<Vector3f>(window, traverser);
-			traverser.MoveToParent();
-
-			traverser.MoveToChild(OctreeInternalNode::FRONT_RIGHT_TOP);
-			DrawOctree<Vector3f>(window, traverser);
-			traverser.MoveToParent();
-
-			traverser.MoveToChild(OctreeInternalNode::FRONT_LEFT_TOP);
-			DrawOctree<Vector3f>(window, traverser);
-			traverser.MoveToParent();
-
-			traverser.MoveToChild(OctreeInternalNode::BACK_LEFT_TOP);
-			DrawOctree<Vector3f>(window, traverser);
-			traverser.MoveToParent();
-
-			traverser.MoveToChild(OctreeInternalNode::BACK_RIGHT_TOP);
-			DrawOctree<Vector3f>(window, traverser);
-			traverser.MoveToParent();
-
-			traverser.MoveToChild(OctreeInternalNode::BACK_RIGHT_BOTTOM);
-			DrawOctree<Vector3f>(window, traverser);
-			traverser.MoveToParent();
-
-			traverser.MoveToChild(OctreeInternalNode::BACK_LEFT_BOTTOM);
-			DrawOctree<Vector3f>(window, traverser);
-			traverser.MoveToParent();
-
-		}
-
-	}
-
-}
-
-void DrawAABB(DX11Window &window, const AABB &aabb)
-{
-
-	auto corners = aabb.GetCorners();
-
-	DrawQuad(window,
-		corners[AABB::FRONT_LEFT_BOTTOM],
-		corners[AABB::FRONT_RIGHT_BOTTOM],
-		corners[AABB::FRONT_RIGHT_TOP],
-		corners[AABB::FRONT_LEFT_TOP]);
-
-	DrawQuad(window,
-		corners[AABB::BACK_LEFT_BOTTOM],
-		corners[AABB::BACK_RIGHT_BOTTOM],
-		corners[AABB::BACK_RIGHT_TOP],
-		corners[AABB::BACK_LEFT_TOP]);
-
-	DrawQuad(window,
-		corners[AABB::FRONT_LEFT_TOP],
-		corners[AABB::FRONT_RIGHT_TOP],
-		corners[AABB::BACK_RIGHT_TOP],
-		corners[AABB::BACK_LEFT_TOP]);
-
-	DrawQuad(window,
-		corners[AABB::FRONT_RIGHT_BOTTOM],
-		corners[AABB::FRONT_RIGHT_TOP],
-		corners[AABB::BACK_RIGHT_TOP],
-		corners[AABB::BACK_RIGHT_BOTTOM]);
-
-	DrawQuad(window,
-		corners[AABB::FRONT_LEFT_BOTTOM],
-		corners[AABB::FRONT_LEFT_TOP],
-		corners[AABB::BACK_LEFT_TOP],
-		corners[AABB::BACK_LEFT_BOTTOM]);
-
-}
-
-void DrawQuad(DX11Window &window,
-			  const Vector3f &a,
-			  const Vector3f &b,
-			  const Vector3f &c,
-			  const Vector3f &d)
-{
-
-	VertexDeclaration vDecl;
-	vDecl.AddAttribute(VertexDeclaration::VDA_POSITION, VertexDeclaration::VDAT_FLOAT3);
-
-	DX11VertexBuffer qVB(NULL, "", NULL, window.GetDevice());
-
-	Vector3f qBuffer[5] = {
-		a,
-		b,
-		c,
-		d,
-		a
-	};
-
-	qVB.Create(&qBuffer[0], 5, vDecl);
-
-	qVB.Bind();
-
-	window.GetDevice().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
-	window.GetDevice().GetImmediateContext()->Draw(5, 0);
-
-	qVB.Destroy();
 
 }
 
@@ -391,7 +329,7 @@ void CompileShaders(void)
 	ResourceHandle hShader = ResourceTypeManager::GetSingleton().CreateResource(
 		"DX11Shader",
 		"VertexShader.hlsl",
-		NULL,
+		nullptr,
 		&params);
 
 	DX11VertexShader *vertexShader = static_cast<DX11VertexShader*>(hShader.get());
@@ -403,7 +341,7 @@ void CompileShaders(void)
 
 		if (!compileError.empty())
 		{
-			MessageBox(NULL,
+			MessageBox(nullptr,
 				compileError.c_str(),
 				"Vertex shader compile error",
 				MB_OK);
@@ -417,7 +355,7 @@ void CompileShaders(void)
 	hShader = ResourceTypeManager::GetSingleton().CreateResource(
 		"DX11Shader",
 		"PixelShader.hlsl",
-		NULL,
+		nullptr,
 		&params);
 
 	DX11PixelShader *pixelShader = static_cast<DX11PixelShader*>(hShader.get());
@@ -425,7 +363,7 @@ void CompileShaders(void)
 	if (!hShader->Load())
 	{
 
-		MessageBox(NULL,
+		MessageBox(nullptr,
 			pixelShader->GetCompileError().c_str(),
 			"Pixel shader compile error",
 			MB_OK);
@@ -434,5 +372,108 @@ void CompileShaders(void)
 
 	vertexShader->Use();
 	pixelShader->Use();
+
+}
+
+template <typename T>
+void CreateOctree(std::list<DX11VertexBuffer>& list,
+				  DX11Window &window,
+				  OctreeTraverser<T> &traverser)
+{
+
+	OctreeNode *node = traverser.GetCurrent();
+
+	if (node)
+	{
+
+		CreateAABB(list, window, traverser.GetBounds());
+
+		if (!node->IsLeaf())
+		{
+
+			OctreeInternalNode *internalNode = static_cast<OctreeInternalNode*>(node);
+
+			for (int i = 0; i < 8; i++)
+			{
+				if (traverser.MoveToChild(OctreeInternalNode::Children(i)))
+				{
+					CreateOctree<Vector3f>(list, window, traverser);
+					traverser.MoveToParent();
+				}
+			}
+
+		}
+
+	}
+
+}
+
+void CreateAABB(std::list<DX11VertexBuffer> &list,
+				DX11Window &window,
+				const AABB &aabb)
+{
+
+	auto corners = aabb.GetCorners();
+
+	CreateQuad(list,
+		window,
+		corners[AABB::FRONT_LEFT_BOTTOM],
+		corners[AABB::FRONT_RIGHT_BOTTOM],
+		corners[AABB::FRONT_RIGHT_TOP],
+		corners[AABB::FRONT_LEFT_TOP]);
+
+	CreateQuad(list,
+		window,
+		corners[AABB::BACK_LEFT_BOTTOM],
+		corners[AABB::BACK_RIGHT_BOTTOM],
+		corners[AABB::BACK_RIGHT_TOP],
+		corners[AABB::BACK_LEFT_TOP]);
+
+	CreateQuad(list,
+		window,
+		corners[AABB::FRONT_LEFT_TOP],
+		corners[AABB::FRONT_RIGHT_TOP],
+		corners[AABB::BACK_RIGHT_TOP],
+		corners[AABB::BACK_LEFT_TOP]);
+
+	CreateQuad(list,
+		window,
+		corners[AABB::FRONT_RIGHT_BOTTOM],
+		corners[AABB::FRONT_RIGHT_TOP],
+		corners[AABB::BACK_RIGHT_TOP],
+		corners[AABB::BACK_RIGHT_BOTTOM]);
+
+	CreateQuad(list,
+		window,
+		corners[AABB::FRONT_LEFT_BOTTOM],
+		corners[AABB::FRONT_LEFT_TOP],
+		corners[AABB::BACK_LEFT_TOP],
+		corners[AABB::BACK_LEFT_BOTTOM]);
+
+}
+
+void CreateQuad(std::list<DX11VertexBuffer> &list,
+				DX11Window &window,
+				const Vector3f &a,
+				const Vector3f &b,
+				const Vector3f &c,
+				const Vector3f &d)
+{
+
+	VertexDeclaration vDecl;
+	vDecl.AddAttribute(VertexDeclaration::VDA_POSITION, VertexDeclaration::VDAT_FLOAT3);
+
+	DX11VertexBuffer qVB(nullptr, "", nullptr, window.GetDevice());
+
+	Vector3f qBuffer[5] = {
+		a,
+		b,
+		c,
+		d,
+		a
+	};
+
+	qVB.Create(&qBuffer[0], 5, vDecl);
+	list.push_back(qVB);
 
 }

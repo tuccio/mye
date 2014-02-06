@@ -6,7 +6,7 @@ namespace mye
 
 		bool GraphicsModule::HasWindow(void) const
 		{
-			return m_mainWindowPointer != NULL;
+			return m_mainWindowPointer != nullptr;
 		}
 
 		IWindow* GraphicsModule::GetWindow(void)

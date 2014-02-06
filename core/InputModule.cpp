@@ -9,12 +9,12 @@ bool InputModule::HasKeyboard(void) const
 
 Keyboard* InputModule::GetKeyboard(void)
 {
-	return NULL;
+	return nullptr;
 }
 
 const Keyboard* InputModule::GetKeyboard(void) const
 {
-	return NULL;
+	return nullptr;
 }
 
 bool InputModule::HasMouse(void) const
@@ -24,12 +24,12 @@ bool InputModule::HasMouse(void) const
 
 Mouse* InputModule::GetMouse(void)
 {
-	return NULL;
+	return nullptr;
 }
 
 const Mouse* InputModule::GetMouse(void) const
 {
-	return NULL;
+	return nullptr;
 }
 
 void InputModule::ResetDeltas(void)

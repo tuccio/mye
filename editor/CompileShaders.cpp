@@ -30,7 +30,7 @@ void CompileShaders(void)
 	ResourceHandle hShader = ResourceTypeManager::GetSingleton().CreateResource(
 		"DX11Shader",
 		"VertexShader.hlsl",
-		NULL,
+		nullptr,
 		&params);
 
 	DX11VertexShader *vertexShader = static_cast<DX11VertexShader*>(hShader.get());
@@ -42,7 +42,7 @@ void CompileShaders(void)
 
 		if (!compileError.empty())
 		{
-			MessageBox(NULL,
+			MessageBox(nullptr,
 				compileError.c_str(),
 				"Vertex shader compile error",
 				MB_OK);
@@ -56,7 +56,7 @@ void CompileShaders(void)
 	hShader = ResourceTypeManager::GetSingleton().CreateResource(
 		"DX11Shader",
 		"PixelShader.hlsl",
-		NULL,
+		nullptr,
 		&params);
 
 	DX11PixelShader *pixelShader = static_cast<DX11PixelShader*>(hShader.get());
@@ -64,7 +64,7 @@ void CompileShaders(void)
 	if (!hShader->Load())
 	{
 
-		MessageBox(NULL,
+		MessageBox(nullptr,
 			pixelShader->GetCompileError().c_str(),
 			"Pixel shader compile error",
 			MB_OK);

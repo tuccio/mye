@@ -64,7 +64,7 @@ void ListView::Create(Window &parent,
 
 	m_hList = CreateWindow( 
 		WC_LISTVIEW,
-		NULL,
+		nullptr,
 		WS_VISIBLE | WS_CHILD | LVS_REPORT | LVS_SINGLESEL,
 		position.x(),
 		position.y(),
@@ -72,8 +72,8 @@ void ListView::Create(Window &parent,
 		size.y(),
 		parent.GetHandle(),
 		(HMENU) m_id,
-		NULL,
-		NULL);
+		nullptr,
+		nullptr);
 
 	SendMessage(m_hList, WM_SETFONT, (WPARAM) GetStockObject(DEFAULT_GUI_FONT), (LPARAM) TRUE);
 	SendMessage(m_hList, LVM_SETEXTENDEDLISTVIEWSTYLE, 0, LVS_EX_FULLROWSELECT);
@@ -88,18 +88,18 @@ void ListView::Create(Window &parent,
 void ListView::Destroy(void)
 {
 	DeleteObject(m_hList);
-	m_hList = NULL;
+	m_hList = nullptr;
 }
 
 void ListView::SetPosition(const Vector2i &position)
 {
 
 	SetWindowPos(m_hList,
-		NULL,
+		nullptr,
 		position.x(),
 		position.y(),
-		NULL,
-		NULL,
+		nullptr,
+		nullptr,
 		SWP_NOSIZE | SWP_NOZORDER | SWP_NOREDRAW);
 
 }
@@ -108,9 +108,9 @@ void ListView::SetSize(const Vector2i &size)
 {
 
 	SetWindowPos(m_hList,
-		NULL,
-		NULL,
-		NULL,
+		nullptr,
+		nullptr,
+		nullptr,
 		size.x(),
 		size.y(),
 		SWP_NOMOVE | SWP_NOZORDER | SWP_NOREDRAW);

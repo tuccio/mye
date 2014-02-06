@@ -85,7 +85,7 @@ void Logger::LogError(const std::string &string)
 const char* Logger::GetTimestamp(void)
 {
 
-	time_t t = time(NULL);
+	time_t t = time(nullptr);
 	tm *timeinfo = localtime(&t);
 
 	static char output[20];

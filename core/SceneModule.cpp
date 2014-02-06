@@ -4,7 +4,7 @@ using namespace mye::core;
 
 SceneModule::SceneModule(void)
 {
-	m_camera = NULL;
+	m_camera = nullptr;
 }
 
 SceneModule::ObjectsList SceneModule::GetVisibleObjects(void)

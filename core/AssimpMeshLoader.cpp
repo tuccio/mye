@@ -9,7 +9,7 @@
 using namespace mye::core;
 
 AssimpMeshLoader::AssimpMeshLoader(void) :
-	m_mesh(NULL)
+	m_mesh(nullptr)
 {
 }
 

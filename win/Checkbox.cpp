@@ -33,8 +33,8 @@ void Checkbox::Create(Window &parent,
 		size.y(),
 		parent.GetHandle(),
 		(HMENU) m_id,
-		NULL,
-		NULL);
+		nullptr,
+		nullptr);
 
 	SendMessage(m_hCheckbox, WM_SETFONT, (WPARAM) GetStockObject(DEFAULT_GUI_FONT), (LPARAM) TRUE);
 
@@ -48,7 +48,7 @@ void Checkbox::Create(Window &parent,
 void Checkbox::Destroy(void)
 {
 	DestroyWindow(m_hCheckbox);
-	m_hCheckbox = NULL;
+	m_hCheckbox = nullptr;
 }
 
 bool Checkbox::IsChecked(void) const
@@ -74,20 +74,20 @@ void Checkbox::Hide(void)
 void Checkbox::SetPosition(const mye::math::Vector2i &position)
 {
 	SetWindowPos(m_hCheckbox,
-		NULL,
+		nullptr,
 		position.x(),
 		position.y(),
-		NULL,
-		NULL,
+		nullptr,
+		nullptr,
 		SWP_NOSIZE | SWP_NOZORDER | SWP_NOREDRAW);
 }
 
 void Checkbox::SetSize(const mye::math::Vector2i &size)
 {
 	SetWindowPos(m_hCheckbox,
-		NULL,
-		NULL,
-		NULL,
+		nullptr,
+		nullptr,
+		nullptr,
 		size.x(),
 		size.y(),
 		SWP_NOMOVE | SWP_NOZORDER | SWP_NOREDRAW);

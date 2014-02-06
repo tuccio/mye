@@ -25,7 +25,7 @@ ResourceHandle::~ResourceHandle(void)
 
 ResourceHandle::operator bool (void) const
 {
-	return _ptr != NULL;
+	return _ptr != nullptr;
 }
 
 Resource& ResourceHandle::operator* (void)

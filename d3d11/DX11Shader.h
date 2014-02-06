@@ -22,7 +22,7 @@ namespace mye
 
 			DX11Shader(mye::core::ResourceManager *owner,
 				const std::string &name,
-				mye::core::ManualResourceLoader *manual = NULL);
+				mye::core::ManualResourceLoader *manual = nullptr);
 
 			~DX11Shader(void);
 

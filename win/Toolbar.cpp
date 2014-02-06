@@ -52,7 +52,7 @@ bool ToolbarWCR::IsRegistered(void) const
 Toolbar::Toolbar(Window &window,
 				 bool vertical) :
 	m_parent(window),
-	m_hImageList(NULL),
+	m_hImageList(nullptr),
 	m_iconSize(32, 32),
 	m_showText(false)
 {
@@ -86,7 +86,7 @@ void Toolbar::Create(void)
 	m_hRebar = CreateWindowEx(
 		0,
 		REBARCLASSNAME,
-		NULL,
+		nullptr,
 		WS_CHILD |
 		RBS_BANDBORDERS |
 		WS_CLIPSIBLINGS |
@@ -99,8 +99,8 @@ void Toolbar::Create(void)
 		0,
 		m_parent.GetHandle(),
 		(HMENU) IDGenerator::GetSingleton().Generate(),
-		NULL,
-		NULL);
+		nullptr,
+		nullptr);
 
 	if (!m_hRebar)
 	{
@@ -111,7 +111,7 @@ void Toolbar::Create(void)
 	m_hToolbar = CreateWindowEx(
 		0,
 		TOOLBARCLASSNAME,
-		NULL,
+		nullptr,
 		WS_CHILD |
 		TBSTYLE_FLAT |
 		TBSTYLE_TOOLTIPS |
@@ -121,9 +121,9 @@ void Toolbar::Create(void)
 		0,
 		0,
 		m_hRebar,
-		NULL,
-		NULL,
-		NULL);
+		nullptr,
+		nullptr,
+		nullptr);
 
 	if (m_hToolbar)
 	{
@@ -147,7 +147,7 @@ void Toolbar::Create(void)
 
 			SetLastError(0);
 
-			HBITMAP hImage = (HBITMAP) LoadImage(NULL,
+			HBITMAP hImage = (HBITMAP) LoadImage(nullptr,
 				it.second.icon.c_str(),
 				IMAGE_BITMAP,
 				0,
@@ -161,7 +161,7 @@ void Toolbar::Create(void)
 				ShowErrorBox();
 			}
 
-			int iBitmap = ImageList_Add(m_hImageList, hImage, NULL);
+			int iBitmap = ImageList_Add(m_hImageList, hImage, nullptr);
 			DeleteObject(hImage);
 
 			if (iBitmap < 0)

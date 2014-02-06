@@ -21,9 +21,9 @@ ModelView::ModelView(void) :
 	m_initialized(false),
 	m_toolbar(g_mainWindow, true),
 	m_bgColor(0.12f, 0.12f, 0.12f, 1.0f),
-	m_vbuffer(NULL, "", NULL, g_device),
-	m_planeBuffer(NULL, "", NULL, g_device),
-	m_mvpBuffer(NULL, "", NULL, g_device),
+	m_vbuffer(nullptr, "", nullptr, g_device),
+	m_planeBuffer(nullptr, "", nullptr, g_device),
+	m_mvpBuffer(nullptr, "", nullptr, g_device),
 	m_transform(Transformf::Identity())
 {
 	m_toolbar.SetIconSize(mye::math::Vector2i(24, 24));
@@ -56,9 +56,9 @@ void ModelView::Activate(void)
 			ofn.nMaxFile        = sizeof(buffer);
 			ofn.lpstrFilter     = "Wavefront OBJ\0*.obj\0\03DS Max\0*.3ds;*.max\0\0";
 			ofn.nFilterIndex    = 1;
-			ofn.lpstrFileTitle  = NULL;
+			ofn.lpstrFileTitle  = nullptr;
 			ofn.nMaxFileTitle   = 0;
-			ofn.lpstrInitialDir = NULL;
+			ofn.lpstrInitialDir = nullptr;
 			ofn.Flags           = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
 			if (GetOpenFileName(&ofn))
@@ -75,7 +75,7 @@ void ModelView::Activate(void)
 				params["texcoords"] = "true";
 
 				m_model = ResourceTypeManager::GetSingleton().
-					CreateResource("Model", buffer, NULL, &params);
+					CreateResource("Model", buffer, nullptr, &params);
 
 				m_model->Load();
 
@@ -130,7 +130,7 @@ void ModelView::Activate(void)
 
 		m_mvpBuffer.Create(sizeof(float) * 16, Matrix4f(1.0f).Data());
 
-// 		Mesh plane(NULL, "plane", NULL);
+// 		Mesh plane(nullptr, "plane", nullptr);
 // 
 // 		VertexDeclaration vd;
 // 
@@ -156,7 +156,7 @@ void ModelView::Deactivate(void)
 {
 	g_renderWindow.Hide();
 	m_toolbar.Hide();
-	g_mainWindow.SetToolbar(NULL);
+	g_mainWindow.SetToolbar(nullptr);
 }
 
 void ModelView::SetPosition(const mye::math::Vector2i &position)

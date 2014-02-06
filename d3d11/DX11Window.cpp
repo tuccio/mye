@@ -67,19 +67,19 @@ void DX11Window::ShutDown(void)
 	if (m_depthStencilView)
 	{
 		m_depthStencilView->Release();
-		m_depthStencilView = NULL;
+		m_depthStencilView = nullptr;
 	}
 
 	if (m_depthStencilBuffer)
 	{
 		m_depthStencilBuffer->Release();
-		m_depthStencilBuffer = NULL;
+		m_depthStencilBuffer = nullptr;
 	}
 
 	if (m_renderTargetView)
 	{
 		m_renderTargetView->Release();
-		m_renderTargetView = NULL;
+		m_renderTargetView = nullptr;
 	}
 
 }

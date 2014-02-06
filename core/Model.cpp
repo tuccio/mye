@@ -26,7 +26,7 @@ Mesh* Model::AddMesh(void)
 {
 
 	SubMesh meshRef;
-	meshRef.mesh = new Mesh(NULL, "", NULL);
+	meshRef.mesh = new Mesh(nullptr, "", nullptr);
 	meshRef.resource = false;
 
 	m_meshes.push_back(meshRef);
@@ -44,7 +44,7 @@ Mesh* Model::AddMesh(const std::string &resourceName)
 
 	SubMesh meshRef;
 	meshRef.handle = mesh;
-	meshRef.mesh = NULL;
+	meshRef.mesh = nullptr;
 	meshRef.resource = true;
 
 	m_meshes.push_back(meshRef);

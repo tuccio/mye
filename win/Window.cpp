@@ -42,7 +42,7 @@ WCR::WCR(void)
 
 	wc.style         = CS_HREDRAW | CS_VREDRAW;
 	wc.lpfnWndProc   = &Window::WindowProc; 
-	wc.hInstance     = GetModuleHandle(NULL);
+	wc.hInstance     = GetModuleHandle(nullptr);
 	wc.hCursor       = LoadCursor(wc.hInstance, IDC_ARROW);
 	wc.hbrBackground = GetSysColorBrush(COLOR_BTNFACE);
 	wc.lpszClassName = WINDOW_CLASS_NAME;
@@ -71,7 +71,7 @@ WCR::~WCR(void)
 	if (m_registered)
 	{
 		UnregisterClass(WINDOW_CLASS_NAME,
-			GetModuleHandle(NULL));
+			GetModuleHandle(nullptr));
 	}
 }
 
@@ -107,9 +107,9 @@ bool Window::Create(const Properties &p)
 		(p.y < 0 ? CW_USEDEFAULT : p.y),
 		(p.width < 0 ? CW_USEDEFAULT : p.width),
 		(p.height < 0 ? CW_USEDEFAULT : p.height),
-		NULL,
-		NULL,
-		GetModuleHandle(NULL),
+		nullptr,
+		nullptr,
+		GetModuleHandle(nullptr),
 		this
 		);
 
@@ -127,8 +127,8 @@ bool Window::CreateChild(Window &parent, const Properties &p)
 		(p.width < 0 ? CW_USEDEFAULT : p.width),
 		(p.height < 0 ? CW_USEDEFAULT : p.height),
 		parent.GetHandle(),
-		NULL,
-		GetModuleHandle(NULL),
+		nullptr,
+		GetModuleHandle(nullptr),
 		this
 		);
 
@@ -146,8 +146,8 @@ bool Window::CreateChild(HWND parent, const Properties &p)
 		(p.width < 0 ? CW_USEDEFAULT : p.width),
 		(p.height < 0 ? CW_USEDEFAULT : p.height),
 		parent,
-		NULL,
-		GetModuleHandle(NULL),
+		nullptr,
+		GetModuleHandle(nullptr),
 		this
 		);
 
@@ -156,7 +156,7 @@ bool Window::CreateChild(HWND parent, const Properties &p)
 void Window::Destroy(void)
 {
 	DestroyWindow(m_hWnd);
-	m_hWnd = NULL;
+	m_hWnd = nullptr;
 }
 
 bool Window::DispatchCommand(unsigned int id, unsigned int code)
@@ -266,9 +266,9 @@ void Window::SetSize(const mye::math::Vector2i &size)
 {
 
 	SetWindowPos(m_hWnd,
-		NULL,
-		NULL,
-		NULL,
+		nullptr,
+		nullptr,
+		nullptr,
 		size.x(),
 		size.y(),
 		SWP_NOMOVE | SWP_NOZORDER);
@@ -292,11 +292,11 @@ void Window::SetPosition(const mye::math::Vector2i &position)
 {
 
 	SetWindowPos(m_hWnd,
-		NULL,
+		nullptr,
 		position.x(),
 		position.y(),
-		NULL,
-		NULL,
+		nullptr,
+		nullptr,
 		SWP_NOSIZE | SWP_NOZORDER);
 
 }
@@ -328,7 +328,7 @@ void Window::AttachMenu(WindowMenu *menu)
 void Window::_CreateMenu(WindowMenu *menu, HMENU hMenu)
 {
 
-	if (menu->GetParent() == NULL || true)
+	if (menu->GetParent() == nullptr || true)
 	{
 
 		auto &subMenus = menu->GetSubMenus();
@@ -414,7 +414,7 @@ void Window::RegisterControl(Control *control)
 Control* Window::FindControl(IDGenerator::ID id)
 {
 	auto it = m_controls.find(id);
-	return (it != m_controls.end() ? it->second : NULL);
+	return (it != m_controls.end() ? it->second : nullptr);
 }
 
 void Window::UnregisterControl(Control *control)
@@ -470,7 +470,7 @@ bool Window::ReleaseDC(HDC hDC)
 void Window::Update(void)
 {
 	UpdateWindow(m_hWnd);
-	RedrawWindow(m_hWnd, NULL, NULL, RDW_UPDATENOW | RDW_ALLCHILDREN);
+	RedrawWindow(m_hWnd, nullptr, nullptr, RDW_UPDATENOW | RDW_ALLCHILDREN);
 }
 
 bool Window::_Create(DWORD dwExStyle,
@@ -548,7 +548,7 @@ bool Window::_Create(DWORD dwExStyle,
 		NotifyCreate();
 	}
 
-	return m_hWnd != NULL;
+	return m_hWnd != nullptr;
 
 }
 
@@ -598,7 +598,7 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd,
 	case WM_MOUSEMOVE:
 
 	/*	{
-			static HCURSOR hCursor = LoadCursor(GetModuleHandle(NULL), IDC_ARROW);
+			static HCURSOR hCursor = LoadCursor(GetModuleHandle(nullptr), IDC_ARROW);
 			SetCursor(hCursor);
 			ShowCursor(TRUE);
 		}

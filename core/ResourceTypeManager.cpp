@@ -32,7 +32,7 @@ ResourceManager* ResourceTypeManager::GetResourceManager(const std::string &type
 		return it->second;
 	}
 
-	return NULL;
+	return nullptr;
 
 }
 

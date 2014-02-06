@@ -52,9 +52,9 @@ void SceneView::_CreateRenderTab(void)
 		ofn.nMaxFile        = sizeof(buffer);
 		ofn.lpstrFilter     = "Wavefront OBJ\0*.obj\0\03DS Max\0*.3ds;*.max\0\0";
 		ofn.nFilterIndex    = 1;
-		ofn.lpstrFileTitle  = NULL;
+		ofn.lpstrFileTitle  = nullptr;
 		ofn.nMaxFileTitle   = 0;
-		ofn.lpstrInitialDir = NULL;
+		ofn.lpstrInitialDir = nullptr;
 		ofn.Flags           = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
 		if (GetOpenFileName(&ofn))
@@ -216,7 +216,7 @@ void SceneView::_CreateRenderTab(void)
 				model = ResourceTypeManager::GetSingleton().CreateResource(
 					"Model",
 					modelPath, 
-					NULL);
+					nullptr);
 
 				rc->SetModel(model);
 

@@ -13,13 +13,13 @@
 		{\
 			LPTSTR output;\
 			FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS,\
-			NULL,\
+			nullptr,\
 			hr,\
 			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),\
 			(LPTSTR) &output,\
 			0x0,\
-			NULL);\
-			MessageBox(NULL, output, "DirectX Error", MB_OK);\
+			nullptr);\
+			MessageBox(nullptr, output, "DirectX Error", MB_OK);\
 		}
 	#endif
 

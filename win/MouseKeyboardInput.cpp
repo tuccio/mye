@@ -26,8 +26,8 @@ bool MouseKeyboardInput::Init(void)
 void MouseKeyboardInput::ShutDown(void)
 {
 // 	IWindow *window = Game::GetSingleton().GetGraphicsModule()->GetWindow();
-// 	window->AttachKeyboard(NULL);
-// 	window->AttachMouse(NULL);
+// 	window->AttachKeyboard(nullptr);
+// 	window->AttachMouse(nullptr);
 	m_keyboard.Unhook();
 }
 

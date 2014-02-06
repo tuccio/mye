@@ -22,8 +22,8 @@ namespace mye
 			~ResourceManager(void);
 
 			ResourceHandle CreateResource(const std::string &name,
-				           ManualResourceLoader *manual = NULL,
-				           Resource::ParametersList *params = NULL);
+				           ManualResourceLoader *manual = nullptr,
+				           Resource::ParametersList *params = nullptr);
 
 			ResourceHandle GetResource(const std::string &name);
 

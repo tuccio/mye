@@ -163,7 +163,7 @@ bool DX11VertexBuffer::Create(Model *model)
 	}
 	else
 	{
-		pVertexBufferData = NULL;
+		pVertexBufferData = nullptr;
 	}
 	
 
