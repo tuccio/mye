@@ -24,6 +24,8 @@ namespace mye
 
 			inline void Free(void *data);
 
+			void Clear(void);
+
 		private:
 
 			void *m_free;

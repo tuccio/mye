@@ -26,7 +26,7 @@ namespace mye
 			mye::math::Vector3f GetPosition(void) const;
 			void SetPosition(const mye::math::Vector3f &position);
 
-			void SetFrustum(float fovy, float aspect, float zNear, float zFar);
+			void SetProjection(float fovy, float aspect, float zNear, float zFar);
 
 			float GetNearClipDistance(void) const;
 			void SetNearClipDistance(float near);
@@ -42,6 +42,9 @@ namespace mye
 			float GetFovY(void) const;
 			float GetFovX(void) const;
 
+			float GetFovYRadians(void) const;
+			float GetFovXRadians(void) const;
+
 			void Roll(float angle);
 			void Pitch(float angle);
 			void Yaw(float angle);
@@ -52,12 +55,16 @@ namespace mye
 
 			inline void UpdateView(void);
 			inline void UpdateProjection(void);
+			inline void UpdateFrustum(void);
 
 			inline mye::math::Matrix4f GetViewMatrix(void) const;
 			inline mye::math::Matrix4f GetProjectionMatrix(void) const;
 
 			inline const mye::math::Matrix4f& GetViewMatrix(void);
 			inline const mye::math::Matrix4f& GetProjectionMatrix(void);
+
+			inline mye::math::Frustumf GetFrustum(void) const;
+			inline const mye::math::Frustumf& GetFrustum(void);
 
 		private:
 
@@ -74,6 +81,9 @@ namespace mye
 
 			bool m_viewMatrixUptodate;
 			bool m_projectionMatrixUptodate;
+			bool m_frustumUptodate;
+
+			mye::math::Frustumf m_frustum;
 
 		};
 

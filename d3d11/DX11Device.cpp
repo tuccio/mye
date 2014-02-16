@@ -1,5 +1,6 @@
 #include "DX11Device.h"
 #include "DX11Utils.h"
+#include "DX11VertexBuffer.h"
 
 #include <mye/core/Logger.h>
 
@@ -16,7 +17,9 @@ DX11Device::DX11Device(void)
 	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
-	HRESULT hResult = D3D11CreateDevice(
+	;
+
+	if (HRTESTFAILED(D3D11CreateDevice(
 		0x0,
 		D3D_DRIVER_TYPE_HARDWARE,
 		0x0,
@@ -26,20 +29,8 @@ DX11Device::DX11Device(void)
 		D3D11_SDK_VERSION,
 		&m_device,
 		&featureLevel,
-		&m_dImmediateContext);
-
-	HRDEBUG(hResult);
-
-	if (FAILED(hResult))
+		&m_dImmediateContext)))
 	{
-
-		Logger::LogErrorOptional("D3D11CreateDevice failed");
-
-		if (featureLevel < D3D_FEATURE_LEVEL_11_0)
-		{
-			Logger::LogErrorOptional("DirectX 11 unsupported");
-		}
-
 		throw;
 	}
 
@@ -49,3 +40,17 @@ DX11Device::DX11Device(void)
 DX11Device::~DX11Device(void)
 {
 }
+
+/*
+void DX11Device::Render(DX11VertexBuffer &vb)
+{
+
+	vb.Bind();
+
+	switch (vb.GetRasterizingPrimitive())
+	{
+	case:
+	}
+
+	m_dImmediateContext->Draw(vb.GetVerticesCount(), 0);
+}*/

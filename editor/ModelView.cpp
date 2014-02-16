@@ -85,7 +85,7 @@ void ModelView::Activate(void)
 				m_vbuffer.Create(model);
 
 				auto minmax = model->GetMinMaxVertices();
-				AABB aabb = AABB::FromMinMax(minmax.first, minmax.second);
+				AABBf aabb = AABBf::FromMinMax(minmax.first, minmax.second);
 
 				Vector3f halfExtents = aabb.GetHalfExtents();
 				float scale = 1.0f / (2.0f * Max(halfExtents.x(), halfExtents.y()));
@@ -123,7 +123,7 @@ void ModelView::Activate(void)
 
 		Vector2i size = g_renderWindow.GetSize();
 
-		m_camera.SetFrustum(75.0f,
+		m_camera.SetProjection(75.0f,
 			(float) size.x() / size.y(),
 			0.1f,
 			100.0f);

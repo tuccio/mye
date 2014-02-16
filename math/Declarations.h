@@ -62,7 +62,23 @@ namespace mye
 		typedef Transform<float> Transformf;
 		typedef Transform<double> Transformd;
 
+		template <typename T>
 		class AABB;
+
+		typedef AABB<float> AABBf;
+		typedef AABB<double> AABBd;
+
+		template <typename T>
+		class Plane;
+
+		typedef Plane<float> Planef;
+		typedef Plane<double> Planed;
+
+		template <typename T>
+		class Frustum;
+
+		typedef Frustum<float> Frustumf;
+		typedef Frustum<double> Frustumd;
 
 		template <typename T>
 		class Ray;

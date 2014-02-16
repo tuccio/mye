@@ -20,6 +20,20 @@ namespace mye
 		}
 
 		template <typename T>
+		Matrix<T, 3, 3>::Matrix(const Matrix<T, 4, 4> &m)
+		{
+			_00(m_data) = m(0, 0);
+			_01(m_data) = m(0, 1);
+			_02(m_data) = m(0, 2);
+			_10(m_data) = m(1, 0);
+			_11(m_data) = m(1, 1);
+			_12(m_data) = m(1, 2);
+			_20(m_data) = m(2, 0);
+			_21(m_data) = m(2, 1);
+			_22(m_data) = m(2, 2);
+		}
+
+		template <typename T>
 		Matrix<T, 3, 3>::Matrix(T d)
 		{
 			_00(m_data) = d;

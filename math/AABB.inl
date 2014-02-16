@@ -4,9 +4,10 @@ namespace mye
 	namespace math
 	{
 
-		AABB AABB::FromMinMax(
-			const mye::math::Vector3f &min,
-			const mye::math::Vector3f &max)
+		template <typename T>
+		AABB<T> AABB<T>::FromMinMax(
+			const mye::math::Matrix<T, 3, 1> &min,
+			const mye::math::Matrix<T, 3, 1> &max)
 		{
 			AABB aabb;
 			aabb.m_min = min;
@@ -14,101 +15,177 @@ namespace mye
 			return aabb;
 		}
 
-		AABB AABB::FromCenterHalfExtents(
-			const mye::math::Vector3f &center,
-			const mye::math::Vector3f &halfExtents)
+		template <typename T>
+		AABB<T> AABB<T>::FromCenterHalfExtents(
+			const mye::math::Matrix<T, 3, 1> &center,
+			const mye::math::Matrix<T, 3, 1> &halfExtents)
 		{
-			mye::math::Vector3f absHalfExtents = halfExtents.CwiseAbs();
+			mye::math::Matrix<T, 3, 1> absHalfExtents = halfExtents.CwiseAbs();
 			AABB aabb;
 			aabb.m_min = center - absHalfExtents;
 			aabb.m_max = center + absHalfExtents;
 			return aabb;
 		}
 
-		Matrix<float, 3, 1> AABB::GetCenter(void) const
+		template <typename T>
+		Matrix<T, 3, 1> AABB<T>::GetCenter(void) const
 		{
 			return (m_max + m_min) * 0.5f;
 		}
 
-		Matrix<float, 3, 1> AABB::GetHalfExtents(void) const
+		template <typename T>
+		Matrix<T, 3, 1> AABB<T>::GetHalfExtents(void) const
 		{
 			return (m_max - m_min) * 0.5f;
 		}
 
-		Matrix<float, 3, 1> AABB::GetMinimum(void) const
+		template <typename T>
+		Matrix<T, 3, 1> AABB<T>::GetMinimum(void) const
 		{
 			return m_min;
 		}
 
-		Matrix<float, 3, 1> AABB::GetMaximum(void) const
+		template <typename T>
+		Matrix<T, 3, 1> AABB<T>::GetMaximum(void) const
 		{
 			return m_max;
 		}
 
-		std::vector<Matrix<float, 3, 1>> AABB::GetCorners(void) const
+		template <typename T>
+		std::vector<Matrix<T, 3, 1>> AABB<T>::GetCorners(void) const
 		{
 
-			std::vector<Matrix<float, 3, 1>> corners(8);
+			std::vector<Matrix<T, 3, 1>> corners(8);
 
-			corners[FRONT_LEFT_BOTTOM] = m_min;
+			corners[static_cast<int>(AABBCorners::LEFT_BOTTOM_NEAR)] = m_min;
 
-			corners[FRONT_RIGHT_BOTTOM].x() = m_max.x();
-			corners[FRONT_RIGHT_BOTTOM].y() = m_min.y();
-			corners[FRONT_RIGHT_BOTTOM].z() = m_min.z();
+			corners[static_cast<int>(AABBCorners::RIGHT_BOTTOM_NEAR)].x() = m_max.x();
+			corners[static_cast<int>(AABBCorners::RIGHT_BOTTOM_NEAR)].y() = m_min.y();
+			corners[static_cast<int>(AABBCorners::RIGHT_BOTTOM_NEAR)].z() = m_min.z();
 
-			corners[FRONT_RIGHT_TOP].x() = m_max.x();
-			corners[FRONT_RIGHT_TOP].y() = m_max.y();
-			corners[FRONT_RIGHT_TOP].z() = m_min.z();
+			corners[static_cast<int>(AABBCorners::RIGHT_TOP_NEAR)].x() = m_max.x();
+			corners[static_cast<int>(AABBCorners::RIGHT_TOP_NEAR)].y() = m_max.y();
+			corners[static_cast<int>(AABBCorners::RIGHT_TOP_NEAR)].z() = m_min.z();
 
-			corners[FRONT_LEFT_TOP].x() = m_min.x();
-			corners[FRONT_LEFT_TOP].y() = m_max.y();
-			corners[FRONT_LEFT_TOP].z() = m_min.z();
+			corners[static_cast<int>(AABBCorners::LEFT_TOP_NEAR)].x() = m_min.x();
+			corners[static_cast<int>(AABBCorners::LEFT_TOP_NEAR)].y() = m_max.y();
+			corners[static_cast<int>(AABBCorners::LEFT_TOP_NEAR)].z() = m_min.z();
 
-			corners[BACK_LEFT_BOTTOM].x() = m_min.x();
-			corners[BACK_LEFT_BOTTOM].y() = m_min.y();
-			corners[BACK_LEFT_BOTTOM].z() = m_max.z();
+			corners[static_cast<int>(AABBCorners::LEFT_BOTTOM_FAR)].x() = m_min.x();
+			corners[static_cast<int>(AABBCorners::LEFT_BOTTOM_FAR)].y() = m_min.y();
+			corners[static_cast<int>(AABBCorners::LEFT_BOTTOM_FAR)].z() = m_max.z();
 
-			corners[BACK_RIGHT_BOTTOM].x() = m_max.x();
-			corners[BACK_RIGHT_BOTTOM].y() = m_min.y();
-			corners[BACK_RIGHT_BOTTOM].z() = m_max.z();
+			corners[static_cast<int>(AABBCorners::RIGHT_BOTTOM_FAR)].x() = m_max.x();
+			corners[static_cast<int>(AABBCorners::RIGHT_BOTTOM_FAR)].y() = m_min.y();
+			corners[static_cast<int>(AABBCorners::RIGHT_BOTTOM_FAR)].z() = m_max.z();
 
-			corners[BACK_RIGHT_TOP] = m_max;
+			corners[static_cast<int>(AABBCorners::RIGHT_TOP_FAR)] = m_max;
 
-			corners[BACK_LEFT_TOP].x() = m_min.x();
-			corners[BACK_LEFT_TOP].y() = m_max.y();
-			corners[BACK_LEFT_TOP].z() = m_max.z();
+			corners[static_cast<int>(AABBCorners::LEFT_TOP_FAR)].x() = m_min.x();
+			corners[static_cast<int>(AABBCorners::LEFT_TOP_FAR)].y() = m_max.y();
+			corners[static_cast<int>(AABBCorners::LEFT_TOP_FAR)].z() = m_max.z();
 
 			return corners;
 
 		}
 
-		AABB AABB::TransformAffine(const Matrix<float, 4, 4> &t)
+		template <typename T>
+		Vector3i AABB<T>::GetAxesOrderBySize(void) const
 		{
 
-			Matrix<float, 3, 1> center = GetCenter();
-			Matrix<float, 3, 1> halfExtents = GetHalfExtents();
+			Matrix<T, 3, 1> halfExtents = GetHalfExtents();
 
-			Matrix<float, 3, 1> transformedCenter = 
+			if (halfExtents.x() < halfExtents.y())
+			{
+
+				if (halfExtents.y() < halfExtents.z())
+				{
+					return Vector3i(0, 1, 2);
+				}
+				else if (halfExtents.x() < halfExtents.z())
+				{
+					return Vector3i(0, 2, 1);
+				}
+				else
+				{
+					return Vector3i(2, 0, 1);
+				}
+
+			}
+			else
+			{
+
+				if (halfExtents.x() < halfExtents.z())
+				{
+					return Vector3i(1, 0, 2);
+				}
+				else if (halfExtents.y() < halfExtents.z())
+				{
+					return Vector3i(1, 2, 0);
+				}
+				else
+				{
+					return Vector3i(2, 1, 0);
+				}
+
+			}
+
+		}
+
+		template <typename T>
+		AABB<T> AABB<T>::TransformAffine(const Matrix<T, 4, 4> &t) const
+		{
+
+			Matrix<T, 3, 1> center = GetCenter();
+			Matrix<T, 3, 1> halfExtents = GetHalfExtents();
+
+			Matrix<T, 3, 1> transformedCenter = 
 				t * center;
 
-			Matrix<float, 3, 1> transformedHalfExtents = 
-				(t * halfExtents).CwiseAbs();
+			Matrix<T, 3, 1> transformedHalfExtents = 
+				(Matrix<T, 3, 3>(t) * halfExtents).CwiseAbs();
 
 			return FromCenterHalfExtents(transformedCenter,
 				transformedHalfExtents);
 
 		}
 
-		bool AABB::Contains(const Matrix<float, 3, 1> &x) const
+		template <typename T>
+		bool AABB<T>::Contains(const Matrix<T, 3, 1> &x) const
 		{
 
 			return x.x() <= m_max.x() &&
-				x.z() <= m_max.y() &&
+				x.y() <= m_max.y() &&
 				x.z() <= m_max.z() &&
 				x.x() >= m_min.x() &&
-				x.z() >= m_min.y() &&
+				x.y() >= m_min.y() &&
 				x.z() >= m_min.z();
 
+		}
+
+		template <typename T>
+		bool AABB<T>::ContainsStrict(const Matrix<T, 3, 1> &x) const
+		{
+
+			return x.x() < m_max.x() &&
+				x.y() < m_max.y() &&
+				x.z() < m_max.z() &&
+				x.x() > m_min.x() &&
+				x.y() > m_min.y() &&
+				x.z() > m_min.z();
+
+		}
+
+		template <typename T>
+		bool AABB<T>::Contains(const AABB<T> &aabb) const
+		{
+			return Contains(aabb.m_min) && Contains(aabb.m_max);
+		}
+
+		template <typename T>
+		bool AABB<T>::ContainsStrict(const AABB<T> &aabb) const
+		{
+			return ContainsStrict(aabb.m_min) && ContainsStrict(aabb.m_max);
 		}
 
 	}

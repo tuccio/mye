@@ -70,8 +70,8 @@ size_t VertexData::GetSize(void) const
 }
 
 void VertexData::SetVertexAttribute(size_t vertexIndex,
-									VertexDeclaration::AttributeSemantic semantic,
-									VertexDeclaration::AttributeType type,
+									VertexAttributeSemantic semantic,
+									VertexAttributeType type,
 									const void *data)
 {
 	memcpy(
@@ -79,12 +79,12 @@ void VertexData::SetVertexAttribute(size_t vertexIndex,
 			vertexIndex * m_declaration.GetSize() +
 			m_declaration.GetAttributeOffset(semantic),
 		data,
-		VertexDeclaration::AttributeTypeSize[type]);
+		VertexDeclaration::AttributeTypeSize[static_cast<int>(type)]);
 }
 
 void VertexData::GetVertexAttribute(size_t vertexIndex,
-									VertexDeclaration::AttributeSemantic semantic,
-									VertexDeclaration::AttributeType type,
+									VertexAttributeSemantic semantic,
+									VertexAttributeType type,
 									void *data) const
 {
 	memcpy(
@@ -92,5 +92,5 @@ void VertexData::GetVertexAttribute(size_t vertexIndex,
 		m_data +
 			vertexIndex * m_declaration.GetSize() +
 			m_declaration.GetAttributeOffset(semantic),
-		VertexDeclaration::AttributeTypeSize[type]);
+		VertexDeclaration::AttributeTypeSize[static_cast<int>(type)]);
 }

@@ -73,16 +73,16 @@ mye::core::PoolAllocator<__TYPE> __TYPE::m_myePoolAllocator;\
 \
 void* __TYPE::operator new (std::size_t size)\
 {\
-	return mye::core::PoolAllocator<__TYPE>::GetSingleton().Allocate();\
+	return m_myePoolAllocator.Allocate();\
 }\
 void* __TYPE::operator new (std::size_t size, const std::nothrow_t)\
 {\
-return mye::core::PoolAllocator<__TYPE>::GetSingleton().AllocateNoThrow();\
+return m_myePoolAllocator.AllocateNoThrow();\
 }\
 \
 void __TYPE::operator delete (void *p)\
 {\
-	return mye::core::PoolAllocator<__TYPE>::GetSingleton().Free(p);\
+	return m_myePoolAllocator.Free(p);\
 }
 
 #define MYE_DEFINE_TEMPLATE_POOL_ALLOCATOR(__TEMPLATE, __TYPE)\
@@ -90,14 +90,14 @@ __TEMPLATE mye::core::PoolAllocator<__TYPE> __TYPE::m_myePoolAllocator;\
 \
 __TEMPLATE void* __TYPE::operator new (std::size_t size)\
 {\
-	return mye::core::PoolAllocator<__TYPE>::GetSingleton().Allocate();\
+	return m_myePoolAllocator.Allocate();\
 }\
-__TEMPLATE void* __TYPE::operator new (std::size_t size, const std::nothrow_t)\
+	__TEMPLATE void* __TYPE::operator new (std::size_t size, const std::nothrow_t)\
 {\
-	return mye::core::PoolAllocator<__TYPE>::GetSingleton().AllocateNoThrow();\
+	return m_myePoolAllocator.AllocateNoThrow();\
 }\
 \
 __TEMPLATE void __TYPE::operator delete (void *p)\
 {\
-	return mye::core::PoolAllocator<__TYPE>::GetSingleton().Free(p);\
+	return m_myePoolAllocator.Free(p);\
 }

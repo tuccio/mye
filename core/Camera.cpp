@@ -13,10 +13,11 @@ Camera::Camera(void) :
 	m_projectionMatrix(0.0f)
 {
 
-	SetFrustum(90.0f, 1.0f, 1.0f, 100.0f);
+	SetProjection(90.0f, 1.0f, 1.0f, 100.0f);
 
 	m_viewMatrixUptodate       = false;
 	m_projectionMatrixUptodate = false;
+	m_frustumUptodate          = false;
 
 }
 
@@ -47,6 +48,7 @@ void Camera::LookAt(const mye::math::Vector3f &position,
 	m_position = position;
 
 	m_viewMatrixUptodate = false;
+	m_frustumUptodate    = false;
 
 }
 
@@ -59,6 +61,7 @@ void Camera::SetOrientation(const mye::math::Quaternionf &direction)
 {
 	m_orientation        = direction;
 	m_viewMatrixUptodate = false;
+	m_frustumUptodate    = false;
 }
 
 mye::math::Vector3f Camera::GetPosition(void) const
@@ -70,6 +73,7 @@ void Camera::SetPosition(const mye::math::Vector3f &position)
 {
 	m_position           = position;
 	m_viewMatrixUptodate = false;
+	m_frustumUptodate    = false;
 }
 
 void Camera::Pitch(float angle)
@@ -87,6 +91,7 @@ void Camera::Pitch(float angle)
 
 	m_orientation        = pitchQuaternion * m_orientation;
 	m_viewMatrixUptodate = false;
+	m_frustumUptodate    = false;
 
 }
 
@@ -106,6 +111,7 @@ void Camera::Yaw(float angle)
 
 	m_orientation        = yawQuaternion * m_orientation;
 	m_viewMatrixUptodate = false;
+	m_frustumUptodate    = false;
 
 }
 
@@ -125,12 +131,13 @@ void Camera::Roll(float angle)
 
 	m_orientation        = rollQuaternion * m_orientation;
 	m_viewMatrixUptodate = false;
+	m_frustumUptodate    = false;
 
 }
 
 /* Projection */
 
-void Camera::SetFrustum(float fovy, float aspect, float zNear, float zFar)
+void Camera::SetProjection(float fovy, float aspect, float zNear, float zFar)
 {
 	m_fovY             = Radians(fovy);
 	m_aspectRatio      = aspect;
@@ -145,8 +152,9 @@ float Camera::GetNearClipDistance(void) const
 
 void Camera::SetNearClipDistance(float near)
 {
-	m_nearClipDistance = near;
+	m_nearClipDistance         = near;
 	m_projectionMatrixUptodate = false;
+	m_frustumUptodate          = false;
 }
 
 float Camera::GetFarClipDistance(void) const
@@ -156,15 +164,17 @@ float Camera::GetFarClipDistance(void) const
 
 void Camera::SetFarClipDistance(float far)
 {
-	m_farClipDistance = far;
+	m_farClipDistance          = far;
 	m_projectionMatrixUptodate = false;
+	m_frustumUptodate          = false;
 }
 
 void Camera::SetClipDistances(float near, float far)
 {
-	m_nearClipDistance = near;
-	m_farClipDistance  = far;
+	m_nearClipDistance         = near;
+	m_farClipDistance          = far;
 	m_projectionMatrixUptodate = false;
+	m_frustumUptodate          = false;
 }
 
 float Camera::GetClipAspectRatio(void) const
@@ -174,8 +184,9 @@ float Camera::GetClipAspectRatio(void) const
 
 void Camera::SetClipAspectRatio(float aspect)
 {
-	m_aspectRatio = aspect;
+	m_aspectRatio              = aspect;
 	m_projectionMatrixUptodate = false;
+	m_frustumUptodate          = false;
 }
 
 float Camera::GetFovY(void) const
@@ -186,4 +197,14 @@ float Camera::GetFovY(void) const
 float Camera::GetFovX(void) const
 {
 	return Degrees(2.0f * Arctangent(m_aspectRatio * Tangent(0.5f * m_fovY)));
+}
+
+float  Camera::GetFovYRadians(void) const
+{
+	return m_fovY;
+}
+
+float  Camera::GetFovXRadians(void) const
+{
+	return 2.0f * Arctangent(m_aspectRatio * Tangent(0.5f * m_fovY));
 }

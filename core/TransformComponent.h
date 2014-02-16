@@ -8,6 +8,7 @@ namespace mye
 
 	namespace core
 	{
+
 		class TransformComponent :
 			public Component
 		{
@@ -40,6 +41,7 @@ namespace mye
 			mye::math::Matrix4f m_matrix;
 
 		};
+
 	}
 }
 

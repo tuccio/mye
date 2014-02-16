@@ -63,8 +63,8 @@ const void* Mesh::GetData(void) const
 
 void Mesh::SetVertexAttribute(size_t triangleIndex,
 							  size_t vertexIndex,
-							  VertexDeclaration::AttributeSemantic semantic,
-							  VertexDeclaration::AttributeType type,
+							  VertexAttributeSemantic semantic,
+							  VertexAttributeType type,
 							  const void *data)
 {
 	assert(vertexIndex >= 0 && vertexIndex <= 2);
@@ -73,8 +73,8 @@ void Mesh::SetVertexAttribute(size_t triangleIndex,
 
 void Mesh::GetVertexAttribute(size_t triangleIndex,
 							  size_t vertexIndex,
-							  VertexDeclaration::AttributeSemantic semantic,
-							  VertexDeclaration::AttributeType type,
+							  VertexAttributeSemantic semantic,
+							  VertexAttributeType type,
 							  void *data) const
 {
 	assert(vertexIndex >= 0 && vertexIndex <= 2);
@@ -140,8 +140,8 @@ Mesh::VectorPair Mesh::GetMinMaxVertices(void) const
 
 		m_data.GetVertexAttribute(
 			i,
-			VertexDeclaration::VDA_POSITION,
-			VertexDeclaration::VDAT_FLOAT3,
+			VertexAttributeSemantic::POSITION,
+			VertexAttributeType::FLOAT3,
 			&x
 			);
 

@@ -8,64 +8,65 @@ namespace mye
 	namespace core
 	{
 
+		enum class VertexAttributeSemantic
+		{
+			POSITION,
+			NORMAL,
+			TEXCOORDS,
+			AMBIENT,
+			DIFFUSE,
+			SPECULAR,
+			COUNT
+		};
+
+		enum class VertexAttributeType
+		{
+			FLOAT,
+			FLOAT2,
+			FLOAT3,
+			FLOAT4,
+			INT,
+			INT2,
+			INT3,
+			INT4,
+			COUNT
+		};
+
+
 		class VertexDeclaration
 		{
 
 		public:
 
-			enum AttributeSemantic
-			{
-				VDA_POSITION,
-				VDA_NORMAL,
-				VDA_TEXCOORDS,
-				VDA_AMBIENT,
-				VDA_DIFFUSE,
-				VDA_SPECULAR,
-				VDA_COUNT
-			};
-
-			enum AttributeType
-			{
-				VDAT_FLOAT,
-				VDAT_FLOAT2,
-				VDAT_FLOAT3,
-				VDAT_FLOAT4,
-				VDAT_INT,
-				VDAT_INT2,
-				VDAT_INT3,
-				VDAT_INT4,
-				VDAT_COUNT
-			};
-
 			struct Attribute
 			{
-				AttributeSemantic semantic;
-				AttributeType type;
+				VertexAttributeSemantic semantic;
+				VertexAttributeType type;
 
-				Attribute(AttributeSemantic semantic,
-					AttributeType type)
+				Attribute(VertexAttributeSemantic semantic,
+					VertexAttributeType type)
 				{
 					this->semantic = semantic;
 					this->type = type;
 				}
 			};
 
-			static const size_t AttributeTypeSize[VDAT_COUNT];
+			static const size_t AttributeTypeSize[VertexAttributeType::COUNT];
 
 			VertexDeclaration(void);
 			~VertexDeclaration(void);
 
 			void AddAttribute(
-				AttributeSemantic semantic,
-				AttributeType type);
+				VertexAttributeSemantic semantic,
+				VertexAttributeType type);
 
 			void InsertAttribute(
-				AttributeSemantic semantic,
-				AttributeType type,
+				VertexAttributeSemantic semantic,
+				VertexAttributeType type,
 				int i);
 
-			int GetAttributeIndex(AttributeSemantic semantic) const;
-			size_t GetAttributeOffset(AttributeSemantic semantic) const;
+			int GetAttributeIndex(VertexAttributeSemantic semantic) const;
+			size_t GetAttributeOffset(VertexAttributeSemantic semantic) const;
 
 			void RemoveAttribute(int i);
 

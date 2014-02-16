@@ -43,6 +43,11 @@ namespace mye
 		template <typename T>
 		inline Matrix<T, 4, 1> operator* (const Matrix<T, 4, 3> &A, const Matrix<T, 4, 1> &x);
 
+		/* Equations */
+
+		template <typename T>
+		inline Matrix<T, 3, 1> Cramer(const Matrix<T, 3, 3> &A, const Matrix<T, 3, 1> &b);
+
 	}
 
 }

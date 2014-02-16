@@ -50,6 +50,8 @@ Component* GameObject::AddComponent(const Component &component)
 		Component *newComponent = static_cast<Component*>(component.Clone());
 		m_components[component.GetName()] = newComponent;
 
+		newComponent->m_owner = this;
+
 		switch (component.GetComponentType())
 		{
 		case COMPONENT_TRANSFORM:

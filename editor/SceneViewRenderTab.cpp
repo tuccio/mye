@@ -9,6 +9,8 @@
 #include <mye/core/Model.h>
 #include <mye/core/ResourceTypeManager.h>
 
+#include <cstdlib>
+
 #define OBJECT_SELECTED_NEEDED() if (!m_selected) { ShowErrorBox("No object selected"); return; }
 
 using namespace mye::dx11;
@@ -151,6 +153,8 @@ void SceneView::_CreateRenderTab(void)
 		if (rc)
 		{
 
+			AABBf aabb;
+
 			ResourceHandle model = rc->GetModel();
 
 			if (model)
@@ -158,14 +162,13 @@ void SceneView::_CreateRenderTab(void)
 				Model *modelPtr = model.Cast<Model>();
 				modelPtr->Load();
 				auto minMax = modelPtr->GetMinMaxVertices();
-				rc->SetBounds(AABB::FromMinMax(minMax.first, minMax.second));
+				aabb = AABBf::FromMinMax(minMax.first, minMax.second);
 			}
 			else
 			{
-				rc->SetBounds(AABB::FromMinMax(Vector3f(0), Vector3f(0)));
+				aabb = AABBf::FromMinMax(Vector3f(0), Vector3f(0));
 			}
 
-			AABB aabb = rc->GetBounds();
 			Vector3f aabbCenter = aabb.GetCenter();
 			Vector3f aabbHalfExtents = aabb.GetHalfExtents();
 
@@ -197,13 +200,30 @@ void SceneView::_CreateRenderTab(void)
 		{
 
 			RenderComponent *rc = m_selected->GetRenderComponent();
+			AABBf aabb;
 
 			if (!rc)
 			{
 				RenderComponent nRC;
 				m_selected->AddComponent(nRC);
 				rc = m_selected->GetRenderComponent();
+				g_scene.AddGameObject(m_selected->GetHandle());
 			}
+
+			aabb = m_selected->GetAABB();
+
+			Vector3f aabbCenter(
+				atoi(static_cast<Edit*>(m_controls["RNDaabbCenterXEdit"])->GetText().c_str()),
+				atoi(static_cast<Edit*>(m_controls["RNDaabbCenterYEdit"])->GetText().c_str()),
+				atoi(static_cast<Edit*>(m_controls["RNDaabbCenterZEdit"])->GetText().c_str()));
+
+			Vector3f aabbHalfExtents(
+				atoi(static_cast<Edit*>(m_controls["RNDaabbHalfExtentsXEdit"])->GetText().c_str()),
+				atoi(static_cast<Edit*>(m_controls["RNDaabbHalfExtentsYEdit"])->GetText().c_str()),
+				atoi(static_cast<Edit*>(m_controls["RNDaabbHalfExtentsZEdit"])->GetText().c_str()));
+
+			rc->SetBounds(AABBf::FromCenterHalfExtents(aabbCenter, aabbHalfExtents));
+			g_scene.MoveGameObject(m_selected->GetHandle(), aabb);
 
 			ResourceHandle model = rc->GetModel();
 
@@ -230,6 +250,7 @@ void SceneView::_CreateRenderTab(void)
 
 			if (rc)
 			{
+				g_scene.RemoveGameObject(m_selected->GetHandle());
 				m_selected->RemoveComponent("render");
 			}
 
@@ -274,8 +295,8 @@ void SceneView::_FillRenderTab(mye::core::GameObject *selectedObject)
 
 			static_cast<Checkbox*>(m_controls["RNDrenderCheckbox"])->SetCheck(true);
 
-			AABB aabb = renderComponent->GetBounds();
-			Vector3f aabbCenter = aabb.GetCenter();
+			AABBf aabb               = renderComponent->GetBounds();
+			Vector3f aabbCenter      = aabb.GetCenter();
 			Vector3f aabbHalfExtents = aabb.GetHalfExtents();
 
 			if (renderComponent->GetModel())

@@ -13,6 +13,8 @@
 
 #include "PoolAllocator.h"
 
+#include <mye/math/Geometry.h>
+
 namespace mye
 {
 
@@ -24,8 +26,6 @@ namespace mye
 		{
 
 		public:
-
-			typedef std::vector<GameObject*> ChildrenList;
 
 			GameObject(void);
 			GameObject(const std::string &name);
@@ -39,6 +39,8 @@ namespace mye
 			inline TransformComponent* GetTransformComponent(void);
 			inline ScriptComponent* GetScriptComponent(void);
 			inline RenderComponent* GetRenderComponent(void);
+
+			inline mye::math::AABBf GetAABB(void);
 
 			inline GameObjectsManager* GetOwner(void);
 			inline GameObjectHandle GetHandle(void);
@@ -57,6 +59,7 @@ namespace mye
 
 			void OnCreation(GameObjectsManager *owner,
 				const GameObjectHandle &handle);
+
 			void OnDestruction(void);
 
 			ComponentsList m_components;

@@ -10,6 +10,8 @@ namespace mye
 	namespace dx11
 	{
 
+		class DX11VertexBuffer;
+
 		class DX11Device
 		{
 
@@ -20,6 +22,8 @@ namespace mye
 
 			inline ID3D11Device* GetDevice(void) const;
 			inline ID3D11DeviceContext* GetImmediateContext(void) const;
+
+			//void Render(DX11VertexBuffer &vb);
 
 		private:
 

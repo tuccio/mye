@@ -13,6 +13,7 @@ namespace mye
 		public:
 
 			Matrix(void);
+			Matrix(const Matrix<T, 4, 4> &m);
 			Matrix(T d);
 
 			inline void Fill(T x);

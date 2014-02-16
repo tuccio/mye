@@ -2,6 +2,7 @@
 
 #include "SceneModule.h"
 #include "GameObject.h"
+#include "LooseOctree.h"
 
 #include <list>
 
@@ -17,7 +18,12 @@ namespace mye
 
 		public:
 
-			OctreeSceneModule(void);
+			OctreeSceneModule(
+				const mye::math::Vector3f &center,
+				float size,
+				unsigned int maxdepth,
+				unsigned int looseness);
+
 			~OctreeSceneModule(void);
 
 			SceneModule::ObjectsList GetVisibleObjects(void);
@@ -27,7 +33,12 @@ namespace mye
 
 		private:
 
-			std::list<GameObjectHandle> m_objects;
+			void ApplyUpdates(void);
+
+			/*std::list<GameObjectHandle> m_objects;*/
+
+			LooseOctree<GameObjectHandle> m_octree;
+
 
 		};
 

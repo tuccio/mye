@@ -29,8 +29,8 @@ namespace mye
 			mye::core::ResourceHandle GetModel(void);
 			void SetModel(ResourceHandle model);
 
-			const mye::math::AABB& GetBounds(void) const;
-			void SetBounds(const mye::math::AABB &bounds);
+			const mye::math::AABBf& GetBounds(void) const;
+			void SetBounds(const mye::math::AABBf &bounds);
 
 			RenderComponent* Clone(void) const;
 			
@@ -41,7 +41,7 @@ namespace mye
 			ResourceHandle m_vertexData;
 			ResourceHandle m_model;
 			
-			mye::math::AABB m_bounds;
+			mye::math::AABBf m_bounds;
 			
 		};
 

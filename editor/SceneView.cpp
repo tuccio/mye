@@ -268,8 +268,12 @@ void SceneView::Update(void)
 			}
 
 		}
-		else if (keyboard->IsPressed(MYE_VK_LALT) && m_selected)
+		else if (keyboard->IsPressed(MYE_VK_LALT) &&
+			m_selected &&
+			m_selected->GetRenderComponent())
 		{
+
+			mye::math::AABBf aabb = m_selected->GetAABB();
 
 			TransformComponent *tc = m_selected->GetTransformComponent();
 
@@ -307,6 +311,14 @@ void SceneView::Update(void)
 				tc->SetPosition(p);
 
 			}
+			else if (float delta = mouse->GetWheelDelta())
+			{
+
+				tc->SetScale(tc->GetScale() + Vector3f(delta * 0.25f));
+
+			}
+
+			g_scene.MoveGameObject(m_selected->GetHandle(), aabb);
 
 		}
 
@@ -427,7 +439,6 @@ void SceneView::_CreateGameObjectsTab(void)
 
 			ListView_InsertItem(gameObjectsList->GetHandle(), &item);
 			SelectGameObject((GameObject*) (item.lParam));
-			g_scene.AddGameObject(hObj);
 			
 // 			ListView_SetItemState(gameObjectsList->GetHandle(), i, LVIS_SELECTED, LVIS_SELECTED);
 // 			ListView_SetSelectionMark(gameObjectsList->GetHandle(), i);
@@ -461,11 +472,20 @@ void SceneView::_CreateGameObjectsTab(void)
 
 				if (itemSelected && item.lParam)
 				{
-					GameObjectHandle hObj = ((GameObject*) (item.lParam))->GetHandle();
-					g_gameObjectsModule.Destroy(hObj);
-					g_scene.RemoveGameObject(hObj);
+
+					GameObject *object = reinterpret_cast<GameObject*>(item.lParam);
+					GameObjectHandle hObj = object->GetHandle();
+
+					if (object->GetRenderComponent())
+					{
+						g_scene.RemoveGameObject(hObj);
+					}
+
 					ListView_DeleteItem(gameObjectsList->GetHandle(), selected);
 					SelectGameObject(nullptr);
+
+					g_gameObjectsModule.Destroy(hObj);
+
 				}
 
 			}

@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
 	Camera camera;
 
 	camera.LookAt(
-		Vector3f(0, 0, - (size * 1.5f)),
+		Vector3f(0, 0, - (3 * size)),
 		Vector3f(0, 1, 0),
 		Vector3f(0));
 
@@ -417,38 +417,38 @@ void CreateAABB(std::list<DX11VertexBuffer> &list,
 
 	CreateQuad(list,
 		window,
-		corners[AABB::FRONT_LEFT_BOTTOM],
-		corners[AABB::FRONT_RIGHT_BOTTOM],
-		corners[AABB::FRONT_RIGHT_TOP],
-		corners[AABB::FRONT_LEFT_TOP]);
+		corners[AABB::LEFT_BOTTOM_NEAR],
+		corners[AABB::RIGHT_BOTTOM_NEAR],
+		corners[AABB::RIGHT_TOP_NEAR],
+		corners[AABB::LEFT_TOP_NEAR]);
 
 	CreateQuad(list,
 		window,
-		corners[AABB::BACK_LEFT_BOTTOM],
-		corners[AABB::BACK_RIGHT_BOTTOM],
-		corners[AABB::BACK_RIGHT_TOP],
-		corners[AABB::BACK_LEFT_TOP]);
+		corners[AABB::LEFT_BOTTOM_FAR],
+		corners[AABB::RIGHT_BOTTOM_FAR],
+		corners[AABB::RIGHT_TOP_FAR],
+		corners[AABB::LEFT_TOP_FAR]);
 
 	CreateQuad(list,
 		window,
-		corners[AABB::FRONT_LEFT_TOP],
-		corners[AABB::FRONT_RIGHT_TOP],
-		corners[AABB::BACK_RIGHT_TOP],
-		corners[AABB::BACK_LEFT_TOP]);
+		corners[AABB::LEFT_TOP_NEAR],
+		corners[AABB::RIGHT_TOP_NEAR],
+		corners[AABB::RIGHT_TOP_FAR],
+		corners[AABB::LEFT_TOP_FAR]);
 
 	CreateQuad(list,
 		window,
-		corners[AABB::FRONT_RIGHT_BOTTOM],
-		corners[AABB::FRONT_RIGHT_TOP],
-		corners[AABB::BACK_RIGHT_TOP],
-		corners[AABB::BACK_RIGHT_BOTTOM]);
+		corners[AABB::RIGHT_BOTTOM_NEAR],
+		corners[AABB::RIGHT_TOP_NEAR],
+		corners[AABB::RIGHT_TOP_FAR],
+		corners[AABB::RIGHT_BOTTOM_FAR]);
 
 	CreateQuad(list,
 		window,
-		corners[AABB::FRONT_LEFT_BOTTOM],
-		corners[AABB::FRONT_LEFT_TOP],
-		corners[AABB::BACK_LEFT_TOP],
-		corners[AABB::BACK_LEFT_BOTTOM]);
+		corners[AABB::LEFT_BOTTOM_NEAR],
+		corners[AABB::LEFT_TOP_NEAR],
+		corners[AABB::LEFT_TOP_FAR],
+		corners[AABB::LEFT_BOTTOM_FAR]);
 
 }
 

@@ -15,6 +15,10 @@ namespace mye
 			const Sphere<T> &sphere,
 			Matrix<T, 3, 1> &intersectionPoint);
 
+		template <typename T>
+		inline VolumeSide Intersect(const AABB<T> &aabb,
+			const Frustum<T> &frustum);
+
 	}
 
 }

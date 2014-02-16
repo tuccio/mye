@@ -69,9 +69,9 @@ namespace mye
 		Matrix<T, 3, 1> operator* (const Matrix<T, 4, 4> &A, const Matrix<T, 3, 1> &x)
 		{
 			return Matrix<T, 3, 1>(
-				x.x() * A(0, 0) + x.y() * A(0, 1) + x.z() * A(0, 2),
-				x.x() * A(1, 0) + x.y() * A(1, 1) + x.z() * A(1, 2),
-				x.x() * A(2, 0) + x.y() * A(2, 1) + x.z() * A(2, 2)
+				x.x() * A(0, 0) + x.y() * A(0, 1) + x.z() * A(0, 2) + A(0, 3),
+				x.x() * A(1, 0) + x.y() * A(1, 1) + x.z() * A(1, 2) + A(1, 3),
+				x.x() * A(2, 0) + x.y() * A(2, 1) + x.z() * A(2, 2) + A(2, 3)
 				);
 		}
 
@@ -136,6 +136,29 @@ namespace mye
 			tmatrix(1, 3) = translation.y();
 			tmatrix(2, 3) = translation.z();
 			return tmatrix;
+		}
+
+		/* Equations */
+
+		template <typename T>
+		Matrix<T, 3, 1> Cramer(const Matrix<T, 3, 3> &A, const Matrix<T, 3, 1> &b)
+		{
+
+			Matrix<T, 3, 1> c[3] =
+			{
+				A.GetColumn(0),
+				A.GetColumn(1),
+				A.GetColumn(2)
+			};
+
+			T invDet = T(1) / A.Determinant();
+
+			return Matrix<T, 3, 1>(
+				invDet * b.Dot(c[1].Cross(c[2])),
+				invDet * c[0].Dot(b.Cross(c[2])),
+				invDet * c[0].Dot(c[1].Cross(b))
+			);
+
 		}
 
 	}

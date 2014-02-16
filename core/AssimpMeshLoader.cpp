@@ -47,19 +47,19 @@ bool AssimpMeshLoader::Load(Resource *resource)
 
 	VertexDeclaration vDecl;
 
-	vDecl.AddAttribute(VertexDeclaration::VDA_POSITION,
-		VertexDeclaration::VDAT_FLOAT3);
+	vDecl.AddAttribute(VertexAttributeSemantic::POSITION,
+		VertexAttributeType::FLOAT3);
 
 	if (normals)
 	{
-		vDecl.AddAttribute(VertexDeclaration::VDA_NORMAL,
-			VertexDeclaration::VDAT_FLOAT3);
+		vDecl.AddAttribute(VertexAttributeSemantic::NORMAL,
+			VertexAttributeType::FLOAT3);
 	}
 
 	if (texcoords)
 	{
-		vDecl.AddAttribute(VertexDeclaration::VDA_TEXCOORDS,
-			VertexDeclaration::VDAT_FLOAT2);
+		vDecl.AddAttribute(VertexAttributeSemantic::TEXCOORDS,
+			VertexAttributeType::FLOAT2);
 	}
 
 	if (m_mesh->HasFaces())
@@ -80,8 +80,8 @@ bool AssimpMeshLoader::Load(Resource *resource)
 				mesh->SetVertexAttribute(
 					triangleIndex,
 					j,
-					VertexDeclaration::VDA_POSITION,
-					VertexDeclaration::VDAT_FLOAT3,
+					VertexAttributeSemantic::POSITION,
+					VertexAttributeType::FLOAT3,
 					(unsigned char*) &m_mesh->mVertices[indices[j]]);
 
 				if (normals)
@@ -90,8 +90,8 @@ bool AssimpMeshLoader::Load(Resource *resource)
 					mesh->SetVertexAttribute(
 						triangleIndex,
 						j,
-						VertexDeclaration::VDA_NORMAL,
-						VertexDeclaration::VDAT_FLOAT3,
+						VertexAttributeSemantic::NORMAL,
+						VertexAttributeType::FLOAT3,
 						(unsigned char*) &m_mesh->mNormals[indices[j]]);
 
 				}
@@ -102,8 +102,8 @@ bool AssimpMeshLoader::Load(Resource *resource)
 					mesh->SetVertexAttribute(
 						triangleIndex,
 						j,
-						VertexDeclaration::VDA_TEXCOORDS,
-						VertexDeclaration::VDAT_FLOAT2,
+						VertexAttributeSemantic::TEXCOORDS,
+						VertexAttributeType::FLOAT2,
 						(unsigned char*) &m_mesh->mNormals[indices[j]]);
 
 				}

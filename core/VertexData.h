@@ -34,13 +34,13 @@ namespace mye
 			size_t GetSize(void) const;
 
 			void SetVertexAttribute(size_t vertexIndex,
-				VertexDeclaration::AttributeSemantic semantic,
-				VertexDeclaration::AttributeType type,
+				VertexAttributeSemantic semantic,
+				VertexAttributeType type,
 				const void *data);
 
 			void GetVertexAttribute(size_t vertexIndex,
-				VertexDeclaration::AttributeSemantic semantic,
-				VertexDeclaration::AttributeType type,
+				VertexAttributeSemantic semantic,
+				VertexAttributeType type,
 				void *data) const;
 
 		private:

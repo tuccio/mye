@@ -25,17 +25,30 @@ namespace mye
 			virtual ObjectsList GetVisibleObjects(void);
 
 			virtual void AddGameObject(const GameObjectHandle &hObj);
-			virtual void RemoveGameObject(const GameObjectHandle &hObj);
 
-			inline mye::core::Camera& Camera(void);
+			virtual void RemoveGameObject(const GameObjectHandle &hObj);
+			
+			inline void MoveGameObject(
+				const GameObjectHandle &hObj,
+				const mye::math::AABBf &oldAABB);
+
+			inline Camera& Camera(void);
 
 			inline mye::core::Camera* GetCamera(void);
 			inline const mye::core::Camera* GetCamera(void) const;
-			inline const void SetCamera(mye::core::Camera *camera);
+			inline void SetCamera(mye::core::Camera *camera);
 
 		protected:
 
+			struct GameObjectUpdate
+			{
+				GameObjectHandle hObj;
+				mye::math::AABBf oldAABB;
+				mye::math::AABBf newAABB;
+			};
+
 			mye::core::Camera *m_camera;
+			std::list<GameObjectUpdate> m_movedObjects;
 
 		};
 

@@ -4,7 +4,7 @@
 
 using namespace mye::core;
 
-const size_t VertexDeclaration::AttributeTypeSize[VDAT_COUNT] =
+const size_t VertexDeclaration::AttributeTypeSize[VertexAttributeType::COUNT] =
 {
 	sizeof(float),
 	2 * sizeof(float),
@@ -27,25 +27,25 @@ VertexDeclaration::~VertexDeclaration(void)
 }
 
 void VertexDeclaration::AddAttribute(
-	AttributeSemantic semantic,
-	AttributeType type)
+	VertexAttributeSemantic semantic,
+	VertexAttributeType type)
 {
 	m_attributes.push_back(Attribute(semantic, type));
-	m_size = AttributeTypeSize[type];
+	m_size = AttributeTypeSize[static_cast<int>(type)];
 }
 
 void VertexDeclaration::InsertAttribute(
-	AttributeSemantic semantic,
-	AttributeType type,
+	VertexAttributeSemantic semantic,
+	VertexAttributeType type,
 	int i)
 {
 	m_attributes.insert(m_attributes.begin() + i,
 		1,
 		Attribute(semantic, type));
-	m_size += AttributeTypeSize[type];
+	m_size += AttributeTypeSize[static_cast<int>(type)];
 }
 
-int VertexDeclaration::GetAttributeIndex(AttributeSemantic semantic) const
+int VertexDeclaration::GetAttributeIndex(VertexAttributeSemantic semantic) const
 {
 	
 	auto it = std::find_if(m_attributes.begin(),
@@ -56,7 +56,7 @@ int VertexDeclaration::GetAttributeIndex(AttributeSemantic semantic) const
 
 }
 
-size_t VertexDeclaration::GetAttributeOffset(AttributeSemantic semantic) const
+size_t VertexDeclaration::GetAttributeOffset(VertexAttributeSemantic semantic) const
 {
 
 	size_t offset = 0;
@@ -64,7 +64,7 @@ size_t VertexDeclaration::GetAttributeOffset(AttributeSemantic semantic) const
 
 	for (int i = 0; i < index; i++)
 	{
-		offset += AttributeTypeSize[m_attributes[i].type];
+		offset += AttributeTypeSize[static_cast<int>(m_attributes[i].type)];
 	}
 
 	return offset;
@@ -74,7 +74,7 @@ size_t VertexDeclaration::GetAttributeOffset(AttributeSemantic semantic) const
 void VertexDeclaration::RemoveAttribute(int i)
 {
 	auto it = m_attributes.begin() + i;
-	m_size -= AttributeTypeSize[it->type];
+	m_size -= AttributeTypeSize[static_cast<int>(it->type)];
 	m_attributes.erase(it);
 }
 

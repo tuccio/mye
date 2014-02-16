@@ -162,6 +162,12 @@ namespace mye
 		}
 
 		template <typename T>
+		Matrix<T, 3, 1> Matrix<T, 3, 1>::Reflect(const Matrix<T, 3, 1> &normal) const
+		{
+			return *this - (2.0f * this->Dot(normal)) * normal;
+		}
+
+		template <typename T>
 		Matrix<T, 3, 1> Matrix<T, 3, 1>::CwiseAbs(void) const
 		{
 			return Matrix<T, 3, 1>(

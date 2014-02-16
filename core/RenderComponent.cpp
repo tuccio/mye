@@ -6,7 +6,7 @@ using namespace mye::math;
 RenderComponent::RenderComponent(void) :
 	Component(COMPONENT_RENDER, "render"),
 	m_visible(true),
-	m_bounds(AABB::FromMinMax(Vector3f(0), Vector3f(0)))
+	m_bounds(AABBf::FromMinMax(Vector3f(0), Vector3f(0)))
 {
 }
 
@@ -40,12 +40,12 @@ void RenderComponent::SetModel(ResourceHandle model)
 	m_model = model;
 }
 
-const mye::math::AABB& RenderComponent::GetBounds(void) const
+const mye::math::AABBf& RenderComponent::GetBounds(void) const
 {
 	return m_bounds;
 }
 
-void RenderComponent::SetBounds(const mye::math::AABB &bounds)
+void RenderComponent::SetBounds(const mye::math::AABBf &bounds)
 {
 	m_bounds = bounds;
 }

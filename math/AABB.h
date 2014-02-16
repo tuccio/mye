@@ -8,58 +8,66 @@ namespace mye
 	namespace math
 	{
 
-		class AABB
+		enum class AABBCorners
+		{
+			LEFT_BOTTOM_NEAR = 0,
+			RIGHT_BOTTOM_NEAR = 1,
+			RIGHT_TOP_NEAR = 2,
+			LEFT_TOP_NEAR = 3,
+			LEFT_TOP_FAR = 4,
+			RIGHT_TOP_FAR = 5,
+			RIGHT_BOTTOM_FAR = 6,
+			LEFT_BOTTOM_FAR = 7
+		};
+
+		template <typename T>
+		class AABB :
+			public Volume
 		{
 
 		public:
 
-
-			enum Corners
-			{
-				FRONT_LEFT_BOTTOM = 0,
-				FRONT_RIGHT_BOTTOM = 1,
-				FRONT_RIGHT_TOP = 2,
-				FRONT_LEFT_TOP = 3,
-				BACK_LEFT_TOP = 4,
-				BACK_RIGHT_TOP = 5,
-				BACK_RIGHT_BOTTOM = 6,
-				BACK_LEFT_BOTTOM = 7
-			};
-
-			AABB::AABB(void) :
-				m_min(-0.5f, -0.5f, -0.5f),
-				m_max(0.5f, 0.5f, 0.5f)
+			AABB(void) :
+				Volume(VolumeType::AABB),
+				m_min(T(-0.5)),
+				m_max(T(0.5))
 			{
 			}
 
-			AABB::~AABB(void)
+			~AABB(void)
 			{
 			}
 
 			static inline AABB FromMinMax(
-				const mye::math::Vector3f &min,
-				const mye::math::Vector3f &max);
+				const mye::math::Matrix<T, 3, 1> &min,
+				const mye::math::Matrix<T, 3, 1> &max);
 
 			static inline AABB FromCenterHalfExtents(
-				const mye::math::Vector3f &center,
-				const mye::math::Vector3f &halfExtents);
+				const mye::math::Matrix<T, 3, 1> &center,
+				const mye::math::Matrix<T, 3, 1> &halfExtents);
 
-			inline Matrix<float, 3, 1> GetCenter(void) const;
-			inline Matrix<float, 3, 1> GetHalfExtents(void) const;
+			inline Matrix<T, 3, 1> GetCenter(void) const;
+			inline Matrix<T, 3, 1> GetHalfExtents(void) const;
 
-			inline Matrix<float, 3, 1> GetMinimum(void) const;
-			inline Matrix<float, 3, 1> GetMaximum(void) const;
+			inline Matrix<T, 3, 1> GetMinimum(void) const;
+			inline Matrix<T, 3, 1> GetMaximum(void) const;
 
-			inline std::vector<Matrix<float, 3, 1>> GetCorners(void) const;
+			inline std::vector<Matrix<T, 3, 1>> GetCorners(void) const;
 
-			inline AABB TransformAffine(const Matrix<float, 4, 4> &t);
+			inline Vector3i GetAxesOrderBySize(void) const;
 
-			inline bool Contains(const Matrix<float, 3, 1> &x) const;
+			inline AABB<T> TransformAffine(const Matrix<T, 4, 4> &t) const;
+
+			inline bool Contains(const Matrix<T, 3, 1> &x) const;
+			inline bool Contains(const AABB<T> &aabb) const;
+
+			inline bool ContainsStrict(const Matrix<T, 3, 1> &x) const;
+			inline bool ContainsStrict(const AABB<T> &aabb) const;
 
 		private:
 
-			Matrix<float, 3, 1> m_min;
-			Matrix<float, 3, 1> m_max;
+			Matrix<T, 3, 1> m_min;
+			Matrix<T, 3, 1> m_max;
 
 		};
 
