@@ -51,7 +51,7 @@ namespace mye
 			T b);
 
 		template <int N, typename T>
-		inline std::string __vec_tostring(const mye::math::Matrix<T, N, 1> &v);
+		inline mye::core::String __vec_tostring(const mye::math::Matrix<T, N, 1> &v);
 
 		template <int N, typename T, int I>
 		inline T __vec_get(const mye::math::Matrix<T, N, 1> &a);
@@ -62,7 +62,7 @@ namespace mye
 		/* Quaternions */
 
 		template <typename T>
-		inline std::string __quat_tostring(const mye::math::Quaternion<T> &q);
+		inline mye::core::String __quat_tostring(const mye::math::Quaternion<T> &q);
 
 		template <typename T, int I>
 		inline T __quat_get(const mye::math::Quaternion<T> &q);

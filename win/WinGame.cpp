@@ -72,7 +72,7 @@ void Quit(void)
 	PostQuitMessage(WM_QUIT);
 }
 
-void WinGame::RuntimeError(const std::string &error)
+void WinGame::RuntimeError(const mye::core::String &error)
 {
 	ShowErrorBox(error);
 }

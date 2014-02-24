@@ -194,6 +194,13 @@ float Camera::GetFovY(void) const
 	return Degrees(m_fovY);
 }
 
+void Camera::SetFovY(float fovy)
+{
+	m_fovY                     = Radians(fovy);
+	m_projectionMatrixUptodate = false;
+	m_frustumUptodate          = false;
+}
+
 float Camera::GetFovX(void) const
 {
 	return Degrees(2.0f * Arctangent(m_aspectRatio * Tangent(0.5f * m_fovY)));

@@ -33,9 +33,9 @@ void MainWindowListener::OnCreate(mye::core::IWindow * window)
 	file.AddSubMenu(MENUSTR_SAVESOLUTIONAS);
 	file.AddSubMenu(MENUSTR_EXIT);
 
-	WindowMenu &views = g_mainWindowMenu.AddSubMenu(MENUSTR_VIEWS);
-	views.AddSubMenu(MENUSTR_SCENEVIEW);
-	views.AddSubMenu(MENUSTR_MODELVIEW);
+// 	WindowMenu &views = g_mainWindowMenu.AddSubMenu(MENUSTR_VIEWS);
+// 	views.AddSubMenu(MENUSTR_SCENEVIEW);
+// 	views.AddSubMenu(MENUSTR_MODELVIEW);
 
 	g_mainWindow.AttachMenu(&g_mainWindowMenu);
 
@@ -56,6 +56,9 @@ void MainWindowListener::OnMenuSelected(IDGenerator::ID id)
 
 	enum {
 		MENUID_FILE_NEWSOLUTION,
+		MEUNID_FILE_OPENSOLUTION,
+		MENUID_FILE_SAVESOLUTION,
+		MENUID_FILE_SAVESOLUTIONAS,
 		MENUID_FILE_EXIT,
 		MENUID_VIEWS_SCENEVIEW,
 		MENUID_VIEWS_MODELVIEW,
@@ -64,9 +67,12 @@ void MainWindowListener::OnMenuSelected(IDGenerator::ID id)
 
 	static IDGenerator::ID ids[MENUID_N] = {
 		g_mainWindowMenu[MENUSTR_FILE][MENUSTR_NEWSOLUTION].GetID(),
+		g_mainWindowMenu[MENUSTR_FILE][MENUSTR_OPENSOLUTION].GetID(),
+		g_mainWindowMenu[MENUSTR_FILE][MENUSTR_SAVESOLUTION].GetID(),
+		g_mainWindowMenu[MENUSTR_FILE][MENUSTR_SAVESOLUTIONAS].GetID(),
 		g_mainWindowMenu[MENUSTR_FILE][MENUSTR_EXIT].GetID(),
-		g_mainWindowMenu[MENUSTR_VIEWS][MENUSTR_SCENEVIEW].GetID(),
-		g_mainWindowMenu[MENUSTR_VIEWS][MENUSTR_MODELVIEW].GetID()
+// 		g_mainWindowMenu[MENUSTR_VIEWS][MENUSTR_SCENEVIEW].GetID(),
+// 		g_mainWindowMenu[MENUSTR_VIEWS][MENUSTR_MODELVIEW].GetID()
 
 	};
 
@@ -77,6 +83,77 @@ void MainWindowListener::OnMenuSelected(IDGenerator::ID id)
 
 	case MENUID_FILE_NEWSOLUTION:
 		// New solution stuff
+		break;
+
+	case MEUNID_FILE_OPENSOLUTION:
+
+		{
+
+			OPENFILENAME ofn;
+			ZeroMemory(&ofn, sizeof(OPENFILENAME));
+
+			char buffer[256] = { 0 };
+
+			ofn.lStructSize     = sizeof(OPENFILENAME);
+			ofn.hwndOwner       = g_mainWindow.GetHandle();
+			ofn.lpstrFile       = buffer;
+			ofn.nMaxFile        = sizeof(buffer);
+			ofn.lpstrFilter     = "mye Scene\0*.mys\0";
+			ofn.nFilterIndex    = 1;
+			ofn.lpstrFileTitle  = nullptr;
+			ofn.nMaxFileTitle   = 0;
+			ofn.lpstrInitialDir = nullptr;
+			ofn.Flags           = 0;
+
+			if (GetOpenFileName(&ofn))
+			{
+				g_currentSolution = ofn.lpstrFile;
+
+				std::list<GameObject*> allocatedObjects;
+				g_game.ImportScene(g_currentSolution, &allocatedObjects);
+
+				for (GameObject *gameObject : allocatedObjects)
+				{
+					g_sceneView._AddGameObject(gameObject->GetHandle());
+				}
+
+			}
+
+		}
+
+		break;
+
+	case MENUID_FILE_SAVESOLUTION:
+		break;
+
+	case MENUID_FILE_SAVESOLUTIONAS:
+
+		{
+
+			OPENFILENAME ofn;
+			ZeroMemory(&ofn, sizeof(OPENFILENAME));
+
+			char buffer[256] = { 0 };
+
+			ofn.lStructSize     = sizeof(OPENFILENAME);
+			ofn.hwndOwner       = g_mainWindow.GetHandle();
+			ofn.lpstrFile       = buffer;
+			ofn.nMaxFile        = sizeof(buffer);
+			ofn.lpstrFilter     = "mye Scene\0*.mys\0";
+			ofn.nFilterIndex    = 1;
+			ofn.lpstrFileTitle  = nullptr;
+			ofn.nMaxFileTitle   = 0;
+			ofn.lpstrInitialDir = nullptr;
+			ofn.Flags           = 0;
+
+			if (GetOpenFileName(&ofn))
+			{
+				g_currentSolution = ofn.lpstrFile;
+				g_game.ExportScene(g_currentSolution);
+			}
+
+		}
+
 		break;
 
 	case MENUID_FILE_EXIT:

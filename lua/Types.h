@@ -32,6 +32,8 @@
 #define MYE_LUA_COLORRGB "ColorRGB"
 #define MYE_LUA_COLORRGBA "ColorRGBA"
 
+#define MYE_LUA_STRING "__String"
+
 #define MYE_LUA_VEC2 "vec2"
 #define MYE_LUA_VEC2I "vec2i"
 

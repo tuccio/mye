@@ -15,7 +15,7 @@
 using namespace mye::core;
 
 Mesh::Mesh(ResourceManager *resourceManager,
-		   const std::string &name,
+		   const String &name,
 		   ManualResourceLoader *loader) :
 Resource(resourceManager, name, loader),
 	m_triangles(0)
@@ -87,7 +87,7 @@ bool Mesh::LoadImpl(void)
 	Assimp::Importer importer;
 	bool loaded = false;
 
-	const aiScene *scene = importer.ReadFile(m_name,
+	const aiScene *scene = importer.ReadFile(m_name.CString(),
 		aiProcessPreset_TargetRealtime_Quality);
 	
 	if (scene)

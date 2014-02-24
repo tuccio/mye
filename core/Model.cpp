@@ -11,7 +11,7 @@
 using namespace mye::core;
 
 Model::Model(ResourceManager *owner,
-			 const std::string &name,
+			 const String &name,
 			 ManualResourceLoader *manual) :
 Resource(owner, name, manual)
 {
@@ -34,7 +34,7 @@ Mesh* Model::AddMesh(void)
 
 }
 
-Mesh* Model::AddMesh(const std::string &resourceName)
+Mesh* Model::AddMesh(const String &resourceName)
 {
 
 	ResourceHandle mesh = ResourceTypeManager::GetSingleton().
@@ -87,7 +87,7 @@ bool Model::LoadImpl(void)
 	Assimp::Importer importer;
 	bool loaded = false;
 
-	const aiScene *scene = importer.ReadFile(m_name,
+	const aiScene *scene = importer.ReadFile(m_name.CString(),
 		aiProcessPreset_TargetRealtime_Quality);
 
 	if (scene)

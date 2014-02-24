@@ -6,6 +6,7 @@
 
 #include <CommCtrl.h>
 
+using namespace mye::core;
 using namespace mye::win;
 using namespace mye::math;
 
@@ -25,7 +26,7 @@ TabsWCR::TabsWCR(void)
 	{
 
 		auto logger = mye::core::Logger::GetSingletonPointer();
-		std::string error = GetLastErrorAsString();
+		String error = GetLastErrorAsString();
 
 		if (logger)
 		{
@@ -162,6 +163,11 @@ void Tabs::AddTab(int index, const std::string &label)
 
 	SendMessage(m_hTabs, TCM_INSERTITEM, index, (LPARAM) &item);
 
+}
+
+void Tabs::Update(void)
+{
+	UpdateWindow(m_hTabs);
 }
 
 void Tabs::Listener::OnTabHide(int index)

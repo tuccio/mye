@@ -7,13 +7,13 @@ namespace mye
 	{
 
 		/*template <typename R>
-		R Script<mye::lua::LuaScriptCaller>::Call(const std::string &f) const
+		R Script<mye::lua::LuaScriptCaller>::Call(const mye::core::String &f) const
 		{
 			return mye::lua::LuaScriptCaller::Call<R>(m_module, *this, f);
 		}*/
 
 		template <typename R>
-		R LuaScript::Call(const std::string &f) const
+		R LuaScript::Call(const mye::core::String &f) const
 		{
 
 			using namespace luabind;
@@ -30,7 +30,7 @@ namespace mye
 		}
 
 		template <typename R, typename T1>
-		R LuaScript::Call(const std::string &f, T1 arg1) const
+		R LuaScript::Call(const mye::core::String &f, T1 arg1) const
 		{
 
 			using namespace luabind;

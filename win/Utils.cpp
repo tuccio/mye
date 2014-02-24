@@ -3,17 +3,19 @@
 #include <Windows.h>
 #include <vector>
 
+using namespace mye::core;
+
 namespace mye
 {
 
 	namespace win
 	{
 
-		std::string GetLastErrorAsString(void)
+		String GetLastErrorAsString(void)
 		{
 
 			LPTSTR error = nullptr;
-			std::string rError;
+			String rError;
 
 			FormatMessage(
 				FORMAT_MESSAGE_ALLOCATE_BUFFER |
@@ -31,49 +33,47 @@ namespace mye
 				LocalFree(error);
 			}
 
-			size_t pos = rError.find_last_not_of("\r\n");
+			String::Position pos = rError.FindLast("\r\n");
 
-			if (pos != std::string::npos)
+			if (pos != String::Null)
 			{
-				rError.resize(pos);
+				rError.Resize(pos);
 			}
 
 			return rError;
 
 		}
 
-		std::string FormatSystemTime(const SYSTEMTIME *lpTime,
-			const std::string &format)
+		mye::core::String FormatSystemTime(const SYSTEMTIME *lpTime,
+			const mye::core::String &format)
 		{
 
 			int len = GetTimeFormat(LOCALE_INVARIANT,
 				TIME_FORCE24HOURFORMAT,
 				lpTime,
-				format.c_str(),
+				format.CString(),
 				nullptr,
 				0);
 
-			char *str = new char[len + 1];
+			mye::core::String r(len);
 
 			GetTimeFormat(LOCALE_INVARIANT,
 				TIME_FORCE24HOURFORMAT,
 				lpTime,
-				format.c_str(),
-				str,
+				format.CString(),
+				&r[0],
 				0);
 
-			std::string result(str);
+			r.UpdateLength();
 
-			delete str;
-
-			return result;
+			return r;
 
 		}
 
-		void ShowErrorBox(const std::string &message)
+		void ShowErrorBox(const mye::core::String &message)
 		{
 			MessageBox(nullptr,
-				message.c_str(),
+				message.CString(),
 				"Error",
 				MB_OK | MB_ICONERROR);
 		}

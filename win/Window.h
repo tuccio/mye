@@ -72,8 +72,8 @@ namespace mye
 			virtual bool IsFullScreen(void) const;
 			virtual void SetFullScreen(void);
 
-			virtual void SetCaption(const std::string &caption);
-			virtual std::string GetCaption(void) const;
+			virtual void SetCaption(const mye::core::String &caption);
+			virtual mye::core::String GetCaption(void) const;
 
 			virtual void SetSize(const mye::math::Vector2i &size);
 			virtual mye::math::Vector2i GetSize(void) const;

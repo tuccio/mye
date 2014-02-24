@@ -6,3 +6,4 @@
 #include "VariableComponent.h"
 #include "TransformComponent.h"
 #include "RenderComponent.h"
+#include "CameraComponent.h"

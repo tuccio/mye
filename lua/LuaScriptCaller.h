@@ -20,11 +20,11 @@ namespace mye
 
 			static mye::core::Script<LuaScriptCaller> LoadClass(
 				mye::core::ScriptModule<LuaScriptCaller> &module,
-				const std::string &filename);
+				const mye::core::String &filename);
 
 			static mye::core::Script<LuaScriptCaller> LoadProcedure(
 				mye::core::ScriptModule<LuaScriptCaller> &module,
-				const std::string &filename);
+				const mye::core::String &filename);
 
 			static bool Run(mye::core::ScriptModule<LuaScriptCaller> &module,
 				const mye::core::Script<LuaScriptCaller> &script);
@@ -33,7 +33,7 @@ namespace mye
 			static R Call(
 				mye::core::ScriptModule<LuaScriptCaller> &module,
 				const mye::core::Script<LuaScriptCaller> &script,
-				const std::string &f);
+				const mye::core::String &f);
 
 		};
 

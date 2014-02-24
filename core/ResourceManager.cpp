@@ -3,7 +3,7 @@
 
 using namespace mye::core;
 
-ResourceManager::ResourceManager(const std::string &type) :
+ResourceManager::ResourceManager(const String &type) :
 	m_type(type)
 {
 	ResourceTypeManager::GetSingleton().
@@ -15,7 +15,7 @@ ResourceManager::~ResourceManager(void)
 {
 }
 
-ResourceHandle ResourceManager::CreateResource(const std::string &name,
+ResourceHandle ResourceManager::CreateResource(const String &name,
 											   ManualResourceLoader *manual,
 											   Resource::ParametersList *params)
 {
@@ -44,7 +44,7 @@ ResourceHandle ResourceManager::CreateResource(const std::string &name,
 
 }
 
-ResourceHandle ResourceManager::GetResource(const std::string &name)
+ResourceHandle ResourceManager::GetResource(const String &name)
 {
 
 	Lock();
@@ -61,7 +61,7 @@ ResourceHandle ResourceManager::GetResource(const std::string &name)
 
 }
 
-void ResourceManager::FreeResource(const std::string &name)
+void ResourceManager::FreeResource(const String &name)
 {
 
 	Lock();
@@ -77,7 +77,7 @@ void ResourceManager::FreeResource(const std::string &name)
 
 }
 
-const std::string& ResourceManager::GetType(void) const
+const String& ResourceManager::GetType(void) const
 {
 	return m_type;
 }
@@ -88,7 +88,7 @@ void ResourceManager::_FreeResource(ResourcesMap::iterator &it)
 	m_resources.erase(it);
 }
 
-ResourceHandle ResourceManager::CreateImpl(const std::string &name,
+ResourceHandle ResourceManager::CreateImpl(const String &name,
 										   ManualResourceLoader *manual,
 										   Resource::ParametersList *params)
 {

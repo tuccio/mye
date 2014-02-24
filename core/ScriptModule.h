@@ -41,10 +41,10 @@ namespace mye
 			ScriptModule(void);
 			~ScriptModule(void);
 
-			Script<ConcreteFunctionCaller> LoadClass(const std::string &filename);
-			Script<ConcreteFunctionCaller> LoadProcedure(const std::string &filename);
+			Script<ConcreteFunctionCaller> LoadClass(const String &filename);
+			Script<ConcreteFunctionCaller> LoadProcedure(const String &filename);
 
-			bool Run(const std::string &filename);
+			bool Run(const String &filename);
 
 		};
 

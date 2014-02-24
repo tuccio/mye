@@ -13,7 +13,7 @@ MeshManager::~MeshManager(void)
 {
 }
 
-ResourceHandle MeshManager::CreateImpl(const std::string &name,
+ResourceHandle MeshManager::CreateImpl(const String &name,
 										ManualResourceLoader *manual,
 										Resource::ParametersList *params)
 {

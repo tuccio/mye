@@ -24,7 +24,7 @@ namespace mye
 
 		public:
 
-			typedef std::unordered_map<std::string, std::string> ParametersList;
+			typedef std::unordered_map<String, String> ParametersList;
 			
 			enum LoadingState
 			{
@@ -37,7 +37,7 @@ namespace mye
 			};
 
 			Resource(ResourceManager *owner,
-				const std::string &name,
+				const String &name,
 				ManualResourceLoader *manual);
 
 			~Resource(void);

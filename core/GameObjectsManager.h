@@ -1,7 +1,7 @@
 #pragma once
 
 #include <unordered_map>
-#include <string>
+#include "String.h"
 
 namespace mye
 {
@@ -43,16 +43,18 @@ namespace mye
 			~GameObjectsManager(void);
 
 			GameObjectHandle Create(void);
-			GameObjectHandle Create(const std::string& name);
+			GameObjectHandle Create(const String& name);
 
 // 			void Rename(const GameObjectHandle &hObj,
-// 				const std::string &name);
+// 				const String &name);
 
 			void Destroy(const GameObjectHandle &hObj);
 
 			inline GameObject* Get(const GameObjectHandle &hObj);
 
-			GameObjectHandle Find(const std::string &name);
+			void Rename(const GameObjectHandle &hObj, const String &name);
+
+			GameObjectHandle Find(const String &name);
 
 			/*void Reset(void);*/
 
@@ -62,7 +64,7 @@ namespace mye
 			inline void FreeHandle(const GameObjectHandle &hObj);
 
 			typedef std::unordered_map<GameObjectHandle, GameObject*, GameObjectHandleIDHasher> ObjectsHashMap;
-			typedef std::unordered_multimap<std::string, GameObjectHandle> ObjectsNamesMap;
+			typedef std::unordered_multimap<String, GameObjectHandle> ObjectsNamesMap;
 
 			ObjectsHashMap m_objects;
 			ObjectsNamesMap m_namedObjects;

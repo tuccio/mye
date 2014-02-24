@@ -1,7 +1,9 @@
 #include <lua.hpp>
+#include <luabind/luabind.hpp>
 
 #include <mye/core/ColorRGB.h>
 #include <mye/core/ColorRGBA.h>
+#include <mye/core/String.h>
 
 namespace mye
 {

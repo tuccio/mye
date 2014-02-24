@@ -15,6 +15,7 @@
 
 #include <typeindex>
 #include <exception>
+#include <list>
 
 namespace mye
 {
@@ -49,7 +50,10 @@ namespace mye
 			AudioModule* GetAudioModule(void);
 			ScriptModule* GetScriptModule(void);
 
-			virtual void RuntimeError(const std::string &error);
+			virtual void RuntimeError(const String &error);
+
+			void ImportScene(const String &file, std::list<GameObject*> *allocatedObjects = nullptr);
+			void ExportScene(const String &file);
 
 		protected:
 

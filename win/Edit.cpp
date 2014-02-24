@@ -5,6 +5,7 @@
 #include <windowsx.h>
 #include <memory>
 
+using namespace mye::core;
 using namespace mye::win;
 
 Edit::Edit(void) :
@@ -52,20 +53,18 @@ void Edit::Destroy(void)
 	m_hEdit = nullptr;
 }
 
-void Edit::SetText(const std::string text)
+void Edit::SetText(const String &text)
 {
-	Edit_SetText(m_hEdit, text.c_str());
+	Edit_SetText(m_hEdit, text.CString());
 }
 
-std::string Edit::GetText(void) const
+String Edit::GetText(void) const
 {
 	size_t len = Edit_GetTextLength(m_hEdit);
-	char *buffer = new char[len + 1];
-	Edit_GetText(m_hEdit, buffer, len + 1);
-	buffer[len] = '\0';
-	std::string str(buffer);
-	delete buffer;
-	return str;
+	String s(len);
+	Edit_GetText(m_hEdit, &s[0], len + 1);
+	s.UpdateLength();
+	return s;
 }
 
 void Edit::SetReadOnly(bool readOnly)

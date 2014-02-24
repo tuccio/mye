@@ -19,13 +19,13 @@ namespace mye
 		public:
 
 			Model(ResourceManager *owner,
-				const std::string &name,
+				const String &name,
 				ManualResourceLoader *manual);
 
 			~Model(void);
 
 			Mesh* AddMesh(void);
-			Mesh* AddMesh(const std::string &resourceName);
+			Mesh* AddMesh(const String &resourceName);
 
 			Mesh* GetMesh(int i);
 			size_t GetMeshesCount(void) const;

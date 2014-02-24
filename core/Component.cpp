@@ -4,9 +4,10 @@ using namespace mye::core;
 using namespace std;
 
 Component::Component(ComponentTypes type,
-					 const std::string &name) :
+					 const String &name) :
 	INamedObject(name),
-	m_type(type)
+	m_type(type),
+	m_owner(nullptr)
 {
 }
 

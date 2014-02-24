@@ -21,24 +21,24 @@ namespace mye
 			ResourceTypeManager(void);
 			~ResourceTypeManager(void);
 
-			void RegisterResourceManager(const std::string &type,
+			void RegisterResourceManager(const String &type,
 				ResourceManager *resourceManager);
 
-			void UnregisterResourceManager(const std::string &type);
+			void UnregisterResourceManager(const String &type);
 
-			ResourceManager* GetResourceManager(const std::string &type);
+			ResourceManager* GetResourceManager(const String &type);
 
-			ResourceHandle CreateResource(const std::string &type,
-				const std::string &name,
+			ResourceHandle CreateResource(const String &type,
+				const String &name,
 				ManualResourceLoader *manual = nullptr,
 				Resource::ParametersList *params = nullptr);
 
-			ResourceHandle GetResource(const std::string &type,
-				const std::string &name);
+			ResourceHandle GetResource(const String &type,
+				const String &name);
 
 		private:
 
-			typedef std::unordered_map<std::string, ResourceManager*> TypeManagerMap;
+			typedef std::unordered_map<String, ResourceManager*> TypeManagerMap;
 
 			TypeManagerMap m_managers;
 

@@ -10,16 +10,16 @@ namespace mye
 	namespace core
 	{
 
-		string PointerToString(void *p)
+		String PointerToString(void *p)
 		{
 			stringstream ss;
 			ss << p;
-			return ss.str();
+			return ss.str().c_str();
 		}
 
-		void* StringToPointer(const std::string &str)
+		void* StringToPointer(const String &str)
 		{
-			std::stringstream ss(str);
+			std::stringstream ss(str.CString());
 			void *ptr;
 			ss >> ptr;
 			return ptr;

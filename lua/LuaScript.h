@@ -39,10 +39,10 @@ namespace mye
 			bool Run(void) const;
 
 			template <typename R>
-			R Call(const std::string &f) const;
+			R Call(const mye::core::String &f) const;
 
 			template <typename R, typename T1>
-			R Call(const std::string &f, T1 arg1) const;
+			R Call(const mye::core::String &f, T1 arg1) const;
 
 		private:
 

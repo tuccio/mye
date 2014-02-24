@@ -13,7 +13,7 @@ ModelManager::~ModelManager(void)
 {
 }
 
-ResourceHandle ModelManager::CreateImpl(const std::string &name,
+ResourceHandle ModelManager::CreateImpl(const String &name,
 										ManualResourceLoader *manual,
 										Resource::ParametersList *params)
 {

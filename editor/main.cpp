@@ -77,6 +77,10 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 		exit(1);
 	}
 
+	g_mainWindow.SetSplitScreen(1, 1);
+	g_mainWindow.SetSplitView(0, 0, &g_sceneView);
+	g_mainWindow.ResizeViews();
+
 	CompileShaders();
 
 	MSG msg;

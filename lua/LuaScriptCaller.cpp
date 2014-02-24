@@ -20,7 +20,7 @@ namespace mye
 
 		Script<LuaScriptCaller> LuaScriptCaller::LoadClass(
 			ScriptModule<LuaScriptCaller> &module,
-			const std::string &filename)
+			const mye::core::String &filename)
 		{
 
 			lua_State *_L = module.GetLuaState();
@@ -62,7 +62,7 @@ namespace mye
 
 			}
 
-			luaL_error(_L, (std::string("Error while loading ") + filename).c_str());
+			luaL_error(_L, (mye::core::String("Error while loading ") + filename).c_str());
 
 			lua_settop(_L, top);
 
@@ -73,7 +73,7 @@ namespace mye
 
 		Script<LuaScriptCaller> LuaScriptCaller::LoadProcedure(
 			ScriptModule<LuaScriptCaller> &module,
-			const std::string &filename)
+			const mye::core::String &filename)
 		{
 
 			lua_State *L = module.GetLuaState();
@@ -109,7 +109,7 @@ namespace mye
 
 			}
 
-			luaL_error(L, (std::string("Error while loading ") + filename).c_str());
+			luaL_error(L, (mye::core::String("Error while loading ") + filename).c_str());
 
 			lua_settop(L, top);
 
@@ -140,13 +140,13 @@ namespace mye
 
 			}
 
-			std::string errorMessage = lua_tostring(L, -1);
+			mye::core::String errorMessage = lua_tostring(L, -1);
 
 			Game *game = Game::GetSingletonPointer();
 
 			if (game)
 			{
-				game->RuntimeError(std::string("Lua script error: ") + errorMessage);
+				game->RuntimeError(mye::core::String("Lua script error: ") + errorMessage);
 			}
 
 			luaL_error(L, errorMessage.c_str());

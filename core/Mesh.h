@@ -20,7 +20,7 @@ namespace mye
 			typedef std::pair<mye::math::Vector3f, mye::math::Vector3f> VectorPair;
 
 			Mesh(ResourceManager *resourceManager,
-				const std::string &name,
+				const String &name,
 				ManualResourceLoader *loader);
 
 			~Mesh(void);

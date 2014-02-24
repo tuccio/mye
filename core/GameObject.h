@@ -13,6 +13,8 @@
 
 #include "PoolAllocator.h"
 
+#include "String.h"
+
 #include <mye/math/Geometry.h>
 
 namespace mye
@@ -21,6 +23,9 @@ namespace mye
 	namespace core
 	{
 
+		typedef std::unordered_map<String, Component*> ComponentsList;
+		typedef std::unordered_map<String, Component*>::iterator ComponentIterator;
+
 		class GameObject :
 			public INamedObject
 		{
@@ -28,17 +33,18 @@ namespace mye
 		public:
 
 			GameObject(void);
-			GameObject(const std::string &name);
+			GameObject(const String &name);
 
 			~GameObject(void);
 
 			Component* AddComponent(const Component &component);
-			Component* GetComponent(const std::string &name);
-			void RemoveComponent(const std::string &name);
+			Component* GetComponent(const String &name);
+			void RemoveComponent(const String &name);
 
 			inline TransformComponent* GetTransformComponent(void);
 			inline ScriptComponent* GetScriptComponent(void);
 			inline RenderComponent* GetRenderComponent(void);
+			inline CameraComponent* GetCameraComponent(void);
 
 			inline mye::math::AABBf GetAABB(void);
 
@@ -49,11 +55,12 @@ namespace mye
 
 			void Clear(void);
 
+			inline ComponentIterator begin(void);
+			inline ComponentIterator end(void);
+
 			MYE_DECLARE_POOL_ALLOCATOR(GameObject)
 
 		private:
-
-			typedef std::unordered_map<std::string, Component*> ComponentsList;
 
 			friend class GameObjectsManager;
 
@@ -63,7 +70,6 @@ namespace mye
 			void OnDestruction(void);
 
 			ComponentsList m_components;
-			std::string m_name;
 
 			GameObjectHandle m_handle;
 			GameObjectsManager *m_owner;
@@ -71,6 +77,7 @@ namespace mye
 			TransformComponent *m_transform;
 			ScriptComponent *m_script;
 			RenderComponent *m_render;
+			CameraComponent *m_camera;
 
 		};
 

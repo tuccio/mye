@@ -5,8 +5,8 @@
 #include <Windows.h>
 
 #include <functional>
-#include <string>
 
+#include <mye/core/String.h>
 #include <mye/math/Math.h>
 
 namespace mye
@@ -29,7 +29,7 @@ namespace mye
 			~Button(void);
 
 			void Create(Window &parent,
-				const std::string &text,
+				const mye::core::String &text,
 				const CallbackType &f,
 				const mye::math::Vector2i &position = mye::math::Vector2i(0, 0),
 				const mye::math::Vector2i &size = mye::math::Vector2i(100, 100));

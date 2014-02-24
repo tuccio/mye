@@ -45,10 +45,10 @@ namespace mye
 
 		void BindGameObjectHandle(lua_State *L);
 
-		std::string __goh_getname(const mye::core::GameObjectHandle &hObj);
+		mye::core::String __goh_getname(const mye::core::GameObjectHandle &hObj);
 
 		luabind::object __goh_getcomponent(const mye::core::GameObjectHandle &hObj,
-										   const std::string &name);
+										   const mye::core::String &name);
 
 		void __goh_addcomponent(const mye::core::GameObjectHandle &hObj,
 								const mye::core::Component &component);
@@ -56,7 +56,7 @@ namespace mye
 		void __goh_destroy(const mye::core::GameObjectHandle &hObj);
 		bool __goh_exists(const mye::core::GameObjectHandle &hObj);
 
-		std::string __goh_tostring(const mye::core::GameObjectHandle &hObj);
+		mye::core::String __goh_tostring(const mye::core::GameObjectHandle &hObj);
 
 	}
 

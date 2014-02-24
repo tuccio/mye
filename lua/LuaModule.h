@@ -1,9 +1,9 @@
 #pragma once
 
 #include <mye/core/ScriptModule.h>
+#include <mye/core/String.h>
 
 #include <lua.hpp>
-#include <string>
 
 namespace mye
 {
@@ -27,20 +27,20 @@ namespace mye
 
 			lua_State* GetLuaState(void);
 
-			std::string GetLastError(void) const;
+			mye::core::String GetLastError(void) const;
 
-			LuaScript LoadBehaviour(const std::string &filename);
-			LuaScript LoadProcedure(const std::string &filename);
+			LuaScript LoadBehaviour(const mye::core::String &filename);
+			LuaScript LoadProcedure(const mye::core::String &filename);
 
-			bool RunFile(const std::string &file);
-			bool RunString(const std::string &code);
+			bool RunFile(const mye::core::String &file);
+			bool RunString(const mye::core::String &code);
 
 		private:
 
 			void OpenAllLibraries(void);
 
 			lua_State *m_L;
-			std::string m_lastError;
+			mye::core::String m_lastError;
 
 		};
 
@@ -79,23 +79,23 @@ namespace mye
 
 			lua_State* GetLuaState(void);
 
-			bool RunFile(const std::string &file);
-			bool RunString(const std::string &code);
+			bool RunFile(const mye::core::String &file);
+			bool RunString(const mye::core::String &code);
 
-			std::string GetLastError(void) const;
+			mye::core::String GetLastError(void) const;
 
 			bool Init(void);
 			void ShutDown(void);
 
-			mye::core::Script<mye::lua::LuaScriptCaller> LoadClass(const std::string &filename);
-			mye::core::Script<mye::lua::LuaScriptCaller> LoadProcedure(const std::string &filename);
+			mye::core::Script<mye::lua::LuaScriptCaller> LoadClass(const mye::core::String &filename);
+			mye::core::Script<mye::lua::LuaScriptCaller> LoadProcedure(const mye::core::String &filename);
 
 		private:
 
 			void OpenAllLibraries(void);
 
 			lua_State *_L;
-			std::string _lastError;
+			mye::core::String _lastError;
 
 		};
 

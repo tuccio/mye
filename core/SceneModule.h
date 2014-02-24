@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Module.h"
-#include "Camera.h"
+#include "CameraComponent.h"
 #include "GameObject.h"
 
 #include <list>
@@ -23,20 +23,20 @@ namespace mye
 			SceneModule(void);
 
 			virtual ObjectsList GetVisibleObjects(void);
+			virtual ObjectsList GetObjects(void);
 
 			virtual void AddGameObject(const GameObjectHandle &hObj);
-
 			virtual void RemoveGameObject(const GameObjectHandle &hObj);
 			
 			inline void MoveGameObject(
 				const GameObjectHandle &hObj,
 				const mye::math::AABBf &oldAABB);
 
-			inline Camera& Camera(void);
+			inline CameraComponent& Camera(void);
 
-			inline mye::core::Camera* GetCamera(void);
-			inline const mye::core::Camera* GetCamera(void) const;
-			inline void SetCamera(mye::core::Camera *camera);
+			inline mye::core::CameraComponent* GetCamera(void);
+			inline const mye::core::CameraComponent* GetCamera(void) const;
+			inline void SetCamera(mye::core::CameraComponent *camera);
 
 		protected:
 
@@ -47,7 +47,7 @@ namespace mye
 				mye::math::AABBf newAABB;
 			};
 
-			mye::core::Camera *m_camera;
+			mye::core::CameraComponent *m_camera;
 			std::list<GameObjectUpdate> m_movedObjects;
 
 		};

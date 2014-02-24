@@ -28,11 +28,11 @@ GameObjectsManager::~GameObjectsManager(void)
 GameObjectHandle GameObjectsManager::Create(void)
 {
 
-	return Create(std::string());
+	return Create(String());
 
 }
 
-GameObjectHandle GameObjectsManager::Create(const std::string& name)
+GameObjectHandle GameObjectsManager::Create(const String& name)
 {
 
 	GameObjectHandle hObj = CreateHandle();
@@ -40,9 +40,9 @@ GameObjectHandle GameObjectsManager::Create(const std::string& name)
 	GameObject *o = new GameObject(name);
 	m_objects[hObj] = o;
 
-	if (!name.empty())
+	if (!name.IsEmpty())
 	{
-		m_namedObjects.insert(std::pair<std::string, GameObjectHandle>(name, hObj));
+		m_namedObjects.insert(std::pair<String, GameObjectHandle>(name, hObj));
 	}
 
 	o->OnCreation(this, hObj);
@@ -52,7 +52,7 @@ GameObjectHandle GameObjectsManager::Create(const std::string& name)
 }
 
 // void GameObjectsManager::Rename(const GameObjectHandle &hObj,
-// 			const std::string &name)
+// 			const String &name)
 // {
 // 	throw;
 // }
@@ -65,9 +65,9 @@ void GameObjectsManager::Destroy(const GameObjectHandle &hObj)
 	if (o)
 	{
 
-		std::string name = o->GetName();
+		String name = o->GetName();
 
-		if (!name.empty())
+		if (!name.IsEmpty())
 		{
 
 			for (auto eqr = m_namedObjects.equal_range(name);
@@ -93,7 +93,7 @@ void GameObjectsManager::Destroy(const GameObjectHandle &hObj)
 
 }
 
-GameObjectHandle GameObjectsManager::Find(const std::string &name)
+GameObjectHandle GameObjectsManager::Find(const String &name)
 {
 
 	auto eqr = m_namedObjects.equal_range(name);
@@ -104,5 +104,46 @@ GameObjectHandle GameObjectsManager::Find(const std::string &name)
 	}
 
 	return GameObjectHandle();
+
+}
+
+void GameObjectsManager::Rename(const GameObjectHandle &hObj, const String &name)
+{
+
+	GameObject *o = Get(hObj);
+
+	if (o)
+	{
+
+		const String &oldName = o->GetName();
+
+		if (!oldName.IsEmpty())
+		{
+
+			for (auto eqr = m_namedObjects.equal_range(oldName);
+				eqr.first != eqr.second;
+				eqr.first++)
+			{
+
+				if (eqr.first->second == hObj)
+				{
+					m_namedObjects.erase(eqr.first);
+					break;
+				}
+
+			}
+
+		}
+
+		o->SetName(name);
+
+		if (!name.IsEmpty())
+		{
+			m_namedObjects.insert(std::pair<String, GameObjectHandle>(name, hObj));
+		}
+
+	}
+
+	
 
 }

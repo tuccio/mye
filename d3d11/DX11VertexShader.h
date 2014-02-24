@@ -15,7 +15,7 @@ namespace mye
 		public:
 
 			DX11VertexShader(mye::core::ResourceManager *owner,
-				const std::string &name,
+				const mye::core::String &name,
 				mye::core::ManualResourceLoader *manual,
 				mye::dx11::DX11Device &device);
 
@@ -24,7 +24,7 @@ namespace mye
 			void Use(void);
 
 			ID3D11VertexShader* GetVertexShader(void);
-			std::string GetCompileError(void);
+			mye::core::String GetCompileError(void);
 
 			void Destroy(void);
 
@@ -36,7 +36,7 @@ namespace mye
 
 			ID3D11VertexShader *m_shader;
 			ID3D11InputLayout *m_inputLayout;
-			std::string m_compileError;
+			mye::core::String m_compileError;
 			DX11Device &m_device;
 			
 

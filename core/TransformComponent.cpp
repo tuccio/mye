@@ -7,7 +7,7 @@ using namespace mye::math;
 #define __MYE_TRANSFORM_IS_VALID() (m_matrix.m33() == 1)
 
 TransformComponent::TransformComponent(void) :
-	Component(COMPONENT_TRANSFORM, "transform"),
+	Component(ComponentTypes::TRANSFORM, "transform"),
 	m_transform(Transformf::Identity()),
 	m_matrix(1.0f)
 {

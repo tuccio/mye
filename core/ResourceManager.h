@@ -18,33 +18,33 @@ namespace mye
 
 		public:
 
-			ResourceManager(const std::string &type);
+			ResourceManager(const String &type);
 			~ResourceManager(void);
 
-			ResourceHandle CreateResource(const std::string &name,
+			ResourceHandle CreateResource(const String &name,
 				           ManualResourceLoader *manual = nullptr,
 				           Resource::ParametersList *params = nullptr);
 
-			ResourceHandle GetResource(const std::string &name);
+			ResourceHandle GetResource(const String &name);
 
-			void FreeResource(const std::string &name);
+			void FreeResource(const String &name);
 
-			const std::string& GetType(void) const;
+			const String& GetType(void) const;
 
 		protected:
 
-			virtual ResourceHandle CreateImpl(const std::string &name,
+			virtual ResourceHandle CreateImpl(const String &name,
 				    ManualResourceLoader *manual,
 				    Resource::ParametersList *params);
 
 			virtual void FreeImpl(Resource* resource);
 
-			typedef std::map<std::string, ResourceHandle> ResourcesMap;
+			typedef std::map<String, ResourceHandle> ResourcesMap;
 
 			void _FreeResource(ResourcesMap::iterator &it);
 
 			ResourcesMap m_resources;
-			std::string m_type;
+			String m_type;
 
 		};
 

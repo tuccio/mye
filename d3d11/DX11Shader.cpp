@@ -7,7 +7,7 @@ using namespace mye::dx11;
 using namespace mye::core;
 
 DX11Shader::DX11Shader(ResourceManager *owner,
-					   const std::string &name,
+					   const mye::core::String &name,
 					   ManualResourceLoader *manual) :
 Resource(owner, name, manual)
 {
@@ -21,7 +21,7 @@ DX11Shader::~DX11Shader(void)
 
 void DX11Shader::Destroy(void)
 {
-	m_source.clear();
+	m_source.Clear();
 }
 
 void DX11Shader::Use(void)
@@ -32,12 +32,12 @@ void DX11Shader::Use(void)
 bool DX11Shader::LoadImpl(void)
 {
 
-	std::ifstream f(m_name);
+	std::ifstream f(m_name.CString());
 	
 	if (f)
 	{
 		m_source = std::string(std::istreambuf_iterator<char>(f),
-			std::istreambuf_iterator<char>());
+			std::istreambuf_iterator<char>()).c_str();
 		return true;
 	}
 
@@ -52,5 +52,5 @@ void DX11Shader::UnloadImpl(void)
 
 size_t DX11Shader::CalculateSizeImpl(void)
 {
-	return m_source.length();
+	return m_source.Length();
 }

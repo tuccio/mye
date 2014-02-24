@@ -12,6 +12,11 @@ SceneModule::ObjectsList SceneModule::GetVisibleObjects(void)
 	return ObjectsList();
 }
 
+SceneModule::ObjectsList SceneModule::GetObjects(void)
+{
+	return ObjectsList();
+}
+
 void SceneModule::AddGameObject(const GameObjectHandle &hObj)
 {
 

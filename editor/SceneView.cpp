@@ -16,6 +16,7 @@
 #define TAB_TRANSFORM 2
 #define TAB_RENDER 3
 #define TAB_BEHAVIOUR 4
+#define TAB_CAMERA 5
 
 using namespace mye::dx11;
 using namespace mye::win;
@@ -29,13 +30,16 @@ SceneView::SceneView(void) :
 	m_selected(nullptr),
 	m_activeTab(-1),
 	m_sensitivity(1.2f),
-	m_dragSpeed(1.5f)
+	m_dragSpeed(1.5f),
+	m_sceneCamera(nullptr)
 {
 
 	m_camera.LookAt(
 		Vector3f(0, 0, -5),
 		Vector3f(0, 1, 0),
 		Vector3f(0, 0, 0));
+
+	m_camera.SetFarClipDistance(4096);
 
 }
 
@@ -67,17 +71,21 @@ void SceneView::Activate(void)
 		m_tabs.AddTab(TAB_TRANSFORM, "Transform");
 		m_tabs.AddTab(TAB_RENDER, "Render");
 		m_tabs.AddTab(TAB_BEHAVIOUR, "Behaviour");
+		m_tabs.AddTab(TAB_CAMERA, "Camera");
 
 		_CreateGameObjectsTab();
 		_CreateRenderTab();
+		_CreatePropertiesTab();
+		_CreateCameraTab();
 
-		m_tabs.SelectTab(-1);
+		m_tabs.SelectTab(TAB_GAME_OBJECTS);
+		m_gameObjectsTab.Show();
 
 		SelectGameObject(nullptr);
 
 		g_game.Init();
 
-		g_scene.SetCamera(&m_camera);
+		m_timer.Start();
 
 		m_initialized = true;
 
@@ -130,6 +138,12 @@ void SceneView::SetSize(const mye::math::Vector2i &size)
 	m_renderTab.SetSize(tabSize);
 	m_renderTab.SetPosition(tabPosition);
 
+	m_propertiesTab.SetSize(tabSize);
+	m_propertiesTab.SetPosition(tabPosition);
+
+	m_cameraTab.SetSize(tabSize);
+	m_cameraTab.SetPosition(tabPosition);
+
 	auto goList = m_controls.find("GOTGameObjectsList");
 
 	if (goList != m_controls.end())
@@ -140,6 +154,7 @@ void SceneView::SetSize(const mye::math::Vector2i &size)
 	m_tabs.SetSize(rightPanel);
 
 	m_tabsWindow.Update();
+	m_tabs.Update();
 
 }
 
@@ -161,10 +176,11 @@ void SceneView::OnTabShow(int index)
 
 	case TAB_GAME_OBJECTS:
 		m_gameObjectsTab.Show();
-		UpdateWindow(m_tabs.GetHandle());
 		break;
 
 	case TAB_PROPERTIES:
+		_FillPropertiesTab(m_selected);
+		m_propertiesTab.Show();
 		break;
 
 	case TAB_TRANSFORM:
@@ -177,12 +193,17 @@ void SceneView::OnTabShow(int index)
 	case TAB_BEHAVIOUR:
 		break;
 
+	case TAB_CAMERA:
+		m_cameraTab.Show();
+		break;
+
 	default:
 		break;
 
 	}
 
 	m_activeTab = index;
+	m_tabs.Update();
 
 }
 
@@ -196,6 +217,7 @@ void SceneView::OnTabHide(int index)
 		break;
 
 	case TAB_PROPERTIES:
+		m_propertiesTab.Hide();
 		break;
 
 	case TAB_TRANSFORM:
@@ -208,6 +230,10 @@ void SceneView::OnTabHide(int index)
 	case TAB_BEHAVIOUR:
 		break;
 
+	case TAB_CAMERA:
+		m_cameraTab.Hide();
+		break;
+
 	default:
 		break;
 
@@ -216,6 +242,8 @@ void SceneView::OnTabHide(int index)
 
 void SceneView::Update(void)
 {
+
+	bool needUpdate = false;
 
 	const Mouse *mouse = g_input.GetMouse();
 	const Keyboard *keyboard = g_input.GetKeyboard();
@@ -282,7 +310,6 @@ void SceneView::Update(void)
 
 				Vector2f delta = mouse->GetDelta() * m_sensitivity;
 
-
 				tc->GetOrientation();
 
 
@@ -298,6 +325,8 @@ void SceneView::Update(void)
 
 				tc->SetPosition(p);
 
+				needUpdate = true;
+
 			}
 			else if (mouse->IsPressed(MYE_VK_MOUSE_MIDDLE))
 			{
@@ -309,6 +338,8 @@ void SceneView::Update(void)
 					+ tc->Forward() * (- delta.y());
 
 				tc->SetPosition(p);
+
+				needUpdate = true;
 
 			}
 			else if (float delta = mouse->GetWheelDelta())
@@ -322,6 +353,15 @@ void SceneView::Update(void)
 
 		}
 
+	}
+
+	static Milliseconds lastUpdate = 0;
+	lastUpdate = lastUpdate + m_timer.Lap();
+
+	if (needUpdate && lastUpdate > 250)
+	{
+		_FillPropertiesTab(m_selected);
+		lastUpdate = 0;
 	}
 
 }
@@ -339,7 +379,10 @@ void SceneView::Render(void)
 		1,
 		0);
 
-	Camera *camera = g_scene.GetCamera();
+	CameraComponent *sceneCamera = g_scene.GetCamera(); 
+	CameraComponent *camera = &m_camera;
+
+	g_scene.SetCamera(camera);
 
 	if (camera)
 	{
@@ -391,6 +434,8 @@ void SceneView::Render(void)
 
 		}
 
+		g_scene.SetCamera(sceneCamera);
+
 		mvpBuffer.Destroy();
 
 	}
@@ -404,6 +449,27 @@ void SceneView::Render(void)
 }
 
 /* Tabs */
+
+void SceneView::_AddGameObject(GameObjectHandle hObj)
+{
+
+	GameObject *gameObject = g_gameObjectsModule.Get(hObj);
+
+	ListView *gameObjectsList = static_cast<ListView*>(m_controls["GOTGameObjectsList"]);
+	int i = ListView_GetItemCount(gameObjectsList->GetHandle());
+
+	LV_ITEM item;
+	ZeroMemory(&item, sizeof(LV_ITEM));
+	item.iItem = i;
+	item.cchTextMax = 64;
+	item.mask = LVIF_TEXT | LVIF_PARAM;
+	item.pszText =  (gameObject->GetName().Length() > 0 ? gameObject->GetName().CString() : "<Anon>");
+	item.lParam = (LPARAM) gameObject;
+
+	ListView_InsertItem(gameObjectsList->GetHandle(), &item);
+	SelectGameObject((GameObject*) (item.lParam));
+
+}
 
 void SceneView::_CreateGameObjectsTab(void)
 {
@@ -427,27 +493,13 @@ void SceneView::_CreateGameObjectsTab(void)
 		{
 
 			GameObjectHandle hObj = g_gameObjectsModule.Create();
-			int i = ListView_GetItemCount(gameObjectsList->GetHandle());
 
-			LV_ITEM item;
-			ZeroMemory(&item, sizeof(LV_ITEM));
-			item.iItem = i;
-			item.cchTextMax = 64;
-			item.mask = LVIF_TEXT | LVIF_PARAM;
-			item.pszText = "<Anon>";
-			item.lParam = (LPARAM) g_gameObjectsModule.Get(hObj);
-
-			ListView_InsertItem(gameObjectsList->GetHandle(), &item);
-			SelectGameObject((GameObject*) (item.lParam));
-			
-// 			ListView_SetItemState(gameObjectsList->GetHandle(), i, LVIS_SELECTED, LVIS_SELECTED);
-// 			ListView_SetSelectionMark(gameObjectsList->GetHandle(), i);
-
-			//ListView_SetItemText(gameObjectsList->GetHandle(), 0, 1, TEXT("<None>"));
+			_AddGameObject(hObj);
+			g_scene.AddGameObject(hObj);
 
 		},
 		Vector2i(0, 0),
-		Vector2i(130, 24));
+		Vector2i(180, 24));
 
 	Button *deleteButton = new Button;
 		m_controls["GOTDeleteButton"] = deleteButton;
@@ -491,8 +543,8 @@ void SceneView::_CreateGameObjectsTab(void)
 			}
 
 		},
-			Vector2i(134, 0),
-			Vector2i(130, 24));
+			Vector2i(184, 0),
+			Vector2i(80, 24));
 
 	LV_COLUMN nameCol;
 	nameCol.mask = LVCF_TEXT | LVCF_WIDTH | LVCF_SUBITEM;
@@ -510,6 +562,7 @@ void SceneView::_CreateGameObjectsTab(void)
 
 	m_gameObjectsTab.RegisterControl(createButton);
 	m_gameObjectsTab.RegisterControl(deleteButton);
+
 	m_gameObjectsTab.RegisterControl(gameObjectsList);
 
 	gameObjectsList->AddListener(this);
@@ -559,9 +612,9 @@ void SceneView::SelectGameObject(GameObject *selectedObject)
 	
 	/* Update tabs */
 
-	/* Update render tab */
-
 	_FillRenderTab(selectedObject);
+	_FillPropertiesTab(selectedObject);
+	_FillCameraTab(selectedObject);
 
 	m_selected = selectedObject;
 

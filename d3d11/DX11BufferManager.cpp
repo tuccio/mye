@@ -17,7 +17,7 @@ DX11BufferManager::~DX11BufferManager(void)
 {
 }
 
-ResourceHandle DX11BufferManager::CreateImpl(const std::string &name,
+ResourceHandle DX11BufferManager::CreateImpl(const mye::core::String &name,
 												   ManualResourceLoader *manual,
 												   Resource::ParametersList *params)
 {

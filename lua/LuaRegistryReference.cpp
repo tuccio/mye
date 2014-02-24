@@ -1,4 +1,5 @@
 #include "LuaRegistryReference.h"
+#include "Converters.h"
 
 using namespace mye::lua;
 

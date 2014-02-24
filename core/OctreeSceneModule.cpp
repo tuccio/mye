@@ -93,16 +93,102 @@ SceneModule::ObjectsList OctreeSceneModule::GetVisibleObjects(void)
 
 }
 
+SceneModule::ObjectsList OctreeSceneModule::GetObjects(void)
+{
+
+	SceneModule::ObjectsList objects;
+
+	std::deque<LooseOctreeNode<GameObjectHandle>*> q;
+
+	q.push_back(m_octree.GetRoot());
+
+	do 
+	{
+
+		LooseOctreeNode<GameObjectHandle> *node = q.front();
+		q.pop_front();
+
+		if (node)
+		{
+
+			for (GameObjectHandle hObj : *node)
+			{
+
+				GameObject *object = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
+
+				if (object)
+				{
+					objects.push_back(object);
+				}
+
+			}
+
+			for (int i = 0; i < 8; i++)
+			{
+				q.push_back(node->GetChild(static_cast<OctreeChild>(i)));
+			}
+
+		}
+
+	} while (!q.empty());
+
+	for (auto it = m_nonRenderableObjects.begin(); it != m_nonRenderableObjects.end(); it++)
+	{
+
+		GameObject *object = Game::GetSingleton().GetGameObjectsModule()->Get(*it);
+
+		if (object)
+		{
+			objects.push_back(object);
+		}
+		else
+		{
+			it = m_nonRenderableObjects.erase(it);
+		}
+
+	}
+
+	return objects;
+
+}
+
 void OctreeSceneModule::AddGameObject(const GameObjectHandle &hObj)
 {
+
 	GameObject *object = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
-	m_octree.Insert(hObj, object->GetAABB());
+
+	if (object->GetRenderComponent())
+	{
+		m_octree.Insert(hObj, object->GetAABB());
+	}
+	else
+	{
+		m_nonRenderableObjects.push_back(hObj);
+	}
+	
 }
 
 void OctreeSceneModule::RemoveGameObject(const GameObjectHandle &hObj)
 {
+
 	GameObject *object = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
-	m_octree.Remove(hObj, object->GetAABB());
+
+	if (object->GetRenderComponent())
+	{
+		m_octree.Remove(hObj, object->GetAABB());
+	}
+	else
+	{
+		
+		auto it = std::find(m_nonRenderableObjects.begin(), m_nonRenderableObjects.end(), hObj);
+
+		if (it != m_nonRenderableObjects.end())
+		{
+			m_nonRenderableObjects.erase(it);
+		}
+
+	}
+	
 }
 
 void OctreeSceneModule::ApplyUpdates(void)

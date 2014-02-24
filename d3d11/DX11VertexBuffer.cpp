@@ -8,7 +8,7 @@ using namespace mye::dx11;
 using namespace mye::core;
 
 DX11VertexBuffer::DX11VertexBuffer(ResourceManager *owner,
-								   const std::string &name,
+								   const mye::core::String &name,
 								   mye::core::ManualResourceLoader *manual,
 								   DX11Device &device) :
 DX11Buffer(owner, name, manual, device),
@@ -26,7 +26,7 @@ bool DX11VertexBuffer::LoadImpl(void)
 {
 
 	ResourceHandle hMesh = ResourceTypeManager::GetSingleton().
-		CreateResource("Mesh", m_name.c_str());
+		CreateResource("Mesh", m_name.CString());
 
 	hMesh.get()->Load();
 

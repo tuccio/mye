@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include "String.h"
 
 namespace mye
 {
@@ -14,16 +14,16 @@ namespace mye
 		public:
 
 			INamedObject(void);
-			INamedObject(const std::string &name);
+			INamedObject(const String &name);
 
 			~INamedObject(void);
 
-			const std::string& GetName(void) const;
+			const String& GetName(void) const;
 
 		protected:
 
-			void SetName(const std::string &name);
-			std::string m_name;			
+			void SetName(const String &name);
+			String m_name;			
 
 		};
 

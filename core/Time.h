@@ -4,7 +4,7 @@
 #include <Windows.h>
 #endif
 
-#include <string>
+#include "String.h"
 
 namespace mye
 {
@@ -17,7 +17,7 @@ namespace mye
 		class Milliseconds;
 
 		inline Seconds TimeSinceEpoch(void);
-		inline std::string FormatEpochTime(std::string format);
+		inline String FormatEpochTime(const String &format);
 
 		class FloatSeconds
 		{

@@ -10,6 +10,7 @@
 #undef max
 
 using namespace mye::win;
+using namespace mye::core;
 
 ToolbarWCR::ToolbarWCR(void)
 {
@@ -25,7 +26,7 @@ ToolbarWCR::ToolbarWCR(void)
 	{
 
 		auto logger = mye::core::Logger::GetSingletonPointer();
-		std::string error = GetLastErrorAsString();
+		String error = GetLastErrorAsString();
 
 		if (logger)
 		{

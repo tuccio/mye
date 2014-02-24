@@ -73,7 +73,7 @@ namespace mye
 		}
 
 		template <int N, typename T>
-		std::string __vec_tostring(const mye::math::Matrix<T, N, 1> &v)
+		mye::core::String __vec_tostring(const mye::math::Matrix<T, N, 1> &v)
 		{
 
 			std::stringstream ss;
@@ -87,7 +87,7 @@ namespace mye
 
 			ss << v[N - 1] << "]";
 
-			return ss.str();
+			return ss.str().c_str();
 
 		}
 
@@ -106,7 +106,7 @@ namespace mye
 		/* Quaternions */
 
 		template <typename T>
-		std::string __quat_tostring(const mye::math::Quaternion<T> &q)
+		mye::core::String __quat_tostring(const mye::math::Quaternion<T> &q)
 		{
 
 			std::stringstream ss;
@@ -115,7 +115,7 @@ namespace mye
 				q.x() << ", " << q.y() <<
 				", " << q.z() << "]";
 
-			return ss.str();
+			return ss.str().c_str();
 
 		}
 

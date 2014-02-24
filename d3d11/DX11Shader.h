@@ -5,8 +5,7 @@
 #include <mye/core/Resource.h>
 
 #include <d3d11.h>
-#include <Effects11\d3dx11effect.h>
-#include <string>
+#include <Effects11/d3dx11effect.h>
 
 namespace mye
 {
@@ -21,7 +20,7 @@ namespace mye
 		public:
 
 			DX11Shader(mye::core::ResourceManager *owner,
-				const std::string &name,
+				const mye::core::String &name,
 				mye::core::ManualResourceLoader *manual = nullptr);
 
 			~DX11Shader(void);
@@ -37,7 +36,7 @@ namespace mye
 
 			virtual size_t CalculateSizeImpl(void);
 
-			std::string m_source;
+			mye::core::String m_source;
 
 		};
 

@@ -59,6 +59,8 @@ namespace mye
 			void AddTab(int index,
 				const std::string &label);
 
+			void Update(void);
+
 		private:
 
 			HWND m_hTabs;

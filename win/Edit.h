@@ -3,7 +3,7 @@
 #include "Control.h"
 #include "Window.h"
 
-#include <string>
+#include <mye/core/String.h>
 
 namespace mye
 {
@@ -26,8 +26,8 @@ namespace mye
 
 			void Destroy(void);
 
-			void SetText(const std::string text);
-			std::string GetText(void) const;
+			void SetText(const mye::core::String &text);
+			mye::core::String GetText(void) const;
 
 			void SetReadOnly(bool readOnly);
 

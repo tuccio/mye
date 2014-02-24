@@ -14,6 +14,8 @@
 #include "VariableComponent.h"
 #include "WindowsFunctions.h"
 #include "InputModule.h"
+#include "CoreTypes.h"
+#include "Converters.h"
 
 #include "LuaModule.h"
 #include "LuaScriptCaller.h"
@@ -32,7 +34,7 @@ namespace mye
 
 		IWindow* __game_get_window(Game &game);
 
-		void __graphics_module_reinterpret(const std::string &type);
+		void __graphics_module_reinterpret(const mye::core::String &type);
 
 		void BindGame(lua_State *L)
 		{
@@ -50,7 +52,7 @@ namespace mye
 				class_<GameObjectsModule>(MYE_LUA_GAMEOBJECTSMODULE).
 
 					def("Create", (GameObjectHandle (GameObjectsModule::*) (void)) &GameObjectsModule::Create).
-					def("Create", (GameObjectHandle (GameObjectsModule::*) (const std::string&)) &GameObjectsModule::Create).
+					def("Create", (GameObjectHandle (GameObjectsModule::*) (const mye::core::String&)) &GameObjectsModule::Create).
 
 					def("Find", &GameObjectsModule::Find),
 
@@ -107,7 +109,7 @@ namespace mye
 			return game.GetGraphicsModule()->GetWindow();
 		}
 
-		void __graphics_module_reinterpret(const std::string &type)
+		void __graphics_module_reinterpret(const mye::core::String &type)
 		{
 
 			Game& game = Game::GetSingleton();

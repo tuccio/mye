@@ -38,12 +38,12 @@ void CompileShaders(void)
 	if (!hShader->Load())
 	{
 
-		const std::string &compileError = vertexShader->GetCompileError();
+		const String &compileError = vertexShader->GetCompileError();
 
-		if (!compileError.empty())
+		if (!compileError.IsEmpty())
 		{
 			MessageBox(nullptr,
-				compileError.c_str(),
+				compileError.CString(),
 				"Vertex shader compile error",
 				MB_OK);
 		}
@@ -65,7 +65,7 @@ void CompileShaders(void)
 	{
 
 		MessageBox(nullptr,
-			pixelShader->GetCompileError().c_str(),
+			pixelShader->GetCompileError().CString(),
 			"Pixel shader compile error",
 			MB_OK);
 

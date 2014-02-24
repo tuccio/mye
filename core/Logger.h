@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Singleton.h"
+#include "String.h"
+#include "Stream.h"
 
-#include <string>
 #include <ostream>
 #include <fstream>
 
@@ -21,29 +22,32 @@ namespace mye
 			Logger(void);
 			~Logger(void);
 
-			void OpenEventLogFile(const std::string &file);
-			void OpenErrorLogFile(const std::string &file);
+			void OpenEventLogFile(const String &file);
+			void OpenErrorLogFile(const String &file);
 
-			void LogEvent(const std::string &string);
-			void LogError(const std::string &string);
+			void LogEvent(const String &string);
+			void LogError(const String &string);
 
-			static bool LogEventOptional(const std::string &string);
-			static bool LogErrorOptional(const std::string &string);
+			static bool LogEventOptional(const String &string);
+			static bool LogErrorOptional(const String &string);
 
-			std::string GetLastEvent(void);
-			std::string GetLastError(void);
+			String GetLastEvent(void);
+			String GetLastError(void);
 
 		private:
 
 			const char* GetTimestamp(void);
+ 
+// 			std::ostream m_eventStream;
+// 			std::ostream m_errorStream;
 
-			std::ostream m_eventStream;
-			std::ostream m_errorStream;
+			FileOutputStream m_eventFile;
+			FileOutputStream m_errorFile;
 
-			std::ofstream m_eventFile, m_errorFile;
+//			std::ofstream m_eventFile, m_errorFile;
 
-			std::string m_lastEvent;
-			std::string m_lastError;
+			String m_lastEvent;
+			String m_lastError;
 
 		};
 

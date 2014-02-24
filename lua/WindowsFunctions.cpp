@@ -2,6 +2,7 @@
 
 #include "Types.h"
 #include "WindowsFunctions.h"
+#include "Converters.h"
 
 #include <Windows.h>
 

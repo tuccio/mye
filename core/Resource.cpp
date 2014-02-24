@@ -4,7 +4,7 @@
 using namespace mye::core;
 
 Resource::Resource(ResourceManager *owner,
-				   const std::string &name,
+				   const String &name,
 				   ManualResourceLoader *manual) :
 	INamedObject(name)
 {

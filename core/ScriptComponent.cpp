@@ -4,7 +4,7 @@ using namespace mye::core;
 using namespace mye::lua;
 
 ScriptComponent::ScriptComponent(LuaScript script) :
-	Component(COMPONENT_SCRIPT, "script"),
+	Component(ComponentTypes::SCRIPT, "script"),
 	m_script(script)
 {
 }

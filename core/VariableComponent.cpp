@@ -5,7 +5,7 @@ using namespace mye::core;
 /* Transform specialization */
 /*
 
-VariableComponent<Transform>::VariableComponent(const std::string &name) :
+VariableComponent<Transform>::VariableComponent(const String &name) :
 	Component(ComponentTypes::VARIABLE_COMPONENT,
 	name)
 {

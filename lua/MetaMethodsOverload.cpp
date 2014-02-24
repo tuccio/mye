@@ -2,6 +2,7 @@
 #include "Math.h"
 #include "Util.h"
 #include "GameObjectHandle.h"
+#include "Converters.h"
 
 #include <mye/core/Components.h>
 #include <mye/core/GameObjectsModule.h>
@@ -93,7 +94,7 @@ namespace mye
 							switch (MYE_LUA_COMPONENT_UNWRAP(component)->GetComponentType())
 							{
 
-							case COMPONENT_VARIABLE:
+							case ComponentTypes::VARIABLE:
 
 								{
 
@@ -103,7 +104,7 @@ namespace mye
 									VARIABLE_COMPONENT_CAST_GET_BEGIN(float)
 									VARIABLE_COMPONENT_CAST_GET_BLOCK(int)
 									VARIABLE_COMPONENT_CAST_GET_BLOCK(bool)
-									VARIABLE_COMPONENT_CAST_GET_BLOCK(std::string)
+									VARIABLE_COMPONENT_CAST_GET_BLOCK(mye::core::String)
 									VARIABLE_COMPONENT_CAST_GET_BLOCK(Vector3f)
 									VARIABLE_COMPONENT_CAST_GET_BLOCK(Vector3i)
 									VARIABLE_COMPONENT_CAST_GET_BLOCK(Transformf)
@@ -111,7 +112,7 @@ namespace mye
 								}
 								break;
 
-							case COMPONENT_TRANSFORM:
+							case ComponentTypes::TRANSFORM:
 
 								rvalue = object(L, boost::ref(static_cast<VariableComponent<mye::math::Transformf>*>(MYE_LUA_COMPONENT_UNWRAP(component))->Get()));
 								break;
@@ -192,7 +193,7 @@ namespace mye
 					switch (MYE_LUA_COMPONENT_UNWRAP(component)->GetComponentType())
 					{
 
-					case COMPONENT_VARIABLE:
+					case ComponentTypes::VARIABLE:
 						{
 
 							auto tmp = static_cast<VariableComponent<char>*>(MYE_LUA_COMPONENT_UNWRAP(component));
@@ -201,7 +202,7 @@ namespace mye
 							VARIABLE_COMPONENT_CAST_SET_BEGIN(float)
 							VARIABLE_COMPONENT_CAST_SET_BLOCK(int)
 							VARIABLE_COMPONENT_CAST_SET_BLOCK(bool)
-							VARIABLE_COMPONENT_CAST_SET_BLOCK(std::string)
+							VARIABLE_COMPONENT_CAST_SET_BLOCK(mye::core::String)
 							VARIABLE_COMPONENT_CAST_SET_BLOCK(Vector3f)
 							VARIABLE_COMPONENT_CAST_SET_BLOCK(Vector3i)
 							VARIABLE_COMPONENT_CAST_SET_BLOCK(Transformf)

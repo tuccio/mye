@@ -15,7 +15,7 @@ namespace mye
 		public:
 
 			DX11PixelShader(mye::core::ResourceManager *owner,
-				const std::string &name,
+				const mye::core::String &name,
 				mye::core::ManualResourceLoader *manual,
 				mye::dx11::DX11Device &device);
 
@@ -24,7 +24,7 @@ namespace mye
 			void Use(void);
 
 			ID3D11PixelShader* GetPixelShader(void);
-			std::string GetCompileError(void);
+			mye::core::String GetCompileError(void);
 
 			void Destroy(void);
 
@@ -35,7 +35,7 @@ namespace mye
 			size_t CalculateSizeImpl(void);
 
 			ID3D11PixelShader *m_shader;
-			std::string m_compileError;
+			mye::core::String m_compileError;
 
 		private:
 

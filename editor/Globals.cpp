@@ -15,7 +15,7 @@ dx11::DX11Window g_renderWindow(g_device);
 SceneView g_sceneView;
 ModelView g_modelView;
 
-Solution g_currentSolution;
+mye::core::String g_currentSolution;
 
 mye::win::MouseKeyboardInput g_input;
 mye::core::GameObjectsModule g_gameObjectsModule;

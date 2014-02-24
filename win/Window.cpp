@@ -53,7 +53,7 @@ WCR::WCR(void)
 	{
 
 		auto logger = mye::core::Logger::GetSingletonPointer();
-		std::string error = GetLastErrorAsString();
+		String error = GetLastErrorAsString();
 
 		if (logger)
 		{
@@ -99,7 +99,7 @@ bool Window::Create(const Properties &p)
 
 	return _Create(0x0,
 		WINDOW_CLASS_NAME,
-		p.caption.c_str(),
+		p.caption.CString(),
 		WS_OVERLAPPEDWINDOW |
 			WS_CLIPCHILDREN |
 			WS_MAXIMIZE,
@@ -120,7 +120,7 @@ bool Window::CreateChild(Window &parent, const Properties &p)
 
 	return _Create(0x0,
 		WINDOW_CLASS_NAME,
-		p.caption.c_str(),
+		p.caption.CString(),
 		WS_CHILD | WS_CLIPCHILDREN,
 		(p.x < 0 ? CW_USEDEFAULT : p.x),
 		(p.y < 0 ? CW_USEDEFAULT : p.y),
@@ -139,7 +139,7 @@ bool Window::CreateChild(HWND parent, const Properties &p)
 
 	return _Create(0x0,
 		WINDOW_CLASS_NAME,
-		p.caption.c_str(),
+		p.caption.CString(),
 		WS_CHILD | WS_CLIPCHILDREN,
 		(p.x < 0 ? CW_USEDEFAULT : p.x),
 		(p.y < 0 ? CW_USEDEFAULT : p.y),
@@ -245,20 +245,20 @@ void Window::SetFullScreen(void)
 	throw;
 }
 
-void Window::SetCaption(const std::string &caption)
+void Window::SetCaption(const String &caption)
 {
-	SetWindowText(m_hWnd, caption.c_str());
+	SetWindowText(m_hWnd, caption.CString());
 }
 
-std::string Window::GetCaption(void) const
+String Window::GetCaption(void) const
 {
 
 	int length = GetWindowTextLength(m_hWnd);
 
-	std::vector<char> v(length + 1);
-	GetWindowText(m_hWnd, &v[0], length);
+	String s(length);
+	GetWindowText(m_hWnd, &s[0], length);
 
-	return std::string(&v[0]);
+	return s;
 
 }
 

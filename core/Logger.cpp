@@ -8,8 +8,8 @@
 using namespace mye::core;
 
 Logger::Logger(void) :
-	m_eventStream(std::cout.rdbuf()),
-	m_errorStream(std::cerr.rdbuf())
+	m_errorFile(StandardOutput),
+	m_eventFile(StandardOutput)
 {
 }
 
@@ -18,67 +18,46 @@ Logger::~Logger(void)
 {
 }
 
-void Logger::OpenEventLogFile(const std::string &file)
+void Logger::OpenEventLogFile(const String &file)
 {
 
 	if (m_eventFile)
 	{
-		m_eventFile.close();
+		m_eventFile.Close();
 	}
 
-	if (!file.empty())
+	if (!file.IsEmpty())
 	{
-		m_eventFile.open(file);
-	}	
-
-	if (m_eventFile)
-	{
-		m_eventStream.set_rdbuf(m_eventFile.rdbuf());
+		m_eventFile = FileOutputStream(file);
 	}
-	else
-	{
-		m_eventStream.set_rdbuf(std::cout.rdbuf());
-	}
-
-	m_eventStream.clear();
 
 }
 
-void Logger::OpenErrorLogFile(const std::string &file)
+void Logger::OpenErrorLogFile(const String &file)
 {
 
 	if (m_errorFile)
 	{
-		m_errorFile.close();
+		m_errorFile.Close();
 	}
 
-	if (!file.empty())
+	if (!file.IsEmpty())
 	{
-		m_errorFile.open(file);
+		m_errorFile = FileOutputStream(file);
 	}
-
-	if (m_errorFile)
-	{
-		m_errorStream.set_rdbuf(m_errorFile.rdbuf());
-	}
-	else
-	{
-		m_errorStream.set_rdbuf(std::cout.rdbuf());
-	}
-
-	m_errorStream.clear();
 
 }
 
-void Logger::LogEvent(const std::string &string)
+void Logger::LogEvent(const String &string)
 {
-	m_eventStream << GetTimestamp() << " " << string << std::endl;
+	
+	m_eventFile << GetTimestamp() << " " << string << NewLine;
 	m_lastEvent = string;
 }
 
-void Logger::LogError(const std::string &string)
+void Logger::LogError(const String &string)
 {
-	m_errorStream << GetTimestamp() << " " << string << std::endl;
+	m_errorFile << GetTimestamp() << " " << string << NewLine;
 	m_lastError = string;
 }
 
@@ -95,17 +74,17 @@ const char* Logger::GetTimestamp(void)
 
 }
 
-std::string Logger::GetLastEvent(void)
+String Logger::GetLastEvent(void)
 {
 	return m_lastEvent;
 }
 
-std::string Logger::GetLastError(void)
+String Logger::GetLastError(void)
 {
 	return m_lastError;
 }
 
-bool Logger::LogEventOptional(const std::string &string)
+bool Logger::LogEventOptional(const String &string)
 {
 
 	Logger *logger = GetSingletonPointer();
@@ -120,7 +99,7 @@ bool Logger::LogEventOptional(const std::string &string)
 
 }
 
-bool Logger::LogErrorOptional(const std::string &string)
+bool Logger::LogErrorOptional(const String &string)
 {
 
 	Logger *logger = GetSingletonPointer();

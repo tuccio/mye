@@ -22,7 +22,7 @@ namespace mye
 		public:
 
 			Component(ComponentTypes type,
-				const std::string &name);
+				const String &name);
 
 			virtual ~Component(void) = 0;
 

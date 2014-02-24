@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include "String.h"
 
 namespace mye
 {
@@ -13,17 +13,17 @@ namespace mye
 
 		public:
 
-			FileInfo(const std::string &filepath);
+			FileInfo(const String &filepath);
 			~FileInfo(void);
 
-			std::string GetFilePath(void) const;
+			String GetFilePath(void) const;
 
-			std::string GetFileName(void) const;
-			std::string GetFileDirectory(void) const;
+			String GetFileName(void) const;
+			String GetFileDirectory(void) const;
 
 		private:
 
-			std::string m_file;
+			String m_file;
 
 		};
 

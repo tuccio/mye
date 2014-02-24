@@ -13,7 +13,7 @@ class TextResource :
 public:
 
 	TextResource(mye::core::ResourceManager *owner,
-		const std::string &name,
+		const mye::core::String &name,
 		mye::core::ManualResourceLoader *manual = nullptr) :
 		Resource(owner, name, manual)
 	{
@@ -34,7 +34,7 @@ protected:
 	bool LoadImpl(void)
 	{
 
-		std::ifstream f(GetName());
+		std::ifstream f(GetName().CString());
 		m_text = std::string(std::istreambuf_iterator<char>(f),
 			std::istreambuf_iterator<char>());
 
@@ -97,7 +97,7 @@ public:
 
 private:
 
-	mye::core::ResourceHandle CreateImpl(const std::string &name,
+	mye::core::ResourceHandle CreateImpl(const mye::core::String &name,
 		mye::core::ManualResourceLoader *manual,
 		mye::core::Resource::ParametersList *params)
 	{

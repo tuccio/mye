@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include "String.h"
 
 namespace mye
 {
@@ -8,8 +8,8 @@ namespace mye
 	namespace core
 	{
 
-		std::string PointerToString(void *p);
-		void* StringToPointer(const std::string &str);
+		String PointerToString(void *p);
+		void* StringToPointer(const String &str);
 
 	}
 }

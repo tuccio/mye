@@ -3,7 +3,7 @@
 #include "Mouse.h"
 #include "Keyboard.h"
 
-#include <string>
+#include "String.h"
 #include <vector>
 
 #include <mye/math/Math.h>
@@ -48,8 +48,8 @@ namespace mye
 			virtual bool IsFullScreen(void) const = 0;
 			virtual void SetFullScreen(void) = 0;
 
-			virtual void SetCaption(const std::string &caption) = 0;
-			virtual std::string GetCaption(void) const = 0;
+			virtual void SetCaption(const String &caption) = 0;
+			virtual String GetCaption(void) const = 0;
 
 			virtual void SetSize(const mye::math::Vector2i &size) = 0;
 			virtual mye::math::Vector2i GetSize(void) const = 0;
@@ -92,7 +92,7 @@ namespace mye
 		struct IWindow::Properties
 		{
 
-			std::string caption;
+			String caption;
 
 			int x;
 			int y;

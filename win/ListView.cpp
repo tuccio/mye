@@ -4,6 +4,7 @@
 
 #include <CommCtrl.h>
 
+using namespace mye::core;
 using namespace mye::win;
 using namespace mye::math;
 
@@ -23,7 +24,7 @@ ListViewWCR::ListViewWCR(void)
 	{
 
 		auto logger = mye::core::Logger::GetSingletonPointer();
-		std::string error = GetLastErrorAsString();
+		String error = GetLastErrorAsString();
 
 		if (logger)
 		{

@@ -26,7 +26,7 @@ namespace mye
 
 		template <typename ConcreteFunctionCaller>
 		template <typename R>
-		R Script<ConcreteFunctionCaller>::Call(const std::string &f) const
+		R Script<ConcreteFunctionCaller>::Call(const String &f) const
 		{
 			return ConcreteFunctionCaller::Call<R>(m_module, *this, f);
 		}

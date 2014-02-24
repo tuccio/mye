@@ -4,7 +4,7 @@ using namespace mye::core;
 using namespace mye::math;
 
 RenderComponent::RenderComponent(void) :
-	Component(COMPONENT_RENDER, "render"),
+	Component(ComponentTypes::RENDER, "render"),
 	m_visible(true),
 	m_bounds(AABBf::FromMinMax(Vector3f(0), Vector3f(0)))
 {

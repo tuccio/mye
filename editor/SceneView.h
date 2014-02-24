@@ -50,12 +50,23 @@ public:
 
 private:
 
+	friend class MainWindowListener;
+
 	void _CreateGameObjectsTab(void);
 	void _CreateRenderTab(void);
+	void _CreatePropertiesTab(void);
+	void _CreateCameraTab(void);
 
 	void _FillRenderTab(mye::core::GameObject *selectedObject);
+	void _FillPropertiesTab(mye::core::GameObject *selectedObject);
+	void _FillCameraTab(mye::core::GameObject *selectedObject);
 
-	mye::core::Camera m_camera;
+	void _AddGameObject(mye::core::GameObjectHandle hObj);
+
+	mye::core::LapStopWatch m_timer;
+
+	mye::core::CameraComponent m_camera;
+	mye::core::CameraComponent *m_sceneCamera;
 
 	mye::win::Tabs m_tabs;
 	mye::win::Window m_tabsWindow;
@@ -64,6 +75,8 @@ private:
 
 	mye::win::Window m_gameObjectsTab;
 	mye::win::Window m_renderTab;
+	mye::win::Window m_propertiesTab;
+	mye::win::Window m_cameraTab;
 
 	std::map<const std::string, mye::win::Control*> m_controls;
 

@@ -1,6 +1,7 @@
 #include "LuaScript.h"
 #include "LuaModule.h"
 #include "LuaScriptCaller.h"
+#include "Converters.h"
 
 #include <lua.hpp>
 
@@ -66,11 +67,11 @@ bool LuaScript::Run(void) const
 
 	}
 
-	std::string errorMessage = lua_tostring(L, -1);
+	mye::core::String errorMessage = lua_tostring(L, -1);
 
 	mye::core::Game::GetSingletonPointer()->RuntimeError(errorMessage);
 
-	luaL_error(L, errorMessage.c_str());
+	luaL_error(L, errorMessage.CString());
 	lua_settop(L, top);
 
 	return false;

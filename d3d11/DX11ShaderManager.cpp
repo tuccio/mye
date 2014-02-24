@@ -17,7 +17,7 @@ DX11ShaderManager::~DX11ShaderManager(void)
 {
 }
 
-ResourceHandle DX11ShaderManager::CreateImpl(const std::string &name,
+ResourceHandle DX11ShaderManager::CreateImpl(const mye::core::String &name,
 											 ManualResourceLoader *manual,
 											 Resource::ParametersList *params)
 {

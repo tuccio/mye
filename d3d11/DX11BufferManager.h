@@ -26,7 +26,7 @@ namespace mye
 
 		protected:
 
-			mye::core::ResourceHandle CreateImpl(const std::string &name,
+			mye::core::ResourceHandle CreateImpl(const mye::core::String &name,
 				mye::core::ManualResourceLoader *manual,
 				mye::core::Resource::ParametersList *params);
 

@@ -9,7 +9,7 @@
 using namespace mye::dx11;
 
 DX11VertexShader::DX11VertexShader(mye::core::ResourceManager *owner,
-								   const std::string &name,
+								   const mye::core::String &name,
 								   mye::core::ManualResourceLoader *manual,
 								   DX11Device &device) :
 DX11Shader(owner, name, manual),
@@ -35,7 +35,7 @@ ID3D11VertexShader* DX11VertexShader::GetVertexShader(void)
 	return m_shader;
 }
 
-std::string DX11VertexShader::GetCompileError(void)
+mye::core::String DX11VertexShader::GetCompileError(void)
 {
 	return m_compileError;
 }
@@ -57,9 +57,9 @@ bool DX11VertexShader::LoadImpl(void)
 #endif
 		
 		if (HRTESTFAILED(D3DCompile(
-			m_source.c_str(),
-			m_source.length(),
-			m_name.c_str(),
+			m_source.CString(),
+			m_source.Length(),
+			m_name.CString(),
 			nullptr,
 			D3D_COMPILE_STANDARD_FILE_INCLUDE,
 			"main",
@@ -125,7 +125,7 @@ void DX11VertexShader::UnloadImpl(void)
 		ReleaseCOM(m_shader);
 	}
 
-	m_compileError.clear();
+	m_compileError.Clear();
 
 }
 
@@ -142,6 +142,6 @@ void DX11VertexShader::Destroy(void)
 		ReleaseCOM(m_shader);
 	}
 	
-	m_compileError.clear();
+	m_compileError.Clear();
 
 }

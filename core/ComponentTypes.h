@@ -6,13 +6,14 @@ namespace mye
 	namespace core
 	{
 
-		enum ComponentTypes
+		enum class ComponentTypes
 		{
-			COMPONENT_VARIABLE,
-			COMPONENT_SCRIPT,
-			COMPONENT_TRANSFORM,
-			COMPONENT_RENDER,
-			COMPONENTS_COUNT
+			VARIABLE,
+			SCRIPT,
+			TRANSFORM,
+			RENDER,
+			CAMERA,
+			COUNT
 		};
 
 	}

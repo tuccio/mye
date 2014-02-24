@@ -9,7 +9,7 @@ namespace mye
 		template <typename R>
 		R LuaScriptCaller::Call(mye::core::ScriptModule<LuaScriptCaller> &module,
 			const mye::core::Script<LuaScriptCaller> &script,
-			const std::string &f)
+			const mye::core::String &f)
 		{
 
 			using namespace luabind;

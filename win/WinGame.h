@@ -1,6 +1,7 @@
 #pragma once
 
 #include <mye/core/Game.h>
+#include <mye/core/String.h>
 #include <mye/win/Window.h>
 
 namespace mye
@@ -25,7 +26,7 @@ namespace mye
 
 			void Run(void);
 
-			void RuntimeError(const std::string &error);
+			void RuntimeError(const mye::core::String &error);
 
 		private:
 

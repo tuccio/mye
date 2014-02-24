@@ -5,8 +5,8 @@ namespace mye
 	{
 
 		template <typename T>
-		VariableComponent<T>::VariableComponent(const std::string &name) :
-			Component(ComponentTypes::COMPONENT_VARIABLE,
+		VariableComponent<T>::VariableComponent(const String &name) :
+			Component(ComponentTypes::VARIABLE,
 			name)
 		{
 		}

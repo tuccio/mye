@@ -1,6 +1,7 @@
 #include "LuaModule.h"
 
 #include "CoreTypes.h"
+#include "Converters.h"
 #include "Math.h"
 #include "Game.h"
 
@@ -9,11 +10,12 @@
 
 #include <luabind/luabind.hpp>
 
+#include <mye/core/String.h>
+
 #include <iostream>
 
 using namespace mye::lua;
 using namespace mye::core;
-using namespace std;
 
 LuaModule::LuaModule(void)
 {
@@ -29,10 +31,10 @@ lua_State* LuaModule::GetLuaState(void)
 	return m_L;
 }
 
-bool LuaModule::RunFile(const string &file)
+bool LuaModule::RunFile(const String &file)
 {
 
-	if (luaL_loadfile(m_L, file.c_str()) ||
+	if (luaL_loadfile(m_L, file.CString()) ||
 		lua_pcall(m_L, 0, 0, 0))
 	{
 		m_lastError = lua_tostring(m_L, -1);
@@ -43,10 +45,10 @@ bool LuaModule::RunFile(const string &file)
 
 }
 
-bool LuaModule::RunString(const string &code)
+bool LuaModule::RunString(const String &code)
 {
 
-	if (luaL_loadstring(m_L, code.c_str()) ||
+	if (luaL_loadstring(m_L, code.CString()) ||
 		lua_pcall(m_L, 0, 0, 0))
 	{
 		m_lastError = lua_tostring(m_L, -1);
@@ -57,7 +59,7 @@ bool LuaModule::RunString(const string &code)
 
 }
 
-string LuaModule::GetLastError(void) const
+String LuaModule::GetLastError(void) const
 {
 	return m_lastError;
 }
@@ -96,12 +98,12 @@ void LuaModule::ShutDown(void)
 	lua_close(m_L);
 }
 
-LuaScript LuaModule::LoadBehaviour(const std::string &filename)
+LuaScript LuaModule::LoadBehaviour(const mye::core::String &filename)
 {
 
 	int top = lua_gettop(m_L);
 
-	if (!luaL_loadfile(m_L, filename.c_str()))
+	if (!luaL_loadfile(m_L, filename.CString()))
 	{
 
 		// Create _ENV for sandbox
@@ -136,7 +138,7 @@ LuaScript LuaModule::LoadBehaviour(const std::string &filename)
 
 	}
 
-	luaL_error(m_L, (std::string("Error while loading ") + filename).c_str());
+	luaL_error(m_L, ("Error while loading " + filename).CString());
 
 	lua_settop(m_L, top);
 
@@ -145,12 +147,12 @@ LuaScript LuaModule::LoadBehaviour(const std::string &filename)
 
 }
 
-LuaScript LuaModule::LoadProcedure(const std::string &filename)
+LuaScript LuaModule::LoadProcedure(const mye::core::String &filename)
 {
 
 	int top = lua_gettop(m_L);
 
-	if (!luaL_loadfile(m_L, filename.c_str()))
+	if (!luaL_loadfile(m_L, filename.CString()))
 	{
 
 		// Create _ENV for sandbox
@@ -179,7 +181,7 @@ LuaScript LuaModule::LoadProcedure(const std::string &filename)
 
 	}
 
-	luaL_error(m_L, (std::string("Error while loading ") + filename).c_str());
+	luaL_error(m_L, ("Error while loading " + filename).CString());
 
 	lua_settop(m_L, top);
 

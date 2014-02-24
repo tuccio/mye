@@ -32,7 +32,7 @@ namespace mye
 			ScriptModule<ConcreteFunctionCaller>& GetModule(void) const;
 
 			template <typename R>
-			R Call(const std::string &f) const;
+			R Call(const String &f) const;
 
 			bool Run(void) const;
 

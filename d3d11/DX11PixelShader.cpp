@@ -6,7 +6,7 @@
 using namespace mye::dx11;
 
 DX11PixelShader::DX11PixelShader(mye::core::ResourceManager *owner,
-								   const std::string &name,
+								   const mye::core::String &name,
 								   mye::core::ManualResourceLoader *manual,
 								   DX11Device &device) :
 DX11Shader(owner, name, manual),
@@ -30,7 +30,7 @@ ID3D11PixelShader* DX11PixelShader::GetPixelShader(void)
 	return m_shader;
 }
 
-std::string DX11PixelShader::GetCompileError(void)
+mye::core::String DX11PixelShader::GetCompileError(void)
 {
 	return m_compileError;
 }
@@ -52,9 +52,9 @@ bool DX11PixelShader::LoadImpl(void)
 #endif
 
 		if (FAILED(D3DCompile(
-			m_source.c_str(),
-			m_source.length(),
-			m_name.c_str(),
+			m_source.CString(),
+			m_source.Length(),
+			m_name.CString(),
 			nullptr,
 			D3D_COMPILE_STANDARD_FILE_INCLUDE,
 			"main",
@@ -106,6 +106,6 @@ void DX11PixelShader::Destroy(void)
 		ReleaseCOM(m_shader);
 	}
 	
-	m_compileError.clear();
+	m_compileError.Clear();
 
 }

@@ -3,6 +3,7 @@
 #include "Types.h"
 #include "Util.h"
 #include "MetaMethodsOverload.h"
+#include "Converters.h"
 
 #include <mye/core/Components.h>
 #include <mye/core/Game.h>
@@ -53,12 +54,12 @@ namespace mye
 
 		}
 
-		std::string __goh_getname(const GameObjectHandle &hObj)
+		mye::core::String __goh_getname(const GameObjectHandle &hObj)
 		{
 			return LPGAMEOBJECT(hObj)->GetName();
 		}
 
-		object __goh_getcomponent(const GameObjectHandle &hObj, const std::string &name)
+		object __goh_getcomponent(const GameObjectHandle &hObj, const mye::core::String &name)
 		{
 			Component *component = LPGAMEOBJECT(hObj)->GetComponent(name);
 			return object(LPLUASTATE, MYE_LUA_COMPONENT_WRAP(component));
@@ -80,18 +81,18 @@ namespace mye
 			return LPGAMEOBJECT(hObj) != nullptr;
 		}
 
-		std::string __goh_tostring(const GameObjectHandle &hObj)
+		mye::core::String __goh_tostring(const GameObjectHandle &hObj)
 		{
 
-			std::string name = LPGAMEOBJECT(hObj)->GetName();
+			mye::core::String name = LPGAMEOBJECT(hObj)->GetName();
 
-			if (name.empty())
+			if (name.IsEmpty())
 			{
-				return std::string("<Unnamed object [") +
-					std::to_string(hObj.id) +
-					std::string(", ") +
-					std::to_string(hObj.allocation) +
-					std::string("]>");
+				return mye::core::String("<Unnamed object [") +
+					mye::core::ToString(hObj.id) +
+					mye::core::String(", ") +
+					mye::core::ToString(hObj.allocation) +
+					mye::core::String("]>");
 			}
 
 			return name;

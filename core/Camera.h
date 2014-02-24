@@ -40,6 +40,8 @@ namespace mye
 			void SetClipAspectRatio(float aspect);
 
 			float GetFovY(void) const;
+			void SetFovY(float fovy);
+
 			float GetFovX(void) const;
 
 			float GetFovYRadians(void) const;

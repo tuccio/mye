@@ -1,6 +1,7 @@
 #include "VariableComponent.h"
 #include "Math.h"
 #include "Types.h"
+#include "Converters.h"
 
 #include <mye/core/VariableComponent.h>
 #include <mye/math/Math.h>
@@ -24,7 +25,7 @@ namespace mye
 			[
 
 				class_<VariableComponent<T>, Component>(name).
-					def(constructor<const std::string&>()).
+					def(constructor<const mye::core::String&>()).
 					property("value", &VariableComponent<T>::Get, &VariableComponent<T>::Set)
 
 			];
@@ -37,7 +38,7 @@ namespace mye
 			BindVariableComponent<float>(L, MYE_LUA_FLOAT_COMPONENT);
 			BindVariableComponent<int>(L, MYE_LUA_INT_COMPONENT);
 			BindVariableComponent<bool>(L, MYE_LUA_BOOL_COMPONENT);
-			BindVariableComponent<std::string>(L, MYE_LUA_STRING_COMPONENT);
+			BindVariableComponent<mye::core::String>(L, MYE_LUA_STRING_COMPONENT);
 			BindVariableComponent<mye::math::Vector3f>(L, MYE_LUA_VEC3_COMPONENT);
 			BindVariableComponent<mye::math::Vector3i>(L, MYE_LUA_VEC3I_COMPONENT);
 			BindVariableComponent<mye::math::Quaternionf>(L, MYE_LUA_QUATERNION_COMPONENT);

@@ -2,6 +2,7 @@
 
 #include "Script.h"
 #include "Types.h"
+#include "Converters.h"
 
 #include <mye/core/Game.h>
 #include <mye/core/ScriptComponent.h>

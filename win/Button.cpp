@@ -19,7 +19,7 @@ Button::~Button(void)
 }
 
 void Button::Create(Window &parent,
-					const std::string &text,
+					const mye::core::String &text,
 					const CallbackType &f,
 					const mye::math::Vector2i &position,
 					const mye::math::Vector2i &size)
@@ -29,7 +29,7 @@ void Button::Create(Window &parent,
 	
 	m_hButton = CreateWindow( 
 		WC_BUTTON,
-		text.c_str(),
+		text.CString(),
 		WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
 		position.x(),
 		position.y(),

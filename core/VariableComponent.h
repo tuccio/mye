@@ -21,9 +21,9 @@ namespace mye
 
 		public:
 
-			VariableComponent(const std::string &name);
+			VariableComponent(const String &name);
 /*
-			VariableComponent(const std::string &name,
+			VariableComponent(const String &name,
 				const std::vector<VariableConstraint<T>*> &constraints)*/
 			~VariableComponent(void);
 
@@ -53,7 +53,7 @@ namespace mye
 
 		public:
 
-			VariableComponent(const std::string &name);
+			VariableComponent(const String &name);
 			~VariableComponent(void);
 
 			VariableComponent<Transform>* Clone(void) const;

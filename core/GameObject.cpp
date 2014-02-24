@@ -14,16 +14,18 @@ GameObject::GameObject(void) :
 	m_owner(nullptr),
 	m_transform(nullptr),
 	m_script(nullptr),
-	m_render(nullptr)
+	m_render(nullptr),
+	m_camera(nullptr)
 {
 }
 
-GameObject::GameObject(const std::string &name) :
-	m_name(name),
+GameObject::GameObject(const String &name) :
+	INamedObject(name),
 	m_owner(nullptr),
 	m_transform(nullptr),
 	m_script(nullptr),
-	m_render(nullptr)
+	m_render(nullptr),
+	m_camera(nullptr)
 {
 }
 
@@ -54,15 +56,23 @@ Component* GameObject::AddComponent(const Component &component)
 
 		switch (component.GetComponentType())
 		{
-		case COMPONENT_TRANSFORM:
+
+		case ComponentTypes::TRANSFORM:
 			m_transform = static_cast<TransformComponent*>(newComponent);
 			break;
-		case COMPONENT_SCRIPT:
+
+		case ComponentTypes::SCRIPT:
 			m_script = static_cast<ScriptComponent*>(newComponent);
 			break;
-		case COMPONENT_RENDER:
+
+		case ComponentTypes::RENDER:
 			m_render = static_cast<RenderComponent*>(newComponent);
 			break;
+
+		case ComponentTypes::CAMERA:
+			m_camera = static_cast<CameraComponent*>(newComponent);
+			break;
+
 		}
 
 		return newComponent;
@@ -71,7 +81,7 @@ Component* GameObject::AddComponent(const Component &component)
 
 }
 
-Component* GameObject::GetComponent(const std::string &name)
+Component* GameObject::GetComponent(const String &name)
 {
 
 	auto it = m_components.find(name);
@@ -87,7 +97,7 @@ Component* GameObject::GetComponent(const std::string &name)
 
 }
 
-void GameObject::RemoveComponent(const std::string &name)
+void GameObject::RemoveComponent(const String &name)
 {
 
 	auto it = m_components.find(name);
@@ -97,15 +107,23 @@ void GameObject::RemoveComponent(const std::string &name)
 
 		switch (it->second->GetComponentType())
 		{
-		case COMPONENT_TRANSFORM:
+
+		case ComponentTypes::TRANSFORM:
 			m_transform = nullptr;
 			break;
-		case COMPONENT_SCRIPT:
+
+		case ComponentTypes::SCRIPT:
 			m_script = nullptr;
 			break;
-		case COMPONENT_RENDER:
+
+		case ComponentTypes::RENDER:
 			m_render = nullptr;
 			break;
+
+		case ComponentTypes::CAMERA:
+			m_camera = nullptr;
+			break;
+
 		}
 
 		delete it->second;

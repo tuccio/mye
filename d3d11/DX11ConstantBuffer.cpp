@@ -6,7 +6,7 @@ using namespace mye::dx11;
 using namespace mye::core;
 
 DX11ConstantBuffer::DX11ConstantBuffer(ResourceManager *owner,
-									   const std::string &name,
+									   const mye::core::String &name,
 									   ManualResourceLoader *manual,
 									   DX11Device &device) :
 DX11Buffer(owner, name, manual, device),

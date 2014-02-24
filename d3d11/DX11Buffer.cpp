@@ -4,7 +4,7 @@
 using namespace mye::dx11;
 
 DX11Buffer::DX11Buffer(mye::core::ResourceManager *owner,
-					   const std::string &name,
+					   const mye::core::String &name,
 					   mye::core::ManualResourceLoader *manual,
 					   DX11Device &device) :
 Resource(owner, name, manual),

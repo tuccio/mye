@@ -18,7 +18,6 @@
 #include "SceneView.h"
 #include "ModelView.h"
 
-#include "Solution.h"
 #include "SimpleLayoutWindow.h"
 
 extern mye::win::IDGenerator g_idGenerator;
@@ -34,7 +33,7 @@ extern mye::dx11::DX11Window g_renderWindow;
 extern SceneView g_sceneView;
 extern ModelView g_modelView;
 
-extern Solution g_currentSolution;
+extern mye::core::String g_currentSolution;
 
 extern mye::win::MouseKeyboardInput g_input;
 extern mye::core::GameObjectsModule g_gameObjectsModule;

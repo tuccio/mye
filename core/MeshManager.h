@@ -19,7 +19,7 @@ namespace mye
 			MeshManager(void);
 			~MeshManager(void);
 
-			mye::core::ResourceHandle CreateImpl(const std::string &name,
+			mye::core::ResourceHandle CreateImpl(const String &name,
 				mye::core::ManualResourceLoader *manual,
 				mye::core::Resource::ParametersList *params);
 

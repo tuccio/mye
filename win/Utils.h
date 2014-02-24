@@ -1,5 +1,4 @@
-#include <string>
-
+#include <mye/core/String.h>
 #include <Windows.h>
 
 namespace mye
@@ -8,12 +7,12 @@ namespace mye
 	namespace win
 	{
 
-		std::string GetLastErrorAsString(void);
+		mye::core::String GetLastErrorAsString(void);
 
-		std::string FormatSystemTime(const SYSTEMTIME *lpTime,
-			const std::string &format);
+		mye::core::String FormatSystemTime(const SYSTEMTIME *lpTime,
+			const mye::core::String &format);
 
-		void ShowErrorBox(const std::string &message = GetLastErrorAsString());
+		void ShowErrorBox(const mye::core::String &message = GetLastErrorAsString());
 
 		bool MakeTransparentBitmap(HBITMAP hBitmap, HDC hDC);
 
