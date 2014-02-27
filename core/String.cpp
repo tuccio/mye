@@ -11,7 +11,17 @@ String::String(void)
 {
 	m_string = nullptr;
 	m_length = 0;
-	m_size = 0;
+	m_size   = 0;
+}
+
+String::String(String &&string) :
+	m_string(string.m_string),
+	m_length(string.m_length),
+	m_size(string.m_size)
+{
+	string.m_string = nullptr;
+	string.m_length = 0;
+	string.m_size   = 0;
 }
 
 String::String(size_t length) :
@@ -39,7 +49,7 @@ String::String(const String &string) :
 
 	if (m_length > 0)
 	{
-		m_size = m_length + 1;
+		m_size   = m_length + 1;
 		m_string = new char[m_size];
 		memcpy(m_string, string.m_string, m_size);
 	}
@@ -47,7 +57,7 @@ String::String(const String &string) :
 	{
 		m_string = nullptr;
 		m_length = 0;
-		m_size = 0;
+		m_size   = 0;
 	}
 
 }
@@ -68,7 +78,7 @@ void String::Resize(size_t length)
 		if (length + 1 > m_size)
 		{
 
-			size_t oldSize = m_size;
+			size_t oldSize  = m_size;
 			char* oldString = m_string;
 
 			m_size = length + 1;
@@ -159,4 +169,18 @@ String String::Repeat(unsigned int n) const
 
 	return s;
 
+}
+
+String::Iterator::Iterator(void)
+{
+}
+
+String::Iterator::Iterator(char *s) :
+	m_it(s)
+{
+}
+
+String::Iterator::Iterator(const Iterator &it) :
+	m_it(it.m_it)
+{
 }

@@ -425,14 +425,45 @@ namespace mye
 
 		}
 
+		String::Iterator& String::Iterator::operator++ (void)
+		{
+			m_it++;
+			return *this;
+		}
+
+		bool String::Iterator::operator== (const String::Iterator &it) const
+		{
+			return m_it == it.m_it;
+		}
+
+		bool String::Iterator::operator!= (const String::Iterator &it) const
+		{
+			return m_it != it.m_it;
+		}
+
+		char& String::Iterator::operator* (void) const
+		{
+			return *m_it;
+		}
+
+		String::Iterator String::begin(void)
+		{
+			return m_string;
+		}
+
+		String::Iterator String::end(void)
+		{
+			return m_string + m_length;
+		}
+
 	}
 
 }
 
-/* Hash for mye::core::String */
-
 namespace std
 {
+
+	/* Hash for mye::core::String */
 
 	template <>
 	struct hash<mye::core::String>
@@ -499,6 +530,8 @@ namespace std
 			return h;
 
 		}
+
+		
 
 	};
 

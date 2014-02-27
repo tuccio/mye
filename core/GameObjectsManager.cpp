@@ -1,5 +1,7 @@
 #include "GameObjectsManager.h"
 #include "GameObject.h"
+#include "Entity.h"
+#include "ResourceTypeManager.h"
 
 using namespace mye::core;
 
@@ -46,6 +48,41 @@ GameObjectHandle GameObjectsManager::Create(const String& name)
 	}
 
 	o->OnCreation(this, hObj);
+
+	return hObj;
+
+}
+
+GameObjectHandle GameObjectsManager::CreateEntity(const String& entity)
+{
+
+	return CreateEntity(entity, String());
+
+}
+
+GameObjectHandle GameObjectsManager::CreateEntity(const String &entity,
+												  const String &name)
+{
+
+	GameObjectHandle hObj;
+	ResourceHandle r = ResourceTypeManager::GetSingleton().CreateResource("Entity", entity);
+
+	if (r)
+	{
+
+		r->Load();
+		
+		EntityTemplate *e = r.Cast<EntityTemplate>();
+
+		hObj = Create(name);
+		GameObject *o = Get(hObj);
+
+		for (Component *c : *e)
+		{
+			o->AddComponent(*c);
+		}
+
+	}
 
 	return hObj;
 

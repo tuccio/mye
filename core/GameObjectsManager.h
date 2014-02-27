@@ -45,6 +45,10 @@ namespace mye
 			GameObjectHandle Create(void);
 			GameObjectHandle Create(const String& name);
 
+			GameObjectHandle CreateEntity(const String &entity);
+			GameObjectHandle CreateEntity(const String &entity,
+				const String &name);
+
 // 			void Rename(const GameObjectHandle &hObj,
 // 				const String &name);
 

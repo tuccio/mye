@@ -121,7 +121,7 @@ void SceneView::_CreatePropertiesTab(void)
 
 		},
 		Vector2i(0, 370),
-		Vector2i(260, 24));
+		Vector2i(260, 104));
 
 	m_propertiesTab.RegisterControl(applyButton);
 

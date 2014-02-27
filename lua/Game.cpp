@@ -54,6 +54,9 @@ namespace mye
 					def("Create", (GameObjectHandle (GameObjectsModule::*) (void)) &GameObjectsModule::Create).
 					def("Create", (GameObjectHandle (GameObjectsModule::*) (const mye::core::String&)) &GameObjectsModule::Create).
 
+					def("CreateEntity", (GameObjectHandle (GameObjectsModule::*) (const mye::core::String&)) &GameObjectsModule::CreateEntity).
+					def("CreateEntity", (GameObjectHandle (GameObjectsModule::*) (const mye::core::String&, const mye::core::String&)) &GameObjectsModule::CreateEntity).
+
 					def("Find", &GameObjectsModule::Find),
 
 				class_<GraphicsModule>(MYE_LUA_GRAPHICSMODULE).

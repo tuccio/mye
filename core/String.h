@@ -5,6 +5,8 @@
 #include <string>
 #include <sstream>
 
+#include <iterator>
+
 #include <mye/math/Geometry.h>
 
 #define __MYE_STRING_INTMAXLEN 11
@@ -23,10 +25,12 @@ namespace mye
 		public:
 
 			typedef size_t Position;
-
+			
 			static const Position Null;
+			class Iterator;
 
 			String(void);
+			String(String &&string);
 			String(size_t length);
 			String(const char *string);
 			String(const String &string);
@@ -72,6 +76,9 @@ namespace mye
 			inline Position FindFirst(const String &s) const;
 			inline Position FindLast(const String &s) const;
 
+			inline Iterator begin(void);
+			inline Iterator end(void);
+
 		private:
 
 			char *m_string;
@@ -82,6 +89,27 @@ namespace mye
 			friend std::hash<mye::core::String>;
 
 			friend String operator+ (const char *s1, const String &s2);
+
+		};
+
+		class String::Iterator :
+			public std::iterator<std::forward_iterator_tag, char>
+		{
+
+		public:
+
+			Iterator(void);
+			Iterator(char *s);
+			Iterator(const Iterator &it);
+
+			inline Iterator& operator++ (void);
+			inline bool operator== (const Iterator &it) const;
+			inline bool operator!= (const Iterator &it) const;
+			inline char& operator* (void) const;
+
+		private:
+
+			char *m_it;
 
 		};
 

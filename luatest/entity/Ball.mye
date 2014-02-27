@@ -1,0 +1,27 @@
+
+/*
+ *	Ball entity
+ */
+
+entity Ball
+{
+
+	// Ball radius
+	
+	float radius(5.0);
+	
+	
+	// Ball kinematics
+	
+	vec3 position(0, 0, 0);
+	vec3 velocity(0.666, -0.666, 0.21);
+	
+	
+	// Ball color
+	
+	RGB color(1, 0, 0);
+	
+	// Render(modelName);
+	// Transform(position, orientation, scaling);
+
+}

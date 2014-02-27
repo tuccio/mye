@@ -29,8 +29,8 @@
 #define MYE_LUA_LUAMODULE "LuaModule"
 #define MYE_LUA_SCRIPT "Script"
 
-#define MYE_LUA_COLORRGB "ColorRGB"
-#define MYE_LUA_COLORRGBA "ColorRGBA"
+#define MYE_LUA_COLORRGB "RGB"
+#define MYE_LUA_COLORRGBA "RGBA"
 
 #define MYE_LUA_STRING "__String"
 

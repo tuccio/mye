@@ -147,10 +147,10 @@ namespace mye
 
 					def("__tostring", &__quat_tostring<float>).
 
-					property("w", __quat_get<float, 3>, __quat_set<float, 3>).
-					property("x", __quat_get<float, 0>, __quat_set<float, 0>).
-					property("y", __quat_get<float, 1>, __quat_set<float, 1>).
-					property("z", __quat_get<float, 2>, __quat_set<float, 2>)
+					property("w", &__quat_get<float, 3>, &__quat_set<float, 3>).
+					property("x", &__quat_get<float, 0>, &__quat_set<float, 0>).
+					property("y", &__quat_get<float, 1>, &__quat_set<float, 1>).
+					property("z", &__quat_get<float, 2>, &__quat_set<float, 2>)
 
 			];
 

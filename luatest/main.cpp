@@ -1,19 +1,18 @@
 #include <mye/core/Logger.h>
-#include <mye/win/MouseKeyboardInput.h>
+#include <mye/core/Entity.h>
 #include <mye/core/ResourceManager.h>
+#include <mye/core/ResourceTypeManager.h>
 
 #include <mye/d3d11/DX11Module.h>
 
+#include <mye/lua/LuaModule.h>
 #include <mye/lua/LuaScriptCaller.h>
 #include <mye/lua/LuaScript.h>
-#include <mye/lua/LuaModule.h>
 
+#include <mye/win/MouseKeyboardInput.h>
 #include <mye/win/WinGame.h>
 
 #include <iostream>
-
-#include "TextResource.h"
-
 #include <Windows.h>
 
 using namespace std;
@@ -28,10 +27,8 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 					 int nCmdShow)
 {
 
-	Logger logger;
-
-	logger.OpenErrorLogFile("error.log");
-	logger.OpenEventLogFile("event.log");
+	ResourceTypeManager resourceTypeManager;
+	EntityTemplateManager entityTemplateManager("./entity/");
 
 	MouseKeyboardInput input;
 	GameObjectsModule gameobjects;

@@ -1,0 +1,18 @@
+
+/*
+ * A sample entity
+ */
+
+entity Sample
+{
+
+	string name("test bla bla");
+	
+	vec3 position(-1, 2, -3);
+	vec4i random(-21, 214, 932, 241);
+	
+	quaternion rotation(1, 0, 0, 0);
+	
+	bool visible(true);
+
+}
