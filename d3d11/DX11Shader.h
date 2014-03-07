@@ -21,12 +21,12 @@ namespace mye
 
 			DX11Shader(mye::core::ResourceManager *owner,
 				const mye::core::String &name,
-				mye::core::ManualResourceLoader *manual = nullptr);
+				mye::core::ManualResourceLoader *manual = nullptr,
+				bool precompiled = false);
 
 			~DX11Shader(void);
 
 			virtual void Use(void);
-
 			virtual void Destroy(void);
 
 		protected:
@@ -37,8 +37,11 @@ namespace mye
 			virtual size_t CalculateSizeImpl(void);
 
 			mye::core::String m_source;
+			bool m_precompiled;
 
 		};
+
+		typedef boost::shared_ptr<DX11Shader> DX11ShaderPointer;
 
 	}
 

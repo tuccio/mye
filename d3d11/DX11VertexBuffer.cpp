@@ -25,14 +25,12 @@ DX11VertexBuffer::~DX11VertexBuffer(void)
 bool DX11VertexBuffer::LoadImpl(void)
 {
 
-	ResourceHandle hMesh = ResourceTypeManager::GetSingleton().
-		CreateResource("Mesh", m_name.CString());
+	MeshPointer hMesh = ResourceTypeManager::GetSingleton().
+		CreateResource<Mesh>("Mesh", m_name);
 
-	hMesh.get()->Load();
+	hMesh->Load();
 
-	Mesh *mesh = hMesh.Cast<Mesh>();
-
-	return Create(mesh);
+	return Create(hMesh.get());
 
 }
 

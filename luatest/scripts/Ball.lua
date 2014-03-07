@@ -1,8 +1,6 @@
-type = "Ball"
+function Update(self, dt)
 
-function Update(hObj, dt)
-
-	hObj.position = hObj.position + hObj.velocity * dt
+	self.position = self.position + self.velocity  * dt
 
 end
 

@@ -26,8 +26,8 @@ namespace mye
 
 			mye::core::ResourceHandle GetVertexData(void);
 
-			mye::core::ResourceHandle GetModel(void);
-			void SetModel(ResourceHandle model);
+			mye::core::ModelPointer GetModel(void);
+			void SetModel(ModelPointer model);
 
 			const mye::math::AABBf& GetBounds(void) const;
 			void SetBounds(const mye::math::AABBf &bounds);
@@ -39,7 +39,7 @@ namespace mye
 			bool m_visible;
 			
 			ResourceHandle m_vertexData;
-			ResourceHandle m_model;
+			ModelPointer m_model;
 			
 			mye::math::AABBf m_bounds;
 			

@@ -23,9 +23,16 @@ namespace mye
 			DX11ShaderManager(DX11Device &device);
 			~DX11ShaderManager(void);
 
+			DX11ShaderPointer CreateVertexShader(const mye::core::String &name,
+				bool precompiled,
+				const std::vector<D3D11_INPUT_ELEMENT_DESC> &vdesc);
+
+			DX11ShaderPointer CreatePixelShader(const mye::core::String &name,
+				bool precompiled);
+
 		protected:
 
-			mye::core::ResourceHandle CreateImpl(const mye::core::String &name,
+			DX11Shader* CreateImpl(const mye::core::String &name,
 				mye::core::ManualResourceLoader *manual,
 				mye::core::Resource::ParametersList *params);
 

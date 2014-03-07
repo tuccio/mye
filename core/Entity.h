@@ -17,7 +17,7 @@ namespace mye
 	namespace core
 	{
 
-		class EntityTemplate :
+		class Entity :
 			public Resource
 		{
 
@@ -25,7 +25,7 @@ namespace mye
 
 			typedef std::vector<Component*>::iterator Iterator;
 
-			EntityTemplate(ResourceManager *owner,
+			Entity(ResourceManager *owner,
 				const String &name,
 				ManualResourceLoader *manual,
 				const String &entityDirectory = "");
@@ -57,6 +57,8 @@ namespace mye
 
 		};
 
+		typedef boost::shared_ptr<Entity> EntityPointer;
+
 		class EntityTemplateManager :
 			public ResourceManager
 		{
@@ -67,7 +69,7 @@ namespace mye
 
 		protected:
 
-			virtual ResourceHandle CreateImpl(const String &name,
+			Entity* CreateImpl(const String &name,
 				ManualResourceLoader *manual,
 				Resource::ParametersList *params);
 
@@ -233,7 +235,7 @@ namespace mye
 
 				}
 
-				bool SemanticParse(Entity &entity, EntityTemplate &templ) const;
+				bool SemanticParse(Entity &entity, mye::core::Entity &templ) const;
 
 			private:
 

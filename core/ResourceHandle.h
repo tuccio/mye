@@ -11,7 +11,7 @@ namespace mye
 	{
 
 		class ResourceHandle :
-			public std::shared_ptr<Resource>
+			public boost::shared_ptr<Resource>
 		{
 
 		public:

@@ -30,12 +30,12 @@ namespace mye
 		public:
 
 			
-			Game(InputModule *input,
+			Game(InputModule       *input,
 				 GameObjectsModule *gameobjects,
-				 SceneModule *scene,
-				 GraphicsModule *graphics,
-				 AudioModule *audio,
-				 ScriptModule *script);
+				 SceneModule       *scene,
+				 GraphicsModule    *graphics,
+				 AudioModule       *audio,
+				 ScriptModule      *script);
 
 			~Game(void);
 
@@ -43,12 +43,12 @@ namespace mye
 			virtual void Run(void);
 			virtual void Quit(void);
 
-			InputModule* GetInputModule(void);
+			InputModule*       GetInputModule(void);
 			GameObjectsModule* GetGameObjectsModule(void);
-			SceneModule* GetSceneModule(void);
-			GraphicsModule* GetGraphicsModule(void);
-			AudioModule* GetAudioModule(void);
-			ScriptModule* GetScriptModule(void);
+			SceneModule*       GetSceneModule(void);
+			GraphicsModule*    GetGraphicsModule(void);
+			AudioModule*       GetAudioModule(void);
+			ScriptModule*      GetScriptModule(void);
 
 			virtual void RuntimeError(const String &error);
 
@@ -57,12 +57,12 @@ namespace mye
 
 		protected:
 
-			InputModule *m_input;
+			InputModule       *m_input;
 			GameObjectsModule *m_gameobjects;
-			SceneModule *m_scene;
-			GraphicsModule *m_graphics;
-			AudioModule *m_audio;
-			ScriptModule *m_script;
+			SceneModule       *m_scene;
+			GraphicsModule    *m_graphics;
+			AudioModule       *m_audio;
+			ScriptModule      *m_script;
 
 			LapStopWatch m_timer;
 

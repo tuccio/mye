@@ -66,33 +66,33 @@ void ModelView::Activate(void)
 
 				if (m_model)
 				{
-					m_model.Release();
+					m_model.reset();
 				}
 
 				Resource::ParametersList params;
 
-				params["normals"] = "true";
+				params["normals"]   = "true";
 				params["texcoords"] = "true";
 
 				m_model = ResourceTypeManager::GetSingleton().
-					CreateResource("Model", buffer, nullptr, &params);
+					CreateResource<Model>("Model", buffer, nullptr, &params);
 
 				m_model->Load();
 
-				Model *model = m_model.Cast<Model>();
+				Model *model = m_model.get();
 
 				m_vbuffer.Destroy();
 				m_vbuffer.Create(model);
 
-				auto minmax = model->GetMinMaxVertices();
-				AABBf aabb = AABBf::FromMinMax(minmax.first, minmax.second);
+				auto minmax          = model->GetMinMaxVertices();
+				AABBf aabb           = AABBf::FromMinMax(minmax.first, minmax.second);
 
 				Vector3f halfExtents = aabb.GetHalfExtents();
-				float scale = 1.0f / (2.0f * Max(halfExtents.x(), halfExtents.y()));
+				float scale          = 1.0f / (2.0f * Max(halfExtents.x(), halfExtents.y()));
 
-				Vector3f center = aabb.GetCenter();
+				Vector3f center      = aabb.GetCenter();
 
-				m_transform = Transformf::Identity();
+				m_transform          = Transformf::Identity();
 
 				m_transform.SetScale(Vector3f(scale));
 				m_transform.SetPosition(-center);

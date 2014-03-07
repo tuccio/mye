@@ -12,7 +12,7 @@
 
 #include <cstdlib>
 
-#define OBJECT_SELECTED_NEEDED() if (!m_selected) { ShowErrorBox("No object selected"); return; }
+#define OBJECT_SELECTED_NEEDED() if (!m_selected) { ShowErrorBox("No object selected", g_mainWindow.GetHandle()); return; }
 
 using namespace mye::dx11;
 using namespace mye::win;
@@ -230,7 +230,7 @@ void SceneView::_FillCameraTab(mye::core::GameObject *selectedObject)
 	Edit *lookAtY = static_cast<Edit*>(m_controls["CAMlookAtYEdit"]);
 	Edit *lookAtZ = static_cast<Edit*>(m_controls["CAMlookAtZEdit"]);
 
-	if (m_selected)
+	if (selectedObject)
 	{
 
 		CameraComponent *camera = selectedObject->GetCameraComponent();

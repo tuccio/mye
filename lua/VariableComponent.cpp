@@ -4,6 +4,7 @@
 #include "Converters.h"
 
 #include <mye/core/VariableComponent.h>
+#include <mye/core/TransformComponent.h>
 #include <mye/math/Math.h>
 
 #include <luabind/luabind.hpp>
@@ -32,6 +33,27 @@ namespace mye
 
 		}
 
+		void BindTransformComponent(lua_State *L, const char *name)
+		{
+
+			module(L)
+			[
+
+				class_<TransformComponent, Component>(name).
+
+					property("position", &TransformComponent::GetPosition, &TransformComponent::SetPosition).
+					property("orientation", &TransformComponent::GetOrientation, &TransformComponent::SetOrientation).
+					property("scale", &TransformComponent::GetScale, &TransformComponent::SetScale).
+
+					property("up", &TransformComponent::Up).
+					property("right", &TransformComponent::Right).
+					property("forward", &TransformComponent::Forward)
+
+
+			];
+
+		}
+
 		void BindVariableComponent(lua_State *L)
 		{
 
@@ -44,7 +66,7 @@ namespace mye
 			BindVariableComponent<mye::math::Quaternionf>(L, MYE_LUA_QUATERNION_COMPONENT);
 			BindVariableComponent<mye::math::Transformf>(L, MYE_LUA_VTRANSFORM_COMPONENT);
 
-			//BindTransformComponent(L, MYE_LUA_TRANSFORM_COMPONENT);
+			BindTransformComponent(L, MYE_LUA_TRANSFORM_COMPONENT);
 
 		}
 

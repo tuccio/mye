@@ -119,6 +119,7 @@ namespace mye
 		inline String ToString(unsigned int x);
 		inline String ToString(float x);
 		inline String ToString(double x);
+		inline String ToString(bool x);
 
 		template <typename T>
 		inline String ToString(const mye::math::Matrix<T, 3, 1> &v);

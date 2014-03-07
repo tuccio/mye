@@ -27,11 +27,12 @@ void CompileShaders(void)
 	params["type"] = "vertex";
 	params["inputLayoutVector"] = PointerToString(static_cast<void*>(&vDesc));
 
-	ResourceHandle hShader = ResourceTypeManager::GetSingleton().CreateResource(
-		"DX11Shader",
-		"VertexShader.hlsl",
-		nullptr,
-		&params);
+	DX11ShaderPointer hShader = ResourceTypeManager::GetSingleton().
+		CreateResource<DX11Shader>(
+			"DX11Shader",
+			"VertexShader.hlsl",
+			nullptr,
+			&params);
 
 	DX11VertexShader *vertexShader = static_cast<DX11VertexShader*>(hShader.get());
 
@@ -53,11 +54,12 @@ void CompileShaders(void)
 	params.clear();
 	params["type"] = "pixel";
 
-	hShader = ResourceTypeManager::GetSingleton().CreateResource(
-		"DX11Shader",
-		"PixelShader.hlsl",
-		nullptr,
-		&params);
+	hShader = ResourceTypeManager::GetSingleton().
+		CreateResource<DX11Shader>(
+			"DX11Shader",
+			"PixelShader.hlsl",
+			nullptr,
+			&params);
 
 	DX11PixelShader *pixelShader = static_cast<DX11PixelShader*>(hShader.get());
 

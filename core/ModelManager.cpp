@@ -13,11 +13,11 @@ ModelManager::~ModelManager(void)
 {
 }
 
-ResourceHandle ModelManager::CreateImpl(const String &name,
+Model* ModelManager::CreateImpl(const String &name,
 										ManualResourceLoader *manual,
 										Resource::ParametersList *params)
 {
-	return ResourceHandle(new Model(this, name, manual));
+	return (new Model(this, name, manual));
 }
 
 

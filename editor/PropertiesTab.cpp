@@ -12,7 +12,7 @@
 
 #include <cstdlib>
 
-#define OBJECT_SELECTED_NEEDED() if (!m_selected) { ShowErrorBox("No object selected"); return; }
+#define OBJECT_SELECTED_NEEDED() if (!m_selected) { ShowErrorBox("No object selected", g_mainWindow.GetHandle()); return; }
 
 using namespace mye::dx11;
 using namespace mye::win;

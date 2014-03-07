@@ -40,14 +40,19 @@ namespace mye
 
 					def("__add", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_add<4, T>).
 					def("__add", (VectorType (*) (const VectorType&, T)) &__vec_add<4, T>).
+
 					def("__sub", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_sub<4, T>).
 					def("__sub", (VectorType (*) (const VectorType&, T)) &__vec_sub<4, T>).
+
 					def("__mul", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_mul<4, T>).
 					def("__mul", (VectorType (*) (const VectorType&, T)) &__vec_mul<4, T>).
+
 					def("__div", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_div<4, T>).
 					def("__div", (VectorType (*) (const VectorType&, T)) &__vec_div<4, T>).
 
 					def(const_self == const_self).
+
+					def(- const_self).
 
 					def("__tostring", &__vec_tostring<4, T>).
 
@@ -79,14 +84,19 @@ namespace mye
 
 				def("__add", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_add<3, T>).
 				def("__add", (VectorType (*) (const VectorType&, T)) &__vec_add<3, T>).
+
 				def("__sub", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_sub<3, T>).
 				def("__sub", (VectorType (*) (const VectorType&, T)) &__vec_sub<3, T>).
+
 				def("__mul", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_mul<3, T>).
 				def("__mul", (VectorType (*) (const VectorType&, T)) &__vec_mul<3, T>).
+
 				def("__div", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_div<3, T>).
 				def("__div", (VectorType (*) (const VectorType&, T)) &__vec_div<3, T>).
 
 				def(const_self == const_self).
+
+				def(- const_self).
 
 				def("__tostring", &__vec_tostring<3, T>).
 
@@ -116,14 +126,19 @@ namespace mye
 
 					def("__add", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_add<2, T>).
 					def("__add", (VectorType (*) (const VectorType&, T)) &__vec_add<2, T>).
+
 					def("__sub", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_sub<2, T>).
 					def("__sub", (VectorType (*) (const VectorType&, T)) &__vec_sub<2, T>).
+
 					def("__mul", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_mul<2, T>).
 					def("__mul", (VectorType (*) (const VectorType&, T)) &__vec_mul<2, T>).
+
 					def("__div", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_div<2, T>).
 					def("__div", (VectorType (*) (const VectorType&, T)) &__vec_div<2, T>).
 
 					def(const_self == const_self).
+
+					def(- const_self).
 
 					def("__tostring", &__vec_tostring<2, T>).
 

@@ -66,6 +66,8 @@ namespace mye
 
 		};
 
+		typedef boost::shared_ptr<Mesh> MeshPointer;
+
 	}
 
 }

@@ -5,6 +5,7 @@
 
 #include "DX11Device.h"
 #include "DX11Window.h"
+#include "DX11ConstantBuffer.h"
 
 namespace mye
 {
@@ -37,6 +38,8 @@ namespace mye
 			DX11Device *m_device;
 			DX11Window *m_window;
 			bool m_ownedDevice;
+
+			DX11ConstantBuffer *m_mvp;
 
 		};
 

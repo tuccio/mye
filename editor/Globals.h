@@ -1,6 +1,7 @@
 #pragma once
 
 #include <mye/core/Game.h>
+#include <mye/core/ResourceTypeManager.h>
 #include <mye/core/OctreeSceneModule.h>
 
 #include <mye/win/Toolbar.h>
@@ -34,6 +35,8 @@ extern SceneView g_sceneView;
 extern ModelView g_modelView;
 
 extern mye::core::String g_currentSolution;
+
+extern mye::core::ResourceTypeManager g_resourceTypeManager;
 
 extern mye::win::MouseKeyboardInput g_input;
 extern mye::core::GameObjectsModule g_gameObjectsModule;

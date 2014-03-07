@@ -34,6 +34,8 @@ namespace mye
 
 		};
 
+		typedef boost::shared_ptr<DX11Buffer> DX11BufferPointer;
+
 	}
 }
 

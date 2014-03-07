@@ -1,9 +1,6 @@
 #include "GameObject.h"
 
-#include "ScriptComponent.h"
-#include "TransformComponent.h"
-
-#include <mye/lua/LuaScript.h>
+#include "Components.h"
 
 using namespace mye::core;
 using namespace std;
@@ -13,9 +10,9 @@ MYE_DEFINE_POOL_ALLOCATOR(GameObject)
 GameObject::GameObject(void) :
 	m_owner(nullptr),
 	m_transform(nullptr),
-	m_script(nullptr),
 	m_render(nullptr),
-	m_camera(nullptr)
+	m_camera(nullptr),
+	m_behaviour(nullptr)
 {
 }
 
@@ -23,9 +20,9 @@ GameObject::GameObject(const String &name) :
 	INamedObject(name),
 	m_owner(nullptr),
 	m_transform(nullptr),
-	m_script(nullptr),
 	m_render(nullptr),
-	m_camera(nullptr)
+	m_camera(nullptr),
+	m_behaviour(nullptr)
 {
 }
 
@@ -61,16 +58,16 @@ Component* GameObject::AddComponent(const Component &component)
 			m_transform = static_cast<TransformComponent*>(newComponent);
 			break;
 
-		case ComponentTypes::SCRIPT:
-			m_script = static_cast<ScriptComponent*>(newComponent);
-			break;
-
 		case ComponentTypes::RENDER:
 			m_render = static_cast<RenderComponent*>(newComponent);
 			break;
 
 		case ComponentTypes::CAMERA:
 			m_camera = static_cast<CameraComponent*>(newComponent);
+			break;
+
+		case ComponentTypes::BEHAVIOUR:
+			m_behaviour = static_cast<BehaviourComponent*>(newComponent);
 			break;
 
 		}
@@ -112,16 +109,16 @@ void GameObject::RemoveComponent(const String &name)
 			m_transform = nullptr;
 			break;
 
-		case ComponentTypes::SCRIPT:
-			m_script = nullptr;
-			break;
-
 		case ComponentTypes::RENDER:
 			m_render = nullptr;
 			break;
 
 		case ComponentTypes::CAMERA:
 			m_camera = nullptr;
+			break;
+
+		case ComponentTypes::BEHAVIOUR:
+			m_behaviour = nullptr;
 			break;
 
 		}
@@ -145,7 +142,12 @@ void GameObject::Clear(void)
 	m_owner     = nullptr;
 
 	m_transform = nullptr;
-	m_script    = nullptr;
+	m_behaviour = nullptr;
+	m_camera    = nullptr;
+	m_render    = nullptr;
+
+	m_entity.Clear();
+	m_name.Clear();
 
 }
 
@@ -153,8 +155,10 @@ void GameObject::OnCreation(GameObjectsManager *owner,
 							const GameObjectHandle &handle)
 {
 
-	m_owner = owner;
+	m_owner  = owner;
 	m_handle = handle;
+
+	m_delendum = false;
 
 	TransformComponent *t = static_cast<TransformComponent*>(AddComponent(TransformComponent()));
 
@@ -170,9 +174,9 @@ void GameObject::OnDestruction(void)
 void GameObject::Update(FloatSeconds dt)
 {
 
-	if (m_script)
+	if (m_behaviour)
 	{
-		m_script->Script().Call<void, float>("Update", dt);
+		m_behaviour->Update(dt);
 	}
 
 }

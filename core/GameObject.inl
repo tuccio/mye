@@ -9,9 +9,9 @@ namespace mye
 			return m_transform;
 		}
 
-		ScriptComponent* GameObject::GetScriptComponent(void)
+		BehaviourComponent* GameObject::GetBehaviourComponent(void)
 		{
-			return m_script;
+			return m_behaviour;
 		}
 
 		RenderComponent* GameObject::GetRenderComponent(void)
@@ -32,6 +32,11 @@ namespace mye
 		GameObjectHandle GameObject::GetHandle(void)
 		{
 			return m_handle;
+		}
+
+		const String& GameObject::GetEntityType(void) const
+		{
+			return m_entity;
 		}
 
 		mye::math::AABBf GameObject::GetAABB(void)

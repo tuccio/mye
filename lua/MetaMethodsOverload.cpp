@@ -5,6 +5,7 @@
 #include "Converters.h"
 
 #include <mye/core/Components.h>
+#include <mye/core/Game.h>
 #include <mye/core/GameObjectsModule.h>
 #include <mye/core/GameObject.h>
 #include <mye/math/Math.h>
@@ -12,6 +13,8 @@
 #include <lua.hpp>
 #include <luabind/luabind.hpp>
 #include <luabind/copy_policy.hpp>
+
+#include "Debug.h"
 
 #define VARIABLE_COMPONENT_CAST_GET_BEGIN(__Type)\
 	if (type == typeid(__Type))\
@@ -61,6 +64,8 @@ namespace mye
 		int IndexOverload(lua_State *L)
 		{
 
+			//__SHOWLUASTACK(L);
+
 			int returnValues = 0;
 
 			lua_pushvalue(L, lua_upvalueindex(1));
@@ -73,81 +78,95 @@ namespace mye
 			{
 
 				const char *field = lua_tostring(L, 2);
-				object obj(from_stack(L, 1));
 
-				auto hObj = object_cast_nothrow<GameObjectHandle>(obj);
-
-				if (hObj)
+				if (strncmp(field, "__", 2)) // Ignore metamethods like __finalize, __init, ...
 				{
 
-					object wrappedComponent = __goh_getcomponent(hObj.get(), field);
+					object obj(from_stack(L, 1));
 
-					if (wrappedComponent)
+					auto hObj = object_cast_nothrow<GameObjectHandle>(obj);
+
+					if (hObj)
 					{
 
-						auto component = object_cast<MYE_LUA_COMPONENT_WRAP_TYPE(Component)>(wrappedComponent);
-						object rvalue = object(L, boost::ref(static_cast<VariableComponent<mye::math::Transformf>*>(component)->Get()));
+						GameObject *go = Game::GetSingleton().GetGameObjectsModule()->Get(hObj.get());
 
-						if (component)
+						if (go)
 						{
 
-							switch (MYE_LUA_COMPONENT_UNWRAP(component)->GetComponentType())
+							Component *component = go->GetComponent(field);
+
+							object rvalue;
+
+							if (component)
 							{
 
-							case ComponentTypes::VARIABLE:
-
+								switch (component->GetComponentType())
 								{
 
-									auto tmp = static_cast<VariableComponent<char>*>(MYE_LUA_COMPONENT_UNWRAP(component));
-									std::type_index type = tmp->GetVariableType();
+								case ComponentTypes::VARIABLE:
 
-									VARIABLE_COMPONENT_CAST_GET_BEGIN(float)
-									VARIABLE_COMPONENT_CAST_GET_BLOCK(int)
-									VARIABLE_COMPONENT_CAST_GET_BLOCK(bool)
-									VARIABLE_COMPONENT_CAST_GET_BLOCK(String)
-									VARIABLE_COMPONENT_CAST_GET_BLOCK(Vector3f)
-									VARIABLE_COMPONENT_CAST_GET_BLOCK(Vector3i)
-									VARIABLE_COMPONENT_CAST_GET_BLOCK(Vector4f)
-									VARIABLE_COMPONENT_CAST_GET_BLOCK(Vector4i)
-									VARIABLE_COMPONENT_CAST_GET_BLOCK(Quaternionf)
-									VARIABLE_COMPONENT_CAST_GET_BLOCK(GameObjectHandle)
+									{
+
+										auto tmp = static_cast<VariableComponent<void*>*>(component);
+										std::type_index type = tmp->GetVariableType();
+
+										VARIABLE_COMPONENT_CAST_GET_BEGIN(float)
+										VARIABLE_COMPONENT_CAST_GET_BLOCK(int)
+										VARIABLE_COMPONENT_CAST_GET_BLOCK(bool)
+										VARIABLE_COMPONENT_CAST_GET_BLOCK(String)
+										VARIABLE_COMPONENT_CAST_GET_BLOCK(Vector3f)
+										VARIABLE_COMPONENT_CAST_GET_BLOCK(Vector3i)
+										VARIABLE_COMPONENT_CAST_GET_BLOCK(Vector4f)
+										VARIABLE_COMPONENT_CAST_GET_BLOCK(Vector4i)
+										VARIABLE_COMPONENT_CAST_GET_BLOCK(Quaternionf)
+										VARIABLE_COMPONENT_CAST_GET_BLOCK(GameObjectHandle)
+
+									}
+									break;
+
+								case ComponentTypes::TRANSFORM:
+
+									rvalue = object(L, boost::ref(*static_cast<TransformComponent*>(component)));
+									break;
+
+								default:
+									break;
+								}
+
+								//__SHOWLUASTACK(L);
+
+								rvalue.push(L);
+								lua_replace(L, 3);
+								//lua_pop(L, 2);
+								returnValues = 1;
+
+								//__SHOWLUASTACK(L);
+
+							}
+							else
+							{
+
+								BehaviourComponent *behaviour = go->GetBehaviourComponent();
+
+								if (behaviour)
+								{								
+
+									//__SHOWLUASTACK(L);
+
+									int ref = behaviour->GetScript()->GetRegistryReference();
+									lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
+									lua_getfield(L, -1, field);
+
+									lua_replace(L, 3);
+									lua_pop(L, 1);
+
+									//__SHOWLUASTACK(L);
+
+									returnValues = 1;
 
 								}
-								break;
 
-							case ComponentTypes::TRANSFORM:
-
-								rvalue = object(L, boost::ref(static_cast<VariableComponent<mye::math::Transformf>*>(MYE_LUA_COMPONENT_UNWRAP(component))->Get()));
-								break;
-
-							default:
-								break;
-							}
-
-							lua_pop(L, 2);
-							rvalue.push(L);
-							returnValues = 1;
-
-						}
-
-					}
-					else
-					{
-
-						object wrappedScript = __goh_getcomponent(hObj.get(), "script");
-
-						if (wrappedScript)
-						{
-
-							auto script = object_cast<MYE_LUA_COMPONENT_WRAP_TYPE(ScriptComponent)>(wrappedScript);
-
-							if (script)
-							{
-								int ref = *script->Script().GetReference();
-								lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-								lua_remove(L, -2);
-								lua_getfield(L, -1, field);
-								returnValues = 1;
 							}
 
 						}
@@ -188,18 +207,18 @@ namespace mye
 				lua_call(L, 2, 1);
 
 				object wrappedComponent(from_stack(L, -1));
-				auto component = object_cast<MYE_LUA_COMPONENT_WRAP_TYPE(Component)>(wrappedComponent);
+				auto component = object_cast<Component*>(wrappedComponent);
 
 				if (component)
 				{
 
-					switch (MYE_LUA_COMPONENT_UNWRAP(component)->GetComponentType())
+					switch (component->GetComponentType())
 					{
 
 					case ComponentTypes::VARIABLE:
 						{
 
-							auto tmp = static_cast<VariableComponent<char>*>(MYE_LUA_COMPONENT_UNWRAP(component));
+							auto tmp = static_cast<VariableComponent<char>*>(component);
 							std::type_index type = tmp->GetVariableType();
 
 							VARIABLE_COMPONENT_CAST_SET_BEGIN(float)
@@ -216,6 +235,18 @@ namespace mye
 						}
 						
 						break;
+
+					case ComponentTypes::TRANSFORM:
+
+						{
+
+							auto value = object_cast<TransformComponent>(object(from_stack(L, 3)));
+							*static_cast<TransformComponent*>(component) = value;
+
+							// TODO: Add the object to the list of the moved objects
+
+							break;
+						}
 
 // 					case COMPONENT_TRANSFORM:
 // 						{

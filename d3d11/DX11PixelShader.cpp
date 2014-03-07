@@ -3,13 +3,18 @@
 
 #include <d3dcompiler.h>
 
+#include <mye/core/FileInputStream.h>
+#include <mye/core/FileInfo.h>
+
 using namespace mye::dx11;
+using namespace mye::core;
 
 DX11PixelShader::DX11PixelShader(mye::core::ResourceManager *owner,
 								   const mye::core::String &name,
 								   mye::core::ManualResourceLoader *manual,
-								   DX11Device &device) :
-DX11Shader(owner, name, manual),
+								   DX11Device &device,
+								   bool precompiled) :
+DX11Shader(owner, name, manual, precompiled),
 	m_device(device)
 {
 	m_shader = nullptr;
@@ -30,7 +35,7 @@ ID3D11PixelShader* DX11PixelShader::GetPixelShader(void)
 	return m_shader;
 }
 
-mye::core::String DX11PixelShader::GetCompileError(void)
+const mye::core::String& DX11PixelShader::GetCompileError(void)
 {
 	return m_compileError;
 }
@@ -44,36 +49,56 @@ bool DX11PixelShader::LoadImpl(void)
 	if (DX11Shader::LoadImpl())
 	{
 
-		ID3DBlob *code, *error;
+		ID3DBlob *code = nullptr;
+		ID3DBlob *error = nullptr;
+
 		UINT compileFlags = 0x0;
 
 #ifdef _DEBUG
 		compileFlags |= D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 
-		if (FAILED(D3DCompile(
-			m_source.CString(),
-			m_source.Length(),
-			m_name.CString(),
-			nullptr,
-			D3D_COMPILE_STANDARD_FILE_INCLUDE,
-			"main",
-			"ps_5_0",
-			compileFlags,
-			0x0,
-			&code,
-			&error)))
+		if (m_precompiled)
 		{
-			m_compileError = (LPCSTR) error->GetBufferPointer();
+
+			std::wstring wfilename;
+			wfilename.assign(m_name.begin(), m_name.end());
+
+			D3DReadFileToBlob(wfilename.c_str(), &code);
+
 		}
-		else if (!FAILED(m_device.GetDevice()->CreatePixelShader(
-			code->GetBufferPointer(),
-			code->GetBufferSize(),
-			nullptr,
-			&m_shader)))
+		else
+		{
+
+			if (HRTESTFAILED(D3DCompile(
+					m_source.CString(),
+					m_source.Length(),
+					m_name.CString(),
+					nullptr,
+					D3D_COMPILE_STANDARD_FILE_INCLUDE,
+					"main",
+					"ps_5_0",
+					compileFlags,
+					0x0,
+					&code,
+					&error)))
+			{
+				m_compileError = (LPCSTR) error->GetBufferPointer();
+			}
+
+		}
+
+		if (code &&
+			!HRTESTFAILED(m_device.GetDevice()->
+				CreatePixelShader(
+					code->GetBufferPointer(),
+					code->GetBufferSize(),
+					nullptr,
+					&m_shader)))
 		{
 			success = true;
 		}
+		
 
 	}
 

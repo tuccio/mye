@@ -17,30 +17,32 @@ namespace mye
 			DX11VertexShader(mye::core::ResourceManager *owner,
 				const mye::core::String &name,
 				mye::core::ManualResourceLoader *manual,
-				mye::dx11::DX11Device &device);
+				mye::dx11::DX11Device &device,
+				bool precompiled = false);
 
 			~DX11VertexShader(void);
 
 			void Use(void);
+			void Destroy(void);
 
 			ID3D11VertexShader* GetVertexShader(void);
-			mye::core::String GetCompileError(void);
-
-			void Destroy(void);
+			mye::core::String   GetCompileError(void);
 
 		protected:
 
-			bool LoadImpl(void);
-			void UnloadImpl(void);
+			bool   LoadImpl(void);
+			void   UnloadImpl(void);
 			size_t CalculateSizeImpl(void);
 
 			ID3D11VertexShader *m_shader;
-			ID3D11InputLayout *m_inputLayout;
-			mye::core::String m_compileError;
-			DX11Device &m_device;
+			ID3D11InputLayout  *m_inputLayout;
+			mye::core::String   m_compileError;
+			DX11Device         &m_device;
 			
 
 		};
+
+		typedef boost::shared_ptr<DX11VertexShader> DX11VertexShaderPointer;
 
 	}
 }

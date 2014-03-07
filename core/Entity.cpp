@@ -6,9 +6,8 @@
 #include <fstream>
 
 using namespace mye::core;
-using namespace mye::core::entity;
 
-Parser::Parser(const String &file)
+entity::Parser::Parser(const String &file)
 {
 
 	std::ifstream f(file.CString());
@@ -23,11 +22,11 @@ Parser::Parser(const String &file)
 }
 
 
-Parser::~Parser(void)
+entity::Parser::~Parser(void)
 {
 }
 
-bool Parser::SemanticParse(Entity &entity, EntityTemplate &templ) const
+bool entity::Parser::SemanticParse(entity::Entity &entity, mye::core::Entity &templ) const
 {
 
 	if (templ.GetName() == entity.name.c_str())
@@ -523,7 +522,7 @@ bool Parser::SemanticParse(Entity &entity, EntityTemplate &templ) const
 
 }
 
-EntityTemplate::EntityTemplate(ResourceManager *owner,
+Entity::Entity(ResourceManager *owner,
 				 const String &name,
 				 ManualResourceLoader *manual,
 				 const String &entityDirectory) :
@@ -533,14 +532,14 @@ EntityTemplate::EntityTemplate(ResourceManager *owner,
 
 }
 
-void EntityTemplate::Insert(Component *component)
+void Entity::Insert(Component *component)
 {
 
 	m_components.push_back(component);
 
 }
 
-void EntityTemplate::Clear(void)
+void Entity::Clear(void)
 {
 
 	for (Component *c : m_components)
@@ -552,16 +551,16 @@ void EntityTemplate::Clear(void)
 
 }
 
-bool EntityTemplate::LoadImpl(void)
+bool Entity::LoadImpl(void)
 {
 	
 	bool loaded = false;
 
 	String file = m_entityDirectory + m_name + ".mye";
 
-	Parser p(file);
+	entity::Parser p(file);
 
-	Entity e;
+	entity::Entity e;
 
 	if (p.LexicalParse(e) && p.SemanticParse(e, *this))
 	{
@@ -572,14 +571,14 @@ bool EntityTemplate::LoadImpl(void)
 
 }
 
-void EntityTemplate::UnloadImpl(void)
+void Entity::UnloadImpl(void)
 {
 
 	Clear();
 
 }
 
-size_t EntityTemplate::CalculateSizeImpl(void)
+size_t Entity::CalculateSizeImpl(void)
 {
 
 	size_t size = 0;
@@ -599,14 +598,14 @@ EntityTemplateManager::EntityTemplateManager(const String &entityDirectory) :
 {
 }
 
-ResourceHandle EntityTemplateManager::CreateImpl(const String &name,
+Entity* EntityTemplateManager::CreateImpl(const String &name,
 												 ManualResourceLoader *manual,
 												 Resource::ParametersList *params)
 {
-	return ResourceHandle(new EntityTemplate(this, name, manual, m_entityDirectory));
+	return (new Entity(this, name, manual, m_entityDirectory));
 }
 
 void EntityTemplateManager::FreeImpl(Resource* resource)
 {
-	static_cast<EntityTemplate*>(resource)->Clear();
+	static_cast<Entity*>(resource)->Clear();
 }

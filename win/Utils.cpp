@@ -70,12 +70,14 @@ namespace mye
 
 		}
 
-		void ShowErrorBox(const mye::core::String &message)
+		void ShowErrorBox(const mye::core::String &message,
+			HWND hParent)
 		{
-			MessageBox(nullptr,
+			MessageBox(hParent,
 				message.CString(),
 				"Error",
 				MB_OK | MB_ICONERROR);
+
 		}
 
 		bool MakeTransparentBitmap(HBITMAP hBitmap, HDC hDC)

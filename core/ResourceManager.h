@@ -20,12 +20,20 @@ namespace mye
 
 			ResourceManager(const String &type);
 			~ResourceManager(void);
+			
+			template <typename ResourceType>
+			boost::shared_ptr<ResourceType> CreateResource(const String &name,
+				ManualResourceLoader *manual = nullptr,
+				Resource::ParametersList *params = nullptr);
 
-			ResourceHandle CreateResource(const String &name,
-				           ManualResourceLoader *manual = nullptr,
-				           Resource::ParametersList *params = nullptr);
+			inline boost::shared_ptr<Resource> CreateResource(const String &name,
+				ManualResourceLoader *manual = nullptr,
+				Resource::ParametersList *params = nullptr);
 
-			ResourceHandle GetResource(const String &name);
+			template <typename ResourceType>
+			boost::shared_ptr<ResourceType> GetResource(const String &name);
+
+			inline boost::shared_ptr<Resource> GetResource(const String &name);
 
 			void FreeResource(const String &name);
 
@@ -33,13 +41,13 @@ namespace mye
 
 		protected:
 
-			virtual ResourceHandle CreateImpl(const String &name,
+			virtual Resource* CreateImpl(const String &name,
 				    ManualResourceLoader *manual,
 				    Resource::ParametersList *params);
 
 			virtual void FreeImpl(Resource* resource);
 
-			typedef std::map<String, ResourceHandle> ResourcesMap;
+			typedef std::map<String, ResourcePointer> ResourcesMap;
 
 			void _FreeResource(ResourcesMap::iterator &it);
 
@@ -52,3 +60,4 @@ namespace mye
 
 }
 
+#include "ResourceManager.inl"

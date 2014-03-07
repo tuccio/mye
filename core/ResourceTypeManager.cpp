@@ -35,33 +35,3 @@ ResourceManager* ResourceTypeManager::GetResourceManager(const String &type)
 	return nullptr;
 
 }
-
-ResourceHandle ResourceTypeManager::CreateResource(const String &type,
-												   const String &name,
-												   ManualResourceLoader *manual,
-												   Resource::ParametersList *params)
-{
-
-	ResourceManager *manager = GetResourceManager(type);
-
-	if (manager)
-	{
-		return manager->CreateResource(name, manual, params);
-	}
-
-	return ResourceHandle();
-
-}
-
-ResourceHandle ResourceTypeManager::GetResource(const String &type,
-												const String &name)
-{
-	ResourceManager *manager = GetResourceManager(type);
-
-	if (manager)
-	{
-		return manager->GetResource(name);
-	}
-
-	return ResourceHandle();
-}

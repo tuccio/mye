@@ -4,6 +4,7 @@
 #include "Lockable.h"
 
 #include <unordered_map>
+#include <boost/shared_ptr.hpp>
 
 #define MYE_DEFAULT_GROUP ""
 #define MYE_CONTAINS_PARAMETER(__PARAMSLIST, __PARAM) (__PARAMSLIST.find(__PARAM) != __PARAMSLIST.end())
@@ -13,6 +14,15 @@ namespace mye
 
 	namespace core
 	{
+
+		enum class LoadingState
+		{
+			NOT_LOADED,
+			LOADING,
+			LOADED,
+			UNLOADING,
+			FREED
+		};
 
 		class ManualResourceLoader;
 		class ResourceManager;
@@ -25,16 +35,6 @@ namespace mye
 		public:
 
 			typedef std::unordered_map<String, String> ParametersList;
-			
-			enum LoadingState
-			{
-				RESOURCE_NOTLOADED,
-				RESOURCE_LOADING,
-				RESOURCE_PREPARING,
-				RESOURCE_LOADED,
-				RESOURCE_UNLOADING,
-				RESOURCE_FREED
-			};
 
 			Resource(ResourceManager *owner,
 				const String &name,
@@ -60,7 +60,6 @@ namespace mye
 			Resource(void);
 
 			virtual bool LoadImpl(void);
-			virtual bool PrepareImpl(void);
 			virtual void UnloadImpl(void);
 
 			virtual size_t CalculateSizeImpl(void) = 0;
@@ -75,6 +74,8 @@ namespace mye
 
 
 		};
+
+		typedef boost::shared_ptr<Resource> ResourcePointer;
 
 	}
 

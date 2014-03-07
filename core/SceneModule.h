@@ -12,6 +12,11 @@ namespace mye
 	namespace core
 	{
 
+		struct SceneCameraListener
+		{
+			virtual void OnCameraChange(CameraComponent *oldCamera, CameraComponent *newCamera) = 0;
+		};
+
 		class SceneModule :
 			public Module
 		{
@@ -38,6 +43,9 @@ namespace mye
 			inline const mye::core::CameraComponent* GetCamera(void) const;
 			inline void SetCamera(mye::core::CameraComponent *camera);
 
+			void AddCameraListener(SceneCameraListener *listener);
+			void RemoveCameraListener(SceneCameraListener *listener);
+
 		protected:
 
 			struct GameObjectUpdate
@@ -49,6 +57,8 @@ namespace mye
 
 			mye::core::CameraComponent *m_camera;
 			std::list<GameObjectUpdate> m_movedObjects;
+
+			std::vector<SceneCameraListener*> m_cameraListeners;
 
 		};
 

@@ -11,7 +11,7 @@
 
 #include <cstdlib>
 
-#define OBJECT_SELECTED_NEEDED() if (!m_selected) { ShowErrorBox("No object selected"); return; }
+#define OBJECT_SELECTED_NEEDED() if (!m_selected) { ShowErrorBox("No object selected", g_mainWindow.GetHandle()); return; }
 
 using namespace mye::dx11;
 using namespace mye::win;
@@ -155,13 +155,12 @@ void SceneView::_CreateRenderTab(void)
 
 			AABBf aabb;
 
-			ResourceHandle model = rc->GetModel();
+			ModelPointer model = rc->GetModel();
 
 			if (model)
 			{
-				Model *modelPtr = model.Cast<Model>();
-				modelPtr->Load();
-				auto minMax = modelPtr->GetMinMaxVertices();
+				model->Load();
+				auto minMax = model->GetMinMaxVertices();
 				aabb = AABBf::FromMinMax(minMax.first, minMax.second);
 			}
 			else
@@ -230,7 +229,7 @@ void SceneView::_CreateRenderTab(void)
 			rc->SetBounds(AABBf::FromCenterHalfExtents(aabbCenter, aabbHalfExtents));
 			g_scene.MoveGameObject(m_selected->GetHandle(), aabb);
 
-			ResourceHandle model = rc->GetModel();
+			ModelPointer model = rc->GetModel();
 
 			String modelPath = static_cast<Edit*>(m_controls["RNDmodelEdit"])->GetText();
 
@@ -238,10 +237,11 @@ void SceneView::_CreateRenderTab(void)
 				!model && !modelPath.IsEmpty())
 			{
 
-				model = ResourceTypeManager::GetSingleton().CreateResource(
-					"Model",
-					modelPath, 
-					nullptr);
+				model = ResourceTypeManager::GetSingleton().
+					CreateResource<Model>(
+						"Model",
+						modelPath, 
+						nullptr);
 
 				rc->SetModel(model);
 

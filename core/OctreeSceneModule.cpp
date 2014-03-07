@@ -209,3 +209,14 @@ void OctreeSceneModule::ApplyUpdates(void)
 	m_movedObjects.clear();
 
 }
+
+void OctreeSceneModule::Reset(
+	const mye::math::Vector3f &center,
+	float size,
+	unsigned int maxdepth,
+	unsigned int looseness)
+{
+
+	m_octree = LooseOctree<GameObjectHandle>(center, size, maxdepth, looseness);
+
+}

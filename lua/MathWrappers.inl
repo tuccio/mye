@@ -97,11 +97,47 @@ namespace mye
 			return a[I];
 		}
 
+// 		template <typename T>
+// 		T __vec_get<3, T, 0>(const mye::math::Matrix<T, 3, 1> &a)
+// 		{
+// 			return a.x();
+// 		}
+// 
+// 		template <typename T>
+// 		T __vec_get<3, T, 1>(const mye::math::Matrix<T, 3, 1> &a)
+// 		{
+// 			return a.y();
+// 		}
+// 
+// 		template <typename T>
+// 		T __vec_get<3, T, 2>(const mye::math::Matrix<T, 3, 1> &a)
+// 		{
+// 			return a.z();
+// 		}
+
 		template <int N, typename T, int I>
 		void __vec_set(mye::math::Matrix<T, N, 1> &a, T b)
 		{
 			a[I] = b;
 		}
+
+// 		template <typename T>
+// 		void __vec_set<3, T, 0>(mye::math::Matrix<T, 3, 1> &a, T b)
+// 		{
+// 			a.x() = b;
+// 		}
+// 
+// 		template <typename T>
+// 		void __vec_set<3, T, 1>(mye::math::Matrix<T, 3, 1> &a, T b)
+// 		{
+// 			a.y() = b;
+// 		}
+// 
+// 		template <typename T>
+// 		void __vec_set<3, T, 2>(mye::math::Matrix<T, 3, 1> &a, T b)
+// 		{
+// 			a.z() = b;
+// 		}
 
 		/* Quaternions */
 

@@ -1,53 +1,35 @@
-#pragma once
-
 #include "Script.h"
-#include "Types.h"
-#include "Converters.h"
-
-#include <mye/core/Game.h>
-#include <mye/core/ScriptComponent.h>
-
-#include <luabind/luabind.hpp>
-
-#include "Game.h"
 #include "LuaModule.h"
-#include "LuaScript.h"
-#include "LuaScriptCaller.h"
-#include "GameObjectHandle.h"
 
-using namespace luabind;
-using namespace mye::core;
 using namespace mye::lua;
 
-namespace mye
+Script::Script(void) :
+	Resource(nullptr, "", nullptr),
+	m_lua(nullptr),
+	m_registryReference(LUA_NOREF)
 {
+}
 
-	namespace lua
-	{
+Script::Script(LuaModule &luaModule, const mye::core::String &name) :
+	Resource(&luaModule, name, nullptr),
+	m_lua(luaModule.GetLuaState()),
+	m_registryReference(LUA_NOREF),
+	m_scriptDirectory(luaModule.GetScriptDirectory())
+{
+}
 
-		void BindScripts(lua_State *L)
-		{
 
-			module(L)
-			[
+Script::~Script(void)
+{
+}
 
-				class_<LuaModule>(MYE_LUA_LUAMODULE).
+size_t Script::CalculateSizeImpl(void)
+{
+	return 1; // TODO: Calcolare rimensione script
+}
 
-					def("LoadBehaviour", &LuaModule::LoadBehaviour).
-					def("LoadProcedure", &LuaModule::LoadProcedure),
-
-				class_<LuaScript>(MYE_LUA_SCRIPT).
-
-					def("Run", &LuaScript::Run),
-
-				class_<ScriptComponent, Component>(MYE_LUA_SCRIPT_COMPONENT).
-
-					def(constructor<LuaScript>())
-
-			];
-
-		}
-
-	}
-
+void Script::Free(void)
+{
+	luaL_unref(m_lua, LUA_REGISTRYINDEX, m_registryReference);
+	m_registryReference = LUA_NOREF;
 }

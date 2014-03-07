@@ -1,0 +1,6 @@
+entity Sphere
+{
+	
+	vec3 velocity(1, 0, 0);
+	
+}

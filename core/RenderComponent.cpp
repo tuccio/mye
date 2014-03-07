@@ -30,12 +30,12 @@ mye::core::ResourceHandle RenderComponent::GetVertexData(void)
 	return m_vertexData;
 }
 
-mye::core::ResourceHandle RenderComponent::GetModel(void)
+mye::core::ModelPointer RenderComponent::GetModel(void)
 {
 	return m_model;
 }
 
-void RenderComponent::SetModel(ResourceHandle model)
+void RenderComponent::SetModel(ModelPointer model)
 {
 	m_model = model;
 }

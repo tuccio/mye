@@ -22,7 +22,12 @@ namespace mye
 
 		void SceneModule::SetCamera(mye::core::CameraComponent *camera)
 		{
+			CameraComponent *old = m_camera;
 			m_camera = camera;
+			for (SceneCameraListener *listener : m_cameraListeners)
+			{
+				listener->OnCameraChange(old, camera);
+			}
 		}
 
 		void SceneModule::MoveGameObject(

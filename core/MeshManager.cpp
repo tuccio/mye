@@ -13,11 +13,11 @@ MeshManager::~MeshManager(void)
 {
 }
 
-ResourceHandle MeshManager::CreateImpl(const String &name,
+Mesh* MeshManager::CreateImpl(const String &name,
 										ManualResourceLoader *manual,
 										Resource::ParametersList *params)
 {
-	return ResourceHandle(new Mesh(this, name, manual));
+	return (new Mesh(this, name, manual));
 }
 
 

@@ -13,7 +13,7 @@ Resource::Resource(ResourceManager *owner,
 	m_manual = manual;
 	
 	m_size = 0;
-	m_loadingState = RESOURCE_NOTLOADED;
+	m_loadingState = LoadingState::NOT_LOADED;
 
 }
 
@@ -24,7 +24,7 @@ Resource::Resource(void)
 	m_manual = nullptr;
 
 	m_size = 0;
-	m_loadingState = RESOURCE_NOTLOADED;
+	m_loadingState = LoadingState::NOT_LOADED;
 
 }
 
@@ -40,7 +40,7 @@ bool Resource::Load(bool background)
 	bool loadSuccess = false;
 	bool prepareSuccess = false;
 
-	if (m_loadingState == RESOURCE_NOTLOADED)
+	if (m_loadingState == LoadingState::NOT_LOADED)
 	{
 
 		if (!background)
@@ -49,50 +49,34 @@ bool Resource::Load(bool background)
 			if (!m_manual)
 			{
 
-				m_loadingState = RESOURCE_LOADING;
+				m_loadingState = LoadingState::LOADING;
 				loadSuccess = LoadImpl();
 
 				if (loadSuccess)
 				{
-
-					m_loadingState = RESOURCE_PREPARING;
-					prepareSuccess = PrepareImpl();
-
-					if (prepareSuccess)
-					{
-						m_loadingState = RESOURCE_LOADED;
-						m_size = CalculateSizeImpl();
-					}
-					else
-					{
-						m_loadingState = RESOURCE_NOTLOADED;
-					}
-
+					m_loadingState = LoadingState::LOADED;
+					m_size = CalculateSizeImpl();
+				}
+				else
+				{
+					m_loadingState = LoadingState::NOT_LOADED;
 				}
 
 			}
 			else
 			{
 
-				m_loadingState = RESOURCE_LOADING;
+				m_loadingState = LoadingState::LOADING;
 				loadSuccess = m_manual->Load(this);
 
 				if (loadSuccess)
 				{
-
-					m_loadingState = RESOURCE_PREPARING;
-					prepareSuccess = m_manual->Prepare(this);
-
-					if (prepareSuccess)
-					{
-						m_loadingState = RESOURCE_LOADED;
-						m_size = CalculateSizeImpl();
-					}
-					else
-					{
-						m_loadingState = RESOURCE_NOTLOADED;
-					}
-
+					m_loadingState = LoadingState::LOADED;
+					m_size = CalculateSizeImpl();
+				}
+				else
+				{
+					m_loadingState = LoadingState::NOT_LOADED;
 				}
 
 			}
@@ -100,14 +84,14 @@ bool Resource::Load(bool background)
 		}
 		else
 		{
-			// TODO
+			// TODO: Load parallelo risorse
 		}
 
 	}
 
 	Unlock();
 
-	return loadSuccess && prepareSuccess;
+	return m_loadingState == LoadingState::LOADED;
 
 }
 
@@ -116,18 +100,18 @@ void Resource::Unload(bool background)
 
 	Lock();
 
-	if (m_loadingState == RESOURCE_LOADED)
+	if (m_loadingState == LoadingState::LOADED)
 	{
 
 		if (!background)
 		{
-			m_loadingState = RESOURCE_UNLOADING;
+			m_loadingState = LoadingState::UNLOADING;
 			UnloadImpl();
-			m_loadingState = RESOURCE_NOTLOADED;
+			m_loadingState = LoadingState::NOT_LOADED;
 		}
 		else
 		{
-			// TODO
+			// TODO: Unload parallelo risorse
 		}
 
 	}
@@ -143,12 +127,12 @@ void Resource::Free(bool background)
 
 	Lock();
 
-	if (m_loadingState == RESOURCE_LOADED)
+	if (m_loadingState == LoadingState::LOADED)
 	{
 
 		if (!background)
 		{
-			m_loadingState = RESOURCE_FREED;
+			m_loadingState = LoadingState::FREED;
 			UnloadImpl();
 		}
 		else
@@ -169,17 +153,12 @@ size_t Resource::GetSize(void) const
 	return m_size;
 }
 
-Resource::LoadingState Resource::GetState(void) const
+LoadingState Resource::GetState(void) const
 {
 	return m_loadingState;
 }
 
 bool Resource::LoadImpl(void)
-{
-	return true;
-}
-
-bool Resource::PrepareImpl(void)
 {
 	return true;
 }

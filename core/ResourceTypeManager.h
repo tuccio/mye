@@ -28,12 +28,22 @@ namespace mye
 
 			ResourceManager* GetResourceManager(const String &type);
 
-			ResourceHandle CreateResource(const String &type,
+			template <typename ResourceType>
+			inline boost::shared_ptr<ResourceType> CreateResource(const String &type,
 				const String &name,
 				ManualResourceLoader *manual = nullptr,
 				Resource::ParametersList *params = nullptr);
 
-			ResourceHandle GetResource(const String &type,
+			inline boost::shared_ptr<Resource> CreateResource(const String &type,
+				const String &name,
+				ManualResourceLoader *manual = nullptr,
+				Resource::ParametersList *params = nullptr);
+			
+			template <typename ResourceType>
+			inline boost::shared_ptr<ResourceType> GetResource(const String &type,
+				const String &name);
+
+			inline boost::shared_ptr<Resource> GetResource(const String &type,
 				const String &name);
 
 		private:
@@ -47,3 +57,5 @@ namespace mye
 	}
 
 }
+
+#include "ResourceTypeManager.inl"

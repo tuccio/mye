@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 	if (sphereRH->Load())
 	{
 
-		for (Component *c : *sphereRH.Cast<EntityTemplate>())
+		for (Component *c : *sphereRH.Cast<Entity>())
 		{
 
 			StandardOutput << static_cast<int>(c->GetComponentType()) << NewLine;

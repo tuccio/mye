@@ -34,17 +34,20 @@ namespace mye
 		GameObjectHandle GameObjectsManager::CreateHandle(void)
 		{
 
+			GameObjectHandle hObj;
+
 			if (m_freeHandles.empty())
 			{
-				return GameObjectHandle(++m_lastId, 0);
+				hObj = GameObjectHandle(++m_lastId, 0);
 			}
 			else
 			{
-				GameObjectHandle hObj = m_freeHandles.front();
+				hObj = m_freeHandles.front();
 				m_freeHandles.pop_front();
 				hObj.allocation++;
-				return hObj;
 			}
+
+			return hObj;
 
 		}
 

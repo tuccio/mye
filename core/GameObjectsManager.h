@@ -33,11 +33,36 @@ namespace mye
 		};
 
 		class GameObject;
+		class GameObjectsManager;
+
+		class ActiveGameObjectsIterator
+		{
+
+		public:
+
+			ActiveGameObjectsIterator(GameObjectsManager *gom,
+				std::list<GameObjectHandle> *list,
+				const std::list<GameObjectHandle>::iterator &it);
+
+			ActiveGameObjectsIterator& operator++ (void);
+			bool operator != (const ActiveGameObjectsIterator&) const;
+
+			GameObjectHandle operator* (void) const;
+
+		private:
+
+			std::list<GameObjectHandle> *m_list;
+			std::list<GameObjectHandle>::iterator m_it;
+			GameObjectsManager *m_gom;
+
+		};
 
 		class GameObjectsManager
 		{
 
 		public:
+
+			typedef ActiveGameObjectsIterator Iterator;
 
 			GameObjectsManager(void);
 			~GameObjectsManager(void);
@@ -60,6 +85,9 @@ namespace mye
 
 			GameObjectHandle Find(const String &name);
 
+			Iterator begin(void);
+			Iterator end(void);
+
 			/*void Reset(void);*/
 
 		protected:
@@ -70,11 +98,13 @@ namespace mye
 			typedef std::unordered_map<GameObjectHandle, GameObject*, GameObjectHandleIDHasher> ObjectsHashMap;
 			typedef std::unordered_multimap<String, GameObjectHandle> ObjectsNamesMap;
 
-			ObjectsHashMap m_objects;
+			ObjectsHashMap  m_objects;
 			ObjectsNamesMap m_namedObjects;
 
 			std::list<GameObjectHandle> m_freeHandles;
 			int m_lastId;
+
+			std::list<GameObjectHandle> m_activeObjects;
 
 		};
 

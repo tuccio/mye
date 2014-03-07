@@ -17,7 +17,7 @@ DX11BufferManager::~DX11BufferManager(void)
 {
 }
 
-ResourceHandle DX11BufferManager::CreateImpl(const mye::core::String &name,
+DX11Buffer* DX11BufferManager::CreateImpl(const mye::core::String &name,
 												   ManualResourceLoader *manual,
 												   Resource::ParametersList *params)
 {
@@ -32,18 +32,18 @@ ResourceHandle DX11BufferManager::CreateImpl(const mye::core::String &name,
 
 			if (it->second == "vertex")
 			{
-				return ResourceHandle(new DX11VertexBuffer(this, name, manual, m_device));
+				return (new DX11VertexBuffer(this, name, manual, m_device));
 			}
 			else if (it->second == "constant")
 			{
-				return ResourceHandle(new DX11ConstantBuffer(this, name, manual, m_device));
+				return (new DX11ConstantBuffer(this, name, manual, m_device));
 			}
 
 		}
 
 	}
 
-	return ResourceHandle(nullptr);
+	return (nullptr);
 
 }
 

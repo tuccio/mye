@@ -56,10 +56,12 @@ private:
 	void _CreateRenderTab(void);
 	void _CreatePropertiesTab(void);
 	void _CreateCameraTab(void);
+	void _CreateBehaviourTab(void);
 
 	void _FillRenderTab(mye::core::GameObject *selectedObject);
 	void _FillPropertiesTab(mye::core::GameObject *selectedObject);
 	void _FillCameraTab(mye::core::GameObject *selectedObject);
+	void _FillBehaviourTab(mye::core::GameObject *selectedObject);;
 
 	void _AddGameObject(mye::core::GameObjectHandle hObj);
 
@@ -77,6 +79,7 @@ private:
 	mye::win::Window m_renderTab;
 	mye::win::Window m_propertiesTab;
 	mye::win::Window m_cameraTab;
+	mye::win::Window m_behaviourTab;
 
 	std::map<const std::string, mye::win::Control*> m_controls;
 

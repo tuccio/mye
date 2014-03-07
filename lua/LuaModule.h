@@ -1,7 +1,12 @@
 #pragma once
 
+#include <mye/core/ResourceManager.h>
 #include <mye/core/ScriptModule.h>
 #include <mye/core/String.h>
+
+#include "BehaviourScript.h"
+#include "ProcedureScript.h"
+#include "Script.h"
 
 #include <lua.hpp>
 
@@ -14,12 +19,13 @@ namespace mye
 		class LuaScript;
 
 		class LuaModule :
-			public mye::core::ScriptModule
+			public mye::core::ScriptModule,
+			public mye::core::ResourceManager
 		{
 
 		public:
 
-			LuaModule(void);
+			LuaModule(const mye::core::String &folder);
 			~LuaModule(void);
 
 			bool Init(void);
@@ -27,20 +33,33 @@ namespace mye
 
 			lua_State* GetLuaState(void);
 
+			const mye::core::String& GetScriptDirectory(void) const;
 			mye::core::String GetLastError(void) const;
 
-			LuaScript LoadBehaviour(const mye::core::String &filename);
-			LuaScript LoadProcedure(const mye::core::String &filename);
+			//LuaScript LoadBehaviour(const mye::core::String &filename);
+			//LuaScript LoadProcedure(const mye::core::String &filename);
+
+			BehaviourScriptPointer LoadBehaviour(const mye::core::String &name);
+			ProcedureScriptPointer LoadProcedure(const mye::core::String &name);
 
 			bool RunFile(const mye::core::String &file);
 			bool RunString(const mye::core::String &code);
+
+		protected:
+
+			Script* CreateImpl(const mye::core::String &name,
+				mye::core::ManualResourceLoader *manual,
+				mye::core::Resource::ParametersList *params);
+
+			void FreeImpl(mye::core::Resource* resource);
 
 		private:
 
 			void OpenAllLibraries(void);
 
-			lua_State *m_L;
+			lua_State *m_lua;
 			mye::core::String m_lastError;
+			mye::core::String m_scriptDirectory;
 
 		};
 

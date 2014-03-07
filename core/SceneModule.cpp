@@ -26,3 +26,20 @@ void SceneModule::RemoveGameObject(const GameObjectHandle &hObj)
 {
 
 }
+
+void SceneModule::AddCameraListener(SceneCameraListener *listener)
+{
+	m_cameraListeners.push_back(listener);
+}
+
+void SceneModule::RemoveCameraListener(SceneCameraListener *listener)
+{
+
+	auto it = std::find(m_cameraListeners.begin(), m_cameraListeners.end(), listener);
+
+	if (it != m_cameraListeners.end())
+	{
+		m_cameraListeners.erase(it);
+	}
+
+}

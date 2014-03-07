@@ -31,18 +31,12 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 					 int nCmdShow)
 {
 
-	Logger logger;
-
-	ResourceTypeManager resourceTypeManager;
 	DX11ShaderManager shaderManager(g_device);
 	DX11BufferManager vertexBufferManager(g_device);
 	MeshManager meshManager;
 	ModelManager modelManager;
 
 	MainWindowListener mainWindowListener;
-
-	logger.OpenErrorLogFile("error.log");
-	logger.OpenEventLogFile("event.log");
 
 	Window::Properties p;
 

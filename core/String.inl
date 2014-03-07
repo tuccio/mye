@@ -348,6 +348,11 @@ namespace mye
 			return String(std::to_string(x).c_str());
 		}
 
+		String ToString(bool x)
+		{
+			return (x ? String("true") : String("false"));
+		}
+
 		template <typename T>
 		String ToString(const mye::math::Matrix<T, 3, 1> &v)
 		{

@@ -32,7 +32,7 @@ FloatSeconds::FloatSeconds(const Seconds &s)
 
 FloatSeconds::FloatSeconds(const Milliseconds &ms)
 {
-	m_seconds = ((unsigned int) ms) * 0.0001f;
+	m_seconds = ((unsigned int) ms) * 0.001f;
 }
 
 /* Seconds */

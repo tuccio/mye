@@ -9,7 +9,7 @@
 
 #include "Game.h"
 #include "DirectX11.h"
-#include "Script.h"
+#include "Scripting.h"
 #include "GameObjectHandle.h"
 #include "VariableComponent.h"
 #include "WindowsFunctions.h"
@@ -18,7 +18,6 @@
 #include "Converters.h"
 
 #include "LuaModule.h"
-#include "LuaScriptCaller.h"
 
 #include <mye/d3d11/DX11Module.h>
 

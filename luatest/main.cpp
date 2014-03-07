@@ -6,8 +6,6 @@
 #include <mye/d3d11/DX11Module.h>
 
 #include <mye/lua/LuaModule.h>
-#include <mye/lua/LuaScriptCaller.h>
-#include <mye/lua/LuaScript.h>
 
 #include <mye/win/MouseKeyboardInput.h>
 #include <mye/win/WinGame.h>
@@ -35,7 +33,7 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 	SceneModule scene;
 	DX11Module graphics;
 	AudioModule audio;
-	LuaModule lua;
+	LuaModule lua("./scripts/");
 
 	WinGame game(&input,
 		&gameobjects,
@@ -54,7 +52,7 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 	
 	// Run the main procedure and the game
 
-	lua.LoadProcedure("main.lua").Run();
+	lua.LoadProcedure("main")->Run();
 	game.Run();
 	
 	return 0;

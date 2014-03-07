@@ -14,53 +14,6 @@ ResourceManager::ResourceManager(const String &type) :
 ResourceManager::~ResourceManager(void)
 {
 }
-
-ResourceHandle ResourceManager::CreateResource(const String &name,
-											   ManualResourceLoader *manual,
-											   Resource::ParametersList *params)
-{
-
-	Lock();
-
-	auto it = m_resources.find(name);
-
-	if (it != m_resources.end())
-	{
-		return it->second;
-	}
-	
-	ResourceHandle resource(CreateImpl(name, manual, params));
-
-	if (params)
-	{
-		resource->SetParametersList(*params);
-	}
-
-	m_resources[name] = resource;
-
-	Unlock();
-
-	return resource;
-
-}
-
-ResourceHandle ResourceManager::GetResource(const String &name)
-{
-
-	Lock();
-
-	auto it = m_resources.find(name);
-
-	ResourceHandle handle = (it != m_resources.end()
-		           ? it->second :
-		           ResourceHandle());
-
-	Unlock();
-
-	return handle;
-
-}
-
 void ResourceManager::FreeResource(const String &name)
 {
 
@@ -88,11 +41,11 @@ void ResourceManager::_FreeResource(ResourcesMap::iterator &it)
 	m_resources.erase(it);
 }
 
-ResourceHandle ResourceManager::CreateImpl(const String &name,
+Resource* ResourceManager::CreateImpl(const String &name,
 										   ManualResourceLoader *manual,
 										   Resource::ParametersList *params)
 {
-	return ResourceHandle();
+	return nullptr;
 }
 
 void ResourceManager::FreeImpl(Resource *)

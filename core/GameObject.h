@@ -39,17 +39,19 @@ namespace mye
 
 			Component* AddComponent(const Component &component);
 			Component* GetComponent(const String &name);
-			void RemoveComponent(const String &name);
+			void       RemoveComponent(const String &name);
 
 			inline TransformComponent* GetTransformComponent(void);
-			inline ScriptComponent* GetScriptComponent(void);
-			inline RenderComponent* GetRenderComponent(void);
-			inline CameraComponent* GetCameraComponent(void);
+			inline RenderComponent*    GetRenderComponent(void);
+			inline CameraComponent*    GetCameraComponent(void);
+			inline BehaviourComponent* GetBehaviourComponent(void);
 
-			inline mye::math::AABBf GetAABB(void);
+			inline mye::math::AABBf    GetAABB(void);
 
 			inline GameObjectsManager* GetOwner(void);
-			inline GameObjectHandle GetHandle(void);
+			inline GameObjectHandle    GetHandle(void);
+
+			inline const String&       GetEntityType(void) const;
 
 			void Update(FloatSeconds dt);
 
@@ -63,21 +65,26 @@ namespace mye
 		private:
 
 			friend class GameObjectsManager;
+			friend class GameObjectsModule;
 
 			void OnCreation(GameObjectsManager *owner,
 				const GameObjectHandle &handle);
 
 			void OnDestruction(void);
 
-			ComponentsList m_components;
+			ComponentsList      m_components;
 
-			GameObjectHandle m_handle;
+			GameObjectHandle    m_handle;
 			GameObjectsManager *m_owner;
 
 			TransformComponent *m_transform;
-			ScriptComponent *m_script;
-			RenderComponent *m_render;
-			CameraComponent *m_camera;
+			RenderComponent    *m_render;
+			CameraComponent    *m_camera;
+			BehaviourComponent *m_behaviour;
+
+			bool m_delendum;
+
+			String m_entity;
 
 		};
 

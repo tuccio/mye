@@ -1,0 +1,10 @@
+
+entity OnePerSecond
+{
+
+	float n(0);
+	float last_n(-1);
+
+	GameObjectHandle child;
+
+}

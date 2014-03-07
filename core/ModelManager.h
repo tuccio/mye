@@ -2,6 +2,7 @@
 
 #include "ResourceManager.h"
 #include "Singleton.h"
+#include "Model.h"
 
 namespace mye
 {
@@ -19,9 +20,9 @@ namespace mye
 			ModelManager(void);
 			~ModelManager(void);
 
-			mye::core::ResourceHandle CreateImpl(const String &name,
-				mye::core::ManualResourceLoader *manual,
-				mye::core::Resource::ParametersList *params);
+			Model* CreateImpl(const String &name,
+				ManualResourceLoader *manual,
+				Resource::ParametersList *params);
 
 			void FreeImpl(mye::core::Resource* resource);
 

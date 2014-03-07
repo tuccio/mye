@@ -49,6 +49,8 @@ GameObjectHandle GameObjectsManager::Create(const String& name)
 
 	o->OnCreation(this, hObj);
 
+	m_activeObjects.push_front(hObj);
+
 	return hObj;
 
 }
@@ -65,22 +67,34 @@ GameObjectHandle GameObjectsManager::CreateEntity(const String &entity,
 {
 
 	GameObjectHandle hObj;
-	ResourceHandle r = ResourceTypeManager::GetSingleton().CreateResource("Entity", entity);
 
-	if (r)
+	EntityPointer e = ResourceTypeManager::GetSingleton().
+		CreateResource<Entity>("Entity", entity);
+
+	Resource::ParametersList params;
+	params["type"] = "behaviour";
+
+	mye::lua::BehaviourScriptPointer s = ResourceTypeManager::GetSingleton().
+		CreateResource<mye::lua::BehaviourScript>("LuaScript", entity, nullptr, &params);
+
+	if (e &&
+		e->Load() &&
+		s &&
+		s->Load())
 	{
 
-		r->Load();
-		
-		EntityTemplate *e = r.Cast<EntityTemplate>();
-
 		hObj = Create(name);
+
 		GameObject *o = Get(hObj);
+
+		o->m_entity = entity;
 
 		for (Component *c : *e)
 		{
 			o->AddComponent(*c);
 		}
+
+		o->AddComponent(BehaviourComponent(s));
 
 	}
 
@@ -183,4 +197,46 @@ void GameObjectsManager::Rename(const GameObjectHandle &hObj, const String &name
 
 	
 
+}
+
+GameObjectsManager::Iterator GameObjectsManager::begin(void)
+{
+	return Iterator(this, &m_activeObjects, m_activeObjects.begin());
+}
+
+GameObjectsManager::Iterator GameObjectsManager::end(void)
+{
+	return Iterator(this, &m_activeObjects, m_activeObjects.end());
+}
+
+ActiveGameObjectsIterator::ActiveGameObjectsIterator(GameObjectsManager *gom,
+													 std::list<GameObjectHandle> *list,
+													 const std::list<GameObjectHandle>::iterator &it) :
+	m_it(it),
+	m_list(list),
+	m_gom(gom)
+{
+
+}
+
+ActiveGameObjectsIterator& ActiveGameObjectsIterator::operator++ (void)
+{
+	
+	do 
+	{
+		m_it++;
+	} while (m_it != m_list->end() && m_gom->Get(*m_it) == nullptr);
+
+	return *this;
+
+}
+
+bool ActiveGameObjectsIterator::operator != (const ActiveGameObjectsIterator& it) const
+{
+	return it.m_it != m_it;
+}
+
+GameObjectHandle ActiveGameObjectsIterator::operator* (void) const
+{
+	return *m_it;
 }

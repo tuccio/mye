@@ -14,7 +14,7 @@ entity Ball
 	// Ball kinematics
 	
 	vec3 position(0, 0, 0);
-	vec3 velocity(0.666, -0.666, 0.21);
+	vec3 velocity(1, -1, 0);
 	
 	
 	// Ball color

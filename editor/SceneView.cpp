@@ -11,6 +11,8 @@
 
 #undef max
 
+#define __RESIZETAB(__TAB) { __TAB.SetSize(tabSize); __TAB.SetPosition(tabPosition); }
+
 #define TAB_GAME_OBJECTS 0
 #define TAB_PROPERTIES 1
 #define TAB_TRANSFORM 2
@@ -77,6 +79,7 @@ void SceneView::Activate(void)
 		_CreateRenderTab();
 		_CreatePropertiesTab();
 		_CreateCameraTab();
+		_CreateBehaviourTab();
 
 		m_tabs.SelectTab(TAB_GAME_OBJECTS);
 		m_gameObjectsTab.Show();
@@ -132,17 +135,11 @@ void SceneView::SetSize(const mye::math::Vector2i &size)
 	Vector2i tabSize = Vector2i(rightPanel.x() - 2 * tabPadding, rightPanel.y() - tabHeight - tabPadding);
 	Vector2i tabPosition = Vector2i(tabPadding, tabHeight);
 
-	m_gameObjectsTab.SetSize(tabSize);
-	m_gameObjectsTab.SetPosition(tabPosition);
-
-	m_renderTab.SetSize(tabSize);
-	m_renderTab.SetPosition(tabPosition);
-
-	m_propertiesTab.SetSize(tabSize);
-	m_propertiesTab.SetPosition(tabPosition);
-
-	m_cameraTab.SetSize(tabSize);
-	m_cameraTab.SetPosition(tabPosition);
+	__RESIZETAB(m_gameObjectsTab);
+	__RESIZETAB(m_renderTab);
+	__RESIZETAB(m_propertiesTab);
+	__RESIZETAB(m_cameraTab);
+	__RESIZETAB(m_behaviourTab);
 
 	auto goList = m_controls.find("GOTGameObjectsList");
 
@@ -191,6 +188,7 @@ void SceneView::OnTabShow(int index)
 		break;
 
 	case TAB_BEHAVIOUR:
+		m_behaviourTab.Show();
 		break;
 
 	case TAB_CAMERA:
@@ -228,6 +226,7 @@ void SceneView::OnTabHide(int index)
 		break;
 
 	case TAB_BEHAVIOUR:
+		m_behaviourTab.Hide();
 		break;
 
 	case TAB_CAMERA:
@@ -404,7 +403,7 @@ void SceneView::Render(void)
 			{
 
 				TransformComponent *tc = object->GetTransformComponent();
-				Model *model = rc->GetModel().Cast<Model>();
+				ModelPointer model = rc->GetModel();
 
 				if (model)
 				{
@@ -417,7 +416,7 @@ void SceneView::Render(void)
 
 					DX11VertexBuffer vertexBuffer(nullptr, "", nullptr, g_renderWindow.GetDevice());
 
-					vertexBuffer.Create(model);
+					vertexBuffer.Create(model.get());
 					vertexBuffer.Bind();
 
 					g_renderWindow.GetDevice().GetImmediateContext()->
@@ -615,6 +614,7 @@ void SceneView::SelectGameObject(GameObject *selectedObject)
 	_FillRenderTab(selectedObject);
 	_FillPropertiesTab(selectedObject);
 	_FillCameraTab(selectedObject);
+	_FillBehaviourTab(selectedObject);
 
 	m_selected = selectedObject;
 

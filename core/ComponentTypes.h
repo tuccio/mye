@@ -9,10 +9,10 @@ namespace mye
 		enum class ComponentTypes
 		{
 			VARIABLE,
-			SCRIPT,
 			TRANSFORM,
 			RENDER,
 			CAMERA,
+			BEHAVIOUR,
 			COUNT
 		};
 

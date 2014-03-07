@@ -73,7 +73,7 @@ namespace mye
 
 		void __goh_destroy(const mye::core::GameObjectHandle &hObj)
 		{
-			Game::GetSingleton().GetGameObjectsModule()->Destroy(hObj);
+			Game::GetSingleton().GetGameObjectsModule()->PostDestroy(hObj);
 		}
 
 		bool __goh_exists(const mye::core::GameObjectHandle &hObj)

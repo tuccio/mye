@@ -2,6 +2,7 @@
 
 #include "ResourceManager.h"
 #include "Singleton.h"
+#include "Mesh.h"
 
 namespace mye
 {
@@ -19,9 +20,9 @@ namespace mye
 			MeshManager(void);
 			~MeshManager(void);
 
-			mye::core::ResourceHandle CreateImpl(const String &name,
-				mye::core::ManualResourceLoader *manual,
-				mye::core::Resource::ParametersList *params);
+			Mesh* CreateImpl(const String &name,
+				ManualResourceLoader *manual,
+				Resource::ParametersList *params);
 
 			void FreeImpl(mye::core::Resource* resource);
 

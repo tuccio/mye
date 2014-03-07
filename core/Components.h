@@ -2,7 +2,7 @@
 
 #include "ComponentTypes.h"
 #include "Component.h"
-#include "ScriptComponent.h"
+#include "BehaviourComponent.h"
 #include "VariableComponent.h"
 #include "TransformComponent.h"
 #include "RenderComponent.h"

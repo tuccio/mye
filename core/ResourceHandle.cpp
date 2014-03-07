@@ -3,17 +3,17 @@
 using namespace mye::core;
 
 ResourceHandle::ResourceHandle(void) :
-	std::shared_ptr<Resource>()
+	boost::shared_ptr<Resource>()
 {
 }
 
 ResourceHandle::ResourceHandle(Resource *resource) :
-	std::shared_ptr<Resource>(resource)
+	boost::shared_ptr<Resource>(resource)
 {
 }
 
 ResourceHandle::ResourceHandle(Resource &resource) :
-	std::shared_ptr<Resource>(&resource)
+	boost::shared_ptr<Resource>(&resource)
 {
 }
 

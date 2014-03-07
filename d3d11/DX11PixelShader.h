@@ -17,31 +17,33 @@ namespace mye
 			DX11PixelShader(mye::core::ResourceManager *owner,
 				const mye::core::String &name,
 				mye::core::ManualResourceLoader *manual,
-				mye::dx11::DX11Device &device);
+				mye::dx11::DX11Device &device,
+				bool precompiled = false);
 
 			~DX11PixelShader(void);
 
 			void Use(void);
-
-			ID3D11PixelShader* GetPixelShader(void);
-			mye::core::String GetCompileError(void);
-
 			void Destroy(void);
 
-		private:
+			ID3D11PixelShader*       GetPixelShader(void);
+			const mye::core::String& GetCompileError(void);
 
-			bool LoadImpl(void);
-			void UnloadImpl(void);
+		protected:
+
+			bool   LoadImpl(void);
+			void   UnloadImpl(void);
 			size_t CalculateSizeImpl(void);
 
-			ID3D11PixelShader *m_shader;
-			mye::core::String m_compileError;
-
 		private:
 
-			DX11Device &m_device;
+			ID3D11PixelShader *m_shader;
+			mye::core::String  m_compileError;
+
+			DX11Device        &m_device;
 
 		};
+
+		typedef boost::shared_ptr<DX11PixelShader> DX11PixelShaderPointer;
 
 	}
 

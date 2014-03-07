@@ -1,6 +1,7 @@
 #include "FileInfo.h"
 
 #include <regex>
+#include <Windows.h>
 
 using namespace mye::core;
 
@@ -50,5 +51,20 @@ String FileInfo::GetFileDirectory(void) const
 	}
 
 	return String(".");
+
+}
+
+size_t FileInfo::GetFileSize(void) const
+{
+
+	HANDLE hFile = CreateFile(m_file.CString(),
+		FILE_READ_ONLY,
+		FILE_SHARE_READ,
+		nullptr,
+		OPEN_EXISTING,
+		FILE_ATTRIBUTE_NORMAL,
+		NULL);
+
+	return (hFile != INVALID_HANDLE_VALUE ? ::GetFileSize(hFile, nullptr) : 0);
 
 }

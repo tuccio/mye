@@ -37,8 +37,8 @@ Mesh* Model::AddMesh(void)
 Mesh* Model::AddMesh(const String &resourceName)
 {
 
-	ResourceHandle mesh = ResourceTypeManager::GetSingleton().
-		CreateResource("Mesh", resourceName);
+	MeshPointer mesh = ResourceTypeManager::GetSingleton().
+		CreateResource<Mesh>("Mesh", resourceName);
 
 	mesh->Load();
 
@@ -49,14 +49,14 @@ Mesh* Model::AddMesh(const String &resourceName)
 
 	m_meshes.push_back(meshRef);
 
-	return meshRef.handle.Cast<Mesh>();
+	return meshRef.handle.get();
 
 }
 
 Mesh* Model::GetMesh(int i)
 {
 	return (m_meshes[i].resource ?
-		m_meshes[i].handle.Cast<Mesh>() :
+		m_meshes[i].handle.get() :
 		m_meshes[i].mesh);
 }
 
@@ -120,7 +120,7 @@ size_t Model::CalculateSizeImpl(void)
 		}
 		else
 		{
-			size += meshRef.handle.Cast<Mesh>()->GetSize();
+			size += meshRef.handle->GetSize();
 		}
 
 	}
@@ -155,7 +155,7 @@ Mesh::VectorPair Model::GetMinMaxVertices(void) const
 		}
 		else
 		{
-			localMinMax = meshRef.handle.Cast<Mesh>()->GetMinMaxVertices();
+			localMinMax = meshRef.handle->GetMinMaxVertices();
 		}
 
 		min = min.CwiseMin(localMinMax.first);

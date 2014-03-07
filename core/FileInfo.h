@@ -21,6 +21,8 @@ namespace mye
 			String GetFileName(void) const;
 			String GetFileDirectory(void) const;
 
+			size_t GetFileSize(void) const;
+
 		private:
 
 			String m_file;

@@ -61,7 +61,7 @@ private:
 
 	mye::core::AssimpModelLoader m_modelLoader;
 
-	mye::core::ResourceHandle m_model;
+	mye::core::ModelPointer m_model;
 	mye::math::Transformf m_transform;
 
 	mye::dx11::DX11VertexBuffer m_vbuffer;

@@ -4,6 +4,7 @@
 #include "Stream.h"
 
 #include "ResourceTypeManager.h"
+#include "OctreeSceneModule.h"
 
 #include <rapidxml.hpp>
 #include <rapidxml_print.hpp>
@@ -13,20 +14,20 @@
 using namespace mye::core;
 using namespace mye::math;
 
-Game::Game(InputModule *input,
+Game::Game(InputModule       *input,
 		   GameObjectsModule *gameobjects,
-		   SceneModule *scene,
-		   GraphicsModule *graphics,
-		   AudioModule *audio,
-		   ScriptModule *script) :
-m_input(input),
+		   SceneModule       *scene,
+		   GraphicsModule    *graphics,
+		   AudioModule       *audio,
+		   ScriptModule      *script) :
+	m_input(input),
 	m_gameobjects(gameobjects),
 	m_scene(scene),
 	m_graphics(graphics),
 	m_audio(audio),
 	m_script(script)
 {
-
+	
 }
 
 Game::~Game(void)
@@ -127,6 +128,7 @@ void Game::ExportScene(const String &path)
 			scene->append_node(gameObjectNode);
 
 			gameObjectNode->append_attribute(document.allocate_attribute("name", o->GetName().CString()));
+			gameObjectNode->append_attribute(document.allocate_attribute("entity", o->GetEntityType().CString()));
 
 			for (auto it : *o)
 			{
@@ -341,6 +343,40 @@ void Game::ImportScene(const String &file, std::list<GameObject*> *allocatedObje
 	if (scene)
 	{
 
+		rapidxml::xml_attribute<> *module = scene->first_attribute("module");
+
+		if (module && !strcmp(module->value(), "octree"))
+		{
+
+			rapidxml::xml_attribute<> *centerNode = scene->first_attribute("center");
+			rapidxml::xml_attribute<> *sizeNode = scene->first_attribute("size");
+			rapidxml::xml_attribute<> *maxdepthNode = scene->first_attribute("maxdepth");
+
+			Vector3f center(0.0f);
+			float size = 1024.0f;
+			unsigned int maxdepth = 32;
+
+			if (centerNode)
+			{
+				center = ParseVector3<float>(centerNode->value());
+			}
+
+			if (sizeNode)
+			{
+				size = ParseType<float>(sizeNode->value());
+			}
+
+			if (maxdepthNode)
+			{
+				maxdepth = ParseType<unsigned int>(maxdepthNode->value());
+			}
+
+			OctreeSceneModule *octreeScene = static_cast<OctreeSceneModule*>(m_scene);
+
+			octreeScene->Reset(center, size, maxdepth);
+
+		}
+
 		for (rapidxml::xml_node<> *gameObjectNode = scene->first_node("gameobject");
 			gameObjectNode;
 			gameObjectNode = gameObjectNode->next_sibling("gameobject"))
@@ -355,8 +391,24 @@ void Game::ImportScene(const String &file, std::list<GameObject*> *allocatedObje
 				name = nameAttribute->value();
 			}
 
-			GameObjectHandle hObj = m_gameobjects->Create(name);
+			rapidxml::xml_attribute<> *entityAttribute = gameObjectNode->first_attribute("entity");
+
+			String entity;
+
+			if (entityAttribute)
+			{
+				entity = entityAttribute->value();
+			}
+
+			GameObjectHandle hObj = (entity.Length() ? m_gameobjects->CreateEntity(entity, name) : m_gameobjects->Create(name));
 			GameObject *gameObject = m_gameobjects->Get(hObj);
+
+			if (gameObject)
+			{
+				
+				/*
+			 * Transform component
+			 */
 
 			rapidxml::xml_node<> *transform = gameObjectNode->first_node("transform");
 			
@@ -386,6 +438,10 @@ void Game::ImportScene(const String &file, std::list<GameObject*> *allocatedObje
 				}
 
 			}
+
+			/*
+			 * Camera component
+			 */
 
 			rapidxml::xml_node<> *camera = gameObjectNode->first_node("camera");
 
@@ -440,6 +496,10 @@ void Game::ImportScene(const String &file, std::list<GameObject*> *allocatedObje
 
 			}
 
+			/*
+			 * Render component
+			 */
+
 			rapidxml::xml_node<> *render = gameObjectNode->first_node("render");
 
 			if (render)
@@ -468,8 +528,10 @@ void Game::ImportScene(const String &file, std::list<GameObject*> *allocatedObje
 
 					rapidxml::xml_attribute<> *modelName = modelNode->first_attribute("name");
 
-					gameObject->GetRenderComponent()->SetModel(
-						ResourceTypeManager::GetSingleton().CreateResource("Model", modelName->value()));
+					ModelPointer model = ResourceTypeManager::GetSingleton().
+						CreateResource<Model>("Model", modelName->value());
+
+					gameObject->GetRenderComponent()->SetModel(model);
 
 				}
 
@@ -480,6 +542,8 @@ void Game::ImportScene(const String &file, std::list<GameObject*> *allocatedObje
 			if (allocatedObjects)
 			{
 				allocatedObjects->push_back(gameObject);
+			}
+
 			}
 
 		}

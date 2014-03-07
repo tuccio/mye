@@ -38,7 +38,7 @@ namespace mye
 
 			struct SubMesh
 			{
-				ResourceHandle handle;
+				MeshPointer handle;
 				Mesh *mesh;
 				bool resource;
 			};
@@ -55,6 +55,8 @@ namespace mye
 			 MeshList m_meshes;
 
 		};
+
+		typedef boost::shared_ptr<Model> ModelPointer;
 
 	}
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "String.h"
+#include <vector>
 
 namespace mye
 {
@@ -8,8 +9,12 @@ namespace mye
 	namespace core
 	{
 
-		String PointerToString(void *p);
-		void* StringToPointer(const String &str);
+		String PointerToString(const void *p);
+		const void* StringToPointer(const String &str);
+
+		void RuntimeError(const String &error);
+
+		std::vector<String> SplitCommandLine(const String &cmd);
 
 	}
 }
