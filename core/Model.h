@@ -2,7 +2,6 @@
 
 #include "Mesh.h"
 #include "Resource.h"
-#include "ResourceHandle.h"
 
 #include <vector>
 
@@ -30,7 +29,7 @@ namespace mye
 			Mesh* GetMesh(int i);
 			size_t GetMeshesCount(void) const;
 
-			void Free(void);
+			void Clear(void);
 
 			Mesh::VectorPair GetMinMaxVertices(void) const;
 

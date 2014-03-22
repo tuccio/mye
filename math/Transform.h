@@ -7,23 +7,23 @@ namespace mye
 	{
 
 		template <typename T>
-		class Transform
+		class Transformt
 		{
 
 		public:
 
-			static Transform<T> Identity(void);
+			static Transformt<T> Identity(void);
 
-			Transform(void);
+			Transformt(void);
 
-			Transform(const Matrix<T, 3, 1> &position,
-				const Quaternion<T> &orientation,
+			Transformt(const Matrix<T, 3, 1> &position,
+				const Quaterniont<T> &orientation,
 				const Matrix<T, 3, 1> &scale);
 
-			~Transform(void);
+			~Transformt(void);
 
-			inline const Quaternion<T>& GetOrientation(void) const;
-			inline void SetOrientation(const Quaternion<T> &q);
+			inline const Quaterniont<T>& GetOrientation(void) const;
+			inline void SetOrientation(const Quaterniont<T> &q);
 
 			inline const Matrix<T, 3, 1>& GetPosition(void) const;
 			inline void SetPosition(const Matrix<T, 3, 1> &position);
@@ -31,11 +31,11 @@ namespace mye
 			inline const Matrix<T, 3, 1>& GetScale(void) const;
 			inline void SetScale(const Matrix<T, 3, 1> &scale);
 
-			inline Matrix<T, 4, 4> GetTRSMatrix(void) const;			
+			inline Matrix<T, 4, 4> GetSRTMatrix(void) const;			
 
 		private:
 
-			Quaternion<T> m_orientation;
+			Quaterniont<T> m_orientation;
 			Matrix<T, 3, 1> m_position;
 			Matrix<T, 3, 1> m_scale;
 

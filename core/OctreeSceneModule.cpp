@@ -6,7 +6,7 @@
 using namespace mye::core;
 using namespace mye::math;
 
-OctreeSceneModule::OctreeSceneModule(const mye::math::Vector3f &center,
+OctreeSceneModule::OctreeSceneModule(const mye::math::Vector3 &center,
 									 float size,
 									 unsigned int maxdepth,
 									 unsigned int looseness) :
@@ -51,8 +51,8 @@ SceneModule::ObjectsList OctreeSceneModule::GetVisibleObjects(void)
 
 	SceneModule::ObjectsList visibleObjects;
 
-	Frustumf frustum = m_camera->GetFrustum();
-	AABBf frustumAABB = BoundingAABB(frustum);
+	Frustum frustum = m_camera->GetFrustum();
+	AABB frustumAABB = BoundingAABB(frustum);
 
 	std::deque<LooseOctreeNode<GameObjectHandle>*> q;
 
@@ -71,7 +71,7 @@ SceneModule::ObjectsList OctreeSceneModule::GetVisibleObjects(void)
 			{
 
 				GameObject *object = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
-				AABBf aabb = object->GetAABB();
+				AABB aabb = object->GetAABB();
 
 				if (Intersect(aabb, frustum) != VolumeSide::OUTSIDE)
 				{
@@ -211,7 +211,7 @@ void OctreeSceneModule::ApplyUpdates(void)
 }
 
 void OctreeSceneModule::Reset(
-	const mye::math::Vector3f &center,
+	const mye::math::Vector3 &center,
 	float size,
 	unsigned int maxdepth,
 	unsigned int looseness)

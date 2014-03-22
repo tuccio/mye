@@ -5,12 +5,12 @@ namespace mye
 	{
 
 		template <typename T>
-		Quaternion<T>::Quaternion(void)
+		Quaterniont<T>::Quaterniont(void)
 		{
 		}
 
 		template <typename T>
-		Quaternion<T>::Quaternion(T w, T x, T y, T z)
+		Quaterniont<T>::Quaterniont(T w, T x, T y, T z)
 		{
 			m_data[0] = x;
 			m_data[1] = y;
@@ -19,7 +19,7 @@ namespace mye
 		}
 
 		template <typename T>
-		Quaternion<T>::Quaternion(const Matrix<T, 3, 1> &axis, T angle)
+		Quaterniont<T>::Quaterniont(const Matrix<T, 3, 1> &axis, T angle)
 		{
 			float angleRadians = Radians(angle);
 			float sinHalfAngle = Sine(angleRadians * 0.5f);
@@ -30,7 +30,7 @@ namespace mye
 		}
 
 		template <typename T>
-		Quaternion<T>::Quaternion(const Matrix<T, 3, 3> &A)
+		Quaterniont<T>::Quaterniont(const Matrix<T, 3, 3> &A)
 		{
 			m_data[3] = Sqrt(1 + A(0, 0) + A(1, 1) + A(2, 2)) * 0.5f;
 			float invFourW = 1.0f / (4.0f * m_data[3]);
@@ -40,13 +40,13 @@ namespace mye
 		}
 
 		template <typename T>
-		Quaternion<T> Quaternion<T>::Inverse(void) const
+		Quaterniont<T> Quaterniont<T>::Inverse(void) const
 		{
 			
 			float invSquaredNorm = 1.0f / (m_data[0] * m_data[0] + m_data[1] * m_data[1] +
 				m_data[2] * m_data[2] + m_data[3] * m_data[3]);
 
-			return Quaternion<T>(
+			return Quaterniont<T>(
 				m_data[3] * invSquaredNorm,
 				m_data[0] * invSquaredNorm,
 				m_data[1] * invSquaredNorm,
@@ -56,9 +56,9 @@ namespace mye
 		}
 
 		template <typename T>
-		Quaternion<T> Quaternion<T>::Conjugate(void) const
+		Quaterniont<T> Quaterniont<T>::Conjugate(void) const
 		{
-			return Quaternion<T>(
+			return Quaterniont<T>(
 				m_data[3],
 				- m_data[0],
 				- m_data[1],
@@ -67,10 +67,10 @@ namespace mye
 		}
 
 		template <typename T>
-		Matrix<T, 3, 1> Quaternion<T>::Rotate(const Matrix<T, 3, 1> &p) const
+		Matrix<T, 3, 1> Quaterniont<T>::Rotate(const Matrix<T, 3, 1> &p) const
 		{
-			Quaternion<T> pQuat(0, p.x(), p.y(), p.z());
-			Quaternion<T> r = *this * pQuat * Conjugate();
+			Quaterniont<T> pQuat(0, p.x(), p.y(), p.z());
+			Quaterniont<T> r = *this * pQuat * Conjugate();
 			return Matrix<T, 3, 1>(
 				r.m_data[0],
 				r.m_data[1],
@@ -79,14 +79,14 @@ namespace mye
 		}
 
 		template <typename T>
-		T Quaternion<T>::Norm(void) const
+		T Quaterniont<T>::Norm(void) const
 		{
 			return Sqrt(m_data[0] * m_data[0] + m_data[1] * m_data[1] +
 				m_data[2] * m_data[2] + m_data[3] * m_data[3]);
 		}
 
 		template <typename T>
-		Quaternion<T>& Quaternion<T>::Normalize(void)
+		Quaterniont<T>& Quaterniont<T>::Normalize(void)
 		{
 			float invNorm = 1.0f / Norm();
 
@@ -97,11 +97,11 @@ namespace mye
 		}
 
 		template <typename T>
-		Quaternion<T> Quaternion<T>::Normalized(void) const
+		Quaterniont<T> Quaterniont<T>::Normalized(void) const
 		{
 			float invNorm = 1.0f / Norm();
 
-			return Quaternion<T>(
+			return Quaterniont<T>(
 				m_data[3] * invNorm,
 				m_data[0] * invNorm,
 				m_data[1] * invNorm,
@@ -110,9 +110,9 @@ namespace mye
 		}
 
 		template <typename T>
-		Quaternion<T> Quaternion<T>::operator+ (const Quaternion &q) const
+		Quaterniont<T> Quaterniont<T>::operator+ (const Quaterniont &q) const
 		{
-			return Quaternion<T>(
+			return Quaterniont<T>(
 				m_data[3] + q.m_data[3],
 				m_data[0] + q.m_data[0],
 				m_data[1] + q.m_data[1],
@@ -121,9 +121,9 @@ namespace mye
 		}
 
 		template <typename T>
-		Quaternion<T> Quaternion<T>::operator- (const Quaternion &q) const
+		Quaterniont<T> Quaterniont<T>::operator- (const Quaterniont &q) const
 		{
-			return Quaternion<T>(
+			return Quaterniont<T>(
 				m_data[3] - q.m_data[3],
 				m_data[0] - q.m_data[0],
 				m_data[1] - q.m_data[1],
@@ -132,9 +132,9 @@ namespace mye
 		}
 
 		template <typename T>
-		Quaternion<T> Quaternion<T>::operator* (const Quaternion &q) const
+		Quaterniont<T> Quaterniont<T>::operator* (const Quaterniont &q) const
 		{
-			return Quaternion<T>(
+			return Quaterniont<T>(
 				m_data[3] * q.m_data[3] - m_data[0] * q.m_data[0] - m_data[1] * q.m_data[1] - m_data[2] * q.m_data[2],
 				m_data[3] * q.m_data[0] + m_data[0] * q.m_data[3] + m_data[1] * q.m_data[2] - m_data[2] * q.m_data[1],
 				m_data[3] * q.m_data[1] + m_data[1] * q.m_data[3] + m_data[2] * q.m_data[0] - m_data[0] * q.m_data[2],
@@ -143,61 +143,61 @@ namespace mye
 		}
 
 		template <typename T>
-		T& Quaternion<T>::operator[] (int i)
+		T& Quaterniont<T>::operator[] (int i)
 		{
 			return m_data[i];
 		}
 
 		template <typename T>
-		const T& Quaternion<T>::operator[] (int i) const
+		const T& Quaterniont<T>::operator[] (int i) const
 		{
 			return m_data[i];
 		}
 
 		template <typename T>
-		T& Quaternion<T>::x(void)
+		T& Quaterniont<T>::x(void)
 		{
 			return m_data[0];
 		}
 
 		template <typename T>
-		const T& Quaternion<T>::x(void) const
+		const T& Quaterniont<T>::x(void) const
 		{
 			return m_data[0];
 		}
 
 		template <typename T>
-		T& Quaternion<T>::y(void)
+		T& Quaterniont<T>::y(void)
 		{
 			return m_data[1];
 		}
 
 		template <typename T>
-		const T& Quaternion<T>::y(void) const
+		const T& Quaterniont<T>::y(void) const
 		{
 			return m_data[1];
 		}
 
 		template <typename T>
-		T& Quaternion<T>::z(void)
+		T& Quaterniont<T>::z(void)
 		{
 			return m_data[2];
 		}
 
 		template <typename T>
-		const T& Quaternion<T>::z(void) const
+		const T& Quaterniont<T>::z(void) const
 		{
 			return m_data[2];
 		}
 
 		template <typename T>
-		T& Quaternion<T>::w(void)
+		T& Quaterniont<T>::w(void)
 		{
 			return m_data[3];
 		}
 
 		template <typename T>
-		const T& Quaternion<T>::w(void) const
+		const T& Quaterniont<T>::w(void) const
 		{
 			return m_data[3];
 		}

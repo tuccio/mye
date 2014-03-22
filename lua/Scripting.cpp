@@ -5,6 +5,7 @@
 #include "Converters.h"
 
 #include <mye/core/Game.h>
+#include <mye/core/Resource.h>
 
 #include <luabind/luabind.hpp>
 
@@ -31,13 +32,16 @@ namespace mye
 				class_<LuaModule>(MYE_LUA_LUAMODULE).
 
 					def("LoadBehaviour", &LuaModule::LoadBehaviour).
-					def("LoadProcedure", &LuaModule::LoadProcedure),
+					def("LoadProcedure", &LuaModule::LoadProcedure).
+					def("LoadScriptResourceLoader", &LuaModule::LoadScriptResourceLoader),
 
-				class_<BehaviourScript>(MYE_LUA_BEHAVIOURSCRIPT),
+				class_<Script, mye::core::Resource>(MYE_LUA_SCRIPT),
 
-				class_<ProcedureScript>(MYE_LUA_PROCEDURESCRIPT).
+				class_<BehaviourScript, Script>(MYE_LUA_BEHAVIOURSCRIPT),
 
-					def("Run", &ProcedureScript::Run)
+				class_<ProcedureScript, Script>(MYE_LUA_PROCEDURESCRIPT).
+
+					def("Run", &ProcedureScript::Run)				
 
 			];
 

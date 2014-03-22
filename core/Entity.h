@@ -71,7 +71,7 @@ namespace mye
 
 			Entity* CreateImpl(const String &name,
 				ManualResourceLoader *manual,
-				Resource::ParametersList *params);
+				const Resource::ParametersList &params);
 
 			virtual void FreeImpl(Resource* resource);
 

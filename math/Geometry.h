@@ -2,6 +2,8 @@
 
 #include "Math.h"
 
+#include "GeometryDeclarations.h"
+
 #include "Quaternion.h"
 #include "QuaternionOperations.h"
 

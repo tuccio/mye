@@ -6,6 +6,7 @@
 
 #include "BehaviourScript.h"
 #include "ProcedureScript.h"
+#include "ScriptResourceLoader.h"
 #include "Script.h"
 
 #include <lua.hpp>
@@ -31,16 +32,16 @@ namespace mye
 			bool Init(void);
 			void ShutDown(void);
 
+			void Preupdate(mye::core::FloatSeconds dt);
+
 			lua_State* GetLuaState(void);
 
 			const mye::core::String& GetScriptDirectory(void) const;
 			mye::core::String GetLastError(void) const;
 
-			//LuaScript LoadBehaviour(const mye::core::String &filename);
-			//LuaScript LoadProcedure(const mye::core::String &filename);
-
-			BehaviourScriptPointer LoadBehaviour(const mye::core::String &name);
-			ProcedureScriptPointer LoadProcedure(const mye::core::String &name);
+			BehaviourScriptPointer      LoadBehaviour(const mye::core::String &name);
+			ProcedureScriptPointer      LoadProcedure(const mye::core::String &name);
+			ScriptResourceLoaderPointer LoadScriptResourceLoader(const mye::core::String &name);
 
 			bool RunFile(const mye::core::String &file);
 			bool RunString(const mye::core::String &code);
@@ -49,7 +50,7 @@ namespace mye
 
 			Script* CreateImpl(const mye::core::String &name,
 				mye::core::ManualResourceLoader *manual,
-				mye::core::Resource::ParametersList *params);
+				const mye::core::Resource::ParametersList &params);
 
 			void FreeImpl(mye::core::Resource* resource);
 

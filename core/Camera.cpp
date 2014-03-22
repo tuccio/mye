@@ -28,22 +28,22 @@ Camera::~Camera(void)
 
 /* View */
 
-void Camera::LookAt(const mye::math::Vector3f &position,
-			const mye::math::Vector3f &up,
-			const mye::math::Vector3f &target)
+void Camera::LookAt(const mye::math::Vector3 &position,
+			const mye::math::Vector3 &up,
+			const mye::math::Vector3 &target)
 {
 
-	Vector3f z = (target - position).Normalized();
-	Vector3f x = up.Cross(z);
-	Vector3f y = z.Cross(x);
+	Vector3 z = (target - position).Normalized();
+	Vector3 x = up.Cross(z);
+	Vector3 y = z.Cross(x);
 
-	Matrix3f cam;
+	Matrix3 cam;
 
 	cam.SetColumn(0, x);
 	cam.SetColumn(1, y);
 	cam.SetColumn(2, z);
 
-	m_orientation = Quaternionf(cam);
+	m_orientation = Quaternion(cam);
 
 	m_position = position;
 
@@ -52,24 +52,24 @@ void Camera::LookAt(const mye::math::Vector3f &position,
 
 }
 
-mye::math::Quaternionf Camera::GetOrientation(void) const
+mye::math::Quaternion Camera::GetOrientation(void) const
 {
 	return m_orientation;
 }
 
-void Camera::SetOrientation(const mye::math::Quaternionf &direction)
+void Camera::SetOrientation(const mye::math::Quaternion &direction)
 {
 	m_orientation        = direction;
 	m_viewMatrixUptodate = false;
 	m_frustumUptodate    = false;
 }
 
-mye::math::Vector3f Camera::GetPosition(void) const
+mye::math::Vector3 Camera::GetPosition(void) const
 {
 	return m_position;
 }
 
-void Camera::SetPosition(const mye::math::Vector3f &position)
+void Camera::SetPosition(const mye::math::Vector3 &position)
 {
 	m_position           = position;
 	m_viewMatrixUptodate = false;
@@ -82,7 +82,7 @@ void Camera::Pitch(float angle)
 // 	float cosHalfAngle = Cosine(Radians(angle) * 0.5f);
 // 	float sinHalfAngle = Sine(Radians(angle) * 0.5f);
 
-	Quaternionf pitchQuaternion(Right(), angle);
+	Quaternion pitchQuaternion(Right(), angle);
 		
 		/*(cosHalfAngle,
 		sinHalfAngle,
@@ -101,7 +101,7 @@ void Camera::Yaw(float angle)
 // 	float cosHalfAngle = Cosine(Radians(angle) * 0.5f);
 // 	float sinHalfAngle = Sine(Radians(angle) * 0.5f);
 
-	Quaternionf yawQuaternion(Up(), angle);
+	Quaternion yawQuaternion(Up(), angle);
 		
 /*
 		(cosHalfAngle,
@@ -121,7 +121,7 @@ void Camera::Roll(float angle)
 // 	float cosHalfAngle = Cosine(Radians(angle) * 0.5f);
 // 	float sinHalfAngle = Sine(Radians(angle) * 0.5f);
 
-	Quaternionf rollQuaternion(Forward(), angle);
+	Quaternion rollQuaternion(Forward(), angle);
 		
 		
 	/*(cosHalfAngle,

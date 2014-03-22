@@ -186,7 +186,7 @@ bool entity::Parser::SemanticParse(entity::Entity &entity, mye::core::Entity &te
 
 				{
 
-					mye::math::Vector3f v;
+					mye::math::Vector3 v;
 
 					if (m.initializer.size() == 3)
 					{
@@ -215,8 +215,8 @@ bool entity::Parser::SemanticParse(entity::Entity &entity, mye::core::Entity &te
 						return false;
 					}
 
-					VariableComponent<mye::math::Vector3f> *component =
-						new VariableComponent<mye::math::Vector3f>(m.name.c_str());
+					VariableComponent<mye::math::Vector3> *component =
+						new VariableComponent<mye::math::Vector3>(m.name.c_str());
 					component->Set(v);
 
 					templ.Insert(component);
@@ -272,7 +272,7 @@ bool entity::Parser::SemanticParse(entity::Entity &entity, mye::core::Entity &te
 
 				{
 
-					mye::math::Vector4f v;
+					mye::math::Vector4 v;
 
 					if (m.initializer.size() == 4)
 					{
@@ -301,8 +301,8 @@ bool entity::Parser::SemanticParse(entity::Entity &entity, mye::core::Entity &te
 						return false;
 					}
 
-					VariableComponent<mye::math::Vector4f> *component =
-						new VariableComponent<mye::math::Vector4f>(m.name.c_str());
+					VariableComponent<mye::math::Vector4> *component =
+						new VariableComponent<mye::math::Vector4>(m.name.c_str());
 					component->Set(v);
 
 					templ.Insert(component);
@@ -358,8 +358,8 @@ bool entity::Parser::SemanticParse(entity::Entity &entity, mye::core::Entity &te
 
 				{
 
-					mye::math::Quaternionf q;
-					mye::math::Vector4f in;
+					mye::math::Quaternion q;
+					mye::math::Vector4 in;
 
 					if (m.initializer.size() == 4)
 					{
@@ -382,7 +382,7 @@ bool entity::Parser::SemanticParse(entity::Entity &entity, mye::core::Entity &te
 
 						}
 
-						q = mye::math::Quaternionf(in[0], in[1], in[2], in[3]);
+						q = mye::math::Quaternion(in[0], in[1], in[2], in[3]);
 
 					}
 					else if (m.initializer.size() != 0)
@@ -390,8 +390,8 @@ bool entity::Parser::SemanticParse(entity::Entity &entity, mye::core::Entity &te
 						return false;
 					}
 
-					VariableComponent<mye::math::Quaternionf> *component =
-						new VariableComponent<mye::math::Quaternionf>(m.name.c_str());
+					VariableComponent<mye::math::Quaternion> *component =
+						new VariableComponent<mye::math::Quaternion>(m.name.c_str());
 					component->Set(q);
 
 					templ.Insert(component);
@@ -405,7 +405,7 @@ bool entity::Parser::SemanticParse(entity::Entity &entity, mye::core::Entity &te
 				{
 
 					ColorRGB c;
-					mye::math::Vector3f in;
+					mye::math::Vector3 in;
 
 					if (m.initializer.size() == 3)
 					{
@@ -451,7 +451,7 @@ bool entity::Parser::SemanticParse(entity::Entity &entity, mye::core::Entity &te
 				{
 
 					ColorRGBA c;
-					mye::math::Vector4f in;
+					mye::math::Vector4 in;
 
 					if (m.initializer.size() == 4)
 					{
@@ -599,8 +599,8 @@ EntityTemplateManager::EntityTemplateManager(const String &entityDirectory) :
 }
 
 Entity* EntityTemplateManager::CreateImpl(const String &name,
-												 ManualResourceLoader *manual,
-												 Resource::ParametersList *params)
+										  ManualResourceLoader *manual,
+										  const Resource::ParametersList &params)
 {
 	return (new Entity(this, name, manual, m_entityDirectory));
 }

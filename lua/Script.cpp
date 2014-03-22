@@ -28,7 +28,7 @@ size_t Script::CalculateSizeImpl(void)
 	return 1; // TODO: Calcolare rimensione script
 }
 
-void Script::Free(void)
+void Script::Clear(void)
 {
 	luaL_unref(m_lua, LUA_REGISTRYINDEX, m_registryReference);
 	m_registryReference = LUA_NOREF;

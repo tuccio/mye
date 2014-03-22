@@ -8,7 +8,7 @@ namespace mye
 
 		enum class VolumeType
 		{
-			AABB,
+			AABBt,
 			FRUSTUM
 		};
 
@@ -19,6 +19,7 @@ namespace mye
 			OUTSIDE
 		};
 
+		template <typename T>
 		class Volume
 		{
 			
@@ -28,6 +29,13 @@ namespace mye
 				m_volumeType(type)
 			{
 			}
+
+			virtual Volume* Clone(void) const = 0;
+
+			virtual VolumeSide Intersect(const Volume &volume) const;
+
+			virtual void TransformAffine(Volume &volume,
+				const Matrix<T, 4, 4> &Transformt) const = 0;
 			
 			inline VolumeType GetVolumeType(void) const
 			{

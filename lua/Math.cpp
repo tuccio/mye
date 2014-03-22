@@ -177,13 +177,13 @@ namespace mye
 			module(L)
 			[
 
-				class_<Transformf>(classname).
+				class_<Transform>(classname).
 
 					def(constructor<>()).
 
-					property("orientation", &Transformf::GetOrientation, &Transformf::SetOrientation).
-					property("position", &Transformf::GetPosition, &Transformf::SetPosition).
-					property("scale", &Transformf::GetScale, &Transformf::SetScale)
+					property("orientation", &Transform::GetOrientation, &Transform::SetOrientation).
+					property("position", &Transform::GetPosition, &Transform::SetPosition).
+					property("scale", &Transform::GetScale, &Transform::SetScale)
 
 			];
 
@@ -192,13 +192,13 @@ namespace mye
 		void BindMath(lua_State *L)
 		{
 
-			BindVector2<float>(L, MYE_LUA_VEC2);
+			BindVector2<Real>(L, MYE_LUA_VEC2);
 			BindVector2<int>(L, MYE_LUA_VEC2I);
 
-			BindVector3<float>(L, MYE_LUA_VEC3);
+			BindVector3<Real>(L, MYE_LUA_VEC3);
 			BindVector3<int>(L, MYE_LUA_VEC3I);
 
-			BindVector4<float>(L, MYE_LUA_VEC4);
+			BindVector4<Real>(L, MYE_LUA_VEC4);
 			BindVector4<int>(L, MYE_LUA_VEC4I);
 
 			BindQuaternion(L, MYE_LUA_QUATERNION);

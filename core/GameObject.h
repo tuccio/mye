@@ -53,6 +53,9 @@ namespace mye
 
 			inline const String&       GetEntityType(void) const;
 
+			/* Script Callbacks */
+
+			void Init(void);
 			void Update(FloatSeconds dt);
 
 			void Clear(void);

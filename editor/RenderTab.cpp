@@ -76,75 +76,75 @@ void SceneView::_CreateRenderTab(void)
 		Vector2i(0, 0),
 		Vector2i(240, 24));
 
-	Edit *aabbCenterLabel = new Edit;
+	Edit *AABBtCenterLabel = new Edit;
 
-	aabbCenterLabel->Create(m_renderTab,
+	AABBtCenterLabel->Create(m_renderTab,
 		Vector2i(0, 52),
 		Vector2i(70, 22));
 
-	m_controls["RNDaabbCenterLabel"] = aabbCenterLabel;
-	aabbCenterLabel->SetText("AABB Center:");
-	aabbCenterLabel->SetReadOnly(true);
-	aabbCenterLabel->SetBorder(false);
+	m_controls["RNDAABBtCenterLabel"] = AABBtCenterLabel;
+	AABBtCenterLabel->SetText("AABBt Center:");
+	AABBtCenterLabel->SetReadOnly(true);
+	AABBtCenterLabel->SetBorder(false);
 
-	Edit *aabbCenterXEdit = new Edit;
+	Edit *AABBtCenterXEdit = new Edit;
 
-	m_controls["RNDaabbCenterXEdit"] = aabbCenterXEdit;
-	aabbCenterXEdit->Create(m_renderTab,
+	m_controls["RNDAABBtCenterXEdit"] = AABBtCenterXEdit;
+	AABBtCenterXEdit->Create(m_renderTab,
 		Vector2i(100, 52),
 		Vector2i(50, 22));
 
-	Edit *aabbCenterYEdit = new Edit;
+	Edit *AABBtCenterYEdit = new Edit;
 
-	m_controls["RNDaabbCenterYEdit"] = aabbCenterYEdit;
-	aabbCenterYEdit->Create(m_renderTab,
+	m_controls["RNDAABBtCenterYEdit"] = AABBtCenterYEdit;
+	AABBtCenterYEdit->Create(m_renderTab,
 		Vector2i(154, 52),
 		Vector2i(50, 22));
 
-	Edit *aabbCenterZEdit = new Edit;
+	Edit *AABBtCenterZEdit = new Edit;
 
-	m_controls["RNDaabbCenterZEdit"] = aabbCenterZEdit;
-	aabbCenterZEdit->Create(m_renderTab,
+	m_controls["RNDAABBtCenterZEdit"] = AABBtCenterZEdit;
+	AABBtCenterZEdit->Create(m_renderTab,
 		Vector2i(208, 52),
 		Vector2i(50, 22));
 
-	Edit *aabbHalfExtentsLabel = new Edit;
+	Edit *AABBtHalfExtentsLabel = new Edit;
 
-	aabbHalfExtentsLabel->Create(m_renderTab,
+	AABBtHalfExtentsLabel->Create(m_renderTab,
 		Vector2i(0, 78),
 		Vector2i(96, 22));
 
-	m_controls["RNDaabbHalfExtentsLabel"] = aabbHalfExtentsLabel;
-	aabbHalfExtentsLabel->SetText("AABB Half Extents:");
-	aabbHalfExtentsLabel->SetReadOnly(true);
-	aabbHalfExtentsLabel->SetBorder(false);
+	m_controls["RNDAABBtHalfExtentsLabel"] = AABBtHalfExtentsLabel;
+	AABBtHalfExtentsLabel->SetText("AABBt Half Extents:");
+	AABBtHalfExtentsLabel->SetReadOnly(true);
+	AABBtHalfExtentsLabel->SetBorder(false);
 
-	Edit *aabbHalfExtentsXEdit = new Edit;
+	Edit *AABBtHalfExtentsXEdit = new Edit;
 
-	m_controls["RNDaabbHalfExtentsXEdit"] = aabbHalfExtentsXEdit;
-	aabbHalfExtentsXEdit->Create(m_renderTab,
+	m_controls["RNDAABBtHalfExtentsXEdit"] = AABBtHalfExtentsXEdit;
+	AABBtHalfExtentsXEdit->Create(m_renderTab,
 		Vector2i(100, 78),
 		Vector2i(50, 22));
 
-	Edit *aabbHalfExtentsYEdit = new Edit;
+	Edit *AABBtHalfExtentsYEdit = new Edit;
 
-	m_controls["RNDaabbHalfExtentsYEdit"] = aabbHalfExtentsYEdit;
-	aabbHalfExtentsYEdit->Create(m_renderTab,
+	m_controls["RNDAABBtHalfExtentsYEdit"] = AABBtHalfExtentsYEdit;
+	AABBtHalfExtentsYEdit->Create(m_renderTab,
 		Vector2i(154, 78),
 		Vector2i(50, 22));
 
-	Edit *aabbHalfExtentsZEdit = new Edit;
+	Edit *AABBtHalfExtentsZEdit = new Edit;
 
-	m_controls["RNDaabbHalfExtentsZEdit"] = aabbHalfExtentsZEdit;
-	aabbHalfExtentsZEdit->Create(m_renderTab,
+	m_controls["RNDAABBtHalfExtentsZEdit"] = AABBtHalfExtentsZEdit;
+	AABBtHalfExtentsZEdit->Create(m_renderTab,
 		Vector2i(208, 78),
 		Vector2i(50, 22));
 
-	Button *aabbAutoSizeButton = new Button;
+	Button *AABBtAutoSizeButton = new Button;
 
-	m_controls["RNDaabbAutoSizeButton"] = aabbAutoSizeButton;
-	aabbAutoSizeButton->Create(m_renderTab,
-		"Auto-Size AABB",
+	m_controls["RNDAABBtAutoSizeButton"] = AABBtAutoSizeButton;
+	AABBtAutoSizeButton->Create(m_renderTab,
+		"Auto-Size AABBt",
 		[this] (void) -> void
 	{
 
@@ -153,7 +153,7 @@ void SceneView::_CreateRenderTab(void)
 		if (rc)
 		{
 
-			AABBf aabb;
+			AABBf AABBt;
 
 			ModelPointer model = rc->GetModel();
 
@@ -161,23 +161,23 @@ void SceneView::_CreateRenderTab(void)
 			{
 				model->Load();
 				auto minMax = model->GetMinMaxVertices();
-				aabb = AABBf::FromMinMax(minMax.first, minMax.second);
+				AABBt = AABBf::FromMinMax(minMax.first, minMax.second);
 			}
 			else
 			{
-				aabb = AABBf::FromMinMax(Vector3f(0), Vector3f(0));
+				AABBt = AABBf::FromMinMax(Vector3f(0), Vector3f(0));
 			}
 
-			Vector3f aabbCenter = aabb.GetCenter();
-			Vector3f aabbHalfExtents = aabb.GetHalfExtents();
+			Vector3f AABBtCenter = AABBt.GetCenter();
+			Vector3f AABBtHalfExtents = AABBt.GetHalfExtents();
 
-			static_cast<Edit*>(m_controls["RNDaabbCenterXEdit"])->SetText(ToString(aabbCenter.x()));
-			static_cast<Edit*>(m_controls["RNDaabbCenterYEdit"])->SetText(ToString(aabbCenter.y()));
-			static_cast<Edit*>(m_controls["RNDaabbCenterZEdit"])->SetText(ToString(aabbCenter.z()));
+			static_cast<Edit*>(m_controls["RNDAABBtCenterXEdit"])->SetText(ToString(AABBtCenter.x()));
+			static_cast<Edit*>(m_controls["RNDAABBtCenterYEdit"])->SetText(ToString(AABBtCenter.y()));
+			static_cast<Edit*>(m_controls["RNDAABBtCenterZEdit"])->SetText(ToString(AABBtCenter.z()));
 
-			static_cast<Edit*>(m_controls["RNDaabbHalfExtentsXEdit"])->SetText(ToString(aabbHalfExtents.x()));
-			static_cast<Edit*>(m_controls["RNDaabbHalfExtentsYEdit"])->SetText(ToString(aabbHalfExtents.y()));
-			static_cast<Edit*>(m_controls["RNDaabbHalfExtentsZEdit"])->SetText(ToString(aabbHalfExtents.z()));
+			static_cast<Edit*>(m_controls["RNDAABBtHalfExtentsXEdit"])->SetText(ToString(AABBtHalfExtents.x()));
+			static_cast<Edit*>(m_controls["RNDAABBtHalfExtentsYEdit"])->SetText(ToString(AABBtHalfExtents.y()));
+			static_cast<Edit*>(m_controls["RNDAABBtHalfExtentsZEdit"])->SetText(ToString(AABBtHalfExtents.z()));
 
 		}
 
@@ -199,7 +199,7 @@ void SceneView::_CreateRenderTab(void)
 		{
 
 			RenderComponent *rc = m_selected->GetRenderComponent();
-			AABBf aabb;
+			AABBf AABBt;
 
 			if (!rc)
 			{
@@ -214,20 +214,20 @@ void SceneView::_CreateRenderTab(void)
 
 			}
 
-			aabb = m_selected->GetAABB();
+			AABBt = m_selected->GetAABB();
 
-			Vector3f aabbCenter(
-				atoi(static_cast<Edit*>(m_controls["RNDaabbCenterXEdit"])->GetText().CString()),
-				atoi(static_cast<Edit*>(m_controls["RNDaabbCenterYEdit"])->GetText().CString()),
-				atoi(static_cast<Edit*>(m_controls["RNDaabbCenterZEdit"])->GetText().CString()));
+			Vector3f AABBtCenter(
+				atoi(static_cast<Edit*>(m_controls["RNDAABBtCenterXEdit"])->GetText().CString()),
+				atoi(static_cast<Edit*>(m_controls["RNDAABBtCenterYEdit"])->GetText().CString()),
+				atoi(static_cast<Edit*>(m_controls["RNDAABBtCenterZEdit"])->GetText().CString()));
 
-			Vector3f aabbHalfExtents(
-				atoi(static_cast<Edit*>(m_controls["RNDaabbHalfExtentsXEdit"])->GetText().CString()),
-				atoi(static_cast<Edit*>(m_controls["RNDaabbHalfExtentsYEdit"])->GetText().CString()),
-				atoi(static_cast<Edit*>(m_controls["RNDaabbHalfExtentsZEdit"])->GetText().CString()));
+			Vector3f AABBtHalfExtents(
+				atoi(static_cast<Edit*>(m_controls["RNDAABBtHalfExtentsXEdit"])->GetText().CString()),
+				atoi(static_cast<Edit*>(m_controls["RNDAABBtHalfExtentsYEdit"])->GetText().CString()),
+				atoi(static_cast<Edit*>(m_controls["RNDAABBtHalfExtentsZEdit"])->GetText().CString()));
 
-			rc->SetBounds(AABBf::FromCenterHalfExtents(aabbCenter, aabbHalfExtents));
-			g_scene.MoveGameObject(m_selected->GetHandle(), aabb);
+			rc->SetBounds(AABBf::FromCenterHalfExtents(AABBtCenter, AABBtHalfExtents));
+			g_scene.MoveGameObject(m_selected->GetHandle(), AABBt);
 
 			ModelPointer model = rc->GetModel();
 
@@ -280,7 +280,7 @@ void SceneView::_CreateRenderTab(void)
 	m_renderTab.RegisterControl(modelEdit);
 	m_renderTab.RegisterControl(renderCheckbox);
 	m_renderTab.RegisterControl(browseModelButton);
-	m_renderTab.RegisterControl(aabbAutoSizeButton);
+	m_renderTab.RegisterControl(AABBtAutoSizeButton);
 	m_renderTab.RegisterControl(applyChangesButton);
 	m_renderTab.RegisterControl(discardChangesButton);
 
@@ -301,9 +301,9 @@ void SceneView::_FillRenderTab(mye::core::GameObject *selectedObject)
 
 			static_cast<Checkbox*>(m_controls["RNDrenderCheckbox"])->SetCheck(true);
 
-			AABBf aabb               = renderComponent->GetBounds();
-			Vector3f aabbCenter      = aabb.GetCenter();
-			Vector3f aabbHalfExtents = aabb.GetHalfExtents();
+			AABBf AABBt               = renderComponent->GetBounds();
+			Vector3f AABBtCenter      = AABBt.GetCenter();
+			Vector3f AABBtHalfExtents = AABBt.GetHalfExtents();
 
 			if (renderComponent->GetModel())
 			{
@@ -314,13 +314,13 @@ void SceneView::_FillRenderTab(mye::core::GameObject *selectedObject)
 				static_cast<Edit*>(m_controls["RNDmodelEdit"])->SetText("");
 			}
 
-			static_cast<Edit*>(m_controls["RNDaabbCenterXEdit"])->SetText(ToString(aabbCenter.x()));
-			static_cast<Edit*>(m_controls["RNDaabbCenterYEdit"])->SetText(ToString(aabbCenter.y()));
-			static_cast<Edit*>(m_controls["RNDaabbCenterZEdit"])->SetText(ToString(aabbCenter.z()));
+			static_cast<Edit*>(m_controls["RNDAABBtCenterXEdit"])->SetText(ToString(AABBtCenter.x()));
+			static_cast<Edit*>(m_controls["RNDAABBtCenterYEdit"])->SetText(ToString(AABBtCenter.y()));
+			static_cast<Edit*>(m_controls["RNDAABBtCenterZEdit"])->SetText(ToString(AABBtCenter.z()));
 
-			static_cast<Edit*>(m_controls["RNDaabbHalfExtentsXEdit"])->SetText(ToString(aabbHalfExtents.x()));
-			static_cast<Edit*>(m_controls["RNDaabbHalfExtentsYEdit"])->SetText(ToString(aabbHalfExtents.y()));
-			static_cast<Edit*>(m_controls["RNDaabbHalfExtentsZEdit"])->SetText(ToString(aabbHalfExtents.z()));
+			static_cast<Edit*>(m_controls["RNDAABBtHalfExtentsXEdit"])->SetText(ToString(AABBtHalfExtents.x()));
+			static_cast<Edit*>(m_controls["RNDAABBtHalfExtentsYEdit"])->SetText(ToString(AABBtHalfExtents.y()));
+			static_cast<Edit*>(m_controls["RNDAABBtHalfExtentsZEdit"])->SetText(ToString(AABBtHalfExtents.z()));
 
 			renderComponentFilled = true;
 
@@ -335,13 +335,13 @@ void SceneView::_FillRenderTab(mye::core::GameObject *selectedObject)
 
 		static_cast<Edit*>(m_controls["RNDmodelEdit"])->SetText("");
 
-		static_cast<Edit*>(m_controls["RNDaabbCenterXEdit"])->SetText("0");
-		static_cast<Edit*>(m_controls["RNDaabbCenterYEdit"])->SetText("0");
-		static_cast<Edit*>(m_controls["RNDaabbCenterZEdit"])->SetText("0");
+		static_cast<Edit*>(m_controls["RNDAABBtCenterXEdit"])->SetText("0");
+		static_cast<Edit*>(m_controls["RNDAABBtCenterYEdit"])->SetText("0");
+		static_cast<Edit*>(m_controls["RNDAABBtCenterZEdit"])->SetText("0");
 
-		static_cast<Edit*>(m_controls["RNDaabbHalfExtentsXEdit"])->SetText("0");;
-		static_cast<Edit*>(m_controls["RNDaabbHalfExtentsYEdit"])->SetText("0");
-		static_cast<Edit*>(m_controls["RNDaabbHalfExtentsZEdit"])->SetText("0");
+		static_cast<Edit*>(m_controls["RNDAABBtHalfExtentsXEdit"])->SetText("0");;
+		static_cast<Edit*>(m_controls["RNDAABBtHalfExtentsYEdit"])->SetText("0");
+		static_cast<Edit*>(m_controls["RNDAABBtHalfExtentsZEdit"])->SetText("0");
 
 	}
 

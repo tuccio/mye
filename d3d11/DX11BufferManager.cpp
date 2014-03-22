@@ -18,27 +18,22 @@ DX11BufferManager::~DX11BufferManager(void)
 }
 
 DX11Buffer* DX11BufferManager::CreateImpl(const mye::core::String &name,
-												   ManualResourceLoader *manual,
-												   Resource::ParametersList *params)
+										  ManualResourceLoader *manual,
+										  const Resource::ParametersList &params)
 {
 
-	if (params)
+	auto it = params.find("type");
+
+	if (it != params.end())
 	{
 
-		auto it = params->find("type");
-
-		if (it != params->end())
+		if (it->second == "vertex")
 		{
-
-			if (it->second == "vertex")
-			{
-				return (new DX11VertexBuffer(this, name, manual, m_device));
-			}
-			else if (it->second == "constant")
-			{
-				return (new DX11ConstantBuffer(this, name, manual, m_device));
-			}
-
+			return (new DX11VertexBuffer(this, name, manual, m_device));
+		}
+		else if (it->second == "constant")
+		{
+			return (new DX11ConstantBuffer(this, name, manual, m_device));
 		}
 
 	}

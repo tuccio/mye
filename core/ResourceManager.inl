@@ -6,7 +6,7 @@ namespace mye
 
 		boost::shared_ptr<Resource> ResourceManager::CreateResource(const String &name,
 			ManualResourceLoader *manual,
-			Resource::ParametersList *params)
+			const Resource::ParametersList &params)
 		{
 			return CreateResource<Resource>(name, manual, params);
 		}
@@ -14,7 +14,7 @@ namespace mye
 		template <typename ResourceType>
 		boost::shared_ptr<ResourceType> ResourceManager::CreateResource(const String &name,
 			ManualResourceLoader *manual,
-			Resource::ParametersList *params)
+			const Resource::ParametersList &params)
 		{
 
 			Lock();
@@ -27,15 +27,10 @@ namespace mye
 			}
 
 			Resource *r = CreateImpl(name, manual, params);
-
-			if (params)
-			{
-				r->SetParametersList(*params);
-			}
+			r->SetParametersList(params);
 
 			auto it2 = m_resources.insert(std::pair<String, ResourcePointer>(name, ResourcePointer(r)));
 			
-
 			Unlock();
 
 			return boost::static_pointer_cast<ResourceType>(it2.first->second);

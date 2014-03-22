@@ -5,23 +5,23 @@ namespace mye
 	{
 
 		template <typename T>
-		Transform<T> Transform<T>::Identity(void)
+		Transformt<T> Transformt<T>::Identity(void)
 		{
-			return Transform<T>(
+			return Transformt<T>(
 				Matrix<T, 3, 1>(0, 0, 0),
-				Quaternion<T>(1, 0, 0, 0),
+				Quaterniont<T>(1, 0, 0, 0),
 				Matrix<T, 3, 1>(1, 1, 1)
 				);
 		}
 
 		template <typename T>
-		Transform<T>::Transform(void)
+		Transformt<T>::Transformt(void)
 		{
 		}
 
 		template <typename T>
-		Transform<T>::Transform(const Matrix<T, 3, 1> &position,
-			const Quaternion<T> &orientation,
+		Transformt<T>::Transformt(const Matrix<T, 3, 1> &position,
+			const Quaterniont<T> &orientation,
 			const Matrix<T, 3, 1> &scale) :
 		m_position(position),
 		m_orientation(orientation),
@@ -31,49 +31,49 @@ namespace mye
 		}
 
 		template <typename T>
-		Transform<T>::~Transform(void)
+		Transformt<T>::~Transformt(void)
 		{
 		}
 
 		
 		template <typename T>
-		const Quaternion<T>& Transform<T>::GetOrientation(void) const
+		const Quaterniont<T>& Transformt<T>::GetOrientation(void) const
 		{
 			return m_orientation;
 		}
 
 		template <typename T>
-		void Transform<T>::SetOrientation(const Quaternion<T> &q)
+		void Transformt<T>::SetOrientation(const Quaterniont<T> &q)
 		{
 			m_orientation = q;
 		}
 
 		template <typename T>
-		const Matrix<T, 3, 1>& Transform<T>::GetPosition(void) const
+		const Matrix<T, 3, 1>& Transformt<T>::GetPosition(void) const
 		{
 			return m_position;
 		}
 
 		template <typename T>
-		void Transform<T>::SetPosition(const Matrix<T, 3, 1> &position)
+		void Transformt<T>::SetPosition(const Matrix<T, 3, 1> &position)
 		{
 			m_position = position;
 		}
 
 		template <typename T>
-		const Matrix<T, 3, 1>& Transform<T>::GetScale(void) const
+		const Matrix<T, 3, 1>& Transformt<T>::GetScale(void) const
 		{
 			return m_scale;
 		}
 
 		template <typename T>
-		void Transform<T>::SetScale(const Matrix<T, 3, 1> &scale)
+		void Transformt<T>::SetScale(const Matrix<T, 3, 1> &scale)
 		{
 			m_scale = scale;
 		}
 
 		template <typename T>
-		Matrix<T, 4, 4> Transform<T>::GetTRSMatrix(void) const
+		Matrix<T, 4, 4> Transformt<T>::GetSRTMatrix(void) const
 		{
 			return TranslationMatrix4(m_position) *
 				RotationMatrix4(m_orientation) *

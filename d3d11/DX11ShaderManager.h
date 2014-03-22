@@ -34,7 +34,7 @@ namespace mye
 
 			DX11Shader* CreateImpl(const mye::core::String &name,
 				mye::core::ManualResourceLoader *manual,
-				mye::core::Resource::ParametersList *params);
+				const mye::core::Resource::ParametersList &params);
 
 			void FreeImpl(mye::core::Resource* resource);
 

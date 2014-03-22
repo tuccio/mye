@@ -65,14 +65,14 @@ size_t Model::GetMeshesCount(void) const
 	return m_meshes.size();
 }
 
-void Model::Free(void)
+void Model::Clear(void)
 {
 
 	for (SubMesh& meshRef : m_meshes)
 	{
 		if (!meshRef.resource)
 		{
-			meshRef.mesh->Destroy();
+			meshRef.mesh->Clear();
 			delete meshRef.mesh;
 		}
 	}
@@ -103,7 +103,7 @@ bool Model::LoadImpl(void)
 
 void Model::UnloadImpl(void)
 {
-	Free();
+	Clear();
 }
 
 size_t Model::CalculateSizeImpl(void)
@@ -132,13 +132,13 @@ size_t Model::CalculateSizeImpl(void)
 Mesh::VectorPair Model::GetMinMaxVertices(void) const
 {
 
-	mye::math::Vector3f max = mye::math::Vector3f(
+	mye::math::Vector3 max = mye::math::Vector3(
 		std::numeric_limits<float>::min(),
 		std::numeric_limits<float>::min(),
 		std::numeric_limits<float>::min()
 		);
 
-	mye::math::Vector3f min = mye::math::Vector3f(
+	mye::math::Vector3 min = mye::math::Vector3(
 		std::numeric_limits<float>::max(),
 		std::numeric_limits<float>::max(),
 		std::numeric_limits<float>::max()

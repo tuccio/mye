@@ -3,11 +3,14 @@
 #include "CoreTypes.h"
 #include "Converters.h"
 #include "Math.h"
+#include "Physics.h"
 #include "Game.h"
+#include "Resource.h"
 
 #include <luabind/luabind.hpp>
 
 #include <mye/core/String.h>
+#include <mye/core/ResourceTypeManager.h>
 
 #include <iostream>
 
@@ -75,7 +78,9 @@ void LuaModule::OpenAllLibraries(void)
 	luabind::open(m_lua);
 
 	BindCoreTypes(m_lua);
+	BindResources(m_lua);
 	BindMath(m_lua);
+	BindPhysics(m_lua);
 	BindGame(m_lua);
 
 }
@@ -94,6 +99,9 @@ bool LuaModule::Init(void)
 	luabind::globals(m_lua)["Input"]       = boost::ref(*game.GetInputModule());
 	luabind::globals(m_lua)["Graphics"]    = boost::ref(*game.GetGraphicsModule());
 
+	luabind::globals(m_lua)["Time"]                = luabind::newtable(m_lua);
+	luabind::globals(m_lua)["ResourceTypeManager"] = boost::ref(ResourceTypeManager::GetSingleton());
+
 	return true;
 
 }
@@ -103,13 +111,20 @@ void LuaModule::ShutDown(void)
 	lua_close(m_lua);
 }
 
+void LuaModule::Preupdate(FloatSeconds dt)
+{
+
+	luabind::globals(m_lua)["Time"]["Delta"] = luabind::object(m_lua, (float) dt);;
+
+}
+
 BehaviourScriptPointer LuaModule::LoadBehaviour(const mye::core::String &name)
 {
 
 	Resource::ParametersList params;
 	params["type"] = "behaviour";
 
-	BehaviourScriptPointer script = CreateResource<BehaviourScript>(name, nullptr, &params);
+	BehaviourScriptPointer script = CreateResource<BehaviourScript>(name, nullptr, params);
 
 	if (script)
 	{
@@ -123,7 +138,10 @@ BehaviourScriptPointer LuaModule::LoadBehaviour(const mye::core::String &name)
 ProcedureScriptPointer LuaModule::LoadProcedure(const mye::core::String &name)
 {
 
-	ProcedureScriptPointer script = CreateResource<ProcedureScript>(name, nullptr, nullptr);
+	Resource::ParametersList params;
+	params["type"] = "procedure";
+
+	ProcedureScriptPointer script = CreateResource<ProcedureScript>(name, nullptr, params);
 
 	if (script)
 	{
@@ -134,66 +152,57 @@ ProcedureScriptPointer LuaModule::LoadProcedure(const mye::core::String &name)
 
 }
 
-/*
-LuaScript LuaModule::LoadProcedure(const mye::core::String &filename)
+ScriptResourceLoaderPointer LuaModule::LoadScriptResourceLoader(const mye::core::String &name)
 {
 
-	int top = lua_gettop(m_lua);
+	Resource::ParametersList params;
+	params["type"] = "resource loader";
 
-	if (!luaL_loadfile(m_lua, filename.CString()))
+	ScriptResourceLoaderPointer script = CreateResource<ScriptResourceLoader>(name, nullptr, params);
+
+	if (script)
+	{
+		script->Load();
+	}
+
+	return script;
+
+}
+
+Script* LuaModule::CreateImpl(const String &name,
+							  ManualResourceLoader *manual,
+							  const Resource::ParametersList &params)
+{
+
+	Script *script = nullptr;
+
+	auto typeIt = params.find("type");
+
+	if (typeIt != params.end())
 	{
 
-		// Create _ENV for sandbox
+		const String &type = typeIt->second;
 
-		lua_newtable(m_lua);
-
-		// Create its metatable
-		lua_newtable(m_lua);
-		lua_getglobal(m_lua, "_G");
-
-		lua_setfield(m_lua, -2, "__index");
-		lua_setmetatable(m_lua, -2);
-
-		const char *upvalue = lua_setupvalue(m_lua, -2, 1);
-
-		if (upvalue != nullptr)
+		if (type == "behaviour")
 		{
-
-			assert(strncmp(upvalue, "_ENV", 4) == 0);
-
-			LuaScript rvalue(*this, LuaScript::PROCEDURE, -1);
-			lua_settop(m_lua, top);
-			return rvalue;
-
+			script = new BehaviourScript(*this, name);
+		}
+		else if (type == "resource loader")
+		{
+			script = new ScriptResourceLoader(*this, name);
+		}
+		else if (type == "procedure")
+		{
+			script = new ProcedureScript(*this, name);
 		}
 
 	}
-
-	luaL_error(m_lua, ("Error while loading " + filename).CString());
-
-	lua_settop(m_lua, top);
-
-	LuaScript rvalue(*this, LuaScript::PROCEDURE);
-	return rvalue;
-
-}*/
-
-Script* LuaModule::CreateImpl(const String &name,
-								ManualResourceLoader *manual,
-								Resource::ParametersList *params)
-{
-
-	bool procedure = true;
-
-	if (params &&
-		(*params)["type"] == "behaviour")
+	else
 	{
-		procedure = false;
+		script = new ProcedureScript(*this, name);
 	}
 
-	return (procedure ?
-		static_cast<Script*>(new ProcedureScript(*this, name)) :
-		static_cast<Script*>(new BehaviourScript(*this, name)));
+	return script;
 
 }
 

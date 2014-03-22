@@ -53,8 +53,8 @@ void CreateLooseQuadtree(std::list<DX11VertexBuffer> &list,
 						 DX11Window &window,
 						 LooseOctree<T> &octree);
 
-void CreateAABB(std::list<DX11VertexBuffer> &list,
-				DX11Window &window,const AABBf &aabb);
+void CreateAABBt(std::list<DX11VertexBuffer> &list,
+				DX11Window &window,const AABBf &AABBt);
 
 void CreateQuad(std::list<DX11VertexBuffer> &list,
 				DX11Window &window,
@@ -148,10 +148,10 @@ int main(int argc, char *argv[])
 			VertexAttributeType::FLOAT3,
 			&triangle.v2());
 
-		AABBf oldAABB = BoundingAABB(triangle);
-		AABBf newAABB = oldAABB.TransformAffine(TranslationMatrix4(Vector3f(0.5f, 0, 0)));
+		AABBf oldAABBt = BoundingAABB(triangle);
+		AABBf newAABBt = oldAABBt.TransformAffine(TranslationMatrix4(Vector3f(0.5f, 0, 0)));
 
-		if (!octree.Relocate(triangle, oldAABB, newAABB))
+		if (!octree.Relocate(triangle, oldAABBt, newAABBt))
 		{
 			fails++;
 		}
@@ -427,7 +427,7 @@ void CreateLooseQuadtree(std::list<DX11VertexBuffer> &list,
 
 		if (node->GetObjectsCount() > 0)
 		{
-			CreateAABB(list, window, node->GetBounds());
+			CreateAABBt(list, window, node->GetBounds());
 		}
 
 		for (int i = 0; i < 8; i++)
@@ -446,47 +446,47 @@ void CreateLooseQuadtree(std::list<DX11VertexBuffer> &list,
 
 }
 
-void CreateAABB(std::list<DX11VertexBuffer> &list,
+void CreateAABBt(std::list<DX11VertexBuffer> &list,
 				DX11Window &window,
-				const AABBf &aabb)
+				const AABBf &AABBt)
 {
 
-	auto corners = aabb.GetCorners();
+	auto corners = AABBt.GetCorners();
 
 	CreateQuad(list,
 		window,
-		corners[static_cast<int>(AABBCorners::LEFT_BOTTOM_NEAR)],
-		corners[static_cast<int>(AABBCorners::RIGHT_BOTTOM_NEAR)],
-		corners[static_cast<int>(AABBCorners::RIGHT_TOP_NEAR)],
-		corners[static_cast<int>(AABBCorners::LEFT_TOP_NEAR)]);
+		corners[static_cast<int>(AABBtCorners::LEFT_BOTTOM_NEAR)],
+		corners[static_cast<int>(AABBtCorners::RIGHT_BOTTOM_NEAR)],
+		corners[static_cast<int>(AABBtCorners::RIGHT_TOP_NEAR)],
+		corners[static_cast<int>(AABBtCorners::LEFT_TOP_NEAR)]);
 
 	CreateQuad(list,
 		window,
-		corners[static_cast<int>(AABBCorners::LEFT_BOTTOM_FAR)],
-		corners[static_cast<int>(AABBCorners::RIGHT_BOTTOM_FAR)],
-		corners[static_cast<int>(AABBCorners::RIGHT_TOP_FAR)],
-		corners[static_cast<int>(AABBCorners::LEFT_TOP_FAR)]);
+		corners[static_cast<int>(AABBtCorners::LEFT_BOTTOM_FAR)],
+		corners[static_cast<int>(AABBtCorners::RIGHT_BOTTOM_FAR)],
+		corners[static_cast<int>(AABBtCorners::RIGHT_TOP_FAR)],
+		corners[static_cast<int>(AABBtCorners::LEFT_TOP_FAR)]);
 
 	CreateQuad(list,
 		window,
-		corners[static_cast<int>(AABBCorners::LEFT_TOP_NEAR)],
-		corners[static_cast<int>(AABBCorners::RIGHT_TOP_NEAR)],
-		corners[static_cast<int>(AABBCorners::RIGHT_TOP_FAR)],
-		corners[static_cast<int>(AABBCorners::LEFT_TOP_FAR)]);
+		corners[static_cast<int>(AABBtCorners::LEFT_TOP_NEAR)],
+		corners[static_cast<int>(AABBtCorners::RIGHT_TOP_NEAR)],
+		corners[static_cast<int>(AABBtCorners::RIGHT_TOP_FAR)],
+		corners[static_cast<int>(AABBtCorners::LEFT_TOP_FAR)]);
 
 	CreateQuad(list,
 		window,
-		corners[static_cast<int>(AABBCorners::RIGHT_BOTTOM_NEAR)],
-		corners[static_cast<int>(AABBCorners::RIGHT_TOP_NEAR)],
-		corners[static_cast<int>(AABBCorners::RIGHT_TOP_FAR)],
-		corners[static_cast<int>(AABBCorners::RIGHT_BOTTOM_FAR)]);
+		corners[static_cast<int>(AABBtCorners::RIGHT_BOTTOM_NEAR)],
+		corners[static_cast<int>(AABBtCorners::RIGHT_TOP_NEAR)],
+		corners[static_cast<int>(AABBtCorners::RIGHT_TOP_FAR)],
+		corners[static_cast<int>(AABBtCorners::RIGHT_BOTTOM_FAR)]);
 
 	CreateQuad(list,
 		window,
-		corners[static_cast<int>(AABBCorners::LEFT_BOTTOM_NEAR)],
-		corners[static_cast<int>(AABBCorners::LEFT_TOP_NEAR)],
-		corners[static_cast<int>(AABBCorners::LEFT_TOP_FAR)],
-		corners[static_cast<int>(AABBCorners::LEFT_BOTTOM_FAR)]);
+		corners[static_cast<int>(AABBtCorners::LEFT_BOTTOM_NEAR)],
+		corners[static_cast<int>(AABBtCorners::LEFT_TOP_NEAR)],
+		corners[static_cast<int>(AABBtCorners::LEFT_TOP_FAR)],
+		corners[static_cast<int>(AABBtCorners::LEFT_BOTTOM_FAR)]);
 
 }
 

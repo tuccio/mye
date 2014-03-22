@@ -17,12 +17,7 @@ namespace mye
 			~ManualResourceLoader(void);
 
 			virtual bool Load(Resource *resource);
-			virtual bool Prepare(Resource *resource);
 			virtual void Unload(Resource *resource);
-
-		protected:
-
-			void CalculateSize(Resource *Resource);
 
 		};
 

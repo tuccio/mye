@@ -300,7 +300,7 @@ void SceneView::Update(void)
 			m_selected->GetRenderComponent())
 		{
 
-			mye::math::AABBf aabb = m_selected->GetAABB();
+			mye::math::AABBf AABBt = m_selected->GetAABB();
 
 			TransformComponent *tc = m_selected->GetTransformComponent();
 
@@ -348,7 +348,7 @@ void SceneView::Update(void)
 
 			}
 
-			g_scene.MoveGameObject(m_selected->GetHandle(), aabb);
+			g_scene.MoveGameObject(m_selected->GetHandle(), AABBt);
 
 		}
 

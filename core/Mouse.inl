@@ -19,18 +19,18 @@ namespace mye
 			return m_keys[key];
 		}
 
-		void Mouse::Move(const mye::math::Vector2f &position)
+		void Mouse::Move(const mye::math::Vector2 &position)
 		{
 			m_delta = position - m_position;
 			m_position = position;
 		}
 
-		mye::math::Vector2f Mouse::GetPosition(void) const
+		mye::math::Vector2 Mouse::GetPosition(void) const
 		{
 			return m_position;
 		}
 
-		mye::math::Vector2f Mouse::GetDelta(void) const
+		mye::math::Vector2 Mouse::GetDelta(void) const
 		{
 			return m_delta;
 		}

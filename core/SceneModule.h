@@ -35,7 +35,7 @@ namespace mye
 			
 			inline void MoveGameObject(
 				const GameObjectHandle &hObj,
-				const mye::math::AABBf &oldAABB);
+				const mye::math::AABB &oldAABB);
 
 			inline CameraComponent& Camera(void);
 
@@ -51,8 +51,8 @@ namespace mye
 			struct GameObjectUpdate
 			{
 				GameObjectHandle hObj;
-				mye::math::AABBf oldAABB;
-				mye::math::AABBf newAABB;
+				mye::math::AABB oldAABB;
+				mye::math::AABB newAABB;
 			};
 
 			mye::core::CameraComponent *m_camera;

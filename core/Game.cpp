@@ -17,12 +17,14 @@ using namespace mye::math;
 Game::Game(InputModule       *input,
 		   GameObjectsModule *gameobjects,
 		   SceneModule       *scene,
+		   PhysicsModule     *physics,
 		   GraphicsModule    *graphics,
 		   AudioModule       *audio,
 		   ScriptModule      *script) :
 	m_input(input),
 	m_gameobjects(gameobjects),
 	m_scene(scene),
+	m_physics(physics),
 	m_graphics(graphics),
 	m_audio(audio),
 	m_script(script)
@@ -37,16 +39,17 @@ Game::~Game(void)
 bool Game::Init(void)
 {
 
-#define __TRY_INIT(x) if (!(x)->Init()) return false;
+#define __MYE_TRY_INIT_MODULE(x) if (!(x)->Init()) return false;
 
-	__TRY_INIT(m_gameobjects)
-	__TRY_INIT(m_scene)
-	__TRY_INIT(m_graphics)
-	__TRY_INIT(m_audio)
-	__TRY_INIT(m_input)
-	__TRY_INIT(m_script)
+	__MYE_TRY_INIT_MODULE(m_gameobjects)
+	__MYE_TRY_INIT_MODULE(m_scene)
+	__MYE_TRY_INIT_MODULE(m_graphics)
+	__MYE_TRY_INIT_MODULE(m_physics)
+	__MYE_TRY_INIT_MODULE(m_audio)
+	__MYE_TRY_INIT_MODULE(m_input)
+	__MYE_TRY_INIT_MODULE(m_script)
 
-#undef __TRY_INIT
+#undef __MYE_TRY_INIT_MODULE
 
 	return true;
 
@@ -76,6 +79,11 @@ GameObjectsModule* Game::GetGameObjectsModule(void)
 SceneModule* Game::GetSceneModule(void)
 {
 	return m_scene;
+}
+
+PhysicsModule* Game::GetPhysicsModule(void)
+{
+	return m_physics;
 }
 
 GraphicsModule* Game::GetGraphicsModule(void)
@@ -269,21 +277,21 @@ void Game::ExportScene(const String &path)
 
 						gameObjectNode->append_node(renderNode);
 
-						String aabbMin = (ToString(rc->GetBounds().GetMinimum().x()) +
+						String AABBtMin = (ToString(rc->GetBounds().GetMinimum().x()) +
 							" " +
 							ToString(rc->GetBounds().GetMinimum().y()) +
 							" " +
 							ToString(rc->GetBounds().GetMinimum().z()));
 
-						String aabbMax = (ToString(rc->GetBounds().GetMaximum().x()) +
+						String AABBtMax = (ToString(rc->GetBounds().GetMaximum().x()) +
 							" " +
 							ToString(rc->GetBounds().GetMaximum().y()) +
 							" " +
 							ToString(rc->GetBounds().GetMaximum().z()));
 
-						rapidxml::xml_node<> *aabb = document.allocate_node(
+						rapidxml::xml_node<> *AABBt = document.allocate_node(
 							rapidxml::node_element,
-							"aabb");
+							"AABBt");
 
 						rapidxml::xml_node<> *model = document.allocate_node(
 							rapidxml::node_element,
@@ -293,17 +301,17 @@ void Game::ExportScene(const String &path)
 							"name",
 							document.allocate_string(rc->GetModel().get()->GetName().CString())));
 
-						aabb->append_node(document.allocate_node(
+						AABBt->append_node(document.allocate_node(
 							rapidxml::node_element,
 							"min",
-							document.allocate_string(aabbMin.CString())));
+							document.allocate_string(AABBtMin.CString())));
 
-						aabb->append_node(document.allocate_node(
+						AABBt->append_node(document.allocate_node(
 							rapidxml::node_element,
 							"max",
-							document.allocate_string(aabbMax.CString())));
+							document.allocate_string(AABBtMax.CString())));
 
-						renderNode->append_node(aabb);
+						renderNode->append_node(AABBt);
 						renderNode->append_node(model);
 
 					}
@@ -352,7 +360,7 @@ void Game::ImportScene(const String &file, std::list<GameObject*> *allocatedObje
 			rapidxml::xml_attribute<> *sizeNode = scene->first_attribute("size");
 			rapidxml::xml_attribute<> *maxdepthNode = scene->first_attribute("maxdepth");
 
-			Vector3f center(0.0f);
+			Vector3 center(0.0f);
 			float size = 1024.0f;
 			unsigned int maxdepth = 32;
 
@@ -421,19 +429,19 @@ void Game::ImportScene(const String &file, std::list<GameObject*> *allocatedObje
 
 				if (positionNode)
 				{
-					Vector3f position = ParseVector3<float>(positionNode->value());
+					Vector3 position = ParseVector3<float>(positionNode->value());
 					gameObject->GetTransformComponent()->SetPosition(position);
 				}
 
 				if (scaleNode)
 				{
-					Vector3f scale = ParseVector3<float>(scaleNode->value());
+					Vector3 scale = ParseVector3<float>(scaleNode->value());
 					gameObject->GetTransformComponent()->SetScale(scale);
 				}
 				
 				if (orientationNode)
 				{
-					Quaternionf orientation = ParseQuaternion<float>(orientationNode->value());
+					Quaternion orientation = ParseQuaternion<float>(orientationNode->value());
 					gameObject->GetTransformComponent()->SetOrientation(orientation);
 				}
 
@@ -461,7 +469,7 @@ void Game::ImportScene(const String &file, std::list<GameObject*> *allocatedObje
 
 				if (positionNode)
 				{
-					Vector3f position = ParseVector3<float>(positionNode->value());
+					Vector3 position = ParseVector3<float>(positionNode->value());
 					gameObject->GetCameraComponent()->SetPosition(position);
 				}
 
@@ -469,7 +477,7 @@ void Game::ImportScene(const String &file, std::list<GameObject*> *allocatedObje
 
 				if (orientationNode)
 				{
-					Quaternionf orientation = ParseQuaternion<float>(orientationNode->value());
+					Quaternion orientation = ParseQuaternion<float>(orientationNode->value());
 					gameObject->GetCameraComponent()->SetOrientation(orientation);
 				}
 
@@ -507,17 +515,17 @@ void Game::ImportScene(const String &file, std::list<GameObject*> *allocatedObje
 
 				gameObject->AddComponent(RenderComponent());
 
-				rapidxml::xml_node<> *aabbNode = render->first_node("aabb");
+				rapidxml::xml_node<> *AABBtNode = render->first_node("AABBt");
 
-				if (aabbNode)
+				if (AABBtNode)
 				{
 
-					rapidxml::xml_node<> *aabbMin = aabbNode->first_node("min");
-					rapidxml::xml_node<> *aabbMax = aabbNode->first_node("max");
+					rapidxml::xml_node<> *AABBtMin = AABBtNode->first_node("min");
+					rapidxml::xml_node<> *AABBtMax = AABBtNode->first_node("max");
 
 					gameObject->GetRenderComponent()->SetBounds(AABBf::FromMinMax(
-						ParseVector3<float>(aabbMin->value()),
-						ParseVector3<float>(aabbMax->value())));
+						ParseVector3<float>(AABBtMin->value()),
+						ParseVector3<float>(AABBtMax->value())));
 
 				}
 

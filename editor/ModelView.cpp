@@ -22,7 +22,7 @@ ModelView::ModelView(void) :
 	m_toolbar(g_mainWindow, true),
 	m_bgColor(0.12f, 0.12f, 0.12f, 1.0f),
 	m_vbuffer(nullptr, "", nullptr, g_device),
-	m_planeBuffer(nullptr, "", nullptr, g_device),
+	m_PlanetBuffer(nullptr, "", nullptr, g_device),
 	m_mvpBuffer(nullptr, "", nullptr, g_device),
 	m_transform(Transformf::Identity())
 {
@@ -85,12 +85,12 @@ void ModelView::Activate(void)
 				m_vbuffer.Create(model);
 
 				auto minmax          = model->GetMinMaxVertices();
-				AABBf aabb           = AABBf::FromMinMax(minmax.first, minmax.second);
+				AABBf AABBt           = AABBf::FromMinMax(minmax.first, minmax.second);
 
-				Vector3f halfExtents = aabb.GetHalfExtents();
+				Vector3f halfExtents = AABBt.GetHalfExtents();
 				float scale          = 1.0f / (2.0f * Max(halfExtents.x(), halfExtents.y()));
 
-				Vector3f center      = aabb.GetCenter();
+				Vector3f center      = AABBt.GetCenter();
 
 				m_transform          = Transformf::Identity();
 
@@ -130,16 +130,16 @@ void ModelView::Activate(void)
 
 		m_mvpBuffer.Create(sizeof(float) * 16, Matrix4f(1.0f).Data());
 
-// 		Mesh plane(nullptr, "plane", nullptr);
+// 		Mesh Planet(nullptr, "Planet", nullptr);
 // 
 // 		VertexDeclaration vd;
 // 
 // 		vd.AddAttribute(VertexDeclaration::VDA_POSITION,
 // 			VertexDeclaration::VDAT_FLOAT3);
 // 
-// 		plane.Allocate(vd, 2);
+// 		Planet.Allocate(vd, 2);
 // 
-// 		m_planeBuffer.Create(&plane);
+// 		m_PlanetBuffer.Create(&Planet);
 
 	}
 
@@ -300,7 +300,7 @@ void ModelView::Render(void)
 
 	Matrix4f mvp = m_camera.GetProjectionMatrix() *
 		m_camera.GetViewMatrix() *
-		m_transform.GetTRSMatrix();
+		m_transform.GetSRTMatrix();
 
 	m_mvpBuffer.SetData(reinterpret_cast<const void*>(mvp.Data()));
 

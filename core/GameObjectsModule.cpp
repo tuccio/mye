@@ -1,6 +1,8 @@
 #include "GameObjectsModule.h"
+#include "Game.h"
 
 using namespace mye::core;
+using namespace mye::math;
 
 void GameObjectsModule::PostDestroy(GameObjectHandle hObj)
 {
@@ -11,9 +13,25 @@ void GameObjectsModule::PostDestroy(GameObjectHandle hObj)
 void GameObjectsModule::Update(FloatSeconds dt)
 {
 
-	for (Iterator it = begin(); it != end(); it++)
+	for (Iterator it = begin(); it != end(); ++it)
 	{
-		Get(*it)->Update(dt);
+
+		GameObject *object = Get(*it);
+
+		RenderComponent *rc = object->GetRenderComponent();
+		TransformComponent *tc = object->GetTransformComponent();
+
+		object->GetTransformComponent()->Preupdate();
+		object->Update(dt);
+
+		Matrix4 oldTransform;
+
+		if (object->GetTransformComponent()->Postupdate(oldTransform))
+		{
+			Game::GetSingleton().GetSceneModule()->
+				MoveGameObject(*it, rc->GetBounds().TransformAffine(oldTransform));
+		}
+		
 	}
 
 // 	for (GameObjectHandle hObj : *this)

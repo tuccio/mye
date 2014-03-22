@@ -1,12 +1,17 @@
-function Update(self, dt)
+function Update()
 
 	local x = self.transform.position
 	
-	if (x.x > 6 or x.x < -6) then
-		self.velocity = - self.velocity
+	if (x.x > 2) then
+		self.acceleration = vec3(-2.8, 0, 0)
+	elseif (x.x < -2) then
+		self.acceleration = vec3(2.8, 0, 0)
 	end
 	
-	local dx = self.velocity * dt
+	local dv = self.acceleration * Time.Delta;
+	self.velocity = self.velocity + dv;
+	
+	local dx = self.velocity * Time.Delta
 	
 	self.transform.position = x + dx
 

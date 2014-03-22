@@ -40,7 +40,7 @@ void Mesh::Allocate(size_t triangles)
 	m_triangles = triangles;
 }
 
-void Mesh::Destroy(void)
+void Mesh::Clear(void)
 {
 	m_data.Free();
 	m_triangles = 0;
@@ -121,13 +121,13 @@ size_t Mesh::CalculateSizeImpl(void)
 Mesh::VectorPair Mesh::GetMinMaxVertices(void) const
 {
 	
-	mye::math::Vector3f max = mye::math::Vector3f(
+	mye::math::Vector3 max = mye::math::Vector3(
 		std::numeric_limits<float>::min(),
 		std::numeric_limits<float>::min(),
 		std::numeric_limits<float>::min()
 		);
 
-	mye::math::Vector3f min = mye::math::Vector3f(
+	mye::math::Vector3 min = mye::math::Vector3(
 		std::numeric_limits<float>::max(),
 		std::numeric_limits<float>::max(),
 		std::numeric_limits<float>::max()
@@ -136,7 +136,7 @@ Mesh::VectorPair Mesh::GetMinMaxVertices(void) const
 	for (int i = 0; i < m_data.GetVerticesCount(); i++)
 	{
 
-		mye::math::Vector3f x;
+		mye::math::Vector3 x;
 
 		m_data.GetVertexAttribute(
 			i,

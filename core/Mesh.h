@@ -17,7 +17,7 @@ namespace mye
 
 		public:
 
-			typedef std::pair<mye::math::Vector3f, mye::math::Vector3f> VectorPair;
+			typedef std::pair<mye::math::Vector3, mye::math::Vector3> VectorPair;
 
 			Mesh(ResourceManager *resourceManager,
 				const String &name,
@@ -30,7 +30,7 @@ namespace mye
 
 			void Allocate(size_t triangles);
 
-			void Destroy(void);
+			void Clear(void);
 
 			size_t GetTrianglesCount(void) const;
 

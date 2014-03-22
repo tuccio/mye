@@ -65,7 +65,7 @@ private:
 	mye::math::Transformf m_transform;
 
 	mye::dx11::DX11VertexBuffer m_vbuffer;
-	mye::dx11::DX11VertexBuffer m_planeBuffer;
+	mye::dx11::DX11VertexBuffer m_PlanetBuffer;
 
 	mye::core::Camera m_camera;
 	mye::dx11::DX11ConstantBuffer m_mvpBuffer;

@@ -8,12 +8,14 @@ using namespace mye::win;
 WinGame::WinGame(InputModule *input,
 	GameObjectsModule *gameobjects,
 	SceneModule *scene,
+	PhysicsModule *physics,
 	GraphicsModule *graphics,
 	AudioModule *audio,
 	ScriptModule *script) :
 Game(input,
 	gameobjects,
 	scene,
+	physics,
 	graphics,
 	audio,
 	script)
@@ -53,10 +55,12 @@ void WinGame::Run(void)
 
 		FloatSeconds dt(m_timer.Lap());
 
+		m_script->Preupdate(dt);
+
 		m_gameobjects->Update(dt);
 		m_gameobjects->FinalizeUpdate();
 
-		//m_physics->Update(dt);
+		m_physics->Update(dt);
 		//m_scene->Update();
 		m_graphics->Render();
 

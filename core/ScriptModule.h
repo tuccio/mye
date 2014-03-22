@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Module.h"
+#include "Time.h"
 
 namespace mye
 {
@@ -11,6 +12,10 @@ namespace mye
 		class ScriptModule :
 			public Module
 		{
+
+		public:
+
+			virtual void Preupdate(FloatSeconds dt) = 0;
 
 		};
 

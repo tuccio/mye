@@ -15,7 +15,7 @@ namespace mye
 	namespace core
 	{
 
-		enum class LoadingState
+		enum class ResourceLoadState
 		{
 			NOT_LOADED,
 			LOADING,
@@ -46,9 +46,11 @@ namespace mye
 			void Unload(bool background = false);
 			void Free(bool background = false);
 
+			void CalculateSize(void);
+
 			size_t GetSize(void) const;
 
-			LoadingState GetState(void) const;
+			ResourceLoadState GetState(void) const;
 
 			void SetParametersList(const ParametersList &params);
 			ParametersList GetParametersList(void) const;
@@ -67,7 +69,7 @@ namespace mye
 			ResourceManager *m_owner;
 			ManualResourceLoader *m_manual;
 
-			LoadingState m_loadingState;
+			ResourceLoadState m_loadingState;
 			size_t m_size;
 
 			ParametersList m_params;

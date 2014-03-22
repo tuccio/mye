@@ -85,6 +85,25 @@ void __TYPE::operator delete (void *p)\
 	return m_myePoolAllocator.Free(p);\
 }
 
+#define MYE_DEFINE_TEMPLATE_POOL_ALLOCATOR(__TYPE, __T1, __T2)\
+\
+template <__T1, __T2> mye::core::PoolAllocator<__TYPE<__T1, __T2>> __TYPE<__T1, __T2>::m_myePoolAllocator;\
+\
+template <__T1, __T2> void* __TYPE<__T1, __T2>::operator new (std::size_t size)\
+{\
+	return m_myePoolAllocator.Allocate();\
+}\
+template <__T1, __T2> void* __TYPE<__T1, __T2>::operator new (std::size_t size, const std::nothrow_t)\
+{\
+	return m_myePoolAllocator.AllocateNoThrow();\
+}\
+\
+template <__T1, __T2> void __TYPE<__T1, __T2>::operator delete (void *p)\
+{\
+	return m_myePoolAllocator.Free(p);\
+}
+
+/*
 #define MYE_DEFINE_TEMPLATE_POOL_ALLOCATOR(__TEMPLATE, __TYPE)\
 __TEMPLATE mye::core::PoolAllocator<__TYPE> __TYPE::m_myePoolAllocator;\
 \
@@ -100,4 +119,4 @@ __TEMPLATE void* __TYPE::operator new (std::size_t size)\
 __TEMPLATE void __TYPE::operator delete (void *p)\
 {\
 	return m_myePoolAllocator.Free(p);\
-}
+}*/

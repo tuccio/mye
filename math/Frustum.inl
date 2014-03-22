@@ -5,57 +5,57 @@ namespace mye
 	{
 
 		template <typename T>
-		Frustum<T>::Frustum(void) :
+		Frustumt<T>::Frustumt(void) :
 		Volume(VolumeType::FRUSTUM)
 		{
 		}
 
 		template <typename T>
-		Frustum<T>::Frustum(const Matrix<T, 3, 1> &origin,
+		Frustumt<T>::Frustumt(const Matrix<T, 3, 1> &origin,
 			const Matrix<T, 3, 1>& forward,
 			const Matrix<T, 3, 1>& up,
 			const Matrix<T, 3, 1>& right,
-			T nearPlaneDistance,
-			T farPlaneDistance,
+			T nearPlanetDistance,
+			T farPlanetDistance,
 			T fovX,
 			T fovY) :
 		Volume(VolumeType::FRUSTUM)
 		{
 
-			/* Construct planes */
+			/* Construct Planets */
 
 			T tgFovX = Abs(Tangent(Radians(fovX * 0.5f)));
 			T tgFovY = Abs(Tangent(Radians(fovY * 0.5f)));
 
-			T nearHeight = tgFovY * nearPlaneDistance;
-			T nearWidth  = tgFovX * nearPlaneDistance;
+			T nearHeight = tgFovY * nearPlanetDistance;
+			T nearWidth  = tgFovX * nearPlanetDistance;
 
 			Matrix<T, 3, 1> nearHeightVector = nearHeight * up;
 			Matrix<T, 3, 1> nearWidthVector = nearWidth * right;
 
-			Matrix<T, 3, 1> nearPlaneCenter = origin + nearPlaneDistance * forward;
-			Matrix<T, 3, 1> farPlaneCenter  = origin + farPlaneDistance * forward;
+			Matrix<T, 3, 1> nearPlanetCenter = origin + nearPlanetDistance * forward;
+			Matrix<T, 3, 1> farPlanetCenter  = origin + farPlanetDistance * forward;
 
-			Matrix<T, 3, 1> tln = nearPlaneCenter - nearWidthVector + nearHeightVector;
-			Matrix<T, 3, 1> bln = nearPlaneCenter - nearWidthVector - nearHeightVector;
-			Matrix<T, 3, 1> trn = nearPlaneCenter + nearWidthVector + nearHeightVector;
+			Matrix<T, 3, 1> tln = nearPlanetCenter - nearWidthVector + nearHeightVector;
+			Matrix<T, 3, 1> bln = nearPlanetCenter - nearWidthVector - nearHeightVector;
+			Matrix<T, 3, 1> trn = nearPlanetCenter + nearWidthVector + nearHeightVector;
 
  			Matrix<T, 3, 1> otl = tln - origin;
 
 			Matrix<T, 3, 1> ln = otl.Cross(tln - bln).Normalize();
 			Matrix<T, 3, 1> tn = otl.Cross(trn - tln).Normalize();
 
-			m_planes[static_cast<int>(FrustumPlanes::NEAR_PLANE)]   = Plane<T>(nearPlaneCenter, forward.Reflect(forward));
-			m_planes[static_cast<int>(FrustumPlanes::FAR_PLANE)]    = Plane<T>(farPlaneCenter, forward);
-			m_planes[static_cast<int>(FrustumPlanes::LEFT_PLANE)]   = Plane<T>(origin, ln);
-			m_planes[static_cast<int>(FrustumPlanes::RIGHT_PLANE)]  = Plane<T>(origin, ln.Reflect(right));
-			m_planes[static_cast<int>(FrustumPlanes::TOP_PLANE)]    = Plane<T>(origin, tn);
-			m_planes[static_cast<int>(FrustumPlanes::BOTTOM_PLANE)] = Plane<T>(origin, tn.Reflect(up));
+			m_Planets[static_cast<int>(FrustumPlanets::NEAR_Planet)]   = Planet<T>(nearPlanetCenter, forward.Reflect(forward));
+			m_Planets[static_cast<int>(FrustumPlanets::FAR_Planet)]    = Planet<T>(farPlanetCenter, forward);
+			m_Planets[static_cast<int>(FrustumPlanets::LEFT_Planet)]   = Planet<T>(origin, ln);
+			m_Planets[static_cast<int>(FrustumPlanets::RIGHT_Planet)]  = Planet<T>(origin, ln.Reflect(right));
+			m_Planets[static_cast<int>(FrustumPlanets::TOP_Planet)]    = Planet<T>(origin, tn);
+			m_Planets[static_cast<int>(FrustumPlanets::BOTTOM_Planet)] = Planet<T>(origin, tn.Reflect(up));
 
 		}
 
 		template <typename T>
-		std::vector<Matrix<T, 3, 1>> Frustum<T>::GetCorners(void) const
+		std::vector<Matrix<T, 3, 1>> Frustumt<T>::GetCorners(void) const
 		{
 
 			std::vector<Matrix<T, 3, 1>> corners(8);
@@ -63,51 +63,51 @@ namespace mye
 			Matrix<T, 3, 3> A;
 			Matrix<T, 3, 1> b;
 
-			A.SetRow(0, m_planes[static_cast<int>(FrustumPlanes::LEFT_PLANE)].Normal());
-			A.SetRow(1, m_planes[static_cast<int>(FrustumPlanes::BOTTOM_PLANE)].Normal());
-			A.SetRow(2, m_planes[static_cast<int>(FrustumPlanes::NEAR_PLANE)].Normal());
+			A.SetRow(0, m_Planets[static_cast<int>(FrustumPlanets::LEFT_Planet)].Normal());
+			A.SetRow(1, m_Planets[static_cast<int>(FrustumPlanets::BOTTOM_Planet)].Normal());
+			A.SetRow(2, m_Planets[static_cast<int>(FrustumPlanets::NEAR_Planet)].Normal());
 
-			b.x() = m_planes[static_cast<int>(FrustumPlanes::LEFT_PLANE)].Coefficient();
-			b.y() = m_planes[static_cast<int>(FrustumPlanes::BOTTOM_PLANE)].Coefficient();
-			b.z() = m_planes[static_cast<int>(FrustumPlanes::NEAR_PLANE)].Coefficient();
+			b.x() = m_Planets[static_cast<int>(FrustumPlanets::LEFT_Planet)].Coefficient();
+			b.y() = m_Planets[static_cast<int>(FrustumPlanets::BOTTOM_Planet)].Coefficient();
+			b.z() = m_Planets[static_cast<int>(FrustumPlanets::NEAR_Planet)].Coefficient();
 
 			corners[static_cast<int>(FrustumCorners::LEFT_BOTTOM_NEAR)] = Cramer(A, b);
 
-			A.SetRow(0, m_planes[static_cast<int>(FrustumPlanes::RIGHT_PLANE)].Normal());
-			b.x() = m_planes[static_cast<int>(FrustumPlanes::RIGHT_PLANE)].Coefficient();
+			A.SetRow(0, m_Planets[static_cast<int>(FrustumPlanets::RIGHT_Planet)].Normal());
+			b.x() = m_Planets[static_cast<int>(FrustumPlanets::RIGHT_Planet)].Coefficient();
 
 			corners[static_cast<int>(FrustumCorners::RIGHT_BOTTOM_NEAR)] = Cramer(A, b);
 
-			A.SetRow(1, m_planes[static_cast<int>(FrustumPlanes::TOP_PLANE)].Normal());
-			b.y() = m_planes[static_cast<int>(FrustumPlanes::TOP_PLANE)].Coefficient();
+			A.SetRow(1, m_Planets[static_cast<int>(FrustumPlanets::TOP_Planet)].Normal());
+			b.y() = m_Planets[static_cast<int>(FrustumPlanets::TOP_Planet)].Coefficient();
 
 			corners[static_cast<int>(FrustumCorners::RIGHT_TOP_NEAR)] = Cramer(A, b);
 
-			A.SetRow(0, m_planes[static_cast<int>(FrustumPlanes::LEFT_PLANE)].Normal());
-			b.x() = m_planes[static_cast<int>(FrustumPlanes::LEFT_PLANE)].Coefficient();
+			A.SetRow(0, m_Planets[static_cast<int>(FrustumPlanets::LEFT_Planet)].Normal());
+			b.x() = m_Planets[static_cast<int>(FrustumPlanets::LEFT_Planet)].Coefficient();
 
 			corners[static_cast<int>(FrustumCorners::LEFT_TOP_NEAR)] = Cramer(A, b);
 
-			A.SetRow(1, m_planes[static_cast<int>(FrustumPlanes::BOTTOM_PLANE)].Normal());
-			b.y() = m_planes[static_cast<int>(FrustumPlanes::BOTTOM_PLANE)].Coefficient();
+			A.SetRow(1, m_Planets[static_cast<int>(FrustumPlanets::BOTTOM_Planet)].Normal());
+			b.y() = m_Planets[static_cast<int>(FrustumPlanets::BOTTOM_Planet)].Coefficient();
 
-			A.SetRow(2, m_planes[static_cast<int>(FrustumPlanes::FAR_PLANE)].Normal());
-			b.z() = m_planes[static_cast<int>(FrustumPlanes::FAR_PLANE)].Coefficient();
+			A.SetRow(2, m_Planets[static_cast<int>(FrustumPlanets::FAR_Planet)].Normal());
+			b.z() = m_Planets[static_cast<int>(FrustumPlanets::FAR_Planet)].Coefficient();
 
 			corners[static_cast<int>(FrustumCorners::LEFT_BOTTOM_FAR)] = Cramer(A, b);
 
-			A.SetRow(0, m_planes[static_cast<int>(FrustumPlanes::RIGHT_PLANE)].Normal());
-			b.x() = m_planes[static_cast<int>(FrustumPlanes::RIGHT_PLANE)].Coefficient();
+			A.SetRow(0, m_Planets[static_cast<int>(FrustumPlanets::RIGHT_Planet)].Normal());
+			b.x() = m_Planets[static_cast<int>(FrustumPlanets::RIGHT_Planet)].Coefficient();
 
 			corners[static_cast<int>(FrustumCorners::RIGHT_BOTTOM_FAR)] = Cramer(A, b);
 
-			A.SetRow(1, m_planes[static_cast<int>(FrustumPlanes::TOP_PLANE)].Normal());
-			b.y() = m_planes[static_cast<int>(FrustumPlanes::TOP_PLANE)].Coefficient();
+			A.SetRow(1, m_Planets[static_cast<int>(FrustumPlanets::TOP_Planet)].Normal());
+			b.y() = m_Planets[static_cast<int>(FrustumPlanets::TOP_Planet)].Coefficient();
 
 			corners[static_cast<int>(FrustumCorners::RIGHT_TOP_FAR)] = Cramer(A, b);
 
-			A.SetRow(0, m_planes[static_cast<int>(FrustumPlanes::LEFT_PLANE)].Normal());
-			b.x() = m_planes[static_cast<int>(FrustumPlanes::LEFT_PLANE)].Coefficient();
+			A.SetRow(0, m_Planets[static_cast<int>(FrustumPlanets::LEFT_Planet)].Normal());
+			b.x() = m_Planets[static_cast<int>(FrustumPlanets::LEFT_Planet)].Coefficient();
 
 			corners[static_cast<int>(FrustumCorners::LEFT_TOP_FAR)] = Cramer(A, b);
 
@@ -116,57 +116,57 @@ namespace mye
 		}
 
 		template <typename T>
-		VolumeSide Frustum<T>::Side(const Matrix<T, 3, 1> &x) const
+		VolumeSide Frustumt<T>::Side(const Matrix<T, 3, 1> &x) const
 		{
 
-			PlaneSide nearSide = m_plane[FrustumPlanes::NEAR_PLANE].Side(x);
+			PlanetSide nearSide = m_Planet[FrustumPlanets::NEAR_Planet].Side(x);
 
-			if (nearSide == PlaneSide::FRONT)
+			if (nearSide == PlanetSide::FRONT)
 			{
 				return VolumeSide::OUTSIDE;
 			}
 
-			PlaneSide farSide = m_plane[FrustumPlanes::FAR_PLANE].Side(x);
+			PlanetSide farSide = m_Planet[FrustumPlanets::FAR_Planet].Side(x);
 
-			if (farSide == PlaneSide::FRONT)
+			if (farSide == PlanetSide::FRONT)
 			{
 				return VolumeSide::OUTSIDE;
 			}
 
-			PlaneSide leftSide = m_plane[FrustumPlanes::LEFT_PLANE].Side(x);
+			PlanetSide leftSide = m_Planet[FrustumPlanets::LEFT_Planet].Side(x);
 
-			if (leftSide == PlaneSide::FRONT)
+			if (leftSide == PlanetSide::FRONT)
 			{
 				return VolumeSide::OUTSIDE;
 			}
 
-			PlaneSide rightSide = m_plane[FrustumPlanes::RIGHT_PLANE].Side(x);
+			PlanetSide rightSide = m_Planet[FrustumPlanets::RIGHT_Planet].Side(x);
 
-			if (rightSide == PlaneSide::FRONT)
+			if (rightSide == PlanetSide::FRONT)
 			{
 				return VolumeSide::OUTSIDE;
 			}
 
-			PlaneSide topSide = m_plane[FrustumPlanes::TOP_PLANE].Side(x);
+			PlanetSide topSide = m_Planet[FrustumPlanets::TOP_Planet].Side(x);
 
-			if (topSide == PlaneSide::FRONT)
+			if (topSide == PlanetSide::FRONT)
 			{
 				return VolumeSide::OUTSIDE;
 			}
 
-			PlaneSide bottomSide = m_plane[FrustumPlanes::BOTTOM_PLANE].Side(x);
+			PlanetSide bottomSide = m_Planet[FrustumPlanets::BOTTOM_Planet].Side(x);
 
-			if (bottomSide == PlaneSide::FRONT)
+			if (bottomSide == PlanetSide::FRONT)
 			{
 				return VolumeSide::OUTSIDE;
 			}
 
-			if (topSide    == PlaneSide::INSIDE ||
-				bottomSide == PlaneSide::INSIDE ||
-				rightSide  == PlaneSide::INSIDE ||
-				leftSide   == PlaneSide::INSIDE ||
-				nearSide   == PlaneSide::INSIDE ||
-				farSide    == PlaneSide::INSIDE)
+			if (topSide    == PlanetSide::INSIDE ||
+				bottomSide == PlanetSide::INSIDE ||
+				rightSide  == PlanetSide::INSIDE ||
+				leftSide   == PlanetSide::INSIDE ||
+				nearSide   == PlanetSide::INSIDE ||
+				farSide    == PlanetSide::INSIDE)
 			{
 				return VolumeSide::INTERSECT;
 			}
@@ -178,43 +178,63 @@ namespace mye
 		}
 
 		template <typename T>
-		const Plane<T>& Frustum<T>::GetPlane(FrustumPlanes plane) const
+		const Planet<T>& Frustumt<T>::GetPlanet(FrustumPlanets Planet) const
 		{
-			return m_planes[static_cast<int>(plane)];
+			return m_Planets[static_cast<int>(Planet)];
+		}
+
+		template <typename T>
+		Frustumt<T>* Frustumt<T>::Clone(void) const
+		{
+			return new Frustumt<T>(*this);
+		}
+
+		template <typename T>
+		void Frustumt<T>::TransformAffine(Volume &volume,
+			const Matrix<T, 4, 4> &Transformt) const
+		{
+
+			Frustumt<T> &f = static_cast<Frustumt<T>&>(volume);
+
+			for (int fp = static_cast<int>(FrustumPlanets::FIRST); fp <= static_cast<int>(FrustumPlanets::LAST); fp++)
+			{
+				f.m_Planets[fp] = m_Planets[fp].Transformt(Transformt);
+			}
+
 		}
 
 // 		template <typename T>
-// 		const Plane<T>& Frustum<T>::Near(void) const
+// 		const Planet<T>& Frustumt<T>::Near(void) const
 // 		{
 // 			return m_near;
 // 		}
 // 
 // 		template <typename T>
-// 		const Plane<T>& Frustum<T>::Far(void) const
+// 		const Planet<T>& Frustumt<T>::Far(void) const
 // 		{
 // 			return m_far;
 // 		}
 // 
 // 		template <typename T>
-// 		const Plane<T>& Frustum<T>::Left(void) const
+// 		const Planet<T>& Frustumt<T>::Left(void) const
 // 		{
 // 			return m_left;
 // 		}
 // 
 // 		template <typename T>
-// 		const Plane<T>& Frustum<T>::Right(void) const
+// 		const Planet<T>& Frustumt<T>::Right(void) const
 // 		{
 // 			return m_right;
 // 		}
 // 
 // 		template <typename T>
-// 		const Plane<T>& Frustum<T>::Top(void) const
+// 		const Planet<T>& Frustumt<T>::Top(void) const
 // 		{
 // 			return m_top;
 // 		}
 // 
 // 		template <typename T>
-// 		const Plane<T>& Frustum<T>::Bottom(void) const
+// 		const Planet<T>& Frustumt<T>::Bottom(void) const
 // 		{
 // 			return m_bottom;
 // 		}

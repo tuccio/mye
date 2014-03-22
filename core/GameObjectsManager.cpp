@@ -75,7 +75,7 @@ GameObjectHandle GameObjectsManager::CreateEntity(const String &entity,
 	params["type"] = "behaviour";
 
 	mye::lua::BehaviourScriptPointer s = ResourceTypeManager::GetSingleton().
-		CreateResource<mye::lua::BehaviourScript>("LuaScript", entity, nullptr, &params);
+		CreateResource<mye::lua::BehaviourScript>("LuaScript", entity, nullptr, params);
 
 	if (e &&
 		e->Load() &&

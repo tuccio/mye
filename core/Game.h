@@ -5,6 +5,7 @@
 #include "InputModule.h"
 #include "GameObjectsModule.h"
 #include "SceneModule.h"
+#include "PhysicsModule.h"
 #include "AudioModule.h"
 #include "GraphicsModule.h"
 #include "ScriptModule.h"
@@ -33,6 +34,7 @@ namespace mye
 			Game(InputModule       *input,
 				 GameObjectsModule *gameobjects,
 				 SceneModule       *scene,
+				 PhysicsModule     *physics,
 				 GraphicsModule    *graphics,
 				 AudioModule       *audio,
 				 ScriptModule      *script);
@@ -46,6 +48,7 @@ namespace mye
 			InputModule*       GetInputModule(void);
 			GameObjectsModule* GetGameObjectsModule(void);
 			SceneModule*       GetSceneModule(void);
+			PhysicsModule*     GetPhysicsModule(void);
 			GraphicsModule*    GetGraphicsModule(void);
 			AudioModule*       GetAudioModule(void);
 			ScriptModule*      GetScriptModule(void);
@@ -60,6 +63,7 @@ namespace mye
 			InputModule       *m_input;
 			GameObjectsModule *m_gameobjects;
 			SceneModule       *m_scene;
+			PhysicsModule     *m_physics;
 			GraphicsModule    *m_graphics;
 			AudioModule       *m_audio;
 			ScriptModule      *m_script;

@@ -4,19 +4,19 @@ namespace mye
 	namespace core
 	{
 
-		mye::math::Vector3f Camera::Up(void) const
+		mye::math::Vector3 Camera::Up(void) const
 		{
-			return m_orientation.Rotate(mye::math::Vector3f(0, 1, 0));
+			return m_orientation.Rotate(mye::math::Vector3(0, 1, 0));
 		}
 
-		mye::math::Vector3f Camera::Right(void) const
+		mye::math::Vector3 Camera::Right(void) const
 		{
-			return m_orientation.Rotate(mye::math::Vector3f(1, 0, 0));
+			return m_orientation.Rotate(mye::math::Vector3(1, 0, 0));
 		}
 
-		mye::math::Vector3f Camera::Forward(void) const
+		mye::math::Vector3 Camera::Forward(void) const
 		{
-			return m_orientation.Rotate(mye::math::Vector3f(0, 0, 1));
+			return m_orientation.Rotate(mye::math::Vector3(0, 0, 1));
 		}
 
 		void Camera::UpdateView(void)
@@ -25,7 +25,7 @@ namespace mye
 			m_viewMatrixUptodate = true;
 		}
 
-		mye::math::Matrix4f Camera::GetViewMatrix(void) const
+		mye::math::Matrix4 Camera::GetViewMatrix(void) const
 		{
 
 			if (m_viewMatrixUptodate)
@@ -33,20 +33,20 @@ namespace mye
 				return m_viewMatrix;
 			}
 
-			mye::math::Matrix3f rot = RotationMatrix3(m_orientation);
-			mye::math::Matrix3f rotT = rot.Transpose();
-			mye::math::Vector3f trans = - (rotT * m_position);
+			mye::math::Matrix3 rot = RotationMatrix3(m_orientation);
+			mye::math::Matrix3 rotT = rot.Transpose();
+			mye::math::Vector3 trans = - (rotT * m_position);
 
-			mye::math::Matrix4f viewMatrix(rotT);
-			viewMatrix(0, 3) = trans.x();
-			viewMatrix(1, 3) = trans.y();
-			viewMatrix(2, 3) = trans.z();
+			mye::math::Matrix4 viewMatrix(rotT);
+			viewMatrix.m03() = trans.x();
+			viewMatrix.m13() = trans.y();
+			viewMatrix.m23() = trans.z();
 
 			return viewMatrix;
 
 		}
 
-		mye::math::Matrix4f Camera::GetProjectionMatrix(void) const
+		mye::math::Matrix4 Camera::GetProjectionMatrix(void) const
 		{
 
 			if (m_projectionMatrixUptodate)
@@ -59,7 +59,7 @@ namespace mye
  			float invDepth = 1.0f / (m_farClipDistance - m_nearClipDistance);
 			float Q = m_farClipDistance / (m_farClipDistance - m_nearClipDistance);
 
-			mye::math::Matrix4f projectionMatrix(0);
+			mye::math::Matrix4 projectionMatrix(0);
 
 			projectionMatrix(0, 0) = xScale;
 			projectionMatrix(1, 1) = yScale;
@@ -71,7 +71,7 @@ namespace mye
 
 		}
 
-		const mye::math::Matrix4f& Camera::GetViewMatrix(void)
+		const mye::math::Matrix4& Camera::GetViewMatrix(void)
 		{
 
 			if (!m_viewMatrixUptodate)
@@ -82,7 +82,7 @@ namespace mye
 			return m_viewMatrix;
 		}
 
-		const mye::math::Matrix4f& Camera::GetProjectionMatrix(void)
+		const mye::math::Matrix4& Camera::GetProjectionMatrix(void)
 		{
 
 			if (!m_projectionMatrixUptodate)
@@ -100,10 +100,10 @@ namespace mye
 			m_projectionMatrixUptodate = true;
 		}
 
-		mye::math::Frustumf Camera::GetFrustum(void) const
+		mye::math::Frustum Camera::GetFrustum(void) const
 		{
 			return (m_frustumUptodate ? m_frustum :
-				mye::math::Frustumf(
+				mye::math::Frustum(
 					m_position,
 					Forward(), Up(), Right(),
 					m_nearClipDistance, m_farClipDistance,
@@ -111,7 +111,7 @@ namespace mye
 				);
 		}
 
-		const mye::math::Frustumf& Camera::GetFrustum(void)
+		const mye::math::Frustum& Camera::GetFrustum(void)
 		{
 
 			if (!m_frustumUptodate)

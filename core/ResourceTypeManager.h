@@ -32,12 +32,12 @@ namespace mye
 			inline boost::shared_ptr<ResourceType> CreateResource(const String &type,
 				const String &name,
 				ManualResourceLoader *manual = nullptr,
-				Resource::ParametersList *params = nullptr);
+				const Resource::ParametersList &params = Resource::ParametersList());
 
 			inline boost::shared_ptr<Resource> CreateResource(const String &type,
 				const String &name,
 				ManualResourceLoader *manual = nullptr,
-				Resource::ParametersList *params = nullptr);
+				const Resource::ParametersList &params = Resource::ParametersList());
 			
 			template <typename ResourceType>
 			inline boost::shared_ptr<ResourceType> GetResource(const String &type,

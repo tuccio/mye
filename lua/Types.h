@@ -55,3 +55,13 @@
 
 #define MYE_LUA_KEYBOARD "Keyboard"
 #define MYE_LUA_MOUSE "Mouse"
+
+#define MYE_LUA_RESOURCE "Resource"
+#define MYE_LUA_RESOURCELOADSTATE "ResourceLoadState"
+#define MYE_LUA_RESOURCETYPEMANAGER "__ResourceTypeManager"
+#define MYE_LUA_MANUALRESOURCELOADER "__ManualResourceLoader"
+#define MYE_LUA_SCRIPTRESOURCELOADER "ScriptResourceLoader"
+
+#define MYE_LUA_BULLET_SHAPE "Shape"
+#define MYE_LUA_BULLET_SPHERE "Sphere"
+#define MYE_LUA_BULLET_BOX "Box"

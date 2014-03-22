@@ -20,25 +20,30 @@ namespace mye
 
 			TransformComponent* Clone(void) const;
 
-			const mye::math::Vector3f& GetPosition(void) const;
-			void SetPosition(const mye::math::Vector3f &position);
+			const mye::math::Vector3& GetPosition(void) const;
+			void SetPosition(const mye::math::Vector3 &position);
 
-			const mye::math::Vector3f& GetScale(void) const;
-			void SetScale(const mye::math::Vector3f &scale);
+			const mye::math::Vector3& GetScale(void) const;
+			void SetScale(const mye::math::Vector3 &scale);
 
-			const mye::math::Quaternionf& GetOrientation(void) const;
-			void SetOrientation(const mye::math::Quaternionf &orientation);
+			const mye::math::Quaternion& GetOrientation(void) const;
+			void SetOrientation(const mye::math::Quaternion &orientation);
 
-			const mye::math::Matrix4f& GetWorldMatrix(void);
+			const mye::math::Matrix4& GetWorldMatrix(void);
 
-			mye::math::Vector3f Up(void) const;
-			mye::math::Vector3f Right(void) const;
-			mye::math::Vector3f Forward(void) const;
+			mye::math::Vector3 Up(void) const;
+			mye::math::Vector3 Right(void) const;
+			mye::math::Vector3 Forward(void) const;
+
+			void Preupdate(void);
+			bool Postupdate(mye::math::Matrix4 &oldTransform);
 
 		private:
 
-			mye::math::Transformf m_transform;
-			mye::math::Matrix4f m_matrix;
+			mye::math::Transform m_transform;
+			mye::math::Matrix4   m_matrix;
+
+			bool m_changed;
 
 		};
 

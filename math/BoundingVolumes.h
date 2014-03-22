@@ -4,12 +4,14 @@ namespace mye
 	namespace math
 	{
 
+		template <typename T>
+		inline AABBt<T> BoundingAABB(const AABBt<T> &AABBt);
 
 		template <typename T>
-		inline AABB<T> BoundingAABB(const Triangle<T> &triangle);
+		inline AABBt<T> BoundingAABB(const Triangle<T> &triangle);
 
 		template <typename T>
-		inline AABB<T> BoundingAABB(const Frustum<T> &frustum);
+		inline AABBt<T> BoundingAABB(const Frustumt<T> &frustum);
 
 
 	}

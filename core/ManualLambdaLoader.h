@@ -17,11 +17,9 @@ namespace mye
 
 			ManualLambdaLoader(
 				std::function<bool(Resource*)> load,
-				std::function<bool(Resource*)> prepare,
 				std::function<void(Resource*)> unload);
 
 			bool Load(Resource *resource);
-			bool Prepare(Resource *resource);
 			void Unload(Resource *resource);
 
 			~ManualLambdaLoader(void);
@@ -29,7 +27,6 @@ namespace mye
 		private:
 
 			std::function<bool(Resource*)> m_load;
-			std::function<bool(Resource*)> m_prepare;
 			std::function<void(Resource*)> m_unload;
 
 

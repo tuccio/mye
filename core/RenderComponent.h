@@ -2,7 +2,6 @@
 
 #include "Component.h"
 #include "Model.h"
-#include "ResourceHandle.h"
 
 #include <mye/math/Geometry.h>
 
@@ -24,13 +23,13 @@ namespace mye
 			bool IsVisible(void) const;
 			void SetVisible(bool visible);
 
-			mye::core::ResourceHandle GetVertexData(void);
+			//VertexDataPointer GetVertexData(void);
 
-			mye::core::ModelPointer GetModel(void);
+			ModelPointer GetModel(void);
 			void SetModel(ModelPointer model);
 
-			const mye::math::AABBf& GetBounds(void) const;
-			void SetBounds(const mye::math::AABBf &bounds);
+			const mye::math::AABB& GetBounds(void) const;
+			void SetBounds(const mye::math::AABB &bounds);
 
 			RenderComponent* Clone(void) const;
 			
@@ -38,10 +37,10 @@ namespace mye
 
 			bool m_visible;
 			
-			ResourceHandle m_vertexData;
+			//VertexDataPointer m_vertexData;
 			ModelPointer m_model;
 			
-			mye::math::AABBf m_bounds;
+			mye::math::AABB m_bounds;
 			
 		};
 

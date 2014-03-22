@@ -14,8 +14,8 @@ MeshManager::~MeshManager(void)
 }
 
 Mesh* MeshManager::CreateImpl(const String &name,
-										ManualResourceLoader *manual,
-										Resource::ParametersList *params)
+							  ManualResourceLoader *manual,
+							  const Resource::ParametersList &params)
 {
 	return (new Mesh(this, name, manual));
 }
@@ -23,5 +23,5 @@ Mesh* MeshManager::CreateImpl(const String &name,
 
 void MeshManager::FreeImpl(mye::core::Resource* resource)
 {
-	static_cast<Model*>(resource)->Free();
+	static_cast<Model*>(resource)->Clear();
 }

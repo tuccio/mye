@@ -68,6 +68,7 @@ Component* GameObject::AddComponent(const Component &component)
 
 		case ComponentTypes::BEHAVIOUR:
 			m_behaviour = static_cast<BehaviourComponent*>(newComponent);
+			Init();
 			break;
 
 		}
@@ -168,6 +169,16 @@ void GameObject::OnDestruction(void)
 {
 
 	Clear();
+
+}
+
+void GameObject::Init(void)
+{
+
+	if (m_behaviour)
+	{
+		m_behaviour->Init();
+	}
 
 }
 

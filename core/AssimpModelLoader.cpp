@@ -35,7 +35,7 @@ bool AssimpModelLoader::Load(Resource *resource)
 		Mesh *mesh = model->AddMesh();
 		mesh->SetParametersList(model->GetParametersList());
 		meshLoader.Load(mesh);
-		CalculateSize(mesh);
+		mesh->CalculateSize();
 	}
 
 	return true;

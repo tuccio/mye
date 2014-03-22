@@ -30,27 +30,28 @@ namespace mye
 		template <typename T>
 		struct LooseOctreeSpacing
 		{
-			mye::math::AABB operator() (T &object);
+			mye::math::AABBt operator() (T &object);
 		};
 
 		/* Loose Octree Node */
 
-		template <typename T>
+		template <typename T, typename BoundingVolume = mye::math::AABB>
 		class LooseOctreeNode
 		{
 
 		public:
 			
+			typedef LooseOctreeNode<T, BoundingVolume> Type;
 			class Iterator;
 
 			LooseOctreeNode(LooseOctreeNode *parent,
-				const mye::math::AABBf& bounds);
+				const mye::math::AABB& bounds);
 
 			~LooseOctreeNode(void);
 
 			void Clear(void);
 
-			inline mye::math::AABBf GetBounds(void) const;
+			inline mye::math::AABB GetBounds(void) const;
 
 			inline LooseOctreeNode* GetChild(OctreeChild child);
 
@@ -62,14 +63,14 @@ namespace mye
 			inline Iterator begin(void);
 			inline Iterator end(void);
 
-			MYE_DECLARE_POOL_ALLOCATOR(LooseOctreeNode<T>)
+			MYE_DECLARE_POOL_ALLOCATOR(Type)
 
 		private:
 			
-			template <typename T>
+			template <typename T, typename BoundingVolume>
 			friend class LooseOctreeTraverser;
 
-			template <typename T>
+			template <typename T, typename BoundingVolume>
 			friend class LooseOctree;
 
 			inline Iterator RemoveObject(const Iterator &it);
@@ -78,12 +79,12 @@ namespace mye
 			LooseOctreeNode* m_parent;
 
 			std::list<T> m_objects;
-			mye::math::AABBf m_bounds;
+			mye::math::AABB m_bounds;
 
 		};
 
-		template <typename T>
-		class LooseOctreeNode<T>::Iterator
+		template <typename T, typename BoundingVolume>
+		class LooseOctreeNode<T, BoundingVolume>::Iterator
 		{
 
 		public:
@@ -96,7 +97,7 @@ namespace mye
 
 		private:
 
-			template <typename T>
+			template <typename T, typename BoundingVolume>
 			friend class LooseOctreeNode;
 
 			Iterator(typename const std::list<T>::iterator &it);
@@ -107,44 +108,46 @@ namespace mye
 
 		/* Loose Octree */
 
-		template <typename T>
+		template <typename T, typename BoundingVolume = mye::math::AABB>
 		class LooseOctree
 		{
 
 		public:
 
-			LooseOctree(mye::math::Vector3f center,
+			LooseOctree(mye::math::Vector3 center,
 				float size,
 				unsigned int maxdepth,
 				unsigned int looseness);
 
 			~LooseOctree(void);
 
-			bool Insert(const T &object, const mye::math::AABBf &aabb);
-			LooseOctreeNode<T>* Find(const mye::math::AABBf &aabb);
-			LooseOctreeNode<T>* FindFirst(const mye::math::AABBf &aabb);
-			typename LooseOctreeNode<T>::Iterator Find(const T &object, const const mye::math::AABBf &aabb);
-			bool Remove(const T &object, const mye::math::AABBf &aabb);
-			bool Relocate(const T &object, const mye::math::AABBf &oldAABB, const mye::math::AABBf &newAABB);
+			bool Insert(const T &object, const BoundingVolume &boundingVolume);
+			LooseOctreeNode<T, BoundingVolume>* Find(const BoundingVolume &boundingVolume);
+			LooseOctreeNode<T, BoundingVolume>* FindFirst(const BoundingVolume &boundingVolume);
+			typename LooseOctreeNode<T, BoundingVolume>::Iterator Find(const T &object, const const BoundingVolume &boundingVolume);
+			bool Remove(const T &object, const BoundingVolume &boundingVolume);
+			bool Relocate(const T &object, const BoundingVolume &oldboundingVolume, const BoundingVolume &newboundingVolume);
 
-			LooseOctreeNode<T>* GetRoot(void);
+			LooseOctreeNode<T, BoundingVolume>* GetRoot(void);
+
+			void Clear(void);
 
 		private:
 
-			template <typename T>
+			template <typename T, typename BoundingVolume>
 			friend class LooseOctreeTraverser;
 
-			mye::math::AABBf ChildBounds(LooseOctreeNode<T> *parent, OctreeChild child) const;
-			OctreeChild ChooseChild(LooseOctreeNode<T> *parent, const mye::math::AABBf &aabb) const;
+			mye::math::AABB ChildBounds(LooseOctreeNode<T, BoundingVolume> *parent, OctreeChild child) const;
+			OctreeChild ChooseChild(LooseOctreeNode<T, BoundingVolume> *parent, const BoundingVolume &boundingVolume) const;
 
-			inline bool Find(const mye::math::AABBf &aabb,
-				LooseOctreeNode<T> **node,
+			inline bool Find(const BoundingVolume &boundingVolume,
+				LooseOctreeNode<T, BoundingVolume> **node,
 				OctreeChild *child,
 				unsigned int *depth,
 				bool *needToAllocate);
 
-			inline void AllocateChildren(const mye::math::AABBf &aabb,
-				LooseOctreeNode<T> **node,
+			inline void AllocateChildren(const BoundingVolume &AABBt,
+				LooseOctreeNode<T, BoundingVolume> **node,
 				OctreeChild *child,
 				unsigned int *depth);
 
@@ -152,19 +155,19 @@ namespace mye
 			unsigned int m_maxdepth;
 			unsigned int m_looseness;
 
-			mye::math::AABBf m_bounds;
+			mye::math::AABB m_bounds;
 
 		};
 
 		/* Loose Octree Traverser */
 
-		template <typename T>
+		template <typename T, typename BoundingVolume = mye::math::AABB>
 		class LooseOctreeTraverser
 		{
 
 		public:
 
-			LooseOctreeTraverser(LooseOctree<T> &octree);
+			LooseOctreeTraverser(LooseOctree<T, BoundingVolume> &octree);
 			~LooseOctreeTraverser(void);
 
 			inline LooseOctreeNode* GetCurrent(void);
@@ -178,8 +181,8 @@ namespace mye
 
 		private:
 
-			std::deque<LooseOctreeNode<T>*> m_path;
-			LooseOctree<T> *octree;
+			std::deque<LooseOctreeNode<T, BoundingVolume>*> m_path;
+			LooseOctree<T, BoundingVolume> *octree;
 
 		};
 

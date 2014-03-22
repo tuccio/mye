@@ -17,7 +17,10 @@ namespace mye
 			return m_registryReference;
 		}
 
-		
+		lua_State* Script::GetLuaState(void)
+		{
+			return m_lua;
+		}
 
 	}
 

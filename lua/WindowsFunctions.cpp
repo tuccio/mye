@@ -21,8 +21,9 @@ namespace mye
 	namespace lua
 	{
 
-		int __win_alloc_console(lua_State *L);
-		int __win_free_console(lua_State *L);
+		void __win_alloc_console(void);
+		void __win_free_console(void);
+		void __win_message_box(const char *title, const char *msg);
 
 		void BindWindowsFunctions(lua_State *L)
 		{
@@ -34,13 +35,15 @@ namespace mye
 					def(constructor<>()),
 
 				def("AllocConsole", &__win_alloc_console),
-				def("FreeConsole", &__win_free_console)
+				def("FreeConsole", &__win_free_console),
+
+				def("MessageBox", &__win_message_box)
 
 			];
 
 		}
 
-		int __win_alloc_console(lua_State *L)
+		void __win_alloc_console(void)
 		{
 
 			if (AllocConsole())
@@ -48,13 +51,16 @@ namespace mye
 				freopen("CONOUT$", "w", stdout);
 			}
 			
-			return 0;
 		}
 
-		int __win_free_console(lua_State *L)
+		void __win_free_console(void)
 		{
 			FreeConsole();
-			return 0;
+		}
+
+		void __win_message_box(const char *title, const char *msg)
+		{
+			MessageBox(NULL, msg, title, MB_OK);
 		}
 
 	}

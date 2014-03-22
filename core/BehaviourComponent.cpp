@@ -1,6 +1,12 @@
 #include "BehaviourComponent.h"
 
 #include "GameObject.h"
+#include "Utils.h"
+#include "Game.h"
+
+#include <mye/lua/LuaModule.h>
+
+#include <luabind/luabind.hpp>
 
 using namespace mye::core;
 
@@ -27,10 +33,48 @@ BehaviourComponent* BehaviourComponent::Clone(void) const
 
 void BehaviourComponent::Init(void)
 {
-	m_script->Call<void, GameObjectHandle>("Init", m_owner->GetHandle());
+
+	lua_State *L = m_script->GetLuaState();
+	luabind::globals(L)["self"] = luabind::object(L, m_owner->GetHandle());
+
+	try
+	{
+		m_script->Call<void>("Init");
+	}
+	catch (mye::lua::CallException ex)
+	{
+
+		if (ex.error == mye::lua::CallExceptionError::RUNTIME)
+		{
+			RuntimeError(m_script->GetName() + ".Init()\n\n" + ex.msg);
+		}
+
+	}
+
+	luabind::globals(L)["self"] = luabind::nil;
+
 }
 
 void BehaviourComponent::Update(FloatSeconds dt)
 {
-	m_script->Call<void, GameObjectHandle, float>("Update", m_owner->GetHandle(), dt);
+
+	lua_State *L = m_script->GetLuaState();
+	luabind::globals(L)["self"] = luabind::object(L, m_owner->GetHandle());
+
+	try
+	{
+		m_script->Call<void>("Update");
+	}
+	catch (mye::lua::CallException ex)
+	{
+
+		if (ex.error == mye::lua::CallExceptionError::RUNTIME)
+		{
+			RuntimeError(m_script->GetName() + ".Update()\n\n" + ex.msg);
+		}
+
+	}
+
+	luabind::globals(L)["self"] = luabind::nil;
+
 }

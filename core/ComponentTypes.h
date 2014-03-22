@@ -13,6 +13,7 @@ namespace mye
 			RENDER,
 			CAMERA,
 			BEHAVIOUR,
+			RIGIDBODY,
 			COUNT
 		};
 

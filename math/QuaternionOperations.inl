@@ -5,7 +5,7 @@ namespace mye
 	{
 
 		template <typename T>
-		Matrix<T, 3, 3> RotationMatrix3(const Quaternion<T> &q)
+		Matrix<T, 3, 3> RotationMatrix3(const Quaterniont<T> &q)
 		{
 
 			Matrix<T, 3, 3> r;
@@ -37,7 +37,7 @@ namespace mye
 		}
 
 		template <typename T>
-		Matrix<T, 4, 4> RotationMatrix4(const Quaternion<T> &q)
+		Matrix<T, 4, 4> RotationMatrix4(const Quaterniont<T> &q)
 		{
 
 			Matrix<T, 4, 4> r;

@@ -19,7 +19,7 @@ namespace mye
 		public:
 
 			OctreeSceneModule(
-				const mye::math::Vector3f &center = mye::math::Vector3f(0),
+				const mye::math::Vector3 &center = mye::math::Vector3(0),
 				float size = 1024.0f,
 				unsigned int maxdepth = 32,
 				unsigned int looseness = 2);
@@ -33,7 +33,7 @@ namespace mye
 			void RemoveGameObject(const GameObjectHandle &hObj);
 
 			void Reset(
-				const mye::math::Vector3f &center = mye::math::Vector3f(0),
+				const mye::math::Vector3 &center = mye::math::Vector3(0),
 				float size = 1024.0f,
 				unsigned int maxdepth = 32,
 				unsigned int looseness = 2);

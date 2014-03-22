@@ -6,7 +6,7 @@ namespace mye
 	namespace math
 	{
 
-		/* Transform */
+		/* Transformt */
 
 		template <typename T>
 		Matrix<T, 4, 4> ScaleMatrix4(const Matrix<T, 3, 1> &scale);

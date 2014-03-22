@@ -32,19 +32,19 @@ namespace mye
 		template <typename T>
 		struct OctreePositionGrabber
 		{
-			mye::math::Vector3f operator() (T &o);
+			mye::math::Vector3 operator() (T &o);
 		};
 
 		template <>
-		struct OctreePositionGrabber<mye::math::Vector3f>
+		struct OctreePositionGrabber<mye::math::Vector3>
 		{
-			inline mye::math::Vector3f operator() (mye::math::Vector3f &v);
+			inline mye::math::Vector3 operator() (mye::math::Vector3 &v);
 		};
 
 		template <>
-		struct OctreePositionGrabber<mye::math::Transformf>
+		struct OctreePositionGrabber<mye::math::Transform>
 		{
-			inline mye::math::Vector3f operator() (mye::math::Transformf &t);
+			inline mye::math::Vector3 operator() (mye::math::Transform &t);
 		};
 
 		template <typename T>
@@ -116,8 +116,8 @@ namespace mye
 
 		public:
 
-			Octree(const mye::math::Vector3f &center,
-				const mye::math::Vector3f &size,
+			Octree(const mye::math::Vector3 &center,
+				const mye::math::Vector3 &size,
 				unsigned int maxDepth);
 
 			~Octree(void);
@@ -127,24 +127,24 @@ namespace mye
 			void Insert(T &object);
 
 			void Relocate(T &object,
-				const mye::math::Vector3f &xOld);
+				const mye::math::Vector3 &xOld);
 			
 			inline bool Remove(T &object);
-			bool Remove(T &object, const mye::math::Vector3f &x);
+			bool Remove(T &object, const mye::math::Vector3 &x);
 
-			OctreeTraverser<T> Traverse(const mye::math::Vector3f &x);
+			OctreeTraverser<T> Traverse(const mye::math::Vector3 &x);
 
 			inline const OctreeInternalNode* GetRoot(void) const;
 			inline OctreeInternalNode* GetRoot(void);
 
-			const mye::math::AABB& GetBounds(void) const;
+			const mye::math::AABBt& GetBounds(void) const;
 
 			unsigned int GetMaxDepth(void) const;
 
 		private:
 
 			OctreeInternalNode m_root;
-			mye::math::AABB m_bounds;
+			mye::math::AABBt m_bounds;
 			unsigned int m_maxDepth;
 
 		};
@@ -170,7 +170,7 @@ namespace mye
 
 			inline OctreeInternalNode::Children GetChildSide(void) const;
 
-			inline bool Traverse(const mye::math::Vector3f &x);
+			inline bool Traverse(const mye::math::Vector3 &x);
 
 			inline bool MoveToChild(OctreeInternalNode::Children child);
 			inline OctreeInternalNode* MoveToParent(void);
@@ -188,20 +188,20 @@ namespace mye
 
 			Octree<T> *m_octree;
 			std::deque<NodeInfo> m_path;
-			mye::math::AABB m_bounds;
+			mye::math::AABBt m_bounds;
 
 		};
 
 		inline OctreeInternalNode::Children __PickSide(
-			const mye::math::AABB &aabb,
-			const mye::math::Vector3f &x);
+			const mye::math::AABBt &AABBt,
+			const mye::math::Vector3 &x);
 
-		inline mye::math::AABB __SplitAABB(
-			const mye::math::AABB &aabb,
+		inline mye::math::AABBt __SplitAABBt(
+			const mye::math::AABBt &AABBt,
 			OctreeInternalNode::Children child);
 
-		inline mye::math::AABB __InverseSplitAABB(
-			const mye::math::AABB &aabb,
+		inline mye::math::AABBt __InverseSplitAABBt(
+			const mye::math::AABBt &AABBt,
 			OctreeInternalNode::Children child);
 
 	}

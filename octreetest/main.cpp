@@ -51,8 +51,8 @@ void CreateOctree(std::list<DX11VertexBuffer> &list,
 				  DX11Window &window,
 				  OctreeTraverser<T> &traverser);
 
-void CreateAABB(std::list<DX11VertexBuffer> &list,
-				DX11Window &window,const AABB &aabb);
+void CreateAABBt(std::list<DX11VertexBuffer> &list,
+				DX11Window &window,const AABBt &AABBt);
 
 void CreateQuad(std::list<DX11VertexBuffer> &list,
 				DX11Window &window,
@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
 	DX11VertexBuffer verticesBuffer(nullptr, "", nullptr, device);
 
 	VertexDeclaration vDecl;
-	vDecl.AddAttribute(VertexDeclaration::VDA_POSITION, VertexDeclaration::VDAT_FLOAT3);
+	vDecl.AddAttribute(VertexDeclaration::VDA_POSITION, VertexDeclaration::VDAT_FLOAT4);
 
 	if (points.size() > 0 &&
 		!verticesBuffer.Create(&points[0], points.size(), vDecl))
@@ -207,7 +207,7 @@ int main(int argc, char *argv[])
 		mvpBuffer.SetData(
 			(camera.GetProjectionMatrix() *
 			camera.GetViewMatrix() *
-			cameraTransform.GetTRSMatrix()).Data());
+			cameraTransform.GetSRTMatrix()).Data());
 
 		colorBuffer.Bind(PIPELINE_PIXEL_SHADER, 0);
 
@@ -386,7 +386,7 @@ void CreateOctree(std::list<DX11VertexBuffer>& list,
 	if (node)
 	{
 
-		CreateAABB(list, window, traverser.GetBounds());
+		CreateAABBt(list, window, traverser.GetBounds());
 
 		if (!node->IsLeaf())
 		{
@@ -408,47 +408,47 @@ void CreateOctree(std::list<DX11VertexBuffer>& list,
 
 }
 
-void CreateAABB(std::list<DX11VertexBuffer> &list,
+void CreateAABBt(std::list<DX11VertexBuffer> &list,
 				DX11Window &window,
-				const AABB &aabb)
+				const AABBt &AABBt)
 {
 
-	auto corners = aabb.GetCorners();
+	auto corners = AABBt.GetCorners();
 
 	CreateQuad(list,
 		window,
-		corners[AABB::LEFT_BOTTOM_NEAR],
-		corners[AABB::RIGHT_BOTTOM_NEAR],
-		corners[AABB::RIGHT_TOP_NEAR],
-		corners[AABB::LEFT_TOP_NEAR]);
+		corners[AABBt::LEFT_BOTTOM_NEAR],
+		corners[AABBt::RIGHT_BOTTOM_NEAR],
+		corners[AABBt::RIGHT_TOP_NEAR],
+		corners[AABBt::LEFT_TOP_NEAR]);
 
 	CreateQuad(list,
 		window,
-		corners[AABB::LEFT_BOTTOM_FAR],
-		corners[AABB::RIGHT_BOTTOM_FAR],
-		corners[AABB::RIGHT_TOP_FAR],
-		corners[AABB::LEFT_TOP_FAR]);
+		corners[AABBt::LEFT_BOTTOM_FAR],
+		corners[AABBt::RIGHT_BOTTOM_FAR],
+		corners[AABBt::RIGHT_TOP_FAR],
+		corners[AABBt::LEFT_TOP_FAR]);
 
 	CreateQuad(list,
 		window,
-		corners[AABB::LEFT_TOP_NEAR],
-		corners[AABB::RIGHT_TOP_NEAR],
-		corners[AABB::RIGHT_TOP_FAR],
-		corners[AABB::LEFT_TOP_FAR]);
+		corners[AABBt::LEFT_TOP_NEAR],
+		corners[AABBt::RIGHT_TOP_NEAR],
+		corners[AABBt::RIGHT_TOP_FAR],
+		corners[AABBt::LEFT_TOP_FAR]);
 
 	CreateQuad(list,
 		window,
-		corners[AABB::RIGHT_BOTTOM_NEAR],
-		corners[AABB::RIGHT_TOP_NEAR],
-		corners[AABB::RIGHT_TOP_FAR],
-		corners[AABB::RIGHT_BOTTOM_FAR]);
+		corners[AABBt::RIGHT_BOTTOM_NEAR],
+		corners[AABBt::RIGHT_TOP_NEAR],
+		corners[AABBt::RIGHT_TOP_FAR],
+		corners[AABBt::RIGHT_BOTTOM_FAR]);
 
 	CreateQuad(list,
 		window,
-		corners[AABB::LEFT_BOTTOM_NEAR],
-		corners[AABB::LEFT_TOP_NEAR],
-		corners[AABB::LEFT_TOP_FAR],
-		corners[AABB::LEFT_BOTTOM_FAR]);
+		corners[AABBt::LEFT_BOTTOM_NEAR],
+		corners[AABBt::LEFT_TOP_NEAR],
+		corners[AABBt::LEFT_TOP_FAR],
+		corners[AABBt::LEFT_BOTTOM_FAR]);
 
 }
 

@@ -8,7 +8,7 @@ namespace mye
 	namespace math
 	{
 
-		enum class AABBCorners
+		enum class AABBtCorners
 		{
 			LEFT_BOTTOM_NEAR = 0,
 			RIGHT_BOTTOM_NEAR = 1,
@@ -21,28 +21,28 @@ namespace mye
 		};
 
 		template <typename T>
-		class AABB :
-			public Volume
+		class AABBt :
+			public Volume<T>
 		{
 
 		public:
 
-			AABB(void) :
-				Volume(VolumeType::AABB),
+			AABBt(void) :
+				Volume(VolumeType::AABBt),
 				m_min(T(-0.5)),
 				m_max(T(0.5))
 			{
 			}
 
-			~AABB(void)
+			~AABBt(void)
 			{
 			}
 
-			static inline AABB FromMinMax(
+			static inline AABBt FromMinMax(
 				const mye::math::Matrix<T, 3, 1> &min,
 				const mye::math::Matrix<T, 3, 1> &max);
 
-			static inline AABB FromCenterHalfExtents(
+			static inline AABBt FromCenterHalfExtents(
 				const mye::math::Matrix<T, 3, 1> &center,
 				const mye::math::Matrix<T, 3, 1> &halfExtents);
 
@@ -56,13 +56,20 @@ namespace mye
 
 			inline Vector3i GetAxesOrderBySize(void) const;
 
-			inline AABB<T> TransformAffine(const Matrix<T, 4, 4> &t) const;
+			inline AABBt<T> TransformAffine(const Matrix<T, 4, 4> &t) const;
 
 			inline bool Contains(const Matrix<T, 3, 1> &x) const;
-			inline bool Contains(const AABB<T> &aabb) const;
+			inline bool Contains(const AABBt<T> &AABBt) const;
 
 			inline bool ContainsStrict(const Matrix<T, 3, 1> &x) const;
-			inline bool ContainsStrict(const AABB<T> &aabb) const;
+			inline bool ContainsStrict(const AABBt<T> &AABBt) const;
+
+			AABBt* Clone(void) const;
+
+			inline VolumeSide Intersects(const Frustumt<T> &frustum) const;
+
+			void TransformAffine(Volume &volume,
+				const Matrix<T, 4, 4> &transform) const;
 
 		private:
 

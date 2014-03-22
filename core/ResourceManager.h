@@ -4,7 +4,6 @@
 #include <memory>
 
 #include "Resource.h"
-#include "ResourceHandle.h"
 
 namespace mye
 {
@@ -24,11 +23,11 @@ namespace mye
 			template <typename ResourceType>
 			boost::shared_ptr<ResourceType> CreateResource(const String &name,
 				ManualResourceLoader *manual = nullptr,
-				Resource::ParametersList *params = nullptr);
+				const Resource::ParametersList &params = Resource::ParametersList());
 
 			inline boost::shared_ptr<Resource> CreateResource(const String &name,
 				ManualResourceLoader *manual = nullptr,
-				Resource::ParametersList *params = nullptr);
+				const Resource::ParametersList &params = Resource::ParametersList());
 
 			template <typename ResourceType>
 			boost::shared_ptr<ResourceType> GetResource(const String &name);
@@ -42,8 +41,8 @@ namespace mye
 		protected:
 
 			virtual Resource* CreateImpl(const String &name,
-				    ManualResourceLoader *manual,
-				    Resource::ParametersList *params);
+				ManualResourceLoader *manual,
+				const Resource::ParametersList &params);
 
 			virtual void FreeImpl(Resource* resource);
 

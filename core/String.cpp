@@ -37,10 +37,15 @@ String::String(const char *string) :
 	m_length(0),
 	m_size(0)
 {
-	size_t length = strlen(string);
-	Resize(length);
-	memcpy(m_string, string, length);
-	m_length = length;
+
+	if (string)
+	{
+		size_t length = strlen(string);
+		Resize(length);
+		memcpy(m_string, string, length);
+		m_length = length;
+	}
+	
 }
 
 String::String(const String &string) :

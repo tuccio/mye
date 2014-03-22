@@ -14,8 +14,8 @@ ModelManager::~ModelManager(void)
 }
 
 Model* ModelManager::CreateImpl(const String &name,
-										ManualResourceLoader *manual,
-										Resource::ParametersList *params)
+								ManualResourceLoader *manual,
+								const Resource::ParametersList &params)
 {
 	return (new Model(this, name, manual));
 }
@@ -23,5 +23,5 @@ Model* ModelManager::CreateImpl(const String &name,
 
 void ModelManager::FreeImpl(mye::core::Resource* resource)
 {
-	static_cast<Model*>(resource)->Free();
+	static_cast<Model*>(resource)->Clear();
 }

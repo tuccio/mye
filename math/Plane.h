@@ -6,7 +6,7 @@ namespace mye
 	namespace math
 	{
 
-		enum class PlaneSide
+		enum class PlanetSide
 		{
 			FRONT,
 			INSIDE,
@@ -14,22 +14,24 @@ namespace mye
 		};
 
 		template <typename T>
-		class Plane
+		class Planet
 		{
 
 		public:
 
-			Plane(void);
-			Plane(const Matrix<T, 3, 1> &p,
+			Planet(void);
+			Planet(const Matrix<T, 3, 1> &p,
 				const Matrix<T, 3, 1> &n);
 
-			Plane(T a, T b, T c, T d);
+			Planet(T a, T b, T c, T d);
 
 			inline bool Contains(const Matrix<T, 3, 1> &x) const;
-			inline PlaneSide Side(const Matrix<T, 3, 1> &x) const;
+			inline PlanetSide Side(const Matrix<T, 3, 1> &x) const;
 
 			inline const Matrix<T, 3, 1>& Normal(void) const;
 			inline const T& Coefficient(void) const;
+
+			inline Planet Transformt(const Matrix<T, 4, 4> &transform) const;
 
 		private:
 

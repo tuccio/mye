@@ -1,6 +1,7 @@
 #include <mye/core/Entity.h>
 #include <mye/core/ModelManager.h>
 #include <mye/core/OctreeSceneModule.h>
+#include <mye/core/PhysicsModule.h>
 #include <mye/core/ResourceManager.h>
 #include <mye/core/ResourceTypeManager.h>
 
@@ -40,11 +41,12 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 	ModelManager modelManager;
 
 	MouseKeyboardInput input;
-	GameObjectsModule gameobjects;
-	OctreeSceneModule scene;
-	DX11Module graphics;
-	AudioModule audio;
-	LuaModule lua("./scripts/");
+	GameObjectsModule  gameobjects;
+	OctreeSceneModule  scene;
+	PhysicsModule      physics;
+	DX11Module         graphics;
+	AudioModule        audio;
+	LuaModule          lua("./scripts/");
 
 	/*
 	 * Prepare shaders
@@ -90,6 +92,7 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 	WinGame game(&input,
 		&gameobjects,
 		&scene,
+		&physics,
 		&graphics,
 		&audio,
 		&lua);
@@ -110,7 +113,7 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 
 	ProcedureScriptPointer main = lua.LoadProcedure("main");
 
-	if (main->GetState() == LoadingState::LOADED)
+	if (main->GetState() == ResourceLoadState::LOADED)
 	{
 		main->Run();
 		main->Unload();

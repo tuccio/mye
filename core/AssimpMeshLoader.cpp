@@ -114,15 +114,8 @@ bool AssimpMeshLoader::Load(Resource *resource)
 
 	}
 
-	CalculateSize(mesh);
-
 	return true;
 
-}
-
-bool Prepare(Resource *resource)
-{
-	return true;
 }
 
 void AssimpMeshLoader::Unload(Resource *resource)
@@ -132,7 +125,7 @@ void AssimpMeshLoader::Unload(Resource *resource)
 
 	if (mesh)
 	{
-		mesh->Destroy();
+		mesh->Clear();
 	}
 
 }

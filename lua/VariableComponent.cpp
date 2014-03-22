@@ -57,14 +57,14 @@ namespace mye
 		void BindVariableComponent(lua_State *L)
 		{
 
-			BindVariableComponent<float>(L, MYE_LUA_FLOAT_COMPONENT);
+			BindVariableComponent<mye::math::Real>(L, MYE_LUA_FLOAT_COMPONENT);
 			BindVariableComponent<int>(L, MYE_LUA_INT_COMPONENT);
 			BindVariableComponent<bool>(L, MYE_LUA_BOOL_COMPONENT);
 			BindVariableComponent<mye::core::String>(L, MYE_LUA_STRING_COMPONENT);
-			BindVariableComponent<mye::math::Vector3f>(L, MYE_LUA_VEC3_COMPONENT);
+			BindVariableComponent<mye::math::Vector3>(L, MYE_LUA_VEC3_COMPONENT);
 			BindVariableComponent<mye::math::Vector3i>(L, MYE_LUA_VEC3I_COMPONENT);
-			BindVariableComponent<mye::math::Quaternionf>(L, MYE_LUA_QUATERNION_COMPONENT);
-			BindVariableComponent<mye::math::Transformf>(L, MYE_LUA_VTRANSFORM_COMPONENT);
+			BindVariableComponent<mye::math::Quaternion>(L, MYE_LUA_QUATERNION_COMPONENT);
+			BindVariableComponent<mye::math::Transform>(L, MYE_LUA_VTRANSFORM_COMPONENT);
 
 			BindTransformComponent(L, MYE_LUA_TRANSFORM_COMPONENT);
 

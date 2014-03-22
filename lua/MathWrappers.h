@@ -62,13 +62,13 @@ namespace mye
 		/* Quaternions */
 
 		template <typename T>
-		inline mye::core::String __quat_tostring(const mye::math::Quaternion<T> &q);
+		inline mye::core::String __quat_tostring(const mye::math::Quaterniont<T> &q);
 
 		template <typename T, int I>
-		inline T __quat_get(const mye::math::Quaternion<T> &q);
+		inline T __quat_get(const mye::math::Quaterniont<T> &q);
 
 		template <typename T, int I>
-		inline void __quat_set(mye::math::Quaternion<T> &q, T b);
+		inline void __quat_set(mye::math::Quaterniont<T> &q, T b);
 
 	}
 

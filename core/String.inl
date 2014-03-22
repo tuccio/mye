@@ -200,6 +200,7 @@ namespace mye
 		{
 
 			bool less = false;
+			bool equal = true;
 
 			unsigned int m = (s.m_length < m_length ? s.m_length : m_length);
 
@@ -209,16 +210,18 @@ namespace mye
 				if (s.m_string[i] < m_string[i])
 				{
 					less = true;
+					equal = false;
 					break;
 				}
 				else if (s.m_string[i] > m_string[i])
 				{
+					equal = false;
 					break;
 				}
 
 			}
 
-			return less;
+			return (equal && m_length < s.m_length ? true : less);
 
 		}
 
@@ -372,7 +375,7 @@ namespace mye
 		}
 
 		template <typename T>
-		String ToString(const mye::math::Quaternion<T> &q)
+		String ToString(const mye::math::Quaterniont<T> &q)
 		{
 
 			String r(48);
@@ -405,10 +408,10 @@ namespace mye
 		}
 
 		template <typename T>
-		mye::math::Quaternion<T> ParseQuaternion(const String &s)
+		mye::math::Quaterniont<T> ParseQuaternion(const String &s)
 		{
 
-			mye::math::Quaternion<T> q;
+			mye::math::Quaterniont<T> q;
 			std::stringstream ss(s.CString());
 
 			ss >> q.w() >> q.x() >> q.y() >> q.z();
@@ -515,7 +518,7 @@ namespace std
 
 			}
 
-			// Handle the last few bytes of the input array
+			// Handle the last few bytes of the input arRayt
 
 			switch (len)
 			{

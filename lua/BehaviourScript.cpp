@@ -23,6 +23,7 @@ bool BehaviourScript::LoadImpl(void)
 {
 
 	int top = lua_gettop(m_lua);
+	bool loaded = false;
 
 	if (!luaL_loadfile(m_lua, (m_scriptDirectory + m_name + ".lua").CString()))
 	{
@@ -51,22 +52,24 @@ bool BehaviourScript::LoadImpl(void)
 			if (!lua_pcall(m_lua, 0, 0, 0))
 			{
 				m_registryReference = luaL_ref(m_lua, LUA_REGISTRYINDEX);
-				lua_settop(m_lua, top);
-				return true;
+				loaded = true;
 			}
 
 		}
 
 	}
 
-	luaL_error(m_lua, ("Error while loading " + m_name).CString());
-
+	if (!loaded)
+	{
+		luaL_error(m_lua, ("Error while loading " + m_name).CString());
+	}
+	
 	lua_settop(m_lua, top);
-	return false;
+	return loaded;
 
 }
 
 void BehaviourScript::UnloadImpl(void)
 {
-	Free();
+	Clear();
 }

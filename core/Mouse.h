@@ -23,10 +23,10 @@ namespace mye
 
 			inline bool IsPressed(MouseVK key) const;
 
-			inline void Move(const mye::math::Vector2f &position);
-			inline mye::math::Vector2f GetPosition(void) const;
+			inline void Move(const mye::math::Vector2 &position);
+			inline mye::math::Vector2 GetPosition(void) const;
 
-			inline mye::math::Vector2f GetDelta(void) const;
+			inline mye::math::Vector2 GetDelta(void) const;
 			inline void ResetDelta(void);
 
 			inline int GetWheelDelta(void) const;
@@ -36,8 +36,8 @@ namespace mye
 
 			bool m_keys[MYE_VK_MOUSE_COUNT];
 
-			mye::math::Vector2f m_position;
-			mye::math::Vector2f m_delta;
+			mye::math::Vector2 m_position;
+			mye::math::Vector2 m_delta;
 
 			int m_wheelDelta;
 

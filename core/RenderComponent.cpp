@@ -6,7 +6,7 @@ using namespace mye::math;
 RenderComponent::RenderComponent(void) :
 	Component(ComponentTypes::RENDER, "render"),
 	m_visible(true),
-	m_bounds(AABBf::FromMinMax(Vector3f(0), Vector3f(0)))
+	m_bounds(AABB::FromMinMax(Vector3(0), Vector3(0)))
 {
 }
 
@@ -25,10 +25,10 @@ void RenderComponent::SetVisible(bool val)
 	m_visible = val;
 }
 
-mye::core::ResourceHandle RenderComponent::GetVertexData(void)
+/*VertexDataPointer RenderComponent::GetVertexData(void)
 {
 	return m_vertexData;
-}
+}*/
 
 mye::core::ModelPointer RenderComponent::GetModel(void)
 {
@@ -40,12 +40,12 @@ void RenderComponent::SetModel(ModelPointer model)
 	m_model = model;
 }
 
-const mye::math::AABBf& RenderComponent::GetBounds(void) const
+const mye::math::AABB& RenderComponent::GetBounds(void) const
 {
 	return m_bounds;
 }
 
-void RenderComponent::SetBounds(const mye::math::AABBf &bounds)
+void RenderComponent::SetBounds(const mye::math::AABB &bounds)
 {
 	m_bounds = bounds;
 }

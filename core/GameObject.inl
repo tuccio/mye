@@ -39,7 +39,7 @@ namespace mye
 			return m_entity;
 		}
 
-		mye::math::AABBf GameObject::GetAABB(void)
+		mye::math::AABB GameObject::GetAABB(void)
 		{
 			return m_render->GetBounds().TransformAffine(m_transform->GetWorldMatrix());
 		}

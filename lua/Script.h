@@ -24,9 +24,10 @@ namespace mye
 
 			~Script(void);
 
-			void Free(void);
+			void Clear(void);
 
 			inline int GetRegistryReference(void);
+			inline lua_State* GetLuaState(void);
 
 		protected:
 

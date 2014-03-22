@@ -62,5 +62,5 @@ bool ProcedureScript::LoadImpl(void)
 
 void ProcedureScript::UnloadImpl(void)
 {
-	Free();
+	Clear();
 }

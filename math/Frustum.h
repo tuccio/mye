@@ -8,14 +8,16 @@ namespace mye
 	namespace math
 	{
 
-		enum class FrustumPlanes
+		enum class FrustumPlanets
 		{
-			NEAR_PLANE,
-			FAR_PLANE,
-			LEFT_PLANE,
-			RIGHT_PLANE,
-			TOP_PLANE,
-			BOTTOM_PLANE
+			NEAR_Planet,
+			FAR_Planet,
+			LEFT_Planet,
+			RIGHT_Planet,
+			TOP_Planet,
+			BOTTOM_Planet,
+			FIRST = NEAR_Planet,
+			LAST = BOTTOM_Planet
 		};
 
 		enum class FrustumCorners
@@ -27,24 +29,26 @@ namespace mye
 			LEFT_TOP_FAR = 4,
 			RIGHT_TOP_FAR = 5,
 			RIGHT_BOTTOM_FAR = 6,
-			LEFT_BOTTOM_FAR = 7
+			LEFT_BOTTOM_FAR = 7,
+			FIRST = LEFT_BOTTOM_NEAR,
+			LAST = LEFT_BOTTOM_FAR
 		};
 
 		template <typename T>
-		class Frustum :
-			public Volume
+		class Frustumt :
+			public Volume<T>
 		{
 
 		public:
 
-			Frustum(void);
+			Frustumt(void);
 
-			Frustum(const Matrix<T, 3, 1> &origin,
+			Frustumt(const Matrix<T, 3, 1> &origin,
 				const Matrix<T, 3, 1>& direction,
 				const Matrix<T, 3, 1>& up,
 				const Matrix<T, 3, 1>& right,
-				T nearPlaneDistance,
-				T farPlaneDistance,
+				T nearPlanetDistance,
+				T farPlanetDistance,
 				T fovX,
 				T fovY);
 
@@ -52,18 +56,25 @@ namespace mye
 
 			inline VolumeSide Side(const Matrix<T, 3, 1> &x) const;
 
-			inline const Plane<T>& GetPlane(FrustumPlanes plane) const;
+			inline const Planet<T>& GetPlanet(FrustumPlanets Planet) const;
 
-// 			inline typename const Plane<T>& Near(void) const;
-// 			inline typename const Plane<T>& Far(void) const;
-// 			inline typename const Plane<T>& Left(void) const;
-// 			inline typename const Plane<T>& Right(void) const;
-// 			inline typename const Plane<T>& Top(void) const;
-// 			inline typename const Plane<T>& Bottom(void) const;
+			Frustumt* Clone(void) const;
+
+			VolumeSide Intersects(const AABBt<T> &AABBt) const;
+
+			void TransformAffine(Volume &volume,
+				const Matrix<T, 4, 4> &transform) const;
+
+// 			inline typename const Planet<T>& Near(void) const;
+// 			inline typename const Planet<T>& Far(void) const;
+// 			inline typename const Planet<T>& Left(void) const;
+// 			inline typename const Planet<T>& Right(void) const;
+// 			inline typename const Planet<T>& Top(void) const;
+// 			inline typename const Planet<T>& Bottom(void) const;
 
 		private:
 
-			Plane<T> m_planes[6];
+			Planet<T> m_Planets[6];
 
 		};
 
