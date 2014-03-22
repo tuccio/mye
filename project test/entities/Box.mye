@@ -1,0 +1,6 @@
+entity Box
+{
+	
+	// RigidBody(Box(1, 1, 1), 1, vec3(0, 0, 0), quaternion(1, 0, 0, 0));
+	
+}
