@@ -5,12 +5,12 @@ namespace mye
 	{
 
 		template <typename T>
-		Planet<T>::Planet(void)
+		PlaneTempl<T>::PlaneTempl(void)
 		{
 		}
 
 		template <typename T>
-		Planet<T>::Planet(const Matrix<T, 3, 1> &p,
+		PlaneTempl<T>::PlaneTempl(const Matrix<T, 3, 1> &p,
 			const Matrix<T, 3, 1> &n) :
 			m_normal(n),
 			m_coefficient(- p.Dot(n))
@@ -18,20 +18,20 @@ namespace mye
 		}
 
 		template <typename T>
-		Planet<T>::Planet(T a, T b, T c, T d) :
+		PlaneTempl<T>::PlaneTempl(T a, T b, T c, T d) :
 			m_normal(a, b, c),
 			m_coefficient(d)
 		{
 		}
 
 		template <typename T>
-		bool Planet<T>::Contains(const Matrix<T, 3, 1> &x) const
+		bool PlaneTempl<T>::Contains(const Matrix<T, 3, 1> &x) const
 		{
 			return m_normal.Dot(x) == T(0);
 		}
 
 		template <typename T>
-		PlanetSide Planet<T>::Side(const Matrix<T, 3, 1> &x) const
+		PlanetSide PlaneTempl<T>::Side(const Matrix<T, 3, 1> &x) const
 		{
 
 			T dot = m_normal.Dot(x) + m_Planet.w();
@@ -52,23 +52,23 @@ namespace mye
 		}
 
 		template <typename T>
-		const Matrix<T, 3, 1>& Planet<T>::Normal(void) const
+		const Matrix<T, 3, 1>& PlaneTempl<T>::Normal(void) const
 		{
 			return m_normal;
 		}
 
 		template <typename T>
-		const T& Planet<T>::Coefficient(void) const
+		const T& PlaneTempl<T>::Coefficient(void) const
 		{
 			return m_coefficient;
 		}
 
 		template <typename T>
-		Planet<T> Planet<T>::Transformt(const Matrix<T, 4, 4> &Transformt) const
+		PlaneTempl<T> PlaneTempl<T>::Transformt(const Matrix<T, 4, 4> &TransformTempl) const
 		{
 			Matrix<T, 4, 1> p(m_normal, m_coefficient);
-			Matrix<T, 4, 1> pt = Transformt.Inverse().Transpose() * p;
-			return Planet<T>(p.x(), p.y(), p.z(), p.w());
+			Matrix<T, 4, 1> pt = TransformTempl.Inverse().Transpose() * p;
+			return PlaneTempl<T>(p.x(), p.y(), p.z(), p.w());
 		}
 
 	}

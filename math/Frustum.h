@@ -8,7 +8,7 @@ namespace mye
 	namespace math
 	{
 
-		enum class FrustumPlanets
+		enum class FrustumPlane
 		{
 			NEAR_Planet,
 			FAR_Planet,
@@ -35,15 +35,15 @@ namespace mye
 		};
 
 		template <typename T>
-		class Frustumt :
+		class FrustumTempl :
 			public Volume<T>
 		{
 
 		public:
 
-			Frustumt(void);
+			FrustumTempl(void);
 
-			Frustumt(const Matrix<T, 3, 1> &origin,
+			FrustumTempl(const Matrix<T, 3, 1> &origin,
 				const Matrix<T, 3, 1>& direction,
 				const Matrix<T, 3, 1>& up,
 				const Matrix<T, 3, 1>& right,
@@ -56,11 +56,11 @@ namespace mye
 
 			inline VolumeSide Side(const Matrix<T, 3, 1> &x) const;
 
-			inline const Planet<T>& GetPlanet(FrustumPlanets Planet) const;
+			inline const PlaneTempl<T>& GetPlane(FrustumPlane Planet) const;
 
-			Frustumt* Clone(void) const;
+			FrustumTempl* Clone(void) const;
 
-			VolumeSide Intersects(const AABBt<T> &AABBt) const;
+			VolumeSide Intersects(const AABBTempl<T> &aabb) const;
 
 			void TransformAffine(Volume &volume,
 				const Matrix<T, 4, 4> &transform) const;
@@ -74,7 +74,7 @@ namespace mye
 
 		private:
 
-			Planet<T> m_Planets[6];
+			PlaneTempl<T> m_Planets[6];
 
 		};
 

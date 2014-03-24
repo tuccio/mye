@@ -21,15 +21,12 @@ bool PhysicsModule::Init(void)
 {
 
 	m_config     = new btDefaultCollisionConfiguration;
-
 	m_dispatcher = new btCollisionDispatcher(m_config);
 	m_cache      = new btDbvtBroadphase();
-
 	m_solver     = new btSequentialImpulseConstraintSolver;
-
 	m_world      = new btDiscreteDynamicsWorld(m_dispatcher, m_cache, m_solver, m_config);
 	
-	m_world->setGravity(btVector3(0.0f, -9.81f, 0.0f));
+	//m_world->setGravity(btVector3(0.0f, -9.81f, 0.0f));
 
 	return true;
 
@@ -62,7 +59,21 @@ void PhysicsModule::Update(FloatSeconds dt)
 
 void PhysicsModule::AddRigidBody(btRigidBody *rigidbody)
 {
-
 	m_world->addRigidBody(rigidbody);
+}
 
+void PhysicsModule::RemoveRigidBody(btRigidBody *rigidbody)
+{
+	m_world->removeRigidBody(rigidbody);
+}
+
+mye::math::Vector3 PhysicsModule::GetGravity(void) const
+{
+	btVector3 g = m_world->getGravity();
+	return mye::math::Vector3(g.x(), g.y(), g.z());
+}
+
+void PhysicsModule::SetGravity(const mye::math::Vector3 &g)
+{
+	m_world->setGravity(btVector3(g.x(), g.y(), g.z()));
 }

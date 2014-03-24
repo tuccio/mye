@@ -375,7 +375,7 @@ namespace mye
 		}
 
 		template <typename T>
-		String ToString(const mye::math::Quaterniont<T> &q)
+		String ToString(const mye::math::QuaternionTempl<T> &q)
 		{
 
 			String r(48);
@@ -408,10 +408,10 @@ namespace mye
 		}
 
 		template <typename T>
-		mye::math::Quaterniont<T> ParseQuaternion(const String &s)
+		mye::math::QuaternionTempl<T> ParseQuaternion(const String &s)
 		{
 
-			mye::math::Quaterniont<T> q;
+			mye::math::QuaternionTempl<T> q;
 			std::stringstream ss(s.CString());
 
 			ss >> q.w() >> q.x() >> q.y() >> q.z();

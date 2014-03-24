@@ -8,8 +8,49 @@
 #include "Types.h"
 #include "Converters.h"
 
+#include <boost/optional.hpp>
+
 using namespace mye::core;
 using namespace luabind;
+
+namespace luabind
+{
+
+	template <>
+	struct default_converter<boost::optional<mye::lua::ScriptResourceLoaderPointer>> :
+		native_converter_base<boost::optional<mye::lua::ScriptResourceLoaderPointer>>
+	{
+
+		inline static int compute_score(lua_State *L, int index)
+		{
+			return (lua_type(L, index) == LUA_TNIL ||
+				object_cast_nothrow<mye::lua::ScriptResourceLoaderPointer>(object(from_stack(L, index))) ? 0 : -1);
+		}
+
+		inline static boost::optional<mye::lua::ScriptResourceLoaderPointer> from(lua_State* L, int index)
+		{
+			return object_cast_nothrow<mye::lua::ScriptResourceLoaderPointer>(object(from_stack(L, index)));
+		}
+
+		inline static void to(lua_State* L, const boost::optional<mye::lua::ScriptResourceLoaderPointer> &o)
+		{
+
+			if (o)
+			{
+				luabind::object x(L, o.get());
+				x.push(L);
+			}
+			else
+			{
+				lua_pushnil(L);
+			}
+
+		}
+
+
+	};
+
+};
 
 namespace mye
 {
@@ -36,22 +77,31 @@ namespace mye
 
 		}
 
+		String sup(boost::optional<ScriptResourceLoaderPointer> x)
+		{
+			return (x ? x.get()->GetName() : "nil");
+		}
+
 		bool __res_load(Resource &r)
 		{
 			return r.Load();
 		}
 
 		ResourcePointer __res_create_resource(
+			ResourceTypeManager &rtm,
 			const mye::core::String &type,
-			const mye::core::String &name);
+			const mye::core::String &name,
+			boost::optional<ScriptResourceLoaderPointer> manual,
+			std::unordered_map<String, String> params)
+		{
+			return rtm.CreateResource(type, name, (manual ? manual.get().get() : nullptr), params);
+		}
 
 		void BindResources(lua_State *L)
 		{
 
 			module(L)
 			[
-
-				def("test", &__res_test),
 
 				class_<Resource>(MYE_LUA_RESOURCE).
 
@@ -77,11 +127,18 @@ namespace mye
 
 				class_<ResourceTypeManager>(MYE_LUA_RESOURCETYPEMANAGER).
 
-					def("CreateResource", &ResourceTypeManager::CreateResource),
+					def("CreateResource", &__res_create_resource),
 
 				class_<ManualResourceLoader>(MYE_LUA_MANUALRESOURCELOADER),
 
-				class_<ScriptResourceLoader, Resource>(MYE_LUA_SCRIPTRESOURCELOADER)
+				class_<ScriptResourceLoader, Resource>(MYE_LUA_SCRIPTRESOURCELOADER),
+
+				class_<boost::optional<ScriptResourceLoaderPointer>>("__BoostOptionalScriptResourceLoaderPointer").
+
+					def(constructor<ScriptResourceLoaderPointer>()).
+					def(constructor<>()),
+
+				def("sup", &sup)
 
 			];
 

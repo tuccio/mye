@@ -7,13 +7,13 @@ namespace mye
 	{
 
 		template <typename T>
-		class Rayt
+		class RayTempl
 		{
 
 		public:
 
-			Rayt(void);
-			~Rayt(void);
+			RayTempl(void);
+			~RayTempl(void);
 
 			inline Matrix<T, 3, 1>& Origin(void);
 			inline const Matrix<T, 3, 1>& Origin(void) const;

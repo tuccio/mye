@@ -7,28 +7,28 @@ namespace mye
 	{
 
 		template <typename T>
-		class Quaterniont
+		class QuaternionTempl
 		{
 
 		public:
 
-			Quaterniont(void);
-			Quaterniont(T w, T x, T y, T z);
-			Quaterniont(const Matrix<T, 3, 1> &axis, T angle);
-			Quaterniont(const Matrix<T, 3, 3> &A);
+			QuaternionTempl(void);
+			QuaternionTempl(T w, T x, T y, T z);
+			QuaternionTempl(const Matrix<T, 3, 1> &axis, T angle);
+			QuaternionTempl(const Matrix<T, 3, 3> &A);
 
-			inline Quaterniont Inverse(void) const;
-			inline Quaterniont Conjugate(void) const;
+			inline QuaternionTempl Inverse(void) const;
+			inline QuaternionTempl Conjugate(void) const;
 
 			inline Matrix<T, 3, 1> Rotate(const Matrix<T, 3, 1> &p) const;
 
 			inline T Norm(void) const;
-			inline Quaterniont& Normalize(void);
-			inline Quaterniont Normalized(void) const;
+			inline QuaternionTempl& Normalize(void);
+			inline QuaternionTempl Normalized(void) const;
 
-			inline Quaterniont operator+ (const Quaterniont &q) const;
-			inline Quaterniont operator- (const Quaterniont &q) const;
-			inline Quaterniont operator* (const Quaterniont &q) const;
+			inline QuaternionTempl operator+ (const QuaternionTempl &q) const;
+			inline QuaternionTempl operator- (const QuaternionTempl &q) const;
+			inline QuaternionTempl operator* (const QuaternionTempl &q) const;
 
 			inline T& operator[] (int i);
 			inline const T& operator[] (int i) const;

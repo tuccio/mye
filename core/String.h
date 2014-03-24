@@ -125,13 +125,13 @@ namespace mye
 		inline String ToString(const mye::math::Matrix<T, 3, 1> &v);
 
 		template <typename T>
-		inline String ToString(const mye::math::Quaterniont<T> &q);
+		inline String ToString(const mye::math::QuaternionTempl<T> &q);
 
 		template <typename T>
 		inline mye::math::Matrix<T, 3, 1> ParseVector3(const String &s);
 
 		template <typename T>
-		inline mye::math::Quaterniont<T> ParseQuaternion(const String &s);
+		inline mye::math::QuaternionTempl<T> ParseQuaternion(const String &s);
 
 		template <typename T>
 		inline T ParseType(const String &s);

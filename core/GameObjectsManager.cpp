@@ -96,6 +96,8 @@ GameObjectHandle GameObjectsManager::CreateEntity(const String &entity,
 
 		o->AddComponent(BehaviourComponent(s));
 
+		o->Init();
+
 	}
 
 	return hObj;

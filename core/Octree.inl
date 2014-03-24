@@ -120,7 +120,7 @@ namespace mye
 			unsigned int maxDepth) :
 		m_maxDepth(maxDepth)
 		{
-			m_bounds = mye::math::AABBt::FromCenterHalfExtents(center, size * 0.5f);
+			m_bounds = mye::math::AABBTempl::FromCenterHalfExtents(center, size * 0.5f);
 		}
 
 		template <typename T>
@@ -148,7 +148,7 @@ namespace mye
 				return;
 			}
 
-			AABBt bounds = traverser.GetBounds();
+			AABBTempl bounds = traverser.GetBounds();
 
 			OctreeInternalNode *previous = traverser.GetParent();
 			OctreeNode *current = traverser.GetCurrent();
@@ -331,7 +331,7 @@ namespace mye
 		}
 
 		template <typename T>
-		const mye::math::AABBt& Octree<T>::GetBounds(void) const
+		const mye::math::AABBTempl& Octree<T>::GetBounds(void) const
 		{
 			return m_bounds;
 		}		
@@ -366,7 +366,7 @@ namespace mye
 		}
 
 		template <typename T>
-		const mye::math::AABBt& OctreeTraverser<T>::GetBounds(void) const
+		const mye::math::AABBTempl& OctreeTraverser<T>::GetBounds(void) const
 		{
 			return m_bounds;
 		}
@@ -503,7 +503,7 @@ namespace mye
 		}
 
 		OctreeInternalNode::Children __PickSide(
-			const mye::math::AABBt &bounds,
+			const mye::math::AABBTempl &bounds,
 			const mye::math::Vector3 &x)
 		{
 
@@ -577,10 +577,10 @@ namespace mye
 
 		}
 
-		mye::math::AABBt __SplitAABBt(const mye::math::AABBt &bounds, OctreeInternalNode::Children child)
+		mye::math::AABBTempl __SplitAABBt(const mye::math::AABBTempl &bounds, OctreeInternalNode::Children child)
 		{
 
-			mye::math::AABBt AABBt;
+			mye::math::AABBTempl AABBt;
 
 			mye::math::Vector3 oldCenter = bounds.GetCenter();
 			mye::math::Vector3 halfExtents = bounds.GetHalfExtents() * 0.5f;
@@ -589,7 +589,7 @@ namespace mye
 			{
 
 			case OctreeInternalNode::FRONT_LEFT_BOTTOM:
-				AABBt = mye::math::AABBt::FromCenterHalfExtents(
+				AABBt = mye::math::AABBTempl::FromCenterHalfExtents(
 					mye::math::Vector3(
 					oldCenter.x() - halfExtents.x(),
 					oldCenter.y() - halfExtents.y(),
@@ -597,7 +597,7 @@ namespace mye
 					halfExtents);
 				break;
 			case OctreeInternalNode::FRONT_RIGHT_BOTTOM:
-				AABBt = mye::math::AABBt::FromCenterHalfExtents(
+				AABBt = mye::math::AABBTempl::FromCenterHalfExtents(
 					mye::math::Vector3(
 					oldCenter.x() + halfExtents.x(),
 					oldCenter.y() - halfExtents.y(),
@@ -605,7 +605,7 @@ namespace mye
 					halfExtents);
 				break;
 			case OctreeInternalNode::FRONT_RIGHT_TOP:
-				AABBt = mye::math::AABBt::FromCenterHalfExtents(
+				AABBt = mye::math::AABBTempl::FromCenterHalfExtents(
 					mye::math::Vector3(
 					oldCenter.x() + halfExtents.x(),
 					oldCenter.y() + halfExtents.y(),
@@ -613,7 +613,7 @@ namespace mye
 					halfExtents);
 				break;
 			case OctreeInternalNode::FRONT_LEFT_TOP:
-				AABBt = mye::math::AABBt::FromCenterHalfExtents(
+				AABBt = mye::math::AABBTempl::FromCenterHalfExtents(
 					mye::math::Vector3(
 					oldCenter.x() - halfExtents.x(),
 					oldCenter.y() + halfExtents.y(),
@@ -621,7 +621,7 @@ namespace mye
 					halfExtents);
 				break;
 			case OctreeInternalNode::BACK_LEFT_TOP:
-				AABBt = mye::math::AABBt::FromCenterHalfExtents(
+				AABBt = mye::math::AABBTempl::FromCenterHalfExtents(
 					mye::math::Vector3(
 					oldCenter.x() - halfExtents.x(),
 					oldCenter.y() + halfExtents.y(),
@@ -629,7 +629,7 @@ namespace mye
 					halfExtents);
 				break;
 			case OctreeInternalNode::BACK_RIGHT_TOP:
-				AABBt = mye::math::AABBt::FromCenterHalfExtents(
+				AABBt = mye::math::AABBTempl::FromCenterHalfExtents(
 					mye::math::Vector3(
 					oldCenter.x() + halfExtents.x(),
 					oldCenter.y() + halfExtents.y(),
@@ -637,7 +637,7 @@ namespace mye
 					halfExtents);
 				break;
 			case OctreeInternalNode::BACK_RIGHT_BOTTOM:
-				AABBt = mye::math::AABBt::FromCenterHalfExtents(
+				AABBt = mye::math::AABBTempl::FromCenterHalfExtents(
 					mye::math::Vector3(
 					oldCenter.x() + halfExtents.x(),
 					oldCenter.y() - halfExtents.y(),
@@ -645,7 +645,7 @@ namespace mye
 					halfExtents);
 				break;
 			case OctreeInternalNode::BACK_LEFT_BOTTOM:
-				AABBt = mye::math::AABBt::FromCenterHalfExtents(
+				AABBt = mye::math::AABBTempl::FromCenterHalfExtents(
 					mye::math::Vector3(
 					oldCenter.x() - halfExtents.x(),
 					oldCenter.y() - halfExtents.y(),
@@ -659,10 +659,10 @@ namespace mye
 
 		}
 
-		mye::math::AABBt __InverseSplitAABBt(const mye::math::AABBt &bounds, OctreeInternalNode::Children child)
+		mye::math::AABBTempl __InverseSplitAABBt(const mye::math::AABBTempl &bounds, OctreeInternalNode::Children child)
 		{
 
-			mye::math::AABBt AABBt;
+			mye::math::AABBTempl AABBt;
 
 			mye::math::Vector3 oldCenter = bounds.GetCenter();
 			mye::math::Vector3 dCenter = bounds.GetHalfExtents();
@@ -672,7 +672,7 @@ namespace mye
 			{
 
 			case OctreeInternalNode::FRONT_LEFT_BOTTOM:
-				AABBt = mye::math::AABBt::FromCenterHalfExtents(
+				AABBt = mye::math::AABBTempl::FromCenterHalfExtents(
 					mye::math::Vector3(
 					oldCenter.x() + dCenter.x(),
 					oldCenter.y() + dCenter.y(),
@@ -680,7 +680,7 @@ namespace mye
 					halfExtents);
 				break;
 			case OctreeInternalNode::FRONT_RIGHT_BOTTOM:
-				AABBt = mye::math::AABBt::FromCenterHalfExtents(
+				AABBt = mye::math::AABBTempl::FromCenterHalfExtents(
 					mye::math::Vector3(
 					oldCenter.x() - dCenter.x(),
 					oldCenter.y() + dCenter.y(),
@@ -688,7 +688,7 @@ namespace mye
 					halfExtents);
 				break;
 			case OctreeInternalNode::FRONT_RIGHT_TOP:
-				AABBt = mye::math::AABBt::FromCenterHalfExtents(
+				AABBt = mye::math::AABBTempl::FromCenterHalfExtents(
 					mye::math::Vector3(
 					oldCenter.x() - dCenter.x(),
 					oldCenter.y() - dCenter.y(),
@@ -696,7 +696,7 @@ namespace mye
 					halfExtents);
 				break;
 			case OctreeInternalNode::FRONT_LEFT_TOP:
-				AABBt = mye::math::AABBt::FromCenterHalfExtents(
+				AABBt = mye::math::AABBTempl::FromCenterHalfExtents(
 					mye::math::Vector3(
 					oldCenter.x() + dCenter.x(),
 					oldCenter.y() - dCenter.y(),
@@ -704,7 +704,7 @@ namespace mye
 					halfExtents);
 				break;
 			case OctreeInternalNode::BACK_LEFT_TOP:
-				AABBt = mye::math::AABBt::FromCenterHalfExtents(
+				AABBt = mye::math::AABBTempl::FromCenterHalfExtents(
 					mye::math::Vector3(
 					oldCenter.x() + dCenter.x(),
 					oldCenter.y() - dCenter.y(),
@@ -712,7 +712,7 @@ namespace mye
 					halfExtents);
 				break;
 			case OctreeInternalNode::BACK_RIGHT_TOP:
-				AABBt = mye::math::AABBt::FromCenterHalfExtents(
+				AABBt = mye::math::AABBTempl::FromCenterHalfExtents(
 					mye::math::Vector3(
 					oldCenter.x() - dCenter.x(),
 					oldCenter.y() - dCenter.y(),
@@ -720,7 +720,7 @@ namespace mye
 					halfExtents);
 				break;
 			case OctreeInternalNode::BACK_RIGHT_BOTTOM:
-				AABBt = mye::math::AABBt::FromCenterHalfExtents(
+				AABBt = mye::math::AABBTempl::FromCenterHalfExtents(
 					mye::math::Vector3(
 					oldCenter.x() - dCenter.x(),
 					oldCenter.y() + dCenter.y(),
@@ -728,7 +728,7 @@ namespace mye
 					halfExtents);
 				break;
 			case OctreeInternalNode::BACK_LEFT_BOTTOM:
-				AABBt = mye::math::AABBt::FromCenterHalfExtents(
+				AABBt = mye::math::AABBTempl::FromCenterHalfExtents(
 					mye::math::Vector3(
 					oldCenter.x() + dCenter.x(),
 					oldCenter.y() + dCenter.y(),

@@ -142,7 +142,7 @@ namespace mye
 		/* Quaternions */
 
 		template <typename T>
-		mye::core::String __quat_tostring(const mye::math::Quaterniont<T> &q)
+		mye::core::String __quat_tostring(const mye::math::QuaternionTempl<T> &q)
 		{
 
 			std::stringstream ss;
@@ -156,13 +156,13 @@ namespace mye
 		}
 
 		template <typename T, int I>
-		T __quat_get(const mye::math::Quaterniont<T> &q)
+		T __quat_get(const mye::math::QuaternionTempl<T> &q)
 		{
 			return q[I];
 		}
 
 		template <typename T, int I>
-		void __quat_set(mye::math::Quaterniont<T> &q, T b)
+		void __quat_set(mye::math::QuaternionTempl<T> &q, T b)
 		{
 			q[I] = b;
 		}

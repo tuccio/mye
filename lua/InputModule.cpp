@@ -32,7 +32,7 @@ namespace mye
 				class_<InputModule>(MYE_LUA_INPUTMODULE).
 
 				def("HasKeyboard", &InputModule::HasKeyboard).
-				def("Keyboard", &__in_get_keyboard)
+				property("keyboard", &__in_get_keyboard)
 
 			];
 

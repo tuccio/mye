@@ -98,6 +98,7 @@ bool LuaModule::Init(void)
 	luabind::globals(m_lua)["Script"]      = boost::ref(*this);
 	luabind::globals(m_lua)["Input"]       = boost::ref(*game.GetInputModule());
 	luabind::globals(m_lua)["Graphics"]    = boost::ref(*game.GetGraphicsModule());
+	luabind::globals(m_lua)["Physics"]     = boost::ref(*game.GetPhysicsModule());
 
 	luabind::globals(m_lua)["Time"]                = luabind::newtable(m_lua);
 	luabind::globals(m_lua)["ResourceTypeManager"] = boost::ref(ResourceTypeManager::GetSingleton());

@@ -2,6 +2,7 @@
 
 #include "Types.h"
 
+#include <mye/core/Components.h>
 #include <mye/core/Game.h>
 #include <mye/core/InputModule.h>
 
@@ -20,6 +21,8 @@
 #include "LuaModule.h"
 
 #include <mye/d3d11/DX11Module.h>
+
+__MYE_DEFINE_RESOURCE_LUA_CONVERTER(mye::core::BulletCollisionShape)
 
 using namespace luabind;
 using namespace mye::core;
@@ -62,7 +65,14 @@ namespace mye
 
 					def("GetWindow", (IWindow* (GraphicsModule::*) (void)) &GraphicsModule::GetWindow).
 					def("HasWindow", &GraphicsModule::HasWindow).
-					def("Reinterpret", &__graphics_module_reinterpret)
+					def("Reinterpret", &__graphics_module_reinterpret),
+
+				class_<Component>(MYE_LUA_COMPONENT),
+
+				class_<RigidBodyComponent, Component>(MYE_LUA_RIGIDBODY_COMPONENT).
+					def(constructor<BulletCollisionShapePointer, mye::math::Real, mye::math::Vector3, mye::math::Quaternion>()).
+					property("velocity", &RigidBodyComponent::GetVelocity, &RigidBodyComponent::SetVelocity).
+					property("position", &RigidBodyComponent::GetPosition, &RigidBodyComponent::SetPosition)
 
 			];
 

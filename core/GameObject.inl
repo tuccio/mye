@@ -14,6 +14,11 @@ namespace mye
 			return m_behaviour;
 		}
 
+		RigidBodyComponent* GameObject::GetRigidBodyComponent(void)
+		{
+			return m_rigidbody;
+		}
+
 		RenderComponent* GameObject::GetRenderComponent(void)
 		{
 			return m_render;

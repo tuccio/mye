@@ -122,9 +122,9 @@ namespace mye
 		Matrix<T, 4, 4> ScaleMatrix4(const Matrix<T, 3, 1> &scale)
 		{
 			Matrix<T, 4, 4> smatrix(1.0f);
-			smatrix(0, 0) = scale.x();
-			smatrix(1, 1) = scale.y();
-			smatrix(2, 2) = scale.z();
+			smatrix.m00() = scale.x();
+			smatrix.m11() = scale.y();
+			smatrix.m22() = scale.z();
 			return smatrix;
 		}
 
@@ -132,9 +132,9 @@ namespace mye
 		Matrix<T, 4, 4> TranslationMatrix4(const Matrix<T, 3, 1> &translation)
 		{
 			Matrix<T, 4, 4> tmatrix(1.0f);
-			tmatrix(0, 3) = translation.x();
-			tmatrix(1, 3) = translation.y();
-			tmatrix(2, 3) = translation.z();
+			tmatrix.m03() = translation.x();
+			tmatrix.m13() = translation.y();
+			tmatrix.m23() = translation.z();
 			return tmatrix;
 		}
 

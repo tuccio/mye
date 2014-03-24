@@ -45,6 +45,7 @@ namespace mye
 			inline RenderComponent*    GetRenderComponent(void);
 			inline CameraComponent*    GetCameraComponent(void);
 			inline BehaviourComponent* GetBehaviourComponent(void);
+			inline RigidBodyComponent* GetRigidBodyComponent(void);
 
 			inline mye::math::AABBf    GetAABB(void);
 
@@ -84,6 +85,7 @@ namespace mye
 			RenderComponent    *m_render;
 			CameraComponent    *m_camera;
 			BehaviourComponent *m_behaviour;
+			RigidBodyComponent *m_rigidbody;
 
 			bool m_delendum;
 

@@ -30,7 +30,7 @@ namespace mye
 		template <typename T>
 		struct LooseOctreeSpacing
 		{
-			mye::math::AABBt operator() (T &object);
+			mye::math::AABBTempl operator() (T &object);
 		};
 
 		/* Loose Octree Node */

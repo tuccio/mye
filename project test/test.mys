@@ -13,7 +13,7 @@
 			<model name="models/sphere.obj"/>
 		</render>
 	</gameobject>
-	<gameobject name="box">
+	<gameobject name="box1" entity="Box">
 		<transform>
 			<position>1.844995 -1.170000 8.730008</position>
 			<scale>1.000000 1.000000 1.000000</scale>
@@ -42,11 +42,6 @@
 		</camera>
 	</gameobject>
 	<gameobject name="box2" entity="Box">
-		<transform>
-			<position>-1.844995 -1.170000 8.730008</position>
-			<scale>1.000000 1.000000 1.000000</scale>
-			<orientation>1.000000 0.000000 0.000000 0.000000</orientation>
-		</transform>
 		<render>
 			<aabb>
 				<min>-1.000000 -1.000000 -1.000000</min>

@@ -27,6 +27,10 @@ namespace mye
 			void Update(FloatSeconds dt);
 
 			void AddRigidBody(btRigidBody *rigidbody);
+			void RemoveRigidBody(btRigidBody *rigidbody);
+
+			mye::math::Vector3 GetGravity(void) const;
+			void SetGravity(const mye::math::Vector3 &g);
 
 		private:
 
@@ -35,7 +39,7 @@ namespace mye
 			btBroadphaseInterface                  *m_cache;
 			btSequentialImpulseConstraintSolver    *m_solver;
 			btDiscreteDynamicsWorld                *m_world;
-			btAlignedObjectArray<btCollisionShape*> m_shapes;
+			//btAlignedObjectArray<btCollisionShape*> m_shapes;
 
 		};
 

@@ -5,13 +5,13 @@ namespace mye
 	{
 
 		template <typename T>
-		inline AABBt<T> BoundingAABB(const AABBt<T> &AABBt);
+		inline AABBTempl<T> BoundingAABB(const AABBTempl<T> &aabb);
 
 		template <typename T>
-		inline AABBt<T> BoundingAABB(const Triangle<T> &triangle);
+		inline AABBTempl<T> BoundingAABB(const Triangle<T> &triangle);
 
 		template <typename T>
-		inline AABBt<T> BoundingAABB(const Frustumt<T> &frustum);
+		inline AABBTempl<T> BoundingAABB(const FrustumTempl<T> &frustum);
 
 
 	}

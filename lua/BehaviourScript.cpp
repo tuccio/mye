@@ -1,5 +1,7 @@
 #include "BehaviourScript.h"
 
+#include <mye/core/Utils.h>
+
 #include <lua.hpp>
 
 using namespace mye::lua;
@@ -61,7 +63,8 @@ bool BehaviourScript::LoadImpl(void)
 
 	if (!loaded)
 	{
-		luaL_error(m_lua, ("Error while loading " + m_name).CString());
+		const char *error = lua_tostring(m_lua, -1);
+		mye::core::RuntimeError("Error while loading " + m_name + "\n\n" + error);
 	}
 	
 	lua_settop(m_lua, top);

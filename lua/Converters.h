@@ -86,6 +86,43 @@ namespace luabind
 		: default_converter<btVector3>
 	{};
 
+	/* btQuaternion */
+
+	template <>
+	struct default_converter<btQuaternion> :
+		native_converter_base<btQuaternion>
+	{
+
+		inline static int compute_score(lua_State *L, int index)
+		{
+			return (object_cast_nothrow<mye::math::Quaternion>(object(from_stack(L, index))) ? 0 : -1);
+		}
+
+		inline static btQuaternion from(lua_State* L, int index)
+		{
+			mye::math::Quaternion q = object_cast<mye::math::Quaternion>(object(from_stack(L, index)));
+			return btQuaternion(q.x(), q.y(), q.z(), q.w());
+		}
+
+		inline static void to(lua_State* L, const btVector3 &v)
+		{
+			luabind::object o(L, mye::math::Quaternion(v.w(), v.x(), v.y(), v.z()));
+			o.push(L);
+		}
+
+
+	};
+
+	template <>
+	struct default_converter<btQuaternion const>
+		: default_converter<btQuaternion>
+	{};
+
+	template <>
+	struct default_converter<btQuaternion const&>
+		: default_converter<btQuaternion>
+	{};
+
 	/* std::unordered_map<mye::core::String, mye::core::String> */
 
 #define __UNORDEREDMAP_STRING_STRING std::unordered_map<mye::core::String, mye::core::String>
@@ -195,4 +232,28 @@ namespace luabind
 
 #undef __UNORDEREDMAP_STRING_STRING
 
+}
+
+#define __MYE_DEFINE_RESOURCE_LUA_CONVERTER(__TYPE)\
+namespace luabind\
+{\
+	template <>\
+	struct default_converter<boost::shared_ptr<__TYPE>> :\
+		native_converter_base<boost::shared_ptr<__TYPE>>\
+	{\
+		inline static int compute_score(lua_State *L, int index)\
+		{\
+			return (object_cast_nothrow<boost::shared_ptr<mye::core::Resource>>(object(from_stack(L, index))) ? 0 : -1);\
+		}\
+		inline static boost::shared_ptr<__TYPE> from(lua_State* L, int index)\
+		{\
+			auto r = object_cast<boost::shared_ptr<mye::core::Resource>>(object(from_stack(L, index)));\
+			return boost::static_pointer_cast<__TYPE>(r);\
+		}\
+		inline static void to(lua_State* L, const boost::shared_ptr<__TYPE> &p)\
+		{\
+			luabind::object o(L, p);\
+			o.push(L);\
+		}\
+	};\
 }

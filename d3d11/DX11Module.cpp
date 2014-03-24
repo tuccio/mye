@@ -72,17 +72,27 @@ void DX11Module::Render(void)
 			if (rc)
 			{
 
+				RigidBodyComponent *rb = object->GetRigidBodyComponent();
 				TransformComponent *tc = object->GetTransformComponent();
+
 				ModelPointer model = rc->GetModel();
 
 				if (model)
 				{
 
 					model->Load();
-
 					m_mvp->Bind(PIPELINE_VERTEX_SHADER, 0);
-					m_mvp->SetData((viewProjection *
-						tc->GetWorldMatrix()).Data());
+
+					if (rb)
+					{
+						m_mvp->SetData((viewProjection *
+							rb->GetWorldMatrix()).Data());
+					}
+					else
+					{
+						m_mvp->SetData((viewProjection *
+							tc->GetWorldMatrix()).Data());
+					}
 
 					DX11VertexBuffer vertexBuffer(nullptr, "", nullptr, *m_device);
 

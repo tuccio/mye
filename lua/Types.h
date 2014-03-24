@@ -22,7 +22,9 @@
 #define MYE_LUA_QUATERNION_COMPONENT "QuaternionVar"
 #define MYE_LUA_VTRANSFORM_COMPONENT "TransformVar"
 
+#define MYE_LUA_COMPONENT "Component"
 #define MYE_LUA_TRANSFORM_COMPONENT "TransformComponent"
+#define MYE_LUA_RIGIDBODY_COMPONENT "RigidBodyComponent"
 
 #define MYE_LUA_SCRIPT_COMPONENT "ScriptComponent"
 

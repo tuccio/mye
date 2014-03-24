@@ -1,43 +1,62 @@
 function Init()
 
-	--Windows.MessageBox("Sup", "Sup")
-	local box = Physics.Box(vec3(1, 1, 1))
-	-- need some kind of shape resource manager
+	Physics.gravity = vec3(0, 0, 0)
 	
-	local yo = { ["a"] = "0", ["b"] = "1", ["c"] = "2" }
-	yo.sup = "yo"
-	Windows.MessageBox("Test", test(yo))
+	self.id = tonumber(self.name:sub(4))
 	
-	local boxLoader = Script:LoadScriptResourceLoader("BoxLoader")
+	local position = vec3(0, -1.17, 8.73)
 	
-	--local mesh = ResourceTypeManager:CreateResource("Mesh", "", boxLoader, { })
+	if (self.id == 1) then
+		position.x = -4
+	else
+		position.x = 4
+	end
 	
-	--ResourceTypeManager:CreateResource("DX11Shader", nil, nil)
+	local box = ResourceTypeManager:CreateResource(
+		"BulletCollisionShape",
+		"BOX_SHAPE",
+		nil,
+		{ ["type"] = "box", ["halfextents"] = "2 2 2" })
 	
-	--[[
-	
-	-- Manual resource creation
-	
-	local params = { ["type"] = "box" }
-	local box = Physics.ShapeManager.CreateResource("BOX_COLLISION_SHAPE", ScriptResourceLoader("BoxLoader"), params)
-	
-	box:Load()
-		
-	
-	--]]
-	
-	local position = self.transform.position
-	local orientation = self.transform.orientation
-	
-	local mass = 1.5
-	
-	--Windows.MessageBox("Box", "Position: " .. tostring(position) .. "\nOrientation: " .. tostring(orientation))
-	
-	--self:AddComponent(RigidBodyComponent(box, mass, position, orientation))
+	self:AddComponent(
+		RigidBodyComponent(
+			box,
+			1,
+			position,
+			quaternion(1, 0, 0, 0)
+		)
+	)
 
 end
 
 function Update()
+
+	local direction = 3;
+	
+	if (self.id == 2) then
+		direction = - direction
+	end
+
+	if (Input.keyboard:IsPressed(Keyboard.D)) then
+		self.rigidbody.velocity = vec3(direction, 0, 0)
+	end
+	
+	if (Input.keyboard:IsPressed(Keyboard.A)) then
+		self.rigidbody.velocity = vec3(-direction, 0, 0)
+	end
+	
+	if (Input.keyboard:IsPressed(Keyboard.S)) then
+		self.rigidbody.velocity = vec3(0)
+		
+	end
+	
+	if (Input.keyboard:IsPressed(Keyboard.G)) then
+		Physics.gravity = vec3(0, -10, 0)
+	end
+	
+	if (Input.keyboard:IsPressed(Keyboard.F)) then
+		Windows.MessageBox("Position", tostring(self.rigidbody.position))
+	end
 
 end
 

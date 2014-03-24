@@ -7,47 +7,47 @@ namespace mye
 	{
 
 		template <typename T>
-		class Quaterniont;
+		class QuaternionTempl;
 
-		typedef Quaterniont<float> Quaternionf;
-		typedef Quaterniont<double> Quaterniond;
+		typedef QuaternionTempl<float> Quaternionf;
+		typedef QuaternionTempl<double> Quaterniond;
 
-		typedef Quaterniont<Real> Quaternion;
-
-		template <typename T = Real>
-		class Transformt;
-
-		typedef Transformt<float> Transformtf;
-		typedef Transformt<double> Transformtd;
-		typedef Transformt<Real> Transform;
+		typedef QuaternionTempl<Real> Quaternion;
 
 		template <typename T = Real>
-		class AABBt;
+		class TransformTempl;
 
-		typedef AABBt<float> AABBf;
-		typedef AABBt<double> AABBd;
-		typedef AABBt<Real> AABB;
-
-		template <typename T = Real>
-		class Planet;
-
-		typedef Planet<float> Planetf;
-		typedef Planet<double> Planetd;
-		typedef Planet<Real> Plane;
+		typedef TransformTempl<float> Transformtf;
+		typedef TransformTempl<double> Transformtd;
+		typedef TransformTempl<Real> Transform;
 
 		template <typename T = Real>
-		class Frustumt;
+		class AABBTempl;
 
-		typedef Frustumt<float> Frustumf;
-		typedef Frustumt<double> Frustumd;
-		typedef Frustumt<Real> Frustum;
+		typedef AABBTempl<float> AABBf;
+		typedef AABBTempl<double> AABBd;
+		typedef AABBTempl<Real> AABB;
 
 		template <typename T = Real>
-		class Rayt;
+		class PlaneTempl;
 
-		typedef Rayt<float> Rayf;
-		typedef Rayt<double> Rayd;
-		typedef Rayt<Real> Ray;
+		typedef PlaneTempl<float> Planetf;
+		typedef PlaneTempl<double> Planetd;
+		typedef PlaneTempl<Real> Plane;
+
+		template <typename T = Real>
+		class FrustumTempl;
+
+		typedef FrustumTempl<float> Frustumf;
+		typedef FrustumTempl<double> Frustumd;
+		typedef FrustumTempl<Real> Frustum;
+
+		template <typename T = Real>
+		class RayTempl;
+
+		typedef RayTempl<float> Rayf;
+		typedef RayTempl<double> Rayd;
+		typedef RayTempl<Real> Ray;
 
 	}
 

@@ -137,14 +137,14 @@ namespace mye
 			inline const OctreeInternalNode* GetRoot(void) const;
 			inline OctreeInternalNode* GetRoot(void);
 
-			const mye::math::AABBt& GetBounds(void) const;
+			const mye::math::AABBTempl& GetBounds(void) const;
 
 			unsigned int GetMaxDepth(void) const;
 
 		private:
 
 			OctreeInternalNode m_root;
-			mye::math::AABBt m_bounds;
+			mye::math::AABBTempl m_bounds;
 			unsigned int m_maxDepth;
 
 		};
@@ -188,20 +188,20 @@ namespace mye
 
 			Octree<T> *m_octree;
 			std::deque<NodeInfo> m_path;
-			mye::math::AABBt m_bounds;
+			mye::math::AABBTempl m_bounds;
 
 		};
 
 		inline OctreeInternalNode::Children __PickSide(
-			const mye::math::AABBt &AABBt,
+			const mye::math::AABBTempl &AABBt,
 			const mye::math::Vector3 &x);
 
-		inline mye::math::AABBt __SplitAABBt(
-			const mye::math::AABBt &AABBt,
+		inline mye::math::AABBTempl __SplitAABBt(
+			const mye::math::AABBTempl &AABBt,
 			OctreeInternalNode::Children child);
 
-		inline mye::math::AABBt __InverseSplitAABBt(
-			const mye::math::AABBt &AABBt,
+		inline mye::math::AABBTempl __InverseSplitAABBt(
+			const mye::math::AABBTempl &AABBt,
 			OctreeInternalNode::Children child);
 
 	}

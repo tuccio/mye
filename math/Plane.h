@@ -14,16 +14,16 @@ namespace mye
 		};
 
 		template <typename T>
-		class Planet
+		class PlaneTempl
 		{
 
 		public:
 
-			Planet(void);
-			Planet(const Matrix<T, 3, 1> &p,
+			PlaneTempl(void);
+			PlaneTempl(const Matrix<T, 3, 1> &p,
 				const Matrix<T, 3, 1> &n);
 
-			Planet(T a, T b, T c, T d);
+			PlaneTempl(T a, T b, T c, T d);
 
 			inline bool Contains(const Matrix<T, 3, 1> &x) const;
 			inline PlanetSide Side(const Matrix<T, 3, 1> &x) const;
@@ -31,7 +31,7 @@ namespace mye
 			inline const Matrix<T, 3, 1>& Normal(void) const;
 			inline const T& Coefficient(void) const;
 
-			inline Planet Transformt(const Matrix<T, 4, 4> &transform) const;
+			inline PlaneTempl Transformt(const Matrix<T, 4, 4> &transform) const;
 
 		private:
 

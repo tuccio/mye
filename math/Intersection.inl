@@ -5,36 +5,36 @@ namespace mye
 	{
 
 		template <typename T>
-		bool Intersect(const Rayt<T> &Rayt,
+		bool Intersect(const RayTempl<T> &ray,
 			const Sphere<T> &sphere)
 		{
 			return Intersect(Rayt, sphere, Matrix<T, 3, 1>());
 		}
 
 		template <typename T>
-		bool Intersect(const Rayt<T> &Rayt,
+		bool Intersect(const RayTempl<T> &ray,
 			const Sphere<T> &sphere,
 			Matrix<T, 3, 1> &intersectionPoint)
 		{
 
-			Vector3f os = Rayt.GetOrigin() - sphere.GetCenter();
+			Vector3f os = ray.GetOrigin() - sphere.GetCenter();
 
-			float a = Rayt.GetDirection().Dot(Rayt.GetDirection());
-			float b = 2.0f * (Rayt.GetDirection() * Rayt.GetOrigin());
-			float c = Rayt.GetOrigin().Dot(Rayt.GetOrigin())
+			float a = ray.GetDirection().Dot(ray.GetDirection());
+			float b = 2.0f * (ray.GetDirection() * ray.GetOrigin());
+			float c = ray.GetOrigin().Dot(ray.GetOrigin())
 
 		}
 
 		template <typename T>
-		VolumeSide Intersect(const AABBt<T> &a,
-			const AABBt<T> &b)
+		VolumeSide Intersect(const AABBTempl<T> &a,
+			const AABBTempl<T> &b)
 		{
 			throw; // TODO
 		}
 
 		template <typename T>
-		VolumeSide Intersect(const AABBt<T> &AABBt,
-			const Frustumt<T> &frustum)
+		VolumeSide Intersect(const AABBTempl<T> &aabb,
+			const FrustumTempl<T> &frustum)
 		{
 
 			VolumeSide r = VolumeSide::INSIDE;
@@ -42,12 +42,12 @@ namespace mye
 			for (int i = 0; i < 6; i++)
 			{
 
-				const Planet<T> &Planet = frustum.GetPlanet(static_cast<FrustumPlanets>(i));
-				Matrix<T, 3, 1> normal = Planet.Normal();
-				T d = Planet.Coefficient();
+				const PlaneTempl<T> &plane = frustum.GetPlane(static_cast<FrustumPlane>(i));
+				Matrix<T, 3, 1> normal = plane.Normal();
+				T d = plane.Coefficient();
 
-				Matrix<T, 3, 1> min = AABBt.GetMinimum();
-				Matrix<T, 3, 1> max = AABBt.GetMaximum();
+				Matrix<T, 3, 1> min = aabb.GetMinimum();
+				Matrix<T, 3, 1> max = aabb.GetMaximum();
 
 				Matrix<T, 3, 1> n, p;
 
@@ -101,27 +101,27 @@ namespace mye
 		}
 
 		template <typename T>
-		VolumeSide Intersect(const Frustumt<T> &frustum,
-			const AABBt<T> &AABBt)
+		VolumeSide Intersect(const FrustumTempl<T> &frustum,
+			const AABBTempl<T> &aabb)
 		{
-			return Intersect(AABBt, frustum);
+			return Intersect(aabb, frustum);
 		}
 
 		template <typename T>
-		VolumeSide Frustumt<T>::Intersects(const AABBt<T> &AABBt) const
+		VolumeSide FrustumTempl<T>::Intersects(const AABBTempl<T> &aabb) const
 		{
-			return Intersect(AABBt, *this);
+			return Intersect(aabb, *this);
 		}
 
 		template <typename T>
-		VolumeSide AABBt<T>::Intersects(const Frustumt<T> &frustum) const
+		VolumeSide AABBTempl<T>::Intersects(const FrustumTempl<T> &frustum) const
 		{
 			return Intersect(*this, frustum);
 		}
 
 		template <typename T>
-		VolumeSide Intersect(const Frustumt<T> &a,
-			const Frustumt<T> &b)
+		VolumeSide Intersect(const FrustumTempl<T> &a,
+			const FrustumTempl<T> &b)
 		{
 			throw; // TODO
 		}
@@ -138,14 +138,14 @@ namespace mye
 
 				case VolumeType::AABBt:
 
-					return mye::math::Intersect<T>(static_cast<const AABBt<T>&>(*this),
-						static_cast<const AABBt<T>&>(volume));
+					return mye::math::Intersect<T>(static_cast<const AABBTempl<T>&>(*this),
+						static_cast<const AABBTempl<T>&>(volume));
 					break;
 
 				case VolumeType::FRUSTUM:
 
-					return mye::math::Intersect<T>(static_cast<const AABBt<T>&>(*this),
-						static_cast<const Frustumt<T>&>(volume));
+					return mye::math::Intersect<T>(static_cast<const AABBTempl<T>&>(*this),
+						static_cast<const FrustumTempl<T>&>(volume));
 
 					break;
 
@@ -163,14 +163,14 @@ namespace mye
 
 				case VolumeType::AABBt:
 
-					return mye::math::Intersect<T>(static_cast<const Frustumt<T>&>(*this),
-						static_cast<const AABBt<T>&>(volume));
+					return mye::math::Intersect<T>(static_cast<const FrustumTempl<T>&>(*this),
+						static_cast<const AABBTempl<T>&>(volume));
 					break;
 
 				case VolumeType::FRUSTUM:
 
-					return mye::math::Intersect<T>(static_cast<const Frustumt<T>&>(*this),
-						static_cast<const Frustumt<T>&>(volume));
+					return mye::math::Intersect<T>(static_cast<const FrustumTempl<T>&>(*this),
+						static_cast<const FrustumTempl<T>&>(volume));
 					break;
 
 				default:

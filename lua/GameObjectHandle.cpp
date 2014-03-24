@@ -27,11 +27,6 @@ namespace mye
 
 			module(L)
 			[
-				class_<Component>("Component")
-			];
-
-			module(L)
-			[
 
 				class_<GameObjectHandle>(MYE_LUA_GAMEOBJECTHANDLE).
 
@@ -43,7 +38,9 @@ namespace mye
 					def("Exists", &__goh_exists).
 					def("Destroy", &__goh_destroy).
 
-					def("__tostring", &__goh_tostring)
+					def("__tostring", &__goh_tostring).
+
+					property("name", &__goh_getname)
 
 			];
 

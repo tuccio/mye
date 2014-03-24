@@ -455,38 +455,38 @@ void CreateAABBt(std::list<DX11VertexBuffer> &list,
 
 	CreateQuad(list,
 		window,
-		corners[static_cast<int>(AABBtCorners::LEFT_BOTTOM_NEAR)],
-		corners[static_cast<int>(AABBtCorners::RIGHT_BOTTOM_NEAR)],
-		corners[static_cast<int>(AABBtCorners::RIGHT_TOP_NEAR)],
-		corners[static_cast<int>(AABBtCorners::LEFT_TOP_NEAR)]);
+		corners[static_cast<int>(AABBCorners::LEFT_BOTTOM_NEAR)],
+		corners[static_cast<int>(AABBCorners::RIGHT_BOTTOM_NEAR)],
+		corners[static_cast<int>(AABBCorners::RIGHT_TOP_NEAR)],
+		corners[static_cast<int>(AABBCorners::LEFT_TOP_NEAR)]);
 
 	CreateQuad(list,
 		window,
-		corners[static_cast<int>(AABBtCorners::LEFT_BOTTOM_FAR)],
-		corners[static_cast<int>(AABBtCorners::RIGHT_BOTTOM_FAR)],
-		corners[static_cast<int>(AABBtCorners::RIGHT_TOP_FAR)],
-		corners[static_cast<int>(AABBtCorners::LEFT_TOP_FAR)]);
+		corners[static_cast<int>(AABBCorners::LEFT_BOTTOM_FAR)],
+		corners[static_cast<int>(AABBCorners::RIGHT_BOTTOM_FAR)],
+		corners[static_cast<int>(AABBCorners::RIGHT_TOP_FAR)],
+		corners[static_cast<int>(AABBCorners::LEFT_TOP_FAR)]);
 
 	CreateQuad(list,
 		window,
-		corners[static_cast<int>(AABBtCorners::LEFT_TOP_NEAR)],
-		corners[static_cast<int>(AABBtCorners::RIGHT_TOP_NEAR)],
-		corners[static_cast<int>(AABBtCorners::RIGHT_TOP_FAR)],
-		corners[static_cast<int>(AABBtCorners::LEFT_TOP_FAR)]);
+		corners[static_cast<int>(AABBCorners::LEFT_TOP_NEAR)],
+		corners[static_cast<int>(AABBCorners::RIGHT_TOP_NEAR)],
+		corners[static_cast<int>(AABBCorners::RIGHT_TOP_FAR)],
+		corners[static_cast<int>(AABBCorners::LEFT_TOP_FAR)]);
 
 	CreateQuad(list,
 		window,
-		corners[static_cast<int>(AABBtCorners::RIGHT_BOTTOM_NEAR)],
-		corners[static_cast<int>(AABBtCorners::RIGHT_TOP_NEAR)],
-		corners[static_cast<int>(AABBtCorners::RIGHT_TOP_FAR)],
-		corners[static_cast<int>(AABBtCorners::RIGHT_BOTTOM_FAR)]);
+		corners[static_cast<int>(AABBCorners::RIGHT_BOTTOM_NEAR)],
+		corners[static_cast<int>(AABBCorners::RIGHT_TOP_NEAR)],
+		corners[static_cast<int>(AABBCorners::RIGHT_TOP_FAR)],
+		corners[static_cast<int>(AABBCorners::RIGHT_BOTTOM_FAR)]);
 
 	CreateQuad(list,
 		window,
-		corners[static_cast<int>(AABBtCorners::LEFT_BOTTOM_NEAR)],
-		corners[static_cast<int>(AABBtCorners::LEFT_TOP_NEAR)],
-		corners[static_cast<int>(AABBtCorners::LEFT_TOP_FAR)],
-		corners[static_cast<int>(AABBtCorners::LEFT_BOTTOM_FAR)]);
+		corners[static_cast<int>(AABBCorners::LEFT_BOTTOM_NEAR)],
+		corners[static_cast<int>(AABBCorners::LEFT_TOP_NEAR)],
+		corners[static_cast<int>(AABBCorners::LEFT_TOP_FAR)],
+		corners[static_cast<int>(AABBCorners::LEFT_BOTTOM_FAR)]);
 
 }
 

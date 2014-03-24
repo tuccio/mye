@@ -1,3 +1,4 @@
+#include <mye/core/BulletCollisionShape.h>
 #include <mye/core/Entity.h>
 #include <mye/core/ModelManager.h>
 #include <mye/core/OctreeSceneModule.h>
@@ -39,6 +40,7 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 	ResourceTypeManager resourceTypeManager;
 	EntityTemplateManager entityTemplateManager("./entities/");
 	ModelManager modelManager;
+	BulletCollisionShapeManager bulletCollisionShape;
 
 	MouseKeyboardInput input;
 	GameObjectsModule  gameobjects;

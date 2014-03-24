@@ -130,6 +130,11 @@ namespace mye
 									rvalue = object(L, boost::ref(*static_cast<TransformComponent*>(component)));
 									break;
 
+								case ComponentTypes::RIGIDBODY:
+
+									rvalue = object(L, boost::ref(*static_cast<RigidBodyComponent*>(component)));
+									break;
+
 								default:
 									break;
 								}
@@ -243,9 +248,18 @@ namespace mye
 							auto value = object_cast<TransformComponent>(object(from_stack(L, 3)));
 							*static_cast<TransformComponent*>(component) = value;
 
-							// TODO: Add the object to the list of the moved objects
+							break;
+						}
+
+					case ComponentTypes::RIGIDBODY:
+
+						{
+
+							auto value = object_cast<RigidBodyComponent>(object(from_stack(L, 3)));
+							*static_cast<RigidBodyComponent*>(component) = value;
 
 							break;
+
 						}
 
 // 					case COMPONENT_TRANSFORM:

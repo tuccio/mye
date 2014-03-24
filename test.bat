@@ -1,1 +1,0 @@
-"D:\Documenti\mye\Debug\mye.exe" "D:\Documenti\mye\project test" test.mys

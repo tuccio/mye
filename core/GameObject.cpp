@@ -12,7 +12,8 @@ GameObject::GameObject(void) :
 	m_transform(nullptr),
 	m_render(nullptr),
 	m_camera(nullptr),
-	m_behaviour(nullptr)
+	m_behaviour(nullptr),
+	m_rigidbody(nullptr)
 {
 }
 
@@ -22,7 +23,8 @@ GameObject::GameObject(const String &name) :
 	m_transform(nullptr),
 	m_render(nullptr),
 	m_camera(nullptr),
-	m_behaviour(nullptr)
+	m_behaviour(nullptr),
+	m_rigidbody(nullptr)
 {
 }
 
@@ -68,7 +70,10 @@ Component* GameObject::AddComponent(const Component &component)
 
 		case ComponentTypes::BEHAVIOUR:
 			m_behaviour = static_cast<BehaviourComponent*>(newComponent);
-			Init();
+			break;
+
+		case ComponentTypes::RIGIDBODY:
+			m_rigidbody = static_cast<RigidBodyComponent*>(newComponent);
 			break;
 
 		}
@@ -120,6 +125,10 @@ void GameObject::RemoveComponent(const String &name)
 
 		case ComponentTypes::BEHAVIOUR:
 			m_behaviour = nullptr;
+			break;
+
+		case ComponentTypes::RIGIDBODY:
+			m_rigidbody = nullptr;
 			break;
 
 		}
