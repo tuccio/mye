@@ -23,11 +23,11 @@ namespace mye
 			template <typename ResourceType>
 			boost::shared_ptr<ResourceType> CreateResource(const String &name,
 				ManualResourceLoader *manual = nullptr,
-				const Resource::ParametersList &params = Resource::ParametersList());
+				const Parameters &params = Parameters());
 
 			inline boost::shared_ptr<Resource> CreateResource(const String &name,
 				ManualResourceLoader *manual = nullptr,
-				const Resource::ParametersList &params = Resource::ParametersList());
+				const Parameters &params = Parameters());
 
 			template <typename ResourceType>
 			boost::shared_ptr<ResourceType> GetResource(const String &name);
@@ -42,7 +42,7 @@ namespace mye
 
 			virtual Resource* CreateImpl(const String &name,
 				ManualResourceLoader *manual,
-				const Resource::ParametersList &params);
+				const Parameters &params);
 
 			virtual void FreeImpl(Resource* resource);
 

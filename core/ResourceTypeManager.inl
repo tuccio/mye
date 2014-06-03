@@ -6,7 +6,7 @@ namespace mye
 		boost::shared_ptr<ResourceType> ResourceTypeManager::CreateResource(const String &type,
 			const String &name,
 			ManualResourceLoader *manual,
-			const Resource::ParametersList &params)
+			const Parameters &params)
 		{
 
 			ResourceManager *manager = GetResourceManager(type);
@@ -23,7 +23,7 @@ namespace mye
 		boost::shared_ptr<Resource> ResourceTypeManager::CreateResource(const String &type,
 			const String &name,
 			ManualResourceLoader *manual,
-			const Resource::ParametersList &params)
+			const Parameters &params)
 		{
 			return CreateResource<Resource>(type, name, manual, params);
 		}

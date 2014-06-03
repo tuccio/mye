@@ -20,7 +20,7 @@ namespace mye
 
 			void PostDestroy(GameObjectHandle hObj);
 
-			void Update(FloatSeconds dt);
+			void Update(void);
 			void FinalizeUpdate(void);
 
 		private:

@@ -345,7 +345,7 @@ int main(int argc, char *argv[])
 void CompileShaders(void)
 {
 
-	Resource::ParametersList params;
+	Parameters params;
 
 	std::vector<D3D11_INPUT_ELEMENT_DESC> vDesc(1);
 

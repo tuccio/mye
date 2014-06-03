@@ -19,7 +19,8 @@ OctreeSceneModule::~OctreeSceneModule(void)
 {
 }
 
-/*
+#ifdef __MYE_NO_OCTREE
+
 SceneModule::ObjectsList OctreeSceneModule::GetVisibleObjects(void)
 {
 	
@@ -42,7 +43,46 @@ void OctreeSceneModule::AddGameObject(const GameObjectHandle &hObj)
 void OctreeSceneModule::RemoveGameObject(const GameObjectHandle &hObj)
 {
 	m_objects.erase(std::find(m_objects.begin(), m_objects.end(), hObj));
-}*/
+}
+
+void OctreeSceneModule::ApplyUpdates(void)
+{
+
+}
+
+void OctreeSceneModule::Reset(
+	const mye::math::Vector3 &center,
+	float size,
+	unsigned int maxdepth,
+	unsigned int looseness)
+{
+
+	m_objects.clear();
+
+}
+
+SceneModule::ObjectsList OctreeSceneModule::GetObjects(void)
+{
+
+	SceneModule::ObjectsList objects;
+
+	for (GameObjectHandle hObj : m_objects)
+	{
+
+		GameObject *object = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
+
+		if (object)
+		{
+			objects.push_back(object);
+		}
+
+	}
+
+	return objects;
+
+}
+
+#else
 
 SceneModule::ObjectsList OctreeSceneModule::GetVisibleObjects(void)
 {
@@ -220,3 +260,5 @@ void OctreeSceneModule::Reset(
 	m_octree = LooseOctree<GameObjectHandle>(center, size, maxdepth, looseness);
 
 }
+
+#endif

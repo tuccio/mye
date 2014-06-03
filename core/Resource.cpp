@@ -168,12 +168,12 @@ void Resource::UnloadImpl(void)
 
 }
 
-void Resource::SetParametersList(const ParametersList &params)
+void Resource::SetParametersList(const Parameters &params)
 {
 	m_params = params;
 }
 
-Resource::ParametersList Resource::GetParametersList(void) const
+Parameters Resource::GetParametersList(void) const
 {
 	return m_params;
 }

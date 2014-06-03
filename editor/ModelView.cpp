@@ -24,7 +24,7 @@ ModelView::ModelView(void) :
 	m_vbuffer(nullptr, "", nullptr, g_device),
 	m_PlanetBuffer(nullptr, "", nullptr, g_device),
 	m_mvpBuffer(nullptr, "", nullptr, g_device),
-	m_transform(Transformf::Identity())
+	m_transform(Transform::Identity())
 {
 	m_toolbar.SetIconSize(mye::math::Vector2i(24, 24));
 }
@@ -69,7 +69,7 @@ void ModelView::Activate(void)
 					m_model.reset();
 				}
 
-				Resource::ParametersList params;
+				Parameters params;
 
 				params["normals"]   = "true";
 				params["texcoords"] = "true";

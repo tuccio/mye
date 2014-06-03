@@ -8,12 +8,12 @@ GraphicsModule::GraphicsModule(void) :
 	m_mainWindowPointer = nullptr;
 }
 
-const ColorRGBA& GraphicsModule::GetClearColor(void) const
+const mye::math::Vector4f& GraphicsModule::GetClearColor(void) const
 {
 	return m_clearColor;
 }
 
-void GraphicsModule::SetClearColor(const ColorRGBA &color)
+void GraphicsModule::SetClearColor(const mye::math::Vector4f &color)
 {
 	m_clearColor = color;
 }

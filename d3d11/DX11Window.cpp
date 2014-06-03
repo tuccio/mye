@@ -188,7 +188,7 @@ void DX11Window::SetMSAA(MSAA msaa)
 	m_msaa = msaa;
 }
 
-void DX11Window::ClearColorBuffer(const mye::core::ColorRGBA &color)
+void DX11Window::ClearColorBuffer(const mye::math::Vector4f &color)
 {
 	m_device.GetImmediateContext()->ClearRenderTargetView(
 		m_renderTargetView,

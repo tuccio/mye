@@ -19,7 +19,7 @@ namespace mye
 			return ss.str().c_str();
 		}
 
-		const void* StringToPointer(const String &str)
+		void* StringToPointer(const String &str)
 		{
 			std::stringstream ss(str.CString());
 			void *ptr;

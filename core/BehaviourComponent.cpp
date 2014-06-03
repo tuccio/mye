@@ -55,7 +55,7 @@ void BehaviourComponent::Init(void)
 
 }
 
-void BehaviourComponent::Update(FloatSeconds dt)
+void BehaviourComponent::Update(void)
 {
 
 	lua_State *L = m_script->GetLuaState();

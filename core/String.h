@@ -55,6 +55,8 @@ namespace mye
 
 			String Repeat(unsigned int n) const;
 
+			String Substring(Iterator from, Iterator to);
+
 			inline String operator+ (const String &s) const;
 			inline String operator+ (const char *s) const;
 
@@ -103,8 +105,16 @@ namespace mye
 			Iterator(const Iterator &it);
 
 			inline Iterator& operator++ (void);
+			inline Iterator& operator-- (void);
+
 			inline bool operator== (const Iterator &it) const;
 			inline bool operator!= (const Iterator &it) const;
+
+			inline int operator- (Iterator it);
+
+			inline Iterator operator+ (size_t pos);
+			inline Iterator operator- (size_t pos);
+
 			inline char& operator* (void) const;
 
 		private:

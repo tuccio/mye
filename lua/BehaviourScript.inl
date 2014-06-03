@@ -31,10 +31,29 @@ namespace mye
 
 		};
 
+		struct __LuaStackCleaner
+		{
+
+			__LuaStackCleaner(lua_State *lua) :
+				lua(lua)
+			{
+				top = lua_gettop(lua);
+			}
+
+			~__LuaStackCleaner(void)
+			{
+				lua_settop(lua, top);
+			}
+
+			lua_State *lua;
+			int top;
+
+		};
+
 		template <typename R>
 		R BehaviourScript::Call(const mye::core::String &f) const
 		{
-
+			
 			using namespace luabind;
 
 			if (m_registryReference == LUA_NOREF)
@@ -42,6 +61,7 @@ namespace mye
 				throw CallException(CallExceptionError::UNDEFINED_SCRIPT);
 			}
 
+			__LuaStackCleaner stackCleaner(m_lua);
 			lua_rawgeti(m_lua, LUA_REGISTRYINDEX, m_registryReference);
 
 			lua_pushstring(m_lua, f.CString());
@@ -56,8 +76,11 @@ namespace mye
 
 			try
 			{
+
 				object function(from_stack(m_lua, -1));
+
 				return static_cast<R>(call_function<R>(function));
+
 			}
 			catch (error e)
 			{
@@ -81,6 +104,7 @@ namespace mye
 				throw CallException(CallExceptionError::UNDEFINED_SCRIPT);
 			}
 
+			__LuaStackCleaner stackCleaner(m_lua);
 			lua_rawgeti(m_lua, LUA_REGISTRYINDEX, m_registryReference);
 
 			lua_pushstring(m_lua, f.CString());
@@ -123,6 +147,7 @@ namespace mye
 				throw CallException(CallExceptionError::UNDEFINED_SCRIPT);
 			}
 
+			__LuaStackCleaner stackCleaner(m_lua);
 			lua_rawgeti(m_lua, LUA_REGISTRYINDEX, m_registryReference);
 
 			lua_pushstring(m_lua, f.CString());

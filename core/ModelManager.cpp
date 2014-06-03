@@ -15,7 +15,7 @@ ModelManager::~ModelManager(void)
 
 Model* ModelManager::CreateImpl(const String &name,
 								ManualResourceLoader *manual,
-								const Resource::ParametersList &params)
+								const Parameters &params)
 {
 	return (new Model(this, name, manual));
 }

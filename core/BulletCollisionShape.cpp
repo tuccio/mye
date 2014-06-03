@@ -19,22 +19,18 @@ bool BulletCollisionShape::LoadImpl(void)
 {
 
 	bool loaded = false;
-	auto it = m_params.find("type");
 
-	if (it != m_params.end())
+	if (m_params.Contains("type"))
 	{
 
-		if (it->second == "box")
+		String type = m_params.GetString("type");
+
+		if (type == "box" && m_params.Contains("halfextents"))
 		{
 
-			it = m_params.find("halfextents");
-
-			if (it != m_params.end())
-			{
-				mye::math::Vector3 h = ParseVector3<mye::math::Real>(it->second);
-				m_shape = new btBoxShape(btVector3(h.x(),  h.y(), h.z()));
-				loaded = true;
-			}
+			mye::math::Vector3 h = m_params.GetVector3<float>("halfextents");
+			m_shape = new btBoxShape(btVector3(h.x(),  h.y(), h.z()));
+			loaded = true;
 
 		}
 
@@ -78,7 +74,7 @@ BulletCollisionShapeManager::BulletCollisionShapeManager(void) :
 
 BulletCollisionShape* BulletCollisionShapeManager::CreateImpl(const String &name,
 								 ManualResourceLoader *manual,
-								 const Resource::ParametersList &params)
+								 const Parameters &params)
 {
 	return new BulletCollisionShape(this, name, manual);
 }

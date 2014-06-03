@@ -2,6 +2,7 @@
 
 #include "Singleton.h"
 #include "ResourceManager.h"
+#include "Parameters.h"
 
 #include <string>
 #include <unordered_map>
@@ -32,12 +33,12 @@ namespace mye
 			inline boost::shared_ptr<ResourceType> CreateResource(const String &type,
 				const String &name,
 				ManualResourceLoader *manual = nullptr,
-				const Resource::ParametersList &params = Resource::ParametersList());
+				const Parameters &params = Parameters());
 
 			inline boost::shared_ptr<Resource> CreateResource(const String &type,
 				const String &name,
 				ManualResourceLoader *manual = nullptr,
-				const Resource::ParametersList &params = Resource::ParametersList());
+				const Parameters &params = Parameters());
 			
 			template <typename ResourceType>
 			inline boost::shared_ptr<ResourceType> GetResource(const String &type,

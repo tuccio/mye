@@ -27,8 +27,7 @@ namespace mye
 
 			Entity(ResourceManager *owner,
 				const String &name,
-				ManualResourceLoader *manual,
-				const String &entityDirectory = "");
+				ManualResourceLoader *manual);
 
 			void Insert(Component *c);
 			void Clear(void);
@@ -53,7 +52,6 @@ namespace mye
 		private:
 
 			std::vector<Component*> m_components;
-			String m_entityDirectory;
 
 		};
 
@@ -71,13 +69,9 @@ namespace mye
 
 			Entity* CreateImpl(const String &name,
 				ManualResourceLoader *manual,
-				const Resource::ParametersList &params);
+				const Parameters &params);
 
 			virtual void FreeImpl(Resource* resource);
-
-		private:
-
-			String m_entityDirectory;
 
 		};
 
@@ -98,8 +92,6 @@ namespace mye
 				VEC4,
 				VEC4I,
 				QUATERNION,
-				RGB,
-				RGBA,
 				GAMEOBJECTHANDLE
 			};
 
@@ -123,17 +115,15 @@ namespace mye
 				{
 
 					add
-						("string", TypeEnum::STRING)
-						("bool", TypeEnum::BOOL)
-						("int", TypeEnum::INT)
-						("float", TypeEnum::FLOAT)
-						("vec3", TypeEnum::VEC3)
-						("vec3i", TypeEnum::VEC3I)
-						("vec4", TypeEnum::VEC4)
-						("vec4i", TypeEnum::VEC4I)
-						("quaternion", TypeEnum::QUATERNION)
-						("RGB", TypeEnum::RGB)
-						("RGBA", TypeEnum::RGBA)
+						("string",           TypeEnum::STRING)
+						("bool",             TypeEnum::BOOL)
+						("int",              TypeEnum::INT)
+						("float",            TypeEnum::FLOAT)
+						("vec3",             TypeEnum::VEC3)
+						("vec3i",            TypeEnum::VEC3I)
+						("vec4",             TypeEnum::VEC4)
+						("vec4i",            TypeEnum::VEC4I)
+						("quaternion",       TypeEnum::QUATERNION)
 						("GameObjectHandle", TypeEnum::GAMEOBJECTHANDLE);
 
 				}

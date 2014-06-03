@@ -28,40 +28,40 @@ namespace mye
 			typedef Matrix<T, 4, 1> VectorType;
 
 			module(L)
-				[
+			[
 
-					class_<VectorType>(classname).
+				class_<VectorType>(classname).
 
-					def(constructor<>()).
-					def(constructor<T>()).
-					def(constructor<T, T, T, T>()).
-					def(constructor<const Matrix<T, 3, 1>&, T>()).
-					def(constructor<const VectorType&>()).
+				def(constructor<>()).
+				def(constructor<T>()).
+				def(constructor<T, T, T, T>()).
+				def(constructor<const Matrix<T, 3, 1>&, T>()).
+				def(constructor<const VectorType&>()).
 
-					def("__add", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_add<4, T>).
-					def("__add", (VectorType (*) (const VectorType&, T)) &__vec_add<4, T>).
+				def("__add", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_add<4, T>).
+				def("__add", (VectorType (*) (const VectorType&, T)) &__vec_add<4, T>).
 
-					def("__sub", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_sub<4, T>).
-					def("__sub", (VectorType (*) (const VectorType&, T)) &__vec_sub<4, T>).
+				def("__sub", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_sub<4, T>).
+				def("__sub", (VectorType (*) (const VectorType&, T)) &__vec_sub<4, T>).
 
-					def("__mul", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_mul<4, T>).
-					def("__mul", (VectorType (*) (const VectorType&, T)) &__vec_mul<4, T>).
+				def("__mul", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_mul<4, T>).
+				def("__mul", (VectorType (*) (const VectorType&, T)) &__vec_mul<4, T>).
 
-					def("__div", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_div<4, T>).
-					def("__div", (VectorType (*) (const VectorType&, T)) &__vec_div<4, T>).
+				def("__div", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_div<4, T>).
+				def("__div", (VectorType (*) (const VectorType&, T)) &__vec_div<4, T>).
 
-					def(const_self == const_self).
+				def(const_self == const_self).
 
-					def(- const_self).
+				def(- const_self).
 
-					def("__tostring", &__vec_tostring<4, T>).
+				def("__tostring", &__vec_tostring<4, T>).
 
-					property("x", &__vec_get<4, T, 0>, &__vec_set<4, T, 0>).
-					property("y", &__vec_get<4, T, 1>, &__vec_set<4, T, 1>).
-					property("z", &__vec_get<4, T, 2>, &__vec_set<4, T, 2>).
-					property("w", &__vec_get<4, T, 3>, &__vec_set<4, T, 3>)
+				property("x", &__vec_get<4, T, 0>, &__vec_set<4, T, 0>).
+				property("y", &__vec_get<4, T, 1>, &__vec_set<4, T, 1>).
+				property("z", &__vec_get<4, T, 2>, &__vec_set<4, T, 2>).
+				property("w", &__vec_get<4, T, 3>, &__vec_set<4, T, 3>)
 
-				];
+			];
 
 		}
 
@@ -159,6 +159,7 @@ namespace mye
 
 					def(constructor<>()).
 					def(constructor<float, float, float, float>()).
+					def(constructor<const Matrix<float, 3, 1>&, float>()).
 
 					def("__tostring", &__quat_tostring<float>).
 

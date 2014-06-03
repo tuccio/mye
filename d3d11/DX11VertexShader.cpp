@@ -103,12 +103,10 @@ bool DX11VertexShader::LoadImpl(void)
 					&m_shader)))
 		{
 
-			auto it = m_params.find("inputLayoutVector");
-
-			if (it != m_params.end())
+			if (m_params.Contains("inputLayoutVector"))
 			{
 
-				const void *ptr = mye::core::StringToPointer(it->second);
+				const void *ptr = m_params.GetPointer("inputLayoutVector");
 
 				const std::vector<D3D11_INPUT_ELEMENT_DESC>* vDesc = static_cast<const std::vector<D3D11_INPUT_ELEMENT_DESC>*>(ptr);
 

@@ -13,6 +13,7 @@
 #include <lua.hpp>
 #include <luabind/luabind.hpp>
 #include <luabind/copy_policy.hpp>
+#include <luabind/shared_ptr_converter.hpp>
 
 #include "Debug.h"
 
@@ -135,6 +136,11 @@ namespace mye
 									rvalue = object(L, boost::ref(*static_cast<RigidBodyComponent*>(component)));
 									break;
 
+								case ComponentTypes::TEXT2D:
+
+									rvalue = object(L, boost::ref(*static_cast<Text2DComponent*>(component)));
+									break;
+
 								default:
 									break;
 								}
@@ -193,9 +199,13 @@ namespace mye
 		int NewIndexOverload(lua_State *L)
 		{
 
+			int top = lua_gettop(L);
+
 			object obj1(from_stack(L, 1));
 
 			const char *s = lua_tostring(L, 2);
+
+			Component *component = nullptr;
 
 			if (object_cast_nothrow<GameObjectHandle>(obj1))
 			{
@@ -212,74 +222,81 @@ namespace mye
 				lua_call(L, 2, 1);
 
 				object wrappedComponent(from_stack(L, -1));
-				auto component = object_cast<Component*>(wrappedComponent);
+				component = object_cast<Component*>(wrappedComponent);
 
-				if (component)
+				switch (component->GetComponentType())
 				{
 
-					switch (component->GetComponentType())
+				case ComponentTypes::VARIABLE:
 					{
 
-					case ComponentTypes::VARIABLE:
-						{
+						auto tmp = static_cast<VariableComponent<char>*>(component);
+						std::type_index type = tmp->GetVariableType();
 
-							auto tmp = static_cast<VariableComponent<char>*>(component);
-							std::type_index type = tmp->GetVariableType();
+						VARIABLE_COMPONENT_CAST_SET_BEGIN(float)
+						VARIABLE_COMPONENT_CAST_SET_BLOCK(int)
+						VARIABLE_COMPONENT_CAST_SET_BLOCK(bool)
+						VARIABLE_COMPONENT_CAST_SET_BLOCK(String)
+						VARIABLE_COMPONENT_CAST_SET_BLOCK(Vector3f)
+						VARIABLE_COMPONENT_CAST_SET_BLOCK(Vector3i)
+						VARIABLE_COMPONENT_CAST_SET_BLOCK(Vector4f)
+						VARIABLE_COMPONENT_CAST_SET_BLOCK(Vector4i)
+						VARIABLE_COMPONENT_CAST_SET_BLOCK(Quaternionf)
+						VARIABLE_COMPONENT_CAST_SET_BLOCK(GameObjectHandle)
 
-							VARIABLE_COMPONENT_CAST_SET_BEGIN(float)
-							VARIABLE_COMPONENT_CAST_SET_BLOCK(int)
-							VARIABLE_COMPONENT_CAST_SET_BLOCK(bool)
-							VARIABLE_COMPONENT_CAST_SET_BLOCK(String)
-							VARIABLE_COMPONENT_CAST_SET_BLOCK(Vector3f)
-							VARIABLE_COMPONENT_CAST_SET_BLOCK(Vector3i)
-							VARIABLE_COMPONENT_CAST_SET_BLOCK(Vector4f)
-							VARIABLE_COMPONENT_CAST_SET_BLOCK(Vector4i)
-							VARIABLE_COMPONENT_CAST_SET_BLOCK(Quaternionf)
-							VARIABLE_COMPONENT_CAST_SET_BLOCK(GameObjectHandle)
+					}
 
-						}
-						
-						break;
+					break;
 
-					case ComponentTypes::TRANSFORM:
+				case ComponentTypes::TRANSFORM:
 
-						{
+					{
 
-							auto value = object_cast<TransformComponent>(object(from_stack(L, 3)));
-							*static_cast<TransformComponent*>(component) = value;
+						auto value = object_cast<TransformComponent>(object(from_stack(L, 3)));
+						*static_cast<TransformComponent*>(component) = value;
 
-							break;
-						}
-
-					case ComponentTypes::RIGIDBODY:
-
-						{
-
-							auto value = object_cast<RigidBodyComponent>(object(from_stack(L, 3)));
-							*static_cast<RigidBodyComponent*>(component) = value;
-
-							break;
-
-						}
-
-// 					case COMPONENT_TRANSFORM:
-// 						{
-// 							auto value = object_cast<Transformf>(object(from_stack(L, 3)));
-// 							static_cast<MYE_LUA_COMPONENT_WRAP_TYPE(TransformComponent)>(MYE_LUA_COMPONENT_UNWRAP(component))->Set(value);
-// 							break;
-// 						}
-
-					default:
 						break;
 					}
 
-				}
+				case ComponentTypes::RIGIDBODY:
 
-				lua_pop(L, 2);
+					{
+
+						auto value = object_cast<RigidBodyComponent>(object(from_stack(L, 3)));
+						*static_cast<RigidBodyComponent*>(component) = value;
+
+						break;
+
+					}
+
+				case ComponentTypes::TEXT2D:
+
+					{
+
+						auto value = object_cast<Text2DComponent>(object(from_stack(L, 3)));
+						*static_cast<Text2DComponent*>(component) = value;
+
+						break;
+
+					}
+
+					// 					case COMPONENT_TRANSFORM:
+					// 						{
+					// 							auto value = object_cast<Transformf>(object(from_stack(L, 3)));
+					// 							static_cast<MYE_LUA_COMPONENT_WRAP_TYPE(TransformComponent)>(MYE_LUA_COMPONENT_UNWRAP(component))->Set(value);
+					// 							break;
+					// 						}
+
+				default:
+					break;
+
+				}
 
 			}
 			else
 			{
+
+				//lua_pop(L, 2);
 
 				lua_pushvalue(L, lua_upvalueindex(1));
 				lua_pushvalue(L, 1);
@@ -288,7 +305,10 @@ namespace mye
 
 				lua_call(L, 3, 0);
 
+
 			}
+
+			lua_settop(L, top);
 
 			return 0;
 

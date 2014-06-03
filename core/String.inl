@@ -395,6 +395,19 @@ namespace mye
 		}
 
 		template <typename T>
+		mye::math::Matrix<T, 2, 1> ParseVector2(const String &s)
+		{
+
+			mye::math::Matrix<T, 2, 1> v;
+			std::stringstream ss(s.CString());
+
+			ss >> v.x() >> v.y();
+
+			return v;
+
+		}
+
+		template <typename T>
 		mye::math::Matrix<T, 3, 1> ParseVector3(const String &s)
 		{
 
@@ -402,6 +415,19 @@ namespace mye
 			std::stringstream ss(s.CString());
 
 			ss >> v.x() >> v.y() >> v.z();
+
+			return v;
+
+		}
+
+		template <typename T>
+		mye::math::Matrix<T, 4, 1> ParseVector4(const String &s)
+		{
+
+			mye::math::Matrix<T, 4, 1> v;
+			std::stringstream ss(s.CString());
+
+			ss >> v.x() >> v.y() >> v.z() >> v.w();
 
 			return v;
 
@@ -437,6 +463,27 @@ namespace mye
 		{
 			m_it++;
 			return *this;
+		}
+
+		String::Iterator& String::Iterator::operator-- (void)
+		{
+			m_it--;
+			return *this;
+		}
+
+		String::Iterator String::Iterator::operator+ (size_t pos)
+		{
+			return Iterator(m_it + pos);
+		}
+
+		String::Iterator String::Iterator::operator- (size_t pos)
+		{
+			return Iterator(m_it - pos);
+		}
+
+		int String::Iterator::operator- (Iterator it)
+		{
+			return m_it - it.m_it;
 		}
 
 		bool String::Iterator::operator== (const String::Iterator &it) const

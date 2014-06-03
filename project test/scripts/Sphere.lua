@@ -3,9 +3,9 @@ function Update()
 	local x = self.transform.position
 	
 	if (x.x > 2) then
-		self.acceleration = vec3(-2.8, 0, 0)
+		self.acceleration = vec3(-3, 0, 0)
 	elseif (x.x < -2) then
-		self.acceleration = vec3(2.8, 0, 0)
+		self.acceleration = vec3(3, 0, 0)
 	end
 	
 	local dv = self.acceleration * Time.Delta;

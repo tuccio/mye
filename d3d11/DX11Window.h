@@ -1,7 +1,7 @@
 #pragma once
 
-#include <mye/core/ColorRGBA.h>
 #include <mye/win/Window.h>
+#include <mye/math/Math.h>
 
 #include "DX11Device.h"
 
@@ -39,7 +39,7 @@ namespace mye
 			void SetRefreshRate(DXGI_RATIONAL refresh);
 			void SetMSAA(MSAA msaa);
 
-			void ClearColorBuffer(const mye::core::ColorRGBA &color = mye::core::ColorRGBA(0, 0, 0, 1));
+			void ClearColorBuffer(const mye::math::Vector4f &color = mye::math::Vector4f (0, 0, 0, 1));
 			void ClearDepthBuffer(float depth = 1.0f);
 
 			void ResizeBuffers(int width, int height);

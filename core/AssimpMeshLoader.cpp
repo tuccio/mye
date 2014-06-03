@@ -33,15 +33,15 @@ bool AssimpMeshLoader::Load(Resource *resource)
 		return false;
 	}
 
-	Resource::ParametersList params = mesh->GetParametersList();
+	Parameters params = mesh->GetParametersList();
 
 	bool normals = m_mesh->HasNormals() &&
-		MYE_CONTAINS_PARAMETER(params, "normals") &&
-		params["normals"] == "true";
+		params.Contains("normals") &&
+		params.GetBool("normals");
 
-	bool texcoords = m_mesh->HasTextureCoords(0) &&
-		MYE_CONTAINS_PARAMETER(params, "texcoords") &&
-		params["texcoords"] == "true";
+	bool texcoord0 = m_mesh->HasTextureCoords(0) &&
+		params.Contains("texcoords") &&
+		params.GetBool("texcoords");
 
 	//int colorChannels = mesh->GetNumColorChannels();
 
@@ -56,9 +56,9 @@ bool AssimpMeshLoader::Load(Resource *resource)
 			VertexAttributeType::FLOAT3);
 	}
 
-	if (texcoords)
+	if (texcoord0)
 	{
-		vDecl.AddAttribute(VertexAttributeSemantic::TEXCOORDS,
+		vDecl.AddAttribute(VertexAttributeSemantic::TEXCOORD0,
 			VertexAttributeType::FLOAT2);
 	}
 
@@ -96,13 +96,13 @@ bool AssimpMeshLoader::Load(Resource *resource)
 
 				}
 
-				if (texcoords)
+				if (texcoord0)
 				{
 
 					mesh->SetVertexAttribute(
 						triangleIndex,
 						j,
-						VertexAttributeSemantic::TEXCOORDS,
+						VertexAttributeSemantic::TEXCOORD0,
 						VertexAttributeType::FLOAT2,
 						(unsigned char*) &m_mesh->mNormals[indices[j]]);
 

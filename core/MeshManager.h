@@ -22,7 +22,7 @@ namespace mye
 
 			Mesh* CreateImpl(const String &name,
 				ManualResourceLoader *manual,
-				const Resource::ParametersList &params);
+				const Parameters &params);
 
 			void FreeImpl(mye::core::Resource* resource);
 

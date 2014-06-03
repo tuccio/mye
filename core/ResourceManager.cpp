@@ -43,7 +43,7 @@ void ResourceManager::_FreeResource(ResourcesMap::iterator &it)
 
 Resource* ResourceManager::CreateImpl(const String &name,
 									  ManualResourceLoader *manual,
-									  const Resource::ParametersList &params)
+									  const Parameters &params)
 {
 	return nullptr;
 }

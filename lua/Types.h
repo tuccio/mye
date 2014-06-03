@@ -25,6 +25,7 @@
 #define MYE_LUA_COMPONENT "Component"
 #define MYE_LUA_TRANSFORM_COMPONENT "TransformComponent"
 #define MYE_LUA_RIGIDBODY_COMPONENT "RigidBodyComponent"
+#define MYE_LUA_TEXT2D_COMPONENT "Text2DComponent"
 
 #define MYE_LUA_SCRIPT_COMPONENT "ScriptComponent"
 
@@ -35,6 +36,10 @@
 
 #define MYE_LUA_COLORRGB "RGB"
 #define MYE_LUA_COLORRGBA "RGBA"
+
+#define MYE_LUA_FONT "Font"
+
+#define MYE_LUA_DX11FONT "DX11Font"
 
 #define MYE_LUA_STRING "__String"
 
@@ -58,6 +63,7 @@
 #define MYE_LUA_KEYBOARD "Keyboard"
 #define MYE_LUA_MOUSE "Mouse"
 
+#define MYE_LUA_PARAMETERS "Parameters"
 #define MYE_LUA_RESOURCE "Resource"
 #define MYE_LUA_RESOURCELOADSTATE "ResourceLoadState"
 #define MYE_LUA_RESOURCETYPEMANAGER "__ResourceTypeManager"

@@ -7,7 +7,7 @@ using namespace mye::core;
 using namespace mye::dx11;
 
 DX11BufferManager::DX11BufferManager(DX11Device &device) :
-	ResourceManager("DX11Buffer"),
+	ResourceManager("GPUBuffer"),
 	m_device(device)
 {
 }
@@ -19,19 +19,19 @@ DX11BufferManager::~DX11BufferManager(void)
 
 DX11Buffer* DX11BufferManager::CreateImpl(const mye::core::String &name,
 										  ManualResourceLoader *manual,
-										  const Resource::ParametersList &params)
+										  const Parameters &params)
 {
 
-	auto it = params.find("type");
-
-	if (it != params.end())
+	if (params.Contains("type"))
 	{
 
-		if (it->second == "vertex")
+		String type = params.GetString("type");
+
+		if (type == "vertex")
 		{
 			return (new DX11VertexBuffer(this, name, manual, m_device));
 		}
-		else if (it->second == "constant")
+		else if (type == "constant")
 		{
 			return (new DX11ConstantBuffer(this, name, manual, m_device));
 		}

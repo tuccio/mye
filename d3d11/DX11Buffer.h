@@ -2,7 +2,7 @@
 
 #include "DX11Device.h"
 
-#include <mye/core/Resource.h>
+#include <mye/core/GPUBuffer.h>
 
 namespace mye
 {
@@ -11,7 +11,7 @@ namespace mye
 	{
 
 		class DX11Buffer :
-			public mye::core::Resource
+			public mye::core::GPUBuffer
 		{
 
 		public:

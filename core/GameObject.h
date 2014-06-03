@@ -46,6 +46,7 @@ namespace mye
 			inline CameraComponent*    GetCameraComponent(void);
 			inline BehaviourComponent* GetBehaviourComponent(void);
 			inline RigidBodyComponent* GetRigidBodyComponent(void);
+			inline Text2DComponent*    GetText2DComponent(void);
 
 			inline mye::math::AABBf    GetAABB(void);
 
@@ -57,7 +58,7 @@ namespace mye
 			/* Script Callbacks */
 
 			void Init(void);
-			void Update(FloatSeconds dt);
+			void Update(void);
 
 			void Clear(void);
 
@@ -86,6 +87,7 @@ namespace mye
 			CameraComponent    *m_camera;
 			BehaviourComponent *m_behaviour;
 			RigidBodyComponent *m_rigidbody;
+			Text2DComponent    *m_text2d;
 
 			bool m_delendum;
 

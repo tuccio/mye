@@ -10,7 +10,7 @@ namespace mye
 	{
 
 		String PointerToString(const void *p);
-		const void* StringToPointer(const String &str);
+		void* StringToPointer(const String &str);
 
 		void RuntimeError(const String &error);
 

@@ -2,8 +2,6 @@
 
 #include <d3d11.h>
 
-#include <mye/core/ColorRGBA.h>
-
 namespace mye
 {
 
@@ -25,10 +23,15 @@ namespace mye
 
 			//void Render(DX11VertexBuffer &vb);
 
+			void SetBlending(bool enable);
+
 		private:
 
 			ID3D11Device *m_device;
 			ID3D11DeviceContext *m_dImmediateContext;
+
+			ID3D11BlendState *m_blendOff;
+			ID3D11BlendState *m_blendOn;
 
 		};
 

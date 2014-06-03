@@ -55,6 +55,18 @@ namespace mye
 			inline T& w(void);
 			inline const T& w(void) const;
 
+			inline T& r(void);
+			inline const T& r(void) const;
+
+			inline T& g(void);
+			inline const T& g(void) const;
+
+			inline T& b(void);
+			inline const T& b(void) const;
+
+			inline T& a(void);
+			inline const T& a(void) const;
+
 			inline T* Data(void);
 			inline const T* Data(void) const;
 			

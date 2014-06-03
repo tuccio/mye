@@ -2,6 +2,7 @@
 
 #include "INamedObject.h"
 #include "Lockable.h"
+#include "Parameters.h"
 
 #include <unordered_map>
 #include <boost/shared_ptr.hpp>
@@ -34,7 +35,23 @@ namespace mye
 
 		public:
 
-			typedef std::unordered_map<String, String> ParametersList;
+			template <typename T, typename R>
+			inline static boost::shared_ptr<T> StaticCast(boost::shared_ptr<R> r)
+			{
+				return boost::static_pointer_cast<T, R>(r);
+			}
+
+			template <typename T, typename R>
+			inline static boost::shared_ptr<T> DynamicCast(boost::shared_ptr<R> r)
+			{
+				return boost::dynamic_pointer_cast<T, R>(r);
+			}
+
+			template <typename T, typename R>
+			inline static boost::shared_ptr<T> ReinterpretCast(boost::shared_ptr<R> r)
+			{
+				return boost::reinterpret_pointer_cast<T, R>(r);
+			}
 
 			Resource(ResourceManager *owner,
 				const String &name,
@@ -52,8 +69,8 @@ namespace mye
 
 			ResourceLoadState GetState(void) const;
 
-			void SetParametersList(const ParametersList &params);
-			ParametersList GetParametersList(void) const;
+			void SetParametersList(const Parameters &params);
+			Parameters GetParametersList(void) const;
 
 		protected:
 
@@ -72,7 +89,7 @@ namespace mye
 			ResourceLoadState m_loadingState;
 			size_t m_size;
 
-			ParametersList m_params;
+			Parameters m_params;
 
 
 		};

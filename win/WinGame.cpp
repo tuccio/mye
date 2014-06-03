@@ -57,7 +57,7 @@ void WinGame::Run(void)
 
 		m_script->Preupdate(dt);
 
-		m_gameobjects->Update(dt);
+		m_gameobjects->Update();
 		m_gameobjects->FinalizeUpdate();
 
 		m_physics->Update(dt);

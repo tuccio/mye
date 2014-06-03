@@ -156,6 +156,30 @@ void String::FlipInPlace(void)
 
 }
 
+String String::Substring(Iterator from, Iterator to)
+{
+
+	int len = to - from;
+
+	String s((len > 0 ? len : 0));
+
+	if (len > 0)
+	{
+
+		while (from != to)
+		{
+
+			s += *from;
+			from++;
+
+		}
+
+	}
+
+	return s;
+
+}
+
 String String::Repeat(unsigned int n) const
 {
 

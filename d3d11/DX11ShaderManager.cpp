@@ -21,28 +21,27 @@ DX11ShaderManager::~DX11ShaderManager(void)
 
 DX11Shader* DX11ShaderManager::CreateImpl(const String &name,
 										  ManualResourceLoader *manual,
-										  const Resource::ParametersList &params)
+										  const Parameters &params)
 {
 
 	bool precompiled = false;
 
-	auto it =  params.find("precompiled");
-
-	if (it != params.end() && it->second == "true")
+	if (params.Contains("precompiled") &&
+		params.GetBool("precompiled"))
 	{
 		precompiled = true;
 	}
 
-	it = params.find("type");
-
-	if (it != params.end())
+	if (params.Contains("type"))
 	{
 
-		if (it->second == "vertex")
+		String type = params.GetString("type");
+
+		if (type == "vertex")
 		{
 			return (new DX11VertexShader(this, name, manual, m_device, precompiled));
 		}
-		else if (it->second == "pixel")
+		else if (type == "pixel")
 		{
 			return (new DX11PixelShader(this, name, manual, m_device, precompiled));
 		}
@@ -63,7 +62,7 @@ DX11ShaderPointer DX11ShaderManager::CreateVertexShader(const String &name,
 														const std::vector<D3D11_INPUT_ELEMENT_DESC> &vdesc)
 {
 
-	Resource::ParametersList params;
+	Parameters params;
 
 	params["type"] = "vertex";
 	params["precompiled"] = ToString(precompiled);
@@ -83,7 +82,7 @@ DX11ShaderPointer DX11ShaderManager::CreateVertexShader(const String &name,
 DX11ShaderPointer DX11ShaderManager::CreatePixelShader(const String &name, bool precompiled)
 {
 
-	Resource::ParametersList params;
+	Parameters params;
 
 	params["type"] = "pixel";
 	params["precompiled"] = ToString(precompiled);

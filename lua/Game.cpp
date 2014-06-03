@@ -15,14 +15,11 @@
 #include "VariableComponent.h"
 #include "WindowsFunctions.h"
 #include "InputModule.h"
-#include "CoreTypes.h"
 #include "Converters.h"
 
 #include "LuaModule.h"
 
 #include <mye/d3d11/DX11Module.h>
-
-__MYE_DEFINE_RESOURCE_LUA_CONVERTER(mye::core::BulletCollisionShape)
 
 using namespace luabind;
 using namespace mye::core;
@@ -70,9 +67,18 @@ namespace mye
 				class_<Component>(MYE_LUA_COMPONENT),
 
 				class_<RigidBodyComponent, Component>(MYE_LUA_RIGIDBODY_COMPONENT).
-					def(constructor<BulletCollisionShapePointer, mye::math::Real, mye::math::Vector3, mye::math::Quaternion>()).
+					def(constructor<BulletCollisionShapePointer, mye::math::Real>()).
 					property("velocity", &RigidBodyComponent::GetVelocity, &RigidBodyComponent::SetVelocity).
-					property("position", &RigidBodyComponent::GetPosition, &RigidBodyComponent::SetPosition)
+					property("position", &RigidBodyComponent::GetPosition, &RigidBodyComponent::SetPosition),
+
+
+				class_<Text2DComponent, Component>(MYE_LUA_TEXT2D_COMPONENT).
+					def(constructor<>()).
+					property("text", &Text2DComponent::GetText, &Text2DComponent::SetText).
+					property("position", &Text2DComponent::GetPosition, &Text2DComponent::SetPosition).
+					property("font", &Text2DComponent::GetFont, &Text2DComponent::SetFont).
+					property("pointsize", &Text2DComponent::GetPointSize, &Text2DComponent::SetPointSize).
+					property("color", &Text2DComponent::GetColor, &Text2DComponent::SetColor)
 
 			];
 

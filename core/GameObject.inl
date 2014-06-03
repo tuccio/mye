@@ -24,6 +24,11 @@ namespace mye
 			return m_render;
 		}
 
+		Text2DComponent* GameObject::GetText2DComponent(void)
+		{
+			return m_text2d;
+		}
+
 		CameraComponent* GameObject::GetCameraComponent(void)
 		{
 			return m_camera;

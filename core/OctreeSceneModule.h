@@ -6,6 +6,8 @@
 
 #include <list>
 
+#define __MYE_NO_OCTREE
+
 namespace mye
 {
 
@@ -42,7 +44,7 @@ namespace mye
 
 			void ApplyUpdates(void);
 
-			/*std::list<GameObjectHandle> m_objects;*/
+			std::list<GameObjectHandle>   m_objects;
 
 			LooseOctree<GameObjectHandle> m_octree;
 			std::vector<GameObjectHandle> m_nonRenderableObjects;

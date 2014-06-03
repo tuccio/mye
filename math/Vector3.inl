@@ -252,6 +252,42 @@ namespace mye
 		}
 
 		template <typename T>
+		T& Matrix<T, 3, 1>::r(void)
+		{
+			return m_data[0];
+		}
+
+		template <typename T>
+		const T& Matrix<T, 3, 1>::r(void) const
+		{
+			return m_data[0];
+		}
+
+		template <typename T>
+		T& Matrix<T, 3, 1>::g(void)
+		{
+			return m_data[1];
+		}
+
+		template <typename T>
+		const T& Matrix<T, 3, 1>::g(void) const
+		{
+			return m_data[1];
+		}
+
+		template <typename T>
+		T& Matrix<T, 3, 1>::b(void)
+		{
+			return m_data[2];
+		}
+
+		template <typename T>
+		const T& Matrix<T, 3, 1>::b(void) const
+		{
+			return m_data[2];
+		}
+
+		template <typename T>
 		T* Matrix<T, 3, 1>::Data(void)
 		{
 			return m_data;

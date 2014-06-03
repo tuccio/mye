@@ -28,7 +28,7 @@ namespace mye
 
 			DX11Buffer* CreateImpl(const mye::core::String &name,
 				mye::core::ManualResourceLoader *manual,
-				const mye::core::Resource::ParametersList &params);
+				const mye::core::Parameters &params);
 
 			void FreeImpl(mye::core::Resource* resource);
 

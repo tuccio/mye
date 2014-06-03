@@ -1,8 +1,8 @@
 #include "LuaModule.h"
 
-#include "CoreTypes.h"
 #include "Converters.h"
 #include "Math.h"
+#include "Scene.h"
 #include "Physics.h"
 #include "Game.h"
 #include "Resource.h"
@@ -77,9 +77,9 @@ void LuaModule::OpenAllLibraries(void)
 	luaL_openlibs(m_lua);
 	luabind::open(m_lua);
 
-	BindCoreTypes(m_lua);
 	BindResources(m_lua);
 	BindMath(m_lua);
+	BindScene(m_lua);
 	BindPhysics(m_lua);
 	BindGame(m_lua);
 
@@ -99,6 +99,7 @@ bool LuaModule::Init(void)
 	luabind::globals(m_lua)["Input"]       = boost::ref(*game.GetInputModule());
 	luabind::globals(m_lua)["Graphics"]    = boost::ref(*game.GetGraphicsModule());
 	luabind::globals(m_lua)["Physics"]     = boost::ref(*game.GetPhysicsModule());
+	luabind::globals(m_lua)["Scene"]       = boost::ref(*game.GetSceneModule());
 
 	luabind::globals(m_lua)["Time"]                = luabind::newtable(m_lua);
 	luabind::globals(m_lua)["ResourceTypeManager"] = boost::ref(ResourceTypeManager::GetSingleton());
@@ -122,7 +123,7 @@ void LuaModule::Preupdate(FloatSeconds dt)
 BehaviourScriptPointer LuaModule::LoadBehaviour(const mye::core::String &name)
 {
 
-	Resource::ParametersList params;
+	Parameters params;
 	params["type"] = "behaviour";
 
 	BehaviourScriptPointer script = CreateResource<BehaviourScript>(name, nullptr, params);
@@ -139,7 +140,7 @@ BehaviourScriptPointer LuaModule::LoadBehaviour(const mye::core::String &name)
 ProcedureScriptPointer LuaModule::LoadProcedure(const mye::core::String &name)
 {
 
-	Resource::ParametersList params;
+	Parameters params;
 	params["type"] = "procedure";
 
 	ProcedureScriptPointer script = CreateResource<ProcedureScript>(name, nullptr, params);
@@ -156,7 +157,7 @@ ProcedureScriptPointer LuaModule::LoadProcedure(const mye::core::String &name)
 ScriptResourceLoaderPointer LuaModule::LoadScriptResourceLoader(const mye::core::String &name)
 {
 
-	Resource::ParametersList params;
+	Parameters params;
 	params["type"] = "resource loader";
 
 	ScriptResourceLoaderPointer script = CreateResource<ScriptResourceLoader>(name, nullptr, params);
@@ -172,17 +173,15 @@ ScriptResourceLoaderPointer LuaModule::LoadScriptResourceLoader(const mye::core:
 
 Script* LuaModule::CreateImpl(const String &name,
 							  ManualResourceLoader *manual,
-							  const Resource::ParametersList &params)
+							  const Parameters &params)
 {
 
 	Script *script = nullptr;
 
-	auto typeIt = params.find("type");
-
-	if (typeIt != params.end())
+	if (params.Contains("type"))
 	{
 
-		const String &type = typeIt->second;
+		String type = params.GetString("type");
 
 		if (type == "behaviour")
 		{

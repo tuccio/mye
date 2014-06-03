@@ -14,6 +14,7 @@ namespace mye
 			CAMERA,
 			BEHAVIOUR,
 			RIGIDBODY,
+			TEXT2D,
 			COUNT
 		};
 

@@ -62,7 +62,7 @@ private:
 	mye::core::AssimpModelLoader m_modelLoader;
 
 	mye::core::ModelPointer m_model;
-	mye::math::Transformf m_transform;
+	mye::math::Transform m_transform;
 
 	mye::dx11::DX11VertexBuffer m_vbuffer;
 	mye::dx11::DX11VertexBuffer m_PlanetBuffer;

@@ -1,5 +1,7 @@
 #include <mye/core/BulletCollisionShape.h>
 #include <mye/core/Entity.h>
+#include <mye/core/FontManager.h>
+#include <mye/core/ImageManager.h>
 #include <mye/core/ModelManager.h>
 #include <mye/core/OctreeSceneModule.h>
 #include <mye/core/PhysicsModule.h>
@@ -8,6 +10,9 @@
 
 #include <mye/d3d11/DX11Module.h>
 #include <mye/d3d11/DX11ShaderManager.h>
+#include <mye/d3d11/DX11TextureManager.h>
+#include <mye/d3d11/DX11BufferManager.h>
+#include <mye/d3d11/DX11FontManager.h>
 
 #include <mye/lua/LuaModule.h>
 
@@ -37,10 +42,11 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 	 * Allocate needed managers and modules
 	 */
 
-	ResourceTypeManager resourceTypeManager;
-	EntityTemplateManager entityTemplateManager("./entities/");
-	ModelManager modelManager;
+	ResourceTypeManager         resourceTypeManager;
+	EntityTemplateManager       entityTemplateManager;
+	ModelManager                modelManager;
 	BulletCollisionShapeManager bulletCollisionShape;
+	ImageManager                imageManager;
 
 	MouseKeyboardInput input;
 	GameObjectsModule  gameobjects;
@@ -51,10 +57,15 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 	LuaModule          lua("./scripts/");
 
 	/*
-	 * Prepare shaders
+	 * Graphics setup
 	 */
 
-	DX11ShaderManager shaderManager(static_cast<DX11Window*>(graphics.GetWindow())->GetDevice());
+	DX11Device &device = static_cast<DX11Window*>(graphics.GetWindow())->GetDevice();
+
+	DX11BufferManager  bufferManager(device);
+	DX11ShaderManager  shaderManager(device);
+	DX11TextureManager textureManager(device);
+	DX11FontManager    fontManager;
 
 	std::vector<D3D11_INPUT_ELEMENT_DESC> vDesc(1);
 

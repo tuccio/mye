@@ -1,0 +1,7 @@
+entity Controller
+{
+	
+	GameObjectHandle box1;
+	GameObjectHandle box2;
+	
+}

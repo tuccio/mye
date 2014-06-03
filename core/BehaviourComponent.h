@@ -24,7 +24,7 @@ namespace mye
 			~BehaviourComponent(void);
 
 			void Init(void);
-			void Update(FloatSeconds dt);
+			void Update(void);
 
 			BehaviourComponent* Clone(void) const;
 

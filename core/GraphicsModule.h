@@ -2,7 +2,8 @@
 
 #include "Module.h"
 #include "IWindow.h"
-#include "ColorRGBA.h"
+
+#include <mye/math/Math.h>
 
 namespace mye
 {
@@ -25,13 +26,15 @@ namespace mye
 
 			virtual void Render(void) = 0;
 
-			const ColorRGBA& GetClearColor(void) const;
-			void SetClearColor(const ColorRGBA &color);
+			virtual mye::math::Vector2f GetPointSize(void) = 0;
+
+			const mye::math::Vector4f& GetClearColor(void) const;
+			void SetClearColor(const mye::math::Vector4f &color);
 
 		protected:
 
-			IWindow *m_mainWindowPointer;
-			ColorRGBA m_clearColor;
+			IWindow            *m_mainWindowPointer;
+			mye::math::Vector4f m_clearColor;
 
 		};
 

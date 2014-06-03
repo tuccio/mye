@@ -3,6 +3,8 @@
 #include <mye/core/Resource.h>
 #include <mye/core/ResourceTypeManager.h>
 #include <mye/core/ResourceManager.h>
+#include <mye/core/Parameters.h>
+#include <mye/core/Font.h>
 
 #include "ScriptResourceLoader.h"
 #include "Types.h"
@@ -11,7 +13,6 @@
 #include <boost/optional.hpp>
 
 using namespace mye::core;
-using namespace luabind;
 
 namespace luabind
 {
@@ -52,6 +53,8 @@ namespace luabind
 
 };
 
+using namespace luabind;
+
 namespace mye
 {
 
@@ -63,7 +66,7 @@ namespace mye
 			return static_cast<int>(r.GetState());
 		}
 
-		String __res_test(const Resource::ParametersList &params)
+		String __res_test(const Parameters &params)
 		{
 
 			String s;
@@ -77,9 +80,9 @@ namespace mye
 
 		}
 
-		String sup(boost::optional<ScriptResourceLoaderPointer> x)
+		String sup(const mye::math::Vector2i &v, FontPointer f, const String &t)
 		{
-			return (x ? x.get()->GetName() : "nil");
+			return ToString(v.x()) + " " + ToString(v.y()) + ";" + f->GetName() + ";" + t;
 		}
 
 		bool __res_load(Resource &r)
@@ -103,7 +106,16 @@ namespace mye
 			module(L)
 			[
 
+				class_<Parameters>(MYE_LUA_PARAMETERS).
+
+					def(constructor<const std::unordered_map<String, String>&>()).
+
+					def("Add", &Parameters::Add).
+					def("Contains", &Parameters::Contains),
+
 				class_<Resource>(MYE_LUA_RESOURCE).
+
+					def("__tostring", &Resource::GetName).
 
 					def("Load", &Resource::Load).
 					def("Load", &__res_load).
@@ -111,8 +123,9 @@ namespace mye
 					def("Free", &Resource::Free).
 					def("CalculateSize", &Resource::CalculateSize).
 
-					def("GetSize", &Resource::GetSize).
-					def("GetState", &__res_get_state),
+					property("size", &Resource::GetSize).
+					property("state", &__res_get_state).
+					property("name", &Resource::GetName),
 
 				class_<ResourceLoadState>(MYE_LUA_RESOURCELOADSTATE).
 
@@ -137,6 +150,8 @@ namespace mye
 
 					def(constructor<ScriptResourceLoaderPointer>()).
 					def(constructor<>()),
+
+				class_<Font, Resource>(MYE_LUA_FONT),
 
 				def("sup", &sup)
 

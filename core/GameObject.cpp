@@ -24,7 +24,8 @@ GameObject::GameObject(const String &name) :
 	m_render(nullptr),
 	m_camera(nullptr),
 	m_behaviour(nullptr),
-	m_rigidbody(nullptr)
+	m_rigidbody(nullptr),
+	m_text2d(nullptr)
 {
 }
 
@@ -74,6 +75,11 @@ Component* GameObject::AddComponent(const Component &component)
 
 		case ComponentTypes::RIGIDBODY:
 			m_rigidbody = static_cast<RigidBodyComponent*>(newComponent);
+			break;
+
+		case ComponentTypes::TEXT2D:
+
+			m_text2d = static_cast<Text2DComponent*>(newComponent);
 			break;
 
 		}
@@ -129,6 +135,10 @@ void GameObject::RemoveComponent(const String &name)
 
 		case ComponentTypes::RIGIDBODY:
 			m_rigidbody = nullptr;
+			break;
+
+		case ComponentTypes::TEXT2D:
+			m_text2d = nullptr;
 			break;
 
 		}
@@ -191,12 +201,12 @@ void GameObject::Init(void)
 
 }
 
-void GameObject::Update(FloatSeconds dt)
+void GameObject::Update(void)
 {
 
 	if (m_behaviour)
 	{
-		m_behaviour->Update(dt);
+		m_behaviour->Update();
 	}
 
 }

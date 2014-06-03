@@ -52,7 +52,7 @@ namespace mye
 
 			BulletCollisionShape* CreateImpl(const String &name,
 				ManualResourceLoader *manual,
-				const Resource::ParametersList &params);
+				const Parameters &params);
 
 			virtual void FreeImpl(Resource* resource);
 

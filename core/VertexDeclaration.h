@@ -12,7 +12,14 @@ namespace mye
 		{
 			POSITION,
 			NORMAL,
-			TEXCOORDS,
+			TEXCOORD0,
+			TEXCOORD1,
+			TEXCOORD2,
+			TEXCOORD3,
+			TEXCOORD4,
+			TEXCOORD5,
+			TEXCOORD6,
+			TEXCOORD7,
 			AMBIENT,
 			DIFFUSE,
 			SPECULAR,
@@ -51,6 +58,8 @@ namespace mye
 				}
 			};
 
+			typedef std::vector<Attribute>::const_iterator Iterator;
+
 			static const size_t AttributeTypeSize[VertexAttributeType::COUNT];
 
 			VertexDeclaration(void);
@@ -73,6 +82,9 @@ namespace mye
 			size_t GetSize(void) const;
 
 			void Clear(void);
+
+			Iterator begin() const;
+			Iterator end() const;
 
 		private:
 

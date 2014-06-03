@@ -7,7 +7,7 @@ DX11Buffer::DX11Buffer(mye::core::ResourceManager *owner,
 					   const mye::core::String &name,
 					   mye::core::ManualResourceLoader *manual,
 					   DX11Device &device) :
-Resource(owner, name, manual),
+GPUBuffer(owner, name, manual),
 m_device(device),
 m_buffer(nullptr)
 {

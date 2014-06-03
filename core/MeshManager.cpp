@@ -15,7 +15,7 @@ MeshManager::~MeshManager(void)
 
 Mesh* MeshManager::CreateImpl(const String &name,
 							  ManualResourceLoader *manual,
-							  const Resource::ParametersList &params)
+							  const Parameters &params)
 {
 	return (new Mesh(this, name, manual));
 }

@@ -14,6 +14,25 @@ namespace mye
 	namespace core
 	{
 
+		class RigidBodyComponent;
+
+		class MotionState :
+			public btMotionState
+		{
+
+		public:
+
+			MotionState(RigidBodyComponent *rb);
+
+			void getWorldTransform(btTransform& worldTrans) const;
+			void setWorldTransform(const btTransform& worldTrans);
+
+		private:
+
+			RigidBodyComponent *m_rigidbody;
+
+		};
+
 		class RigidBodyComponent
 			: public Component
 		{
@@ -21,9 +40,7 @@ namespace mye
 		public:
 
 			RigidBodyComponent(BulletCollisionShapePointer shape,
-				mye::math::Real mass,
-				const mye::math::Vector3 &position = mye::math::Vector3(0, 0, 0),
-				const mye::math::Quaternion &orientation = mye::math::Quaternion(1, 0, 0, 0));
+				mye::math::Real mass);
 
 			RigidBodyComponent(const RigidBodyComponent &rb);
 
@@ -35,14 +52,22 @@ namespace mye
 			mye::math::Vector3 GetPosition(void) const;
 			void SetPosition(const mye::math::Vector3 &v);
 
+			mye::math::Quaternion GetOrientation(void) const;
+			void SetOrientation(const mye::math::Quaternion &v);
+
+			mye::math::Real GetMass(void) const;
+			void SetMass(const mye::math::Real &mass);
+
 			mye::math::Matrix4 GetWorldMatrix(void) const;
 
 			RigidBodyComponent* Clone(void) const;
 
 		private:
 
+			friend class MotionState;
+
 			btRigidBody                   *m_rigidbody;
-			btDefaultMotionState          *m_motionState;
+			MotionState                   *m_motionState;
 			BulletCollisionShapePointer    m_shape;
 
 		};

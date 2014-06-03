@@ -1,5 +1,7 @@
 #include "Bullet.h"
 
+#include <lua.hpp>
+
 namespace mye
 {
 

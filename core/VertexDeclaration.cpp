@@ -31,7 +31,7 @@ void VertexDeclaration::AddAttribute(
 	VertexAttributeType type)
 {
 	m_attributes.push_back(Attribute(semantic, type));
-	m_size = AttributeTypeSize[static_cast<int>(type)];
+	m_size += AttributeTypeSize[static_cast<int>(type)];
 }
 
 void VertexDeclaration::InsertAttribute(
@@ -87,4 +87,14 @@ void VertexDeclaration::Clear(void)
 size_t VertexDeclaration::GetSize(void) const
 {
 	return m_size;
+}
+
+VertexDeclaration::Iterator VertexDeclaration::begin() const
+{
+	return m_attributes.begin();
+}
+
+VertexDeclaration::Iterator VertexDeclaration::end() const
+{
+	return m_attributes.end();
 }

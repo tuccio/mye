@@ -1,7 +1,5 @@
 #include "Entity.h"
 #include "GameObject.h"
-#include "ColorRGBA.h"
-#include "ColorRGB.h"
 
 #include <fstream>
 
@@ -400,98 +398,6 @@ bool entity::Parser::SemanticParse(entity::Entity &entity, mye::core::Entity &te
 
 				}
 
-			case TypeEnum::RGB:
-
-				{
-
-					ColorRGB c;
-					mye::math::Vector3 in;
-
-					if (m.initializer.size() == 3)
-					{
-
-						float x;
-
-						for (int i = 0; i < 3; i++)
-						{
-
-							auto it = m.initializer[i].begin();
-							auto end = m.initializer[i].end();
-
-							if (!qi::parse(it, end, qi::float_, x) ||
-								it != end)
-							{
-								return false;
-							}
-
-							in[i] = x;
-
-						}
-
-						c = ColorRGB(in[0], in[1], in[2]);
-
-					}
-					else if (m.initializer.size() != 0)
-					{
-						return false;
-					}
-
-					VariableComponent<ColorRGB> *component =
-						new VariableComponent<ColorRGB>(m.name.c_str());
-					component->Set(c);
-
-					templ.Insert(component);
-
-					break;
-
-				}
-
-			case TypeEnum::RGBA:
-
-				{
-
-					ColorRGBA c;
-					mye::math::Vector4 in;
-
-					if (m.initializer.size() == 4)
-					{
-
-						float x;
-
-						for (int i = 0; i < 4; i++)
-						{
-
-							auto it = m.initializer[i].begin();
-							auto end = m.initializer[i].end();
-
-							if (!qi::parse(it, end, qi::float_, x) ||
-								it != end)
-							{
-								return false;
-							}
-
-							in[i] = x;
-
-						}
-
-						c = ColorRGBA(in[0], in[1], in[2], in[3]);
-
-					}
-					else if (m.initializer.size() != 0)
-					{
-						return false;
-					}
-
-					VariableComponent<ColorRGBA> *component =
-						new VariableComponent<ColorRGBA>(m.name.c_str());
-					component->Set(c);
-
-					templ.Insert(component);
-
-					break;
-
-				}
-
 			case TypeEnum::GAMEOBJECTHANDLE:
 
 				{
@@ -524,10 +430,8 @@ bool entity::Parser::SemanticParse(entity::Entity &entity, mye::core::Entity &te
 
 Entity::Entity(ResourceManager *owner,
 				 const String &name,
-				 ManualResourceLoader *manual,
-				 const String &entityDirectory) :
-	Resource(owner, name, manual),
-	m_entityDirectory(entityDirectory)
+				 ManualResourceLoader *manual) :
+	Resource(owner, name, manual)
 {
 
 }
@@ -556,7 +460,7 @@ bool Entity::LoadImpl(void)
 	
 	bool loaded = false;
 
-	String file = m_entityDirectory + m_name + ".mye";
+	String file = "./entities/" + m_name + ".mye";
 
 	entity::Parser p(file);
 
@@ -593,16 +497,15 @@ size_t Entity::CalculateSizeImpl(void)
 }
 
 EntityTemplateManager::EntityTemplateManager(const String &entityDirectory) :
-	ResourceManager("Entity"),
-	m_entityDirectory(entityDirectory)
+	ResourceManager("Entity")
 {
 }
 
 Entity* EntityTemplateManager::CreateImpl(const String &name,
 										  ManualResourceLoader *manual,
-										  const Resource::ParametersList &params)
+										  const Parameters &params)
 {
-	return (new Entity(this, name, manual, m_entityDirectory));
+	return (new Entity(this, name, manual));
 }
 
 void EntityTemplateManager::FreeImpl(Resource* resource)

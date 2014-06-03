@@ -7,6 +7,7 @@
 
 #include <mye/d3d11/DX11Window.h>
 #include <mye/d3d11/DX11Module.h>
+#include <mye/d3d11/DX11Font.h>
 
 #include <luabind/luabind.hpp>
 
@@ -31,7 +32,9 @@ namespace mye
 
 				class_<DX11Module, GraphicsModule>(MYE_LUA_DX11MODULE).
 
-					def("SetClearColor", &DX11Module::SetClearColor)
+					def("SetClearColor", &DX11Module::SetClearColor),
+
+				class_<DX11Font, Font>(MYE_LUA_DX11FONT)
 
 			];
 

@@ -60,6 +60,15 @@ namespace mye
 			inline T& z(void);
 			inline const T& z(void) const;
 
+			inline T& r(void);
+			inline const T& r(void) const;
+
+			inline T& g(void);
+			inline const T& g(void) const;
+
+			inline T& b(void);
+			inline const T& b(void) const;
+
 			inline T* Data(void);
 			inline const T* Data(void) const;
 

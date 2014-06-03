@@ -3,6 +3,10 @@
 #pragma warning( disable : 4067 )
 
 #include <Windows.h>
+#include <vector>
+
+#include <mye/core/VertexDeclaration.h>
+#include <d3d11.h>
 
 #if defined(DEBUG) | defined(_DEBUG)
 
@@ -49,14 +53,17 @@ namespace mye
 
 #ifndef ReleaseCOM(x)
 
-	#define ReleaseCOM(x) { x->Release(); x = 0x0; }
+	#define ReleaseCOM(x) { x->Release(); x = nullptr; }
+	#define ReleaseCOMIf(x) { if (x) ReleaseCOM(x); }
 
 #endif
 
 namespace mye
 {
+
 	namespace dx11
 	{
+
 		enum PipelineStages
 		{
 			PIPELINE_INPUT_ASSEMBLER,
@@ -67,5 +74,122 @@ namespace mye
 			PIPELINE_PIXEL_SHADER,
 			PIPELINE_OUTPUT_MERGER
 		};
+
+		inline std::vector<D3D11_INPUT_ELEMENT_DESC> MakeInputElementVector(const mye::core::VertexDeclaration &vd)
+		{
+
+			std::vector<D3D11_INPUT_ELEMENT_DESC> v;
+
+			for (mye::core::VertexDeclaration::Attribute a : vd)
+			{
+
+				D3D11_INPUT_ELEMENT_DESC vDesc;
+
+				switch (a.semantic)
+				{
+					
+				case mye::core::VertexAttributeSemantic::POSITION:
+					vDesc.SemanticName         = "POSITION";
+					vDesc.SemanticIndex        = 0;	
+					break;
+
+				case mye::core::VertexAttributeSemantic::TEXCOORD0:
+					vDesc.SemanticName         = "TEXCOORD";
+					vDesc.SemanticIndex        = 0;
+					break;
+
+				case mye::core::VertexAttributeSemantic::TEXCOORD1:
+					vDesc.SemanticName         = "TEXCOORD";
+					vDesc.SemanticIndex        = 1;
+					break;
+
+				case mye::core::VertexAttributeSemantic::TEXCOORD2:
+					vDesc.SemanticName         = "TEXCOORD";
+					vDesc.SemanticIndex        = 2;
+					break;
+
+				case mye::core::VertexAttributeSemantic::TEXCOORD3:
+					vDesc.SemanticName         = "TEXCOORD";
+					vDesc.SemanticIndex        = 3;
+					break;
+
+				case mye::core::VertexAttributeSemantic::TEXCOORD4:
+					vDesc.SemanticName         = "TEXCOORD";
+					vDesc.SemanticIndex        = 4;
+					break;
+
+				case mye::core::VertexAttributeSemantic::TEXCOORD5:
+					vDesc.SemanticName         = "TEXCOORD";
+					vDesc.SemanticIndex        = 5;
+					break;
+
+				case mye::core::VertexAttributeSemantic::TEXCOORD6:
+					vDesc.SemanticName         = "TEXCOORD";
+					vDesc.SemanticIndex        = 6;
+					break;
+
+				case mye::core::VertexAttributeSemantic::TEXCOORD7:
+					vDesc.SemanticName         = "TEXCOORD";
+					vDesc.SemanticIndex        = 7;
+					break;
+
+				default:
+					break;
+
+				}
+
+				switch (a.type)
+				{
+
+					case mye::core::VertexAttributeType::FLOAT:
+						vDesc.Format               = DXGI_FORMAT_R32_FLOAT;
+						break;
+
+					case mye::core::VertexAttributeType::FLOAT2:
+						vDesc.Format               = DXGI_FORMAT_R32G32_FLOAT;
+						break;
+
+					case mye::core::VertexAttributeType::FLOAT3:
+						vDesc.Format               = DXGI_FORMAT_R32G32B32_FLOAT;
+						break;
+
+					case mye::core::VertexAttributeType::FLOAT4:
+						vDesc.Format               = DXGI_FORMAT_R32G32B32A32_FLOAT;
+						break;
+
+					case mye::core::VertexAttributeType::INT:
+						vDesc.Format               = DXGI_FORMAT_R32_SINT;
+						break;
+
+					case mye::core::VertexAttributeType::INT2:
+						vDesc.Format               = DXGI_FORMAT_R32G32_SINT;
+						break;
+
+					case mye::core::VertexAttributeType::INT3:
+						vDesc.Format               = DXGI_FORMAT_R32G32B32_SINT;
+						break;
+
+					case mye::core::VertexAttributeType::INT4:
+						vDesc.Format               = DXGI_FORMAT_R32G32B32A32_SINT;
+						break;
+						
+					default:
+						break;
+
+				}
+
+				vDesc.InputSlot            = 0;
+				vDesc.AlignedByteOffset    = D3D11_APPEND_ALIGNED_ELEMENT;
+				vDesc.InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
+				vDesc.InstanceDataStepRate = 0;
+
+				v.push_back(vDesc);
+
+			}
+
+			return v;
+		}
+
 	}
+
 }

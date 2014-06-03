@@ -1,12 +1,19 @@
 #pragma once
 
-#include <mye/core/Resource.h>
+#include <mye/core/Parameters.h>
 #include <mye/core/String.h>
+
+/* Resources */
+
+#include <mye/core/Resource.h>
+#include <mye/core/Font.h>
+#include <mye/core/BulletCollisionShape.h>
 
 #include <mye/math/Math.h>
 
 #include <luabind/luabind.hpp>
 #include <luabind/value_wrapper.hpp>
+#include <luabind/shared_ptr_converter.hpp>
 
 #include <btBulletCollisionCommon.h>
 
@@ -170,14 +177,19 @@ namespace luabind
 			
 			__UNORDEREDMAP_STRING_STRING m;
 
-			lua_pushnil(L);
-
-			while (lua_next(L, index) != 0)
+			if (lua_type(L, index) == LUA_TTABLE)
 			{
 
-				m.insert(std::pair<mye::core::String, mye::core::String>(lua_tostring(L, -2), lua_tostring(L, -1)));
+				lua_pushnil(L);
 
-				lua_pop(L, 1);
+				while (lua_next(L, index) != 0)
+				{
+
+					m.insert(std::pair<mye::core::String, mye::core::String>(lua_tostring(L, -2), lua_tostring(L, -1)));
+
+					lua_pop(L, 1);
+
+				}
 
 			}
 
@@ -216,21 +228,113 @@ namespace luabind
 	{};
 
 	/*template <>
-	struct default_converter<mye::core::Resource::ParametersList>
+	struct default_converter<mye::core::Parameters>
 		: default_converter<__UNORDEREDMAP_STRING_STRING>
 	{};
 
 	template <>
-	struct default_converter<mye::core::Resource::ParametersList const>
-		: default_converter<mye::core::Resource::ParametersList>
+	struct default_converter<mye::core::Parameters const>
+		: default_converter<mye::core::Parameters>
 	{};
 
 	template <>
-	struct default_converter<mye::core::Resource::ParametersList const&>
-		: default_converter<mye::core::Resource::ParametersList>
+	struct default_converter<mye::core::Parameters const&>
+		: default_converter<mye::core::Parameters>
 	{};*/
 
 #undef __UNORDEREDMAP_STRING_STRING
+
+	template <>
+	struct default_converter<mye::core::Parameters> :
+		native_converter_base<mye::core::Parameters>
+	{
+
+		inline static int compute_score(lua_State *L, int index)
+		{
+
+			bool score = true;
+
+			if (lua_type(L, index) == LUA_TTABLE)
+			{
+
+				lua_pushnil(L);
+
+				while (score && lua_next(L, index) != 0)
+				{
+
+					if (lua_type(L, -2) != LUA_TSTRING || lua_type(L, -1) != LUA_TSTRING)
+					{
+						lua_pop(L, 2);
+						score = false;
+					}
+
+					lua_pop(L, 1);
+
+				}
+
+			}
+			else
+			{
+				score = false;
+			}
+
+			return score;
+
+		}
+
+		inline static mye::core::Parameters from(lua_State* L, int index)
+		{
+
+			int top = lua_gettop(L);
+
+			mye::core::Parameters m;
+
+			lua_pushnil(L);
+
+			while (lua_next(L, index) != 0)
+			{
+
+				m.Add(lua_tostring(L, -2), lua_tostring(L, -1));
+
+				lua_pop(L, 1);
+
+			}
+
+			//int newtop = lua_gettop(L);
+
+			return m;
+
+		}
+
+		inline static void to(lua_State* L, const mye::core::Parameters &m)
+		{
+
+			lua_createtable(L, 0, m.Size());
+
+			for (auto pair : m)
+			{
+
+				lua_pushstring(L, pair.first.CString());
+				lua_pushstring(L, pair.second.CString());
+
+				lua_rawset(L, -3);
+
+			}
+
+		}
+
+
+	};
+
+	template <>
+	struct default_converter<mye::core::Parameters const>
+		: default_converter<mye::core::Parameters>
+	{};
+
+	template <>
+	struct default_converter<mye::core::Parameters const&>
+		: default_converter<mye::core::Parameters>
+	{};
 
 }
 
@@ -256,4 +360,15 @@ namespace luabind\
 			o.push(L);\
 		}\
 	};\
+	template <>\
+	struct default_converter<__TYPE const>\
+		: default_converter<__TYPE>\
+	{};\
+	template <>\
+	struct default_converter<__TYPE const&>\
+	: default_converter<__TYPE>\
+	{};\
 }
+
+/*__MYE_DEFINE_RESOURCE_LUA_CONVERTER(mye::core::BulletCollisionShape)
+__MYE_DEFINE_RESOURCE_LUA_CONVERTER(mye::core::Font)*/

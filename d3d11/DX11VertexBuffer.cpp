@@ -59,7 +59,7 @@ bool DX11VertexBuffer::Create(void *data, size_t n, const VertexDeclaration &vDe
 	vertexBufferDesc.BindFlags           = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags      = 0;
 	vertexBufferDesc.MiscFlags           = 0;
-	vertexBufferDesc.StructureByteStride = 0;
+	vertexBufferDesc.StructureByteStride = vDecl.GetSize();
 
 	D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
 	vertexBufferData.pSysMem = data;
@@ -75,6 +75,14 @@ bool DX11VertexBuffer::Create(void *data, size_t n, const VertexDeclaration &vDe
 
 	return success;
 
+}
+
+void DX11VertexBuffer::Clear(void)
+{
+	if (m_buffer)
+	{
+		Destroy();
+	}
 }
 
 bool DX11VertexBuffer::Create(Mesh *mesh)

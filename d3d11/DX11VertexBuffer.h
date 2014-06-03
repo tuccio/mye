@@ -3,8 +3,7 @@
 #include "DX11Device.h"
 #include "DX11Buffer.h"
 
-#include <mye/core/Mesh.h>
-#include <mye/core/Model.h>
+#include <mye/core/VertexBuffer.h>
 
 namespace mye
 {
@@ -13,7 +12,8 @@ namespace mye
 	{
 
 		class DX11VertexBuffer :
-			public DX11Buffer
+			public DX11Buffer,
+			public mye::core::VertexBuffer
 		{
 
 		public:
@@ -28,6 +28,8 @@ namespace mye
 			bool Create(void *data, size_t n, const mye::core::VertexDeclaration &vDecl);
 			bool Create(mye::core::Mesh *mesh);
 			bool Create(mye::core::Model *model);
+
+			void Clear(void);
 
 			void Bind(void);
 
@@ -45,6 +47,8 @@ namespace mye
 			size_t m_vertices;
 
 		};
+
+		typedef boost::shared_ptr<DX11VertexBuffer> DX11VertexBufferPointer;
 
 	}
 }

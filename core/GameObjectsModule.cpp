@@ -10,7 +10,7 @@ void GameObjectsModule::PostDestroy(GameObjectHandle hObj)
 	Get(hObj)->m_delendum = true;
 }
 
-void GameObjectsModule::Update(FloatSeconds dt)
+void GameObjectsModule::Update(void)
 {
 
 	for (Iterator it = begin(); it != end(); ++it)
@@ -18,11 +18,11 @@ void GameObjectsModule::Update(FloatSeconds dt)
 
 		GameObject *object = Get(*it);
 
-		RenderComponent *rc = object->GetRenderComponent();
+		RenderComponent    *rc = object->GetRenderComponent();
 		TransformComponent *tc = object->GetTransformComponent();
 
 		object->GetTransformComponent()->Preupdate();
-		object->Update(dt);
+		object->Update();
 
 		Matrix4 oldTransform;
 
