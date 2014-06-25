@@ -2,10 +2,6 @@
 
 #include <cassert>
 
-#ifndef nullptr
-#define nullptr 0x0
-#endif
-
 namespace mye
 {
 

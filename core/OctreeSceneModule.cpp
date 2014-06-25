@@ -37,6 +37,10 @@ SceneModule::ObjectsList OctreeSceneModule::GetVisibleObjects(void)
 
 void OctreeSceneModule::AddGameObject(const GameObjectHandle &hObj)
 {
+
+	assert(Game::GetSingleton().GetGameObjectsModule()->Get(hObj) &&
+		"Non-existent object added to the scene");
+
 	m_objects.push_back(hObj);
 }
 

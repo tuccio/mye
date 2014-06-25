@@ -119,8 +119,8 @@ void Tabs::SetPosition(const Vector2i &position)
 		nullptr,
 		position.x(),
 		position.y(),
-		nullptr,
-		nullptr,
+		0,
+		0,
 		SWP_NOSIZE | SWP_NOZORDER | SWP_NOREDRAW);
 
 }
@@ -130,8 +130,8 @@ void Tabs::SetSize(const Vector2i &size)
 	
 	SetWindowPos(m_hTabs,
 		nullptr,
-		nullptr,
-		nullptr,
+		0,
+		0,
 		size.x(),
 		size.y(),
 		SWP_NOMOVE | SWP_NOZORDER | SWP_NOREDRAW);

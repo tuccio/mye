@@ -1,5 +1,10 @@
 #pragma once
 
+#include <boost/preprocessor/repetition/repeat.hpp>
+#include <boost/preprocessor/arithmetic/mod.hpp>
+#include <boost/preprocessor/arithmetic/div.hpp>
+#include <boost/preprocessor/cat.hpp>
+
 #include "Declarations.h"
 
 #include "Functions.h"

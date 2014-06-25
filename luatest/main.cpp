@@ -26,7 +26,7 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 {
 
 	ResourceTypeManager resourceTypeManager;
-	EntityTemplateManager entityTemplateManager("./entity/");
+	EntityManager entityTemplateManager("./entity/");
 
 	MouseKeyboardInput input;
 	GameObjectsModule gameobjects;

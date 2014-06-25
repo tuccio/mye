@@ -211,13 +211,13 @@ void DX11Module::Render(void)
 
 // 					if (rb)
 // 					{
-// 						m_mvp->SetData((viewProjection *
+// 						m_mvpBuffer->SetData((viewProjection *
 // 							rb->GetWorldMatrix()).Data());
 // 					}
 // 					else
 					{
-						m_mvpBuffer->SetData((viewProjection *
-							tc->GetWorldMatrix()).Data());
+						Matrix4f mvp = viewProjection * tc->GetWorldMatrix() * rc->GetModelMatrix();
+						m_mvpBuffer->SetData(mvp.Data());
 					}
 
 					m_basicvs->Use();
@@ -241,16 +241,12 @@ void DX11Module::Render(void)
 				}
 
 			}
-			else
+			
+			Text2DComponent *t2dc = object->GetText2DComponent();
+
+			if (t2dc)
 			{
-
-				Text2DComponent *t2dc = object->GetText2DComponent();
-
-				if (t2dc)
-				{
-					textes.push_back(t2dc);
-				}
-
+				textes.push_back(t2dc);
 			}
 
 		}

@@ -7,8 +7,6 @@
 #include "Game.h"
 #include "Resource.h"
 
-#include <luabind/luabind.hpp>
-
 #include <mye/core/String.h>
 #include <mye/core/ResourceTypeManager.h>
 

@@ -31,6 +31,9 @@ namespace mye
 			const mye::math::AABB& GetBounds(void) const;
 			void SetBounds(const mye::math::AABB &bounds);
 
+			const mye::math::Matrix4f& GetModelMatrix(void) const;
+			void SetModelMatrix(const mye::math::Matrix4f &matrix);
+
 			RenderComponent* Clone(void) const;
 			
 		private:
@@ -40,7 +43,10 @@ namespace mye
 			//VertexDataPointer m_vertexData;
 			ModelPointer m_model;
 			
-			mye::math::AABB m_bounds;
+			mye::math::AABB     m_bounds;
+			mye::math::Matrix4f m_modelMatrix;
+
+
 			
 		};
 

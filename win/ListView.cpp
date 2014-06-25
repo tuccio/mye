@@ -99,8 +99,8 @@ void ListView::SetPosition(const Vector2i &position)
 		nullptr,
 		position.x(),
 		position.y(),
-		nullptr,
-		nullptr,
+		0,
+		0,
 		SWP_NOSIZE | SWP_NOZORDER | SWP_NOREDRAW);
 
 }
@@ -110,8 +110,8 @@ void ListView::SetSize(const Vector2i &size)
 
 	SetWindowPos(m_hList,
 		nullptr,
-		nullptr,
-		nullptr,
+		0,
+		0,
 		size.x(),
 		size.y(),
 		SWP_NOMOVE | SWP_NOZORDER | SWP_NOREDRAW);

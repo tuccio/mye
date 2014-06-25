@@ -1,4 +1,5 @@
 #include "Debug.h"
+#include "Utils.h"
 
 #include <type_traits>
 
@@ -31,24 +32,48 @@ namespace mye
 
 		};
 
-		struct __LuaStackCleaner
+		/*template <typename R, typename ... Args>
+		R BehaviourScript::Call(const mye::core::String &f, Args ... args) const
 		{
 
-			__LuaStackCleaner(lua_State *lua) :
-				lua(lua)
+			using namespace luabind;
+
+			if (m_registryReference == LUA_NOREF)
 			{
-				top = lua_gettop(lua);
+				throw CallException(CallExceptionError::UNDEFINED_SCRIPT);
 			}
 
-			~__LuaStackCleaner(void)
+			__LuaStackCleaner stackCleaner(m_lua);
+			lua_rawgeti(m_lua, LUA_REGISTRYINDEX, m_registryReference);
+
+			lua_pushstring(m_lua, f.CString());
+			lua_rawget(m_lua, -2);
+
+			int t = lua_type(m_lua, -1);
+
+			if (t != LUA_TFUNCTION)
 			{
-				lua_settop(lua, top);
+				throw CallException(CallExceptionError::UNDEFINED_FUNCTION);
 			}
 
-			lua_State *lua;
-			int top;
+			try
+			{
 
-		};
+				object function(from_stack(m_lua, -1));
+
+				return static_cast<R, Args ...>(call_function<R>(function, args ...));
+
+			}
+			catch (error e)
+			{
+				throw CallException(CallExceptionError::RUNTIME, lua_tostring(m_lua, -1));
+			}
+			catch (...)
+			{
+				throw CallException(CallExceptionError::UNKNOWN);
+			}
+
+		}*/
 
 		template <typename R>
 		R BehaviourScript::Call(const mye::core::String &f) const
@@ -61,7 +86,7 @@ namespace mye
 				throw CallException(CallExceptionError::UNDEFINED_SCRIPT);
 			}
 
-			__LuaStackCleaner stackCleaner(m_lua);
+			LuaStackCleaner stackCleaner(m_lua);
 			lua_rawgeti(m_lua, LUA_REGISTRYINDEX, m_registryReference);
 
 			lua_pushstring(m_lua, f.CString());
@@ -104,7 +129,7 @@ namespace mye
 				throw CallException(CallExceptionError::UNDEFINED_SCRIPT);
 			}
 
-			__LuaStackCleaner stackCleaner(m_lua);
+			LuaStackCleaner stackCleaner(m_lua);
 			lua_rawgeti(m_lua, LUA_REGISTRYINDEX, m_registryReference);
 
 			lua_pushstring(m_lua, f.CString());
@@ -147,7 +172,7 @@ namespace mye
 				throw CallException(CallExceptionError::UNDEFINED_SCRIPT);
 			}
 
-			__LuaStackCleaner stackCleaner(m_lua);
+			LuaStackCleaner stackCleaner(m_lua);
 			lua_rawgeti(m_lua, LUA_REGISTRYINDEX, m_registryReference);
 
 			lua_pushstring(m_lua, f.CString());

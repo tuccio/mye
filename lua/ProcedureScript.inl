@@ -1,5 +1,7 @@
 #include <mye/core/Utils.h>
 
+#include "Utils.h"
+
 namespace mye
 {
 
@@ -9,7 +11,7 @@ namespace mye
 		void ProcedureScript::Run(void)
 		{
 
-			int top = lua_gettop(m_lua);
+			LuaStackCleaner stackCleaner(m_lua);
 
 			lua_rawgeti(m_lua, LUA_REGISTRYINDEX, m_registryReference);
 
@@ -22,9 +24,12 @@ namespace mye
 				luaL_error(m_lua, errorMessage.CString());
 
 			}
-			
-			lua_settop(m_lua, top);
 
+		}
+
+		const mye::core::String& ProcedureScript::GetLastError(void) const
+		{
+			return m_error;
 		}
 
 	}

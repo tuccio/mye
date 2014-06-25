@@ -106,6 +106,16 @@ namespace mye
 
 			std::list<GameObjectHandle> m_activeObjects;
 
+		private:
+
+			struct __ObjectInfo {
+				GameObjectHandle handle;
+				GameObject *object;
+			};
+
+			__ObjectInfo __InstantiateObject(const String &name);
+			void         __InitObject(__ObjectInfo);
+
 		};
 
 	}

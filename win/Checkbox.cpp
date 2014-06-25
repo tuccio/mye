@@ -77,17 +77,17 @@ void Checkbox::SetPosition(const mye::math::Vector2i &position)
 		nullptr,
 		position.x(),
 		position.y(),
-		nullptr,
-		nullptr,
+		0,
+		0,
 		SWP_NOSIZE | SWP_NOZORDER | SWP_NOREDRAW);
 }
 
 void Checkbox::SetSize(const mye::math::Vector2i &size)
 {
 	SetWindowPos(m_hCheckbox,
-		nullptr,
-		nullptr,
-		nullptr,
+		0,
+		0,
+		0,
 		size.x(),
 		size.y(),
 		SWP_NOMOVE | SWP_NOZORDER | SWP_NOREDRAW);

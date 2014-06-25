@@ -32,6 +32,8 @@ namespace mye
 			mye::math::Vector3 GetGravity(void) const;
 			void SetGravity(const mye::math::Vector3 &g);
 
+			size_t GetBodiesCount(void) const;
+
 		private:
 
 			btDefaultCollisionConfiguration        *m_config;

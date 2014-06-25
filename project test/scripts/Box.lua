@@ -4,14 +4,14 @@ function Init()
 	
 	self.id = tonumber(self.name:sub(4))
 	
-	local position = vec3(0, -1.17, 8.73)
-	local mass     = 1
+	local info = { }
 	
 	if (self.id == 1) then
-		position.x = -4
+		info["position"] = vec3(-4, -1.17, 8.73)
+		info["mass"]     = 1
 	else
-		position.x = 4
-		mass       = 0.25
+		info["position"] = vec3(4, -1.17, 8.73)
+		info["mass"]     = 0.25
 	end
 	
 	local box = ResourceTypeManager:CreateResource(
@@ -20,62 +20,21 @@ function Init()
 		nil,
 		{ ["type"] = "box", ["halfextents"] = "1 1 1" })
 	
-	self:AddComponent(RigidBodyComponent(box, mass))
+	self:AddComponent(RigidBodyComponent(box, info["mass"]))
 	
-	self.rigidbody.position = position
+	self.rigidbody.position = info["position"]
 	self.rigidbody.orientation = quaternion(vec3(0, 1, 0), 45)
+	
+	self.text2d.position = vec2i(8, 1024 + (self.id - 1) * 48)
+	self.text2d.color    = vec4(0, 1, 0, 1)
 
 end
 
 function Update()
 
-	--[[
-
-	local id = self.id
+	local text = "Box " .. self.id .. " velocity: " .. tostring(self.rigidbody.velocity) .. " position: " .. tostring(self.rigidbody.position)
 	
-	if (self.id == 1) then
-
-		if (Input.keyboard:IsPressed(Keyboard.D)) then
-			self.rigidbody.velocity = self.rigidbody.velocity + vec3(1, 0, 0)
-		end
-	
-		if (Input.keyboard:IsPressed(Keyboard.A)) then
-			self.rigidbody.velocity = self.rigidbody.velocity - vec3(1, 0, 0)
-		end
-	
-		if (Input.keyboard:IsPressed(Keyboard.S)) then
-			self.rigidbody.velocity = vec3(0)
-		end
-	
-	else
-	
-		if (Input.keyboard:IsPressed(Keyboard.Q)) then
-			self.rigidbody.velocity = self.rigidbody.velocity - vec3(1, 0, 0)
-		end
-	
-		if (Input.keyboard:IsPressed(Keyboard.E)) then
-			self.rigidbody.velocity = self.rigidbody.velocity + vec3(1, 0, 0)
-		end
-	
-		if (Input.keyboard:IsPressed(Keyboard.S)) then
-			self.rigidbody.velocity = vec3(0)
-		end
-		
-	end
-	
-	if (Input.keyboard:IsPressed(Keyboard.G) and self.id == 1) then
-		if (Physics.gravity.y == 0) then
-			Physics.gravity = vec3(0, -10, 0)
-		elseif (self.id == 1) then
-			Physics.gravity = vec3(0)
-		end
-	end
-	
-	if (Input.keyboard:IsPressed(Keyboard.F)) then
-		Windows.MessageBox("Object " .. tostring(id), "Position: " .. tostring(self.rigidbody.position) .. "\nVelocity: " .. tostring(self.rigidbody.velocity))
-	end
-	
-	]]--
+	self.text2d.text = text
 
 end
 

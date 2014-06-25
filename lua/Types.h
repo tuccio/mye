@@ -26,6 +26,7 @@
 #define MYE_LUA_TRANSFORM_COMPONENT "TransformComponent"
 #define MYE_LUA_RIGIDBODY_COMPONENT "RigidBodyComponent"
 #define MYE_LUA_TEXT2D_COMPONENT "Text2DComponent"
+#define MYE_LUA_RENDER_COMPONENT "RenderComponent"
 
 #define MYE_LUA_SCRIPT_COMPONENT "ScriptComponent"
 
@@ -51,6 +52,10 @@
 
 #define MYE_LUA_VEC4 "vec4"
 #define MYE_LUA_VEC4I "vec4i"
+
+#define MYE_LUA_MAT2 "mat2"
+#define MYE_LUA_MAT3 "mat3"
+#define MYE_LUA_MAT4 "mat4"
 
 #define MYE_LUA_QUATERNION "quaternion"
 #define MYE_LUA_TRANSFORM "transform"

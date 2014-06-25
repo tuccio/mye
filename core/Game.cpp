@@ -414,7 +414,7 @@ void Game::ImportScene(const String &file, std::list<GameObject*> *allocatedObje
 			if (gameObject)
 			{
 				
-				/*
+			/*
 			 * Transform component
 			 */
 

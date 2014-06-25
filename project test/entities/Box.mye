@@ -2,6 +2,19 @@ entity Box
 {
 	
 	int id;
-	// RigidBody(Box(1, 1, 1), 1, vec3(0, 0, 0), quaternion(1, 0, 0, 0));
+	
+	Text2DComponent(
+		vec2i(0, 0),
+		ResourceTypeManager:CreateResource(
+			"Font",
+			"verdana_regular_17",
+			nil,
+			nil),
+		"This is Sparta!");
+	
+	/*
+	RigidBodyComponent (Box(1, 1, 1), 1, vec3(0, 0, 0), quaternion(1, 0, 0, 0));
+	render =("box.obj", AABB(...), Transform(..))
+	*/
 	
 }

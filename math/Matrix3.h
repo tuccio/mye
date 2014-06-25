@@ -27,7 +27,10 @@ namespace mye
 			inline T& operator() (int i, int j);
 			inline const T& operator() (int i, int j) const;
 
+			inline Matrix<T, 3, 3> operator+ (const Matrix<T, 3, 3> &a) const;
+
 			inline Matrix<T, 3, 3> operator* (const Matrix<T, 3, 3> &a) const;
+			inline Matrix<T, 3, 3> operator* (T s) const;
 
 			inline Matrix<T, 3, 3>& ScaleInPlace(T s);
 
@@ -38,38 +41,30 @@ namespace mye
 			inline T* Data(void);
 			inline const T* Data(void) const;
 
-			inline T& m00(void);
-			inline const T& m00(void) const;
+#define __MYE_MATH_DEFINE_MATRIX3_GET_SET(N, I, AUX) \
+	inline T BOOST_PP_CAT(Get, BOOST_PP_CAT(BOOST_PP_DIV(I, 3), BOOST_PP_MOD(I, 3))) (void) const { return *(m_data + I); }\
+	inline void BOOST_PP_CAT(Set, BOOST_PP_CAT(BOOST_PP_DIV(I, 3), BOOST_PP_MOD(I, 3))) (const T &x) { *(m_data + I) = x; }
 
-			inline T& m01(void);
-			inline const T& m01(void) const;
+#define __MYE_MATH_DEFINE_MATRIX3_REFS(N, I, AUX) \
+	inline const T& BOOST_PP_CAT(m, BOOST_PP_CAT(BOOST_PP_DIV(I, 3), BOOST_PP_MOD(I, 3))) (void) const { return *(m_data + I); }\
+	inline T& BOOST_PP_CAT(m, BOOST_PP_CAT(BOOST_PP_DIV(I, 3), BOOST_PP_MOD(I, 3))) (void) { return *(m_data + I); }
 
-			inline T& m02(void);
-			inline const T& m02(void) const;
+			BOOST_PP_REPEAT(9,
+				__MYE_MATH_DEFINE_MATRIX3_GET_SET,
+				0)
 
-			inline T& m10(void);
-			inline const T& m10(void) const;
-
-			inline T& m11(void);
-			inline const T& m11(void) const;
-
-			inline T& m12(void);
-			inline const T& m12(void) const;
-
-			inline T& m20(void);
-			inline const T& m20(void) const;
-
-			inline T& m21(void);
-			inline const T& m21(void) const;
-
-			inline T& m22(void);
-			inline const T& m22(void) const;
+			BOOST_PP_REPEAT(9,
+				__MYE_MATH_DEFINE_MATRIX3_REFS,
+				0)
 
 		private:
 
 			T m_data[9];
 
 		};
+
+		template <typename T>
+		inline Matrix<T, 3, 3> operator* (T s, const Matrix<T, 3, 3> &m);
 
 	}
 

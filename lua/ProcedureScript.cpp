@@ -1,4 +1,5 @@
 #include "ProcedureScript.h"
+#include "Utils.h"
 
 #include <lua.hpp>
 
@@ -22,7 +23,7 @@ ProcedureScript::~ProcedureScript(void)
 bool ProcedureScript::LoadImpl(void)
 {
 
-	int top = lua_gettop(m_lua);
+	LuaStackCleaner stackCleaner(m_lua);
 
 	if (!luaL_loadfile(m_lua, (m_scriptDirectory + m_name + ".lua").CString()))
 	{
@@ -46,16 +47,14 @@ bool ProcedureScript::LoadImpl(void)
 			assert(strncmp(upvalue, "_ENV", 4) == 0);
 
 			m_registryReference = luaL_ref(m_lua, LUA_REGISTRYINDEX);
-			lua_settop(m_lua, top);
 			return true;
 
 		}
 
 	}
 
-	//luaL_error(m_lua, ("Error while loading " + m_name).CString());
+	m_error = lua_tostring(m_lua, -1);
 
-	lua_settop(m_lua, top);
 	return false;
 
 }

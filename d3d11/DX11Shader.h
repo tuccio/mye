@@ -5,7 +5,6 @@
 #include <mye/core/Resource.h>
 
 #include <d3d11.h>
-#include <Effects11/d3dx11effect.h>
 
 namespace mye
 {

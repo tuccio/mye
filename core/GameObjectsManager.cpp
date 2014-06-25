@@ -37,21 +37,10 @@ GameObjectHandle GameObjectsManager::Create(void)
 GameObjectHandle GameObjectsManager::Create(const String& name)
 {
 
-	GameObjectHandle hObj = CreateHandle();
+	__ObjectInfo objectInfo = __InstantiateObject(name);
+	__InitObject(objectInfo);
 
-	GameObject *o = new GameObject(name);
-	m_objects[hObj] = o;
-
-	if (!name.IsEmpty())
-	{
-		m_namedObjects.insert(std::pair<String, GameObjectHandle>(name, hObj));
-	}
-
-	o->OnCreation(this, hObj);
-
-	m_activeObjects.push_front(hObj);
-
-	return hObj;
+	return objectInfo.handle;
 
 }
 
@@ -66,7 +55,7 @@ GameObjectHandle GameObjectsManager::CreateEntity(const String &entity,
 												  const String &name)
 {
 
-	GameObjectHandle hObj;
+	__ObjectInfo objectInfo;
 
 	EntityPointer e = ResourceTypeManager::GetSingleton().
 		CreateResource<Entity>("Entity", entity);
@@ -83,24 +72,22 @@ GameObjectHandle GameObjectsManager::CreateEntity(const String &entity,
 		s->Load())
 	{
 
-		hObj = Create(name);
+		objectInfo = __InstantiateObject(name);
 
-		GameObject *o = Get(hObj);
-
-		o->m_entity = entity;
+		objectInfo.object->m_entity = entity;
 
 		for (Component *c : *e)
 		{
-			o->AddComponent(*c);
+			objectInfo.object->AddComponent(*c);
 		}
 
-		o->AddComponent(BehaviourComponent(s));
+		objectInfo.object->AddComponent(BehaviourComponent(s));
 
-		o->Init();
+		__InitObject(objectInfo);
 
 	}
 
-	return hObj;
+	return objectInfo.handle;
 
 }
 
@@ -241,4 +228,32 @@ bool ActiveGameObjectsIterator::operator != (const ActiveGameObjectsIterator& it
 GameObjectHandle ActiveGameObjectsIterator::operator* (void) const
 {
 	return *m_it;
+}
+
+GameObjectsManager::__ObjectInfo GameObjectsManager::__InstantiateObject(const String &name)
+{
+
+	__ObjectInfo objectInfo;
+
+	objectInfo.handle = CreateHandle();
+	objectInfo.object = new GameObject(name);
+
+	m_objects[objectInfo.handle] = objectInfo.object;
+
+	return objectInfo;
+
+}
+
+void GameObjectsManager::__InitObject(__ObjectInfo objectInfo)
+{
+
+	if (!objectInfo.object->m_name.IsEmpty())
+	{
+		m_namedObjects.insert(std::pair<String, GameObjectHandle>(objectInfo.object->m_name, objectInfo.handle));
+	}
+
+	objectInfo.object->OnCreation(this, objectInfo.handle);
+
+	m_activeObjects.push_front(objectInfo.handle);
+
 }

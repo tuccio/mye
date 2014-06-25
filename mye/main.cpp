@@ -1,5 +1,5 @@
 #include <mye/core/BulletCollisionShape.h>
-#include <mye/core/Entity.h>
+#include <mye/core/EntityManager.h>
 #include <mye/core/FontManager.h>
 #include <mye/core/ImageManager.h>
 #include <mye/core/ModelManager.h>
@@ -43,7 +43,7 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 	 */
 
 	ResourceTypeManager         resourceTypeManager;
-	EntityTemplateManager       entityTemplateManager;
+	EntityManager               entityTemplateManager;
 	ModelManager                modelManager;
 	BulletCollisionShapeManager bulletCollisionShape;
 	ImageManager                imageManager;
@@ -130,6 +130,10 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 	{
 		main->Run();
 		main->Unload();
+	}
+	else if (!main->GetLastError().IsEmpty())
+	{
+		ShowErrorBox("main.lua: " + main->GetLastError());
 	}
 	
 	game.Run();

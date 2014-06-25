@@ -136,45 +136,53 @@ void Text2DComponent::UpdateText(void)
 	for (unsigned char c : m_text)
 	{
 
-		const CharacterInfo& info = m_font->GetCharacterInfo(c);
+		if (c == '\n')
+		{
+			x = m_position.x() * m_pointSize.x() - 1;
+			y -= m_font->GetHeight() * 1.5f * m_pointSize.y();
+		}
+		else
+		{
+			const CharacterInfo& info = m_font->GetCharacterInfo(c);
 
-		float bottom = y - (info.height + info.yoffset) * m_pointSize.y();
+			float bottom = y - (info.height + info.yoffset) * m_pointSize.y();
 
-		Vector2f offset(info.xoffset * m_pointSize.x(), info.yoffset * m_pointSize.y());
-		//Vector2f offset(0, 0);
+			Vector2f offset(info.xoffset * m_pointSize.x(), info.yoffset * m_pointSize.y());
+			//Vector2f offset(0, 0);
 
-		Vector2f p1(x + offset.x(), y - offset.y());
-		Vector2f p2(p1.x(), bottom);
+			Vector2f p1(x + offset.x(), y - offset.y());
+			Vector2f p2(p1.x(), bottom);
 
-		x += (info.width + info.xoffset) * m_pointSize.x();
+			x += (info.width + info.xoffset) * m_pointSize.x();
 
-		Vector2f p3(x, p1.y());
-		Vector2f p4(x, bottom);
+			Vector2f p3(x, p1.y());
+			Vector2f p4(x, bottom);
 
-		Vector2f t1(info.left,  info.top);
-		Vector2f t2(info.left,  info.bottom);
-		Vector2f t3(info.right, info.top);
-		Vector2f t4(info.right, info.bottom);
+			Vector2f t1(info.left,  info.top);
+			Vector2f t2(info.left,  info.bottom);
+			Vector2f t3(info.right, info.top);
+			Vector2f t4(info.right, info.bottom);
 
-		data.SetVertexAttribute(i,     VertexAttributeSemantic::POSITION,  VertexAttributeType::FLOAT2, &p1);
-		data.SetVertexAttribute(i,     VertexAttributeSemantic::TEXCOORD0, VertexAttributeType::FLOAT2, &t1);
+			data.SetVertexAttribute(i,     VertexAttributeSemantic::POSITION,  VertexAttributeType::FLOAT2, &p1);
+			data.SetVertexAttribute(i,     VertexAttributeSemantic::TEXCOORD0, VertexAttributeType::FLOAT2, &t1);
 
-		data.SetVertexAttribute(i + 1, VertexAttributeSemantic::POSITION,  VertexAttributeType::FLOAT2, &p2);
-		data.SetVertexAttribute(i + 1, VertexAttributeSemantic::TEXCOORD0, VertexAttributeType::FLOAT2, &t2);
+			data.SetVertexAttribute(i + 1, VertexAttributeSemantic::POSITION,  VertexAttributeType::FLOAT2, &p2);
+			data.SetVertexAttribute(i + 1, VertexAttributeSemantic::TEXCOORD0, VertexAttributeType::FLOAT2, &t2);
 
-		data.SetVertexAttribute(i + 2, VertexAttributeSemantic::POSITION,  VertexAttributeType::FLOAT2, &p3);
-		data.SetVertexAttribute(i + 2, VertexAttributeSemantic::TEXCOORD0, VertexAttributeType::FLOAT2, &t3);
+			data.SetVertexAttribute(i + 2, VertexAttributeSemantic::POSITION,  VertexAttributeType::FLOAT2, &p3);
+			data.SetVertexAttribute(i + 2, VertexAttributeSemantic::TEXCOORD0, VertexAttributeType::FLOAT2, &t3);
 
-		data.SetVertexAttribute(i + 3, VertexAttributeSemantic::POSITION,  VertexAttributeType::FLOAT2, &p3);
-		data.SetVertexAttribute(i + 3, VertexAttributeSemantic::TEXCOORD0, VertexAttributeType::FLOAT2, &t3);
+			data.SetVertexAttribute(i + 3, VertexAttributeSemantic::POSITION,  VertexAttributeType::FLOAT2, &p3);
+			data.SetVertexAttribute(i + 3, VertexAttributeSemantic::TEXCOORD0, VertexAttributeType::FLOAT2, &t3);
 
-		data.SetVertexAttribute(i + 4, VertexAttributeSemantic::POSITION,  VertexAttributeType::FLOAT2, &p2);
-		data.SetVertexAttribute(i + 4, VertexAttributeSemantic::TEXCOORD0, VertexAttributeType::FLOAT2, &t2);
+			data.SetVertexAttribute(i + 4, VertexAttributeSemantic::POSITION,  VertexAttributeType::FLOAT2, &p2);
+			data.SetVertexAttribute(i + 4, VertexAttributeSemantic::TEXCOORD0, VertexAttributeType::FLOAT2, &t2);
 
-		data.SetVertexAttribute(i + 5, VertexAttributeSemantic::POSITION,  VertexAttributeType::FLOAT2, &p4);
-		data.SetVertexAttribute(i + 5, VertexAttributeSemantic::TEXCOORD0, VertexAttributeType::FLOAT2, &t4);
+			data.SetVertexAttribute(i + 5, VertexAttributeSemantic::POSITION,  VertexAttributeType::FLOAT2, &p4);
+			data.SetVertexAttribute(i + 5, VertexAttributeSemantic::TEXCOORD0, VertexAttributeType::FLOAT2, &t4);
 
-		i += 6;
+			i += 6;
+		}
 
 	}
 

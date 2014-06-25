@@ -20,6 +20,7 @@
 #include "LuaModule.h"
 
 #include <mye/d3d11/DX11Module.h>
+#include <mye/math/Math.h>
 
 using namespace luabind;
 using namespace mye::core;
@@ -74,11 +75,16 @@ namespace mye
 
 				class_<Text2DComponent, Component>(MYE_LUA_TEXT2D_COMPONENT).
 					def(constructor<>()).
+					def(constructor<const mye::math::Vector2i &, FontPointer, const mye::core::String &>()).
 					property("text", &Text2DComponent::GetText, &Text2DComponent::SetText).
 					property("position", &Text2DComponent::GetPosition, &Text2DComponent::SetPosition).
 					property("font", &Text2DComponent::GetFont, &Text2DComponent::SetFont).
 					property("pointsize", &Text2DComponent::GetPointSize, &Text2DComponent::SetPointSize).
-					property("color", &Text2DComponent::GetColor, &Text2DComponent::SetColor)
+					property("color", &Text2DComponent::GetColor, &Text2DComponent::SetColor),
+
+				class_<RenderComponent, Component>(MYE_LUA_RENDER_COMPONENT).
+					def(constructor<>()).
+					property("matrix", &RenderComponent::GetModelMatrix, &RenderComponent::SetModelMatrix)
 
 			];
 

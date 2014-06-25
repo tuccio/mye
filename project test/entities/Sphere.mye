@@ -1,7 +1,4 @@
 entity Sphere
 {
 	
-	vec3 velocity(0, 0, 0);
-	vec3 acceleration;
-	
 }

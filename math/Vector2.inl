@@ -221,6 +221,25 @@ namespace mye
 			return m_data;
 		}
 
+		template <typename T>
+		Matrix<T, 2, 1> Matrix<T, 2, 1>::Clamp(T minimum, T maximum)
+		{
+			return Clamp(Matrix<T, 2, 1>(minimum), Matrix<T, 2, 1>(maximum));
+		}
+
+		template <typename T>
+		Matrix<T, 2, 1> Matrix<T, 2, 1>::Clamp(const Matrix<T, 2, 1> &minimum, const Matrix<T, 2, 1> &maximum)
+		{
+
+			Matrix<T, 2, 1> v;
+
+			v.m_data[0] = ((m_data[0] < minimum.m_data[0]) ? minimum.m_data[0] : ((m_data[0] > maximum.m_data[0]) ? maximum.m_data[0] : m_data[0]));
+			v.m_data[1] = ((m_data[1] < minimum.m_data[1]) ? minimum.m_data[1] : ((m_data[1] > maximum.m_data[1]) ? maximum.m_data[1] : m_data[1]));
+
+			return v;
+
+		}
+
 	}
 
 }

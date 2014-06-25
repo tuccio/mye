@@ -21,6 +21,7 @@ namespace mye
 			[
 
 				class_<PhysicsModule>("__PhysicsModule").
+					def("GetBodiesCount", &PhysicsModule::GetBodiesCount).
 					property("gravity", &PhysicsModule::GetGravity, &PhysicsModule::SetGravity)
 
 			];

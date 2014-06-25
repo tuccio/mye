@@ -6,7 +6,6 @@
 #include <mye/d3d11/DX11Window.h>
 
 #include <mye/core/Camera.h>
-#include <mye/core/ColorRGBA.h>
 #include <mye/core/GameObject.h>
 
 #include <mye/win/Tabs.h>

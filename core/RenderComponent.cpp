@@ -6,7 +6,8 @@ using namespace mye::math;
 RenderComponent::RenderComponent(void) :
 	Component(ComponentTypes::RENDER, "render"),
 	m_visible(true),
-	m_bounds(AABB::FromMinMax(Vector3(0), Vector3(0)))
+	m_bounds(AABB::FromMinMax(Vector3(0), Vector3(0))),
+	m_modelMatrix(1)
 {
 }
 
@@ -53,4 +54,14 @@ void RenderComponent::SetBounds(const mye::math::AABB &bounds)
 RenderComponent* RenderComponent::Clone(void) const
 {
 	return new RenderComponent(*this);
+}
+
+const mye::math::Matrix4f& RenderComponent::GetModelMatrix(void) const
+{
+	return m_modelMatrix;
+}
+
+void RenderComponent::SetModelMatrix(const mye::math::Matrix4f &matrix)
+{
+	m_modelMatrix = matrix;
 }

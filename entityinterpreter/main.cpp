@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 {
 
 	ResourceTypeManager rtm;
-	EntityTemplateManager etm;
+	EntityManager etm;
 
 	ResourceHandle sphereRH = etm.CreateResource("Sphere");
 	

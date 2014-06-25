@@ -4,4 +4,13 @@ entity Controller
 	GameObjectHandle box1;
 	GameObjectHandle box2;
 	
+	Text2DComponent(
+		vec2i(8, 8),
+		ResourceTypeManager:CreateResource(
+			"Font",
+			"verdana_regular_17",
+			nil,
+			nil),
+		"This is Sparta!");
+	
 }

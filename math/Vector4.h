@@ -43,6 +43,9 @@ namespace mye
 			inline Matrix<T, 4, 1> CwiseMin(const Matrix<T, 4, 1> &v) const;
 			inline Matrix<T, 4, 1> CwiseMax(const Matrix<T, 4, 1> &v) const;
 
+			inline Matrix<T, 4, 1> Clamp(T minimum, T maximum);
+			inline Matrix<T, 4, 1> Clamp(const Matrix<T, 4, 1> &minimum, const Matrix<T, 4, 1> &maximum);
+
 			inline T& x(void);
 			inline const T& x(void) const;
 

@@ -19,6 +19,7 @@ RigidBodyComponent::RigidBodyComponent(BulletCollisionShapePointer shape,
 
 	btRigidBody::btRigidBodyConstructionInfo constructionInfo(mass, m_motionState, m_shape->GetShape());
 	m_rigidbody = new btRigidBody(constructionInfo);
+	m_rigidbody->setDeactivationTime(DISABLE_DEACTIVATION);
 
 	Game::GetSingleton().GetPhysicsModule()->AddRigidBody(m_rigidbody);
 

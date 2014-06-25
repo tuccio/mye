@@ -8,8 +8,10 @@
 #include "ProcedureScript.h"
 #include "ScriptResourceLoader.h"
 #include "Script.h"
+#include "Utils.h"
 
 #include <lua.hpp>
+#include <luabind/luabind.hpp>
 
 namespace mye
 {
@@ -33,6 +35,9 @@ namespace mye
 			void ShutDown(void);
 
 			void Preupdate(mye::core::FloatSeconds dt);
+
+			template <typename T>
+			T Create(const mye::core::String &name, const std::vector<std::string> &initializer);
 
 			lua_State* GetLuaState(void);
 
@@ -63,23 +68,11 @@ namespace mye
 			mye::core::String m_scriptDirectory;
 
 		};
+		
 
 	}
 
 }
-
-/*
-namespace mye
-{
-
-	namespace lua
-	{
-		struct LuaScriptCaller;
-		typedef mye::core::ScriptModule<LuaScriptCaller> LuaModule;
-	}
-
-}
-
 
 namespace mye
 {
@@ -87,40 +80,56 @@ namespace mye
 	namespace core
 	{
 
-		template <>
-		class ScriptModule<mye::lua::LuaScriptCaller> :
-			public IScriptModule
+		template <typename T>
+		struct ScriptObjectCreator
 		{
 
-		public:
+			static boost::optional<T> Create(const mye::core::String &name, const mye::core::String &initializer)
+			{
 
-			ScriptModule(void);
-			~ScriptModule(void);
+				// TODO: Sandbox
 
-			lua_State* GetLuaState(void);
+				lua_State *lua = LPLUASTATE;
+				mye::lua::LuaStackCleaner stackCleaner(lua);
 
-			bool RunFile(const mye::core::String &file);
-			bool RunString(const mye::core::String &code);
+				mye::core::String code(511);
 
-			mye::core::String GetLastError(void) const;
+				code = "return ";
+				code += name;
+				code += "(";
+				code += initializer;
 
-			bool Init(void);
-			void ShutDown(void);
+				/*bool first = true;
 
-			mye::core::Script<mye::lua::LuaScriptCaller> LoadClass(const mye::core::String &filename);
-			mye::core::Script<mye::lua::LuaScriptCaller> LoadProcedure(const mye::core::String &filename);
+				for (auto &s : initializer)
+				{
 
-		private:
+					if (!first)
+					{
+						code += ",";
+					}
+					else
+					{
+						first = false;
+					}
+					
+					code += s.c_str();
 
-			void OpenAllLibraries(void);
+				}*/
 
-			lua_State *_L;
-			mye::core::String _lastError;
+				code += ")";
+
+				if (luaL_dostring(lua, code.CString()))
+				{
+					return boost::optional<T>();
+				}
+
+				return luabind::object_cast_nothrow<T>(luabind::object(luabind::from_stack(lua, -1)));
+
+			}
 
 		};
 
 	}
 
 }
-
-*/

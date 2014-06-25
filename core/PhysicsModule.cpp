@@ -77,3 +77,8 @@ void PhysicsModule::SetGravity(const mye::math::Vector3 &g)
 {
 	m_world->setGravity(btVector3(g.x(), g.y(), g.z()));
 }
+
+size_t PhysicsModule::GetBodiesCount(void) const
+{
+	return m_world->getNumCollisionObjects();
+}

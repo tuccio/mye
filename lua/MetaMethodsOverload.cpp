@@ -1,6 +1,6 @@
 #include "MetaMethodsOverload.h"
 #include "Math.h"
-#include "Util.h"
+#include "Utils.h"
 #include "GameObjectHandle.h"
 #include "Converters.h"
 
@@ -141,6 +141,11 @@ namespace mye
 									rvalue = object(L, boost::ref(*static_cast<Text2DComponent*>(component)));
 									break;
 
+								case ComponentTypes::RENDER:
+
+									rvalue = object(L, boost::ref(*static_cast<RenderComponent*>(component)));
+									break;
+
 								default:
 									break;
 								}
@@ -275,6 +280,17 @@ namespace mye
 
 						auto value = object_cast<Text2DComponent>(object(from_stack(L, 3)));
 						*static_cast<Text2DComponent*>(component) = value;
+
+						break;
+
+					}
+
+				case ComponentTypes::RENDER:
+
+					{
+
+						auto value = object_cast<RenderComponent>(object(from_stack(L, 3)));
+						*static_cast<RenderComponent*>(component) = value;
 
 						break;
 

@@ -267,8 +267,8 @@ void Window::SetSize(const mye::math::Vector2i &size)
 
 	SetWindowPos(m_hWnd,
 		nullptr,
-		nullptr,
-		nullptr,
+		0,
+		0,
 		size.x(),
 		size.y(),
 		SWP_NOMOVE | SWP_NOZORDER);
@@ -295,8 +295,8 @@ void Window::SetPosition(const mye::math::Vector2i &position)
 		nullptr,
 		position.x(),
 		position.y(),
-		nullptr,
-		nullptr,
+		0,
+		0,
 		SWP_NOSIZE | SWP_NOZORDER);
 
 }

@@ -85,7 +85,11 @@ namespace mye
 						value("Ctrl"      , KeyboardVK::MYE_VK_LCTRL),
 						value("RightCtrl" , KeyboardVK::MYE_VK_RCTRL),
 						value("Tab"       , KeyboardVK::MYE_VK_TAB),
-						value("Backspace" , KeyboardVK::MYE_VK_BACKSPACE)
+						value("Backspace" , KeyboardVK::MYE_VK_BACKSPACE),
+						value("LeftArrow" , KeyboardVK::MYE_VK_LEFT_ARROW),
+						value("RightArrow", KeyboardVK::MYE_VK_RIGHT_ARROW),
+						value("UpArrow"   , KeyboardVK::MYE_VK_UP_ARROW),
+						value("DownArrow" , KeyboardVK::MYE_VK_DOWN_ARROW)
 
 					].
 

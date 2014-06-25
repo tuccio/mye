@@ -2,12 +2,20 @@
 
 #include "Module.h"
 #include "Time.h"
+#include "String.h"
+
+#include <vector>
+
+#include <boost/optional.hpp>
 
 namespace mye
 {
 
 	namespace core
 	{
+
+		template <typename T>
+		struct ScriptObjectCreator;
 
 		class ScriptModule :
 			public Module
@@ -16,6 +24,12 @@ namespace mye
 		public:
 
 			virtual void Preupdate(FloatSeconds dt) = 0;
+
+			template <typename T>
+			boost::optional<T> Create(const String &name, const String &initializer)
+			{
+				return ScriptObjectCreator<T>::Create(name, initializer);
+			}
 
 		};
 

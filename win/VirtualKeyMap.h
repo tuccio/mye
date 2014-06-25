@@ -51,6 +51,19 @@ namespace mye
 			case VK_SPACE:
 				return mye::core::KeyboardVK::MYE_VK_SPACE;
 
+			case VK_LEFT:
+				return mye::core::KeyboardVK::MYE_VK_LEFT_ARROW;
+
+			case VK_RIGHT:
+				return mye::core::KeyboardVK::MYE_VK_RIGHT_ARROW;
+
+			case VK_UP:
+				return mye::core::KeyboardVK::MYE_VK_UP_ARROW;
+
+			case VK_DOWN:
+				return mye::core::KeyboardVK::MYE_VK_DOWN_ARROW;
+				
+
 			default:
 				return mye::core::KeyboardVK::MYE_VK_COUNT;
 

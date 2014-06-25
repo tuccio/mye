@@ -22,10 +22,16 @@ namespace mye
 
 			inline void Run(void);
 
+			inline const mye::core::String& GetLastError(void) const;
+
 		protected:
 
 			bool LoadImpl(void);
 			void UnloadImpl(void);
+
+		private:
+
+			mye::core::String m_error;
 
 		};
 

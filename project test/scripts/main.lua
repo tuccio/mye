@@ -8,27 +8,57 @@ local verdana = ResourceTypeManager:CreateResource(
 	
 verdana:Load()
 
---local text = GameObjects:Create()
+local controller = GameObjects:CreateEntity("Controller")
 
---text.AddComponent(Text2DComponent(vec2i(0, 0), verdana, "Test text"))
-
---Windows.MessageBox("Test", sup(verdana))
---Windows.MessageBox("Test", sup(vec2i(0, 0), verdana, "Test text"))
---Text2DComponent(vec2i(0, 0), verdana, "Test text")
+Scene:AddGameObject(controller)
 
 --[[
+Windows.AllocConsole()
 
-text:AddComponent(Text2DComponent())
+local printMatrix = function(m, padding)
 
-text.text2d.text = "This is a simple test (or text?)"
-text.text2d.position = vec2i(8, 8)
-text.text2d.font = verdana
-text.text2d.pointsize = vec2(1 / 800, 1 / 600)
-text.text2d.color = vec4(1, 0, 0, 1)
+	for i = 0, 3 do
+	
+		for j = 0, 3 do
+		
+		local number = tostring(m["m" .. tostring(i) .. tostring(j)])
+		local spacing = "," .. string.rep(" ", padding - number:len())
+		
+		if (j == 3) then
+			spacing = "\n"
+		end
+		
+		io.write(number .. spacing)
+		
+		end
+	
+	end
+end
 
-Scene:AddGameObject(text)
+local quaternion = quaternion(vec3(0, 1, 0), 45)
+local rotation = Math.RotationMatrix3(quaternion)
 
+local translation = vec3(2, 0, 0)
+
+local m1 = Math.TranslationMatrix4(translation) * mat4(rotation)
+local m2 = Math.RotationTranslationMatrix4(quaternion, translation)
+
+local transform = transform()
+
+transform.orientation = quaternion
+transform.position = translation
+transform.scale = vec3(1)
+
+local m3 = transform.matrix
+
+print("*** M1 ***")
+printMatrix(m1, 25)
+
+print("*** M2 ***")
+printMatrix(m2, 25)
+
+print("*** M3 ***")
+printMatrix(m3, 25)
+
+print("Test... " .. ((m1 == m2 and m2 == m3) and "OK" or "FAILED"))
 ]]--
-
-local controller = GameObjects:CreateEntity("Controller")
-Scene:AddGameObject(controller)

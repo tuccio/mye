@@ -61,11 +61,11 @@ namespace mye
 
 			mye::math::Matrix4 projectionMatrix(0);
 
-			projectionMatrix(0, 0) = xScale;
-			projectionMatrix(1, 1) = yScale;
-			projectionMatrix(2, 2) = Q;
-			projectionMatrix(3, 2) = 1;
-			projectionMatrix(2, 3) = - Q * m_nearClipDistance;
+			projectionMatrix.m00() = xScale;
+			projectionMatrix.m11() = yScale;
+			projectionMatrix.m22() = Q;
+			projectionMatrix.m32() = 1;
+			projectionMatrix.m23() = - Q * m_nearClipDistance;
 
 			return projectionMatrix;
 

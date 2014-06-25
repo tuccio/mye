@@ -182,6 +182,8 @@ void GameObject::OnCreation(GameObjectsManager *owner,
 
 	TransformComponent *t = static_cast<TransformComponent*>(AddComponent(TransformComponent()));
 
+	Init();
+
 }
 
 void GameObject::OnDestruction(void)

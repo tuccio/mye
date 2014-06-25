@@ -1,18 +1,27 @@
+function Init()
+
+	local sphere = ResourceTypeManager:CreateResource(
+		"BulletCollisionShape",
+		"SPHERE_SHAPE",
+		nil,
+		{ ["type"] = "sphere", ["radius"] = "1" })
+		
+	self:AddComponent(RigidBodyComponent(sphere, 1))
+	
+	self.rigidbody.position = vec3(0, -1.17, 4.73)
+	--self.rigidbody.scaling  = vec3(3, 3, 3)
+	
+
+end
+
 function Update()
 
-	local x = self.transform.position
-	
-	if (x.x > 2) then
-		self.acceleration = vec3(-3, 0, 0)
-	elseif (x.x < -2) then
-		self.acceleration = vec3(3, 0, 0)
+	if (Input.keyboard:IsPressed(Keyboard.M)) then
+		self.render.matrix = Math.ScaleMatrix4(vec3(1.1)) * self.render.matrix
 	end
 	
-	local dv = self.acceleration * Time.Delta;
-	self.velocity = self.velocity + dv;
-	
-	local dx = self.velocity * Time.Delta
-	
-	self.transform.position = x + dx
+	if (Input.keyboard:IsPressed(Keyboard.N)) then
+		self.render.matrix = Math.ScaleMatrix4(vec3(0.9)) * self.render.matrix
+	end
 
 end

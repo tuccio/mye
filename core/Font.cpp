@@ -108,8 +108,8 @@ bool Font::LoadImpl(void)
 					info.xoffset = offset.x();
 					info.yoffset = offset.y();
 
-					info.left    = (float) (rect.x() - 1) / imageWidth;
-					info.top     = (float) (rect.y() - 1) / imageHeight;
+					info.left    = (float) (rect.x()) / imageWidth;
+					info.top     = (float) (rect.y()) / imageHeight;
 
 					info.right   = (float) (rect.x() + rect.z()) / imageWidth;
 					info.bottom  = (float) (rect.y() + rect.w()) / imageHeight;

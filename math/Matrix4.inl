@@ -173,6 +173,41 @@ namespace mye
 
 		template <typename T>
 		inline Matrix<T, 4, 4> Matrix<T, 4, 4>::operator* (
+			T s) const
+		{
+
+			Matrix<T, 4, 4> r;
+
+			_00(r.m_data) = s * _00(m_data);
+			_01(r.m_data) = s * _01(m_data);
+			_02(r.m_data) = s * _02(m_data);
+			_03(r.m_data) = s * _03(m_data);
+			_10(r.m_data) = s * _10(m_data);
+			_11(r.m_data) = s * _11(m_data);
+			_12(r.m_data) = s * _12(m_data);
+			_13(r.m_data) = s * _13(m_data);
+			_20(r.m_data) = s * _20(m_data);
+			_21(r.m_data) = s * _21(m_data);
+			_22(r.m_data) = s * _22(m_data);
+			_23(r.m_data) = s * _23(m_data);
+			_30(r.m_data) = s * _30(m_data);
+			_31(r.m_data) = s * _31(m_data);
+			_32(r.m_data) = s * _32(m_data);
+			_33(r.m_data) = s * _33(m_data);
+
+			return r;
+
+		}
+
+		template <typename T>
+		Matrix<T, 4, 4>& Matrix<T, 4, 4>::operator= (const Matrix<T, 4, 4> &m)
+		{
+			memcpy(m_data, m.m_data, sizeof(T) * 16);
+			return *this;
+		}
+
+		template <typename T>
+		inline Matrix<T, 4, 4> Matrix<T, 4, 4>::operator* (
 			const Matrix<T, 4, 4> &b) const
 		{
 
@@ -287,6 +322,34 @@ namespace mye
 		}
 
 		template <typename T>
+		inline Matrix<T, 4, 4> Matrix<T, 4, 4>::operator+ (
+			const Matrix<T, 4, 4> &b) const
+		{
+
+			Matrix<T, 4, 4> r;
+
+			_00(r.m_data) = _00(m_data) + _00(b.m_data);
+			_01(r.m_data) = _01(m_data) + _01(b.m_data);
+			_02(r.m_data) = _02(m_data) + _02(b.m_data);
+			_03(r.m_data) = _03(m_data) + _03(b.m_data);
+			_10(r.m_data) = _10(m_data) + _10(b.m_data);
+			_11(r.m_data) = _11(m_data) + _11(b.m_data);
+			_12(r.m_data) = _12(m_data) + _12(b.m_data);
+			_13(r.m_data) = _13(m_data) + _13(b.m_data);
+			_20(r.m_data) = _20(m_data) + _20(b.m_data);
+			_21(r.m_data) = _21(m_data) + _21(b.m_data);
+			_22(r.m_data) = _22(m_data) + _22(b.m_data);
+			_23(r.m_data) = _23(m_data) + _23(b.m_data);
+			_30(r.m_data) = _30(m_data) + _30(b.m_data);
+			_31(r.m_data) = _31(m_data) + _31(b.m_data);
+			_32(r.m_data) = _32(m_data) + _32(b.m_data);
+			_33(r.m_data) = _33(m_data) + _33(b.m_data);
+
+			return r;
+
+		}
+
+		template <typename T>
 		Matrix<T, 4, 4> Matrix<T, 4, 4>::Transpose(void) const
 		{
 			Matrix<T, 4, 4> r;
@@ -316,124 +379,76 @@ namespace mye
 		}
 
 		template <typename T>
-		Matrix<T, 4, 4> Matrix<T, 4, 4>::Inverse(void) const
+		Matrix<T, 4, 4> Matrix<T, 4, 4>::operator- (void) const
 		{
 
 			Matrix<T, 4, 4> r;
 
-			_00(r.m_data) = _12(m_data) * _23(m_data) * _31(m_data)
-				- _13(m_data) * _22(m_data) * _31(m_data)
-				+ _13(m_data) * _21(m_data) * _32(m_data)
-				- _11(m_data) * _23(m_data) * _32(m_data)
-				- _12(m_data) * _21(m_data) * _33(m_data)
-				+ _11(m_data) * _22(m_data) * _33(m_data);
+			_00(r.m_data) = - _00(m_data);
+			_01(r.m_data) = - _01(m_data);
+			_02(r.m_data) = - _02(m_data);
+			_03(r.m_data) = - _03(m_data);
+			_10(r.m_data) = - _10(m_data);
+			_11(r.m_data) = - _11(m_data);
+			_12(r.m_data) = - _12(m_data);
+			_13(r.m_data) = - _13(m_data);
+			_20(r.m_data) = - _20(m_data);
+			_21(r.m_data) = - _21(m_data);
+			_22(r.m_data) = - _22(m_data);
+			_23(r.m_data) = - _23(m_data);
+			_30(r.m_data) = - _30(m_data);
+			_31(r.m_data) = - _31(m_data);
+			_32(r.m_data) = - _32(m_data);
+			_33(r.m_data) = - _33(m_data);
 
-			_01(r.m_data) = _03(m_data) * _22(m_data) * _31(m_data)
-				- _02(m_data) * _23(m_data) * _31(m_data)
-				- _03(m_data) * _21(m_data) * _32(m_data)
-				+ _01(m_data) * _23(m_data) * _32(m_data)
-				+ _02(m_data) * _21(m_data) * _33(m_data)
-				- _01(m_data) * _22(m_data) * _33(m_data);
+			return r;
 
-			_02(r.m_data) = _02(m_data) * _13(m_data) * _31(m_data)
-				- _03(m_data) * _12(m_data) * _31(m_data)
-				+ _03(m_data) * _11(m_data) * _32(m_data)
-				- _01(m_data) * _13(m_data) * _32(m_data)
-				- _02(m_data) * _11(m_data) * _33(m_data)
-				+ _01(m_data) * _12(m_data) * _33(m_data);
+		}
 
-			_03(r.m_data) = _03(m_data) * _12(m_data) * _21(m_data)
-				- _02(m_data) * _13(m_data) * _21(m_data)
-				- _03(m_data) * _11(m_data) * _22(m_data)
-				+ _01(m_data) * _13(m_data) * _22(m_data)
-				+ _02(m_data) * _11(m_data) * _23(m_data)
-				- _01(m_data) * _12(m_data) * _23(m_data);
+		template <typename T>
+		Matrix<T, 4, 4> Matrix<T, 4, 4>::Inverse(void) const
+		{
 
-			_10(r.m_data) = _13(m_data) * _22(m_data) * _30(m_data)
-				- _12(m_data) * _23(m_data) * _30(m_data)
-				- _13(m_data) * _20(m_data) * _32(m_data)
-				+ _10(m_data) * _23(m_data) * _32(m_data)
-				+ _12(m_data) * _20(m_data) * _33(m_data)
-				- _10(m_data) * _22(m_data) * _33(m_data);
+			T s0 = _00(m_data) * _11(m_data) - _10(m_data) * _01(m_data);
+			T s1 = _00(m_data) * _12(m_data) - _10(m_data) * _02(m_data);
+			T s2 = _00(m_data) * _13(m_data) - _10(m_data) * _03(m_data);
+			T s3 = _01(m_data) * _12(m_data) - _11(m_data) * _02(m_data);
+			T s4 = _01(m_data) * _13(m_data) - _11(m_data) * _03(m_data);
+			T s5 = _02(m_data) * _13(m_data) - _12(m_data) * _03(m_data);
 
-			_11(r.m_data) = _02(m_data) * _23(m_data) * _30(m_data)
-				- _03(m_data) * _22(m_data) * _30(m_data)
-				+ _03(m_data) * _20(m_data) * _32(m_data)
-				- _00(m_data) * _23(m_data) * _32(m_data)
-				- _02(m_data) * _20(m_data) * _33(m_data)
-				+ _00(m_data) * _22(m_data) * _33(m_data);
+			T c5 = _22(m_data) * _33(m_data) - _32(m_data) * _23(m_data);
+			T c4 = _21(m_data) * _33(m_data) - _31(m_data) * _23(m_data);
+			T c3 = _21(m_data) * _32(m_data) - _31(m_data) * _22(m_data);
+			T c2 = _20(m_data) * _33(m_data) - _30(m_data) * _23(m_data);
+			T c1 = _20(m_data) * _32(m_data) - _30(m_data) * _22(m_data);
+			T c0 = _20(m_data) * _31(m_data) - _30(m_data) * _21(m_data);
 
-			_12(r.m_data) = _03(m_data) * _12(m_data) * _30(m_data)
-				- _02(m_data) * _13(m_data) * _30(m_data)
-				- _03(m_data) * _10(m_data) * _32(m_data)
-				+ _00(m_data) * _13(m_data) * _32(m_data)
-				+ _02(m_data) * _10(m_data) * _33(m_data)
-				- _00(m_data) * _12(m_data) * _33(m_data);
+			Matrix<T, 4, 4> r;
 
-			_13(r.m_data) = _02(m_data) * _13(m_data) * _20(m_data)
-				- _03(m_data) * _12(m_data) * _20(m_data)
-				+ _03(m_data) * _10(m_data) * _22(m_data)
-				- _00(m_data) * _13(m_data) * _22(m_data)
-				- _02(m_data) * _10(m_data) * _23(m_data)
-				+ _00(m_data) * _12(m_data) * _23(m_data);
+			_00(r.m_data) =   _11(m_data) * c5 - _12(m_data) * c4 + _13(m_data) * c3;
+			_01(r.m_data) = - _01(m_data) * c5 + _02(m_data) * c4 - _03(m_data) * c3;
+			_02(r.m_data) =   _31(m_data) * s5 - _32(m_data) * s4 + _33(m_data) * s3;
+			_03(r.m_data) = - _21(m_data) * s5 + _22(m_data) * s4 - _23(m_data) * s3;
 
-			_20(r.m_data) = _11(m_data) * _23(m_data) * _30(m_data)
-				- _13(m_data) * _21(m_data) * _30(m_data)
-				+ _13(m_data) * _20(m_data) * _31(m_data)
-				- _10(m_data) * _23(m_data) * _31(m_data)
-				- _11(m_data) * _20(m_data) * _33(m_data)
-				+ _10(m_data) * _21(m_data) * _33(m_data);
+			_10(r.m_data) = - _10(m_data) * c5 + _12(m_data) * c2 - _13(m_data) * c1;
+			_11(r.m_data) =   _00(m_data) * c5 - _02(m_data) * c2 + _03(m_data) * c1;
+			_12(r.m_data) = - _30(m_data) * s5 + _32(m_data) * s2 - _33(m_data) * s1;
+			_13(r.m_data) =   _20(m_data) * s5 - _22(m_data) * s2 + _23(m_data) * s1;
 
-			_21(r.m_data) = _03(m_data) * _21(m_data) * _30(m_data)
-				- _01(m_data) * _23(m_data) * _30(m_data)
-				- _03(m_data) * _20(m_data) * _31(m_data)
-				+ _00(m_data) * _23(m_data) * _31(m_data)
-				+ _01(m_data) * _20(m_data) * _33(m_data)
-				- _00(m_data) * _21(m_data) * _33(m_data);
+			_20(r.m_data) =   _10(m_data) * c4 - _11(m_data) * c2 + _13(m_data) * c0;
+			_21(r.m_data) = - _00(m_data) * c4 + _01(m_data) * c2 - _03(m_data) * c0;
+			_22(r.m_data) =   _30(m_data) * s4 - _31(m_data) * s2 + _33(m_data) * s0;
+			_23(r.m_data) = - _20(m_data) * s4 + _21(m_data) * s2 - _23(m_data) * s0;
 
-			_22(r.m_data) = _01(m_data) * _13(m_data) * _30(m_data)
-				- _03(m_data) * _11(m_data) * _30(m_data)
-				+ _03(m_data) * _10(m_data) * _31(m_data)
-				- _00(m_data) * _13(m_data) * _31(m_data)
-				- _01(m_data) * _10(m_data) * _33(m_data)
-				+ _00(m_data) * _11(m_data) * _33(m_data);
+			_30(r.m_data) = - _10(m_data) * c3 + _11(m_data) * c1 - _12(m_data) * c0;
+			_31(r.m_data) =   _00(m_data) * c3 - _01(m_data) * c1 + _02(m_data) * c0;
+			_32(r.m_data) = - _30(m_data) * s3 + _31(m_data) * s1 - _32(m_data) * s0;
+			_33(r.m_data) =   _20(m_data) * s3 - _21(m_data) * s1 + _22(m_data) * s0;
 
-			_23(r.m_data) = _03(m_data) * _11(m_data) * _20(m_data)
-				- _01(m_data) * _13(m_data) * _20(m_data)
-				- _03(m_data) * _10(m_data) * _21(m_data)
-				+ _00(m_data) * _13(m_data) * _21(m_data)
-				+ _01(m_data) * _10(m_data) * _23(m_data)
-				- _00(m_data) * _11(m_data) * _23(m_data);
+			T determinant = Determinant();
+			assert(determinant != T(0));
 
-			_30(r.m_data) = _12(m_data) * _21(m_data) * _30(m_data)
-				- _11(m_data) * _22(m_data) * _30(m_data)
-				- _12(m_data) * _20(m_data) * _31(m_data)
-				+ _10(m_data) * _22(m_data) * _31(m_data)
-				+ _11(m_data) * _20(m_data) * _32(m_data)
-				- _10(m_data) * _21(m_data) * _32(m_data);
-
-			_31(r.m_data) = _01(m_data) * _22(m_data) * _30(m_data)
-				- _02(m_data) * _21(m_data) * _30(m_data)
-				+ _02(m_data) * _20(m_data) * _31(m_data)
-				- _00(m_data) * _22(m_data) * _31(m_data)
-				- _01(m_data) * _20(m_data) * _32(m_data)
-				+ _00(m_data) * _21(m_data) * _32(m_data);
-
-			_32(r.m_data) = _02(m_data) * _11(m_data) * _30(m_data)
-				- _01(m_data) * _12(m_data) * _30(m_data)
-				- _02(m_data) * _10(m_data) * _31(m_data)
-				+ _00(m_data) * _12(m_data) * _31(m_data)
-				+ _01(m_data) * _10(m_data) * _32(m_data)
-				- _00(m_data) * _11(m_data) * _32(m_data);
-
-			_33(r.m_data) = _01(m_data) * _12(m_data) * _20(m_data)
-				- _02(m_data) * _11(m_data) * _20(m_data)
-				+ _02(m_data) * _10(m_data) * _21(m_data)
-				- _00(m_data) * _12(m_data) * _21(m_data)
-				- _01(m_data) * _10(m_data) * _22(m_data)
-				+ _00(m_data) * _11(m_data) * _22(m_data);
-
-			return r.ScaleInPlace(1.0f / r.Determinant());
+			return r.ScaleInPlace(T(1) / determinant);
 
 		}
 
@@ -481,195 +496,9 @@ namespace mye
 		}
 
 		template <typename T>
-		T& Matrix<T, 4, 4>::m00(void)
+		inline Matrix<T, 4, 4> operator* (T s, const Matrix<T, 4, 4> &m)
 		{
-			return _00(m_data);
-		}
-
-		template <typename T>
-		const T& Matrix<T, 4, 4>::m00(void) const
-		{
-			return _00(m_data);
-		}
-
-		template <typename T>
-		T& Matrix<T, 4, 4>::m01(void)
-		{
-			return _01(m_data);
-		}
-
-		template <typename T>
-		const T& Matrix<T, 4, 4>::m01(void) const
-		{
-			return _01(m_data);
-		}
-
-		template <typename T>
-		T& Matrix<T, 4, 4>::m02(void)
-		{
-			return _02(m_data);
-		}
-
-		template <typename T>
-		const T& Matrix<T, 4, 4>::m02(void) const
-		{
-			return _02(m_data);
-		}
-
-		template <typename T>
-		T& Matrix<T, 4, 4>::m03(void)
-		{
-			return _03(m_data);
-		}
-
-		template <typename T>
-		const T& Matrix<T, 4, 4>::m03(void) const
-		{
-			return _03(m_data);
-		}
-
-		template <typename T>
-		T& Matrix<T, 4, 4>::m10(void)
-		{
-			return _10(m_data);
-		}
-
-		template <typename T>
-		const T& Matrix<T, 4, 4>::m10(void) const
-		{
-			return _10(m_data);
-		}
-
-		template <typename T>
-		T& Matrix<T, 4, 4>::m11(void)
-		{
-			return _11(m_data);
-		}
-
-		template <typename T>
-		const T& Matrix<T, 4, 4>::m11(void) const
-		{
-			return _11(m_data);
-		}
-
-		template <typename T>
-		T& Matrix<T, 4, 4>::m12(void)
-		{
-			return _12(m_data);
-		}
-
-		template <typename T>
-		const T& Matrix<T, 4, 4>::m12(void) const
-		{
-			return _12(m_data);
-		}
-
-		template <typename T>
-		T& Matrix<T, 4, 4>::m13(void)
-		{
-			return _13(m_data);
-		}
-
-		template <typename T>
-		const T& Matrix<T, 4, 4>::m13(void) const
-		{
-			return _13(m_data);
-		}
-
-		template <typename T>
-		T& Matrix<T, 4, 4>::m20(void)
-		{
-			return _20(m_data);
-		}
-
-		template <typename T>
-		const T& Matrix<T, 4, 4>::m20(void) const
-		{
-			return _20(m_data);
-		}
-
-		template <typename T>
-		T& Matrix<T, 4, 4>::m21(void)
-		{
-			return _21(m_data);
-		}
-
-		template <typename T>
-		const T& Matrix<T, 4, 4>::m21(void) const
-		{
-			return _21(m_data);
-		}
-
-		template <typename T>
-		T& Matrix<T, 4, 4>::m22(void)
-		{
-			return _22(m_data);
-		}
-
-		template <typename T>
-		const T& Matrix<T, 4, 4>::m22(void) const
-		{
-			return _22(m_data);
-		}
-
-		template <typename T>
-		T& Matrix<T, 4, 4>::m23(void)
-		{
-			return _23(m_data);
-		}
-
-		template <typename T>
-		const T& Matrix<T, 4, 4>::m23(void) const
-		{
-			return _23(m_data);
-		}
-
-		template <typename T>
-		T& Matrix<T, 4, 4>::m30(void)
-		{
-			return _30(m_data);
-		}
-
-		template <typename T>
-		const T& Matrix<T, 4, 4>::m30(void) const
-		{
-			return _30(m_data);
-		}
-
-		template <typename T>
-		T& Matrix<T, 4, 4>::m31(void)
-		{
-			return _31(m_data);
-		}
-
-		template <typename T>
-		const T& Matrix<T, 4, 4>::m31(void) const
-		{
-			return _31(m_data);
-		}
-
-		template <typename T>
-		T& Matrix<T, 4, 4>::m32(void)
-		{
-			return _32(m_data);
-		}
-
-		template <typename T>
-		const T& Matrix<T, 4, 4>::m32(void) const
-		{
-			return _32(m_data);
-		}
-
-		template <typename T>
-		T& Matrix<T, 4, 4>::m33(void)
-		{
-			return _33(m_data);
-		}
-
-		template <typename T>
-		const T& Matrix<T, 4, 4>::m33(void) const
-		{
-			return _33(m_data);
+			return m * s;
 		}
 
 

@@ -3,30 +3,36 @@ function Init()
 	self.box1 = GameObjects:Find("box1")
 	self.box2 = GameObjects:Find("box2")
 	
-	local verdana = ResourceTypeManager:CreateResource(
-		"Font",
-		"verdana_regular_17",
-		nil,
-		nil)
-		
-	self:AddComponent(Text2DComponent())
-	
-	self.text2d.font     = verdana
-	self.text2d.position = vec2i(8, 8)
 	self.text2d.color    = vec4(1, 1, 0, 1)
 	
 end
 
 function Update()
 	
+	local clampValue = 10
 	local pressedButtons = { }
+	
+	if (Input.keyboard:IsPressed(Keyboard.Shift)) then
+	
+		pressedButtons[#pressedButtons + 1] = 'Shift'
+		
+		clampValue = 3
+	
+	end
+	
+	if (Input.keyboard:IsPressed(Keyboard.Space)) then
+	
+		pressedButtons[#pressedButtons + 1] = 'Space'
+		self.box1.rigidbody.velocity = vec3(0)
+		self.box2.rigidbody.velocity = vec3(0)
+	
+	end
 	
 	if (Input.keyboard:IsPressed(Keyboard.D)) then
 	
 		pressedButtons[#pressedButtons + 1] = 'D'
 		
-		box1.rigidbody.velocity = vec3(0)
-		box1.rigidbody.acceleration = 1
+		self.box1.rigidbody.velocity = (self.box1.rigidbody.velocity + vec3(1, 0, 0)):Clamp(-clampValue, clampValue)
 		
 	end
 	
@@ -34,23 +40,55 @@ function Update()
 	
 		pressedButtons[#pressedButtons + 1] = 'A'
 		
+		self.box1.rigidbody.velocity = (self.box1.rigidbody.velocity - vec3(1, 0, 0)):Clamp(-clampValue, clampValue)
+		
+	end
+	
+	if (Input.keyboard:IsPressed(Keyboard.W)) then
+	
+		pressedButtons[#pressedButtons + 1] = 'W'
+		
+		self.box1.rigidbody.velocity = (self.box1.rigidbody.velocity + vec3(0, 0, 1)):Clamp(-clampValue, clampValue)
+		
 	end
 	
 	if (Input.keyboard:IsPressed(Keyboard.S)) then
 	
 		pressedButtons[#pressedButtons + 1] = 'S'
 		
-	end
-	
-	if (Input.keyboard:IsPressed(Keyboard.Q)) then
-	
-		pressedButtons[#pressedButtons + 1] = 'Q'
+		self.box1.rigidbody.velocity = (self.box1.rigidbody.velocity - vec3(0, 0, 1)):Clamp(-clampValue, clampValue)
 		
 	end
 	
-	if (Input.keyboard:IsPressed(Keyboard.E)) then
+	if (Input.keyboard:IsPressed(Keyboard.LeftArrow)) then
 	
-		pressedButtons[#pressedButtons + 1] = 'E'
+		pressedButtons[#pressedButtons + 1] = 'LeftArrow'
+		
+		self.box2.rigidbody.velocity = (self.box2.rigidbody.velocity - vec3(1, 0, 0)):Clamp(-clampValue, clampValue)
+		
+	end
+	
+	if (Input.keyboard:IsPressed(Keyboard.RightArrow)) then
+	
+		pressedButtons[#pressedButtons + 1] = 'RightArrow'
+		
+		self.box2.rigidbody.velocity = (self.box2.rigidbody.velocity + vec3(1, 0, 0)):Clamp(-clampValue, clampValue)
+		
+	end
+	
+	if (Input.keyboard:IsPressed(Keyboard.UpArrow)) then
+	
+		pressedButtons[#pressedButtons + 1] = 'UpArrow'
+		
+		self.box2.rigidbody.velocity = (self.box2.rigidbody.velocity + vec3(0, 0, 1)):Clamp(-clampValue, clampValue)
+		
+	end
+	
+	if (Input.keyboard:IsPressed(Keyboard.DownArrow)) then
+	
+		pressedButtons[#pressedButtons + 1] = 'DownArrow'
+		
+		self.box2.rigidbody.velocity = (self.box2.rigidbody.velocity - vec3(0, 0, 1)):Clamp(-clampValue, clampValue)
 		
 	end
 	
@@ -66,6 +104,6 @@ function Update()
 	
 	end
 	
-	self.text2d.text = "Pressed buttons: " .. pressedButtonsString
+	self.text2d.text = "Pressed buttons: " .. pressedButtonsString .. "\nPhysical bodies count: " .. Physics:GetBodiesCount()
 
 end

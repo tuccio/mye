@@ -116,6 +116,26 @@ namespace mye
 		}
 
 		template <typename T>
+		Matrix<T, 3, 3> Matrix<T, 3, 3>::operator+ (const Matrix<T, 3, 3> &a) const
+		{
+
+			Matrix<T, 3, 3> r;
+
+			_00(r.m_data) = _00(m_data) + _00(a.m_data);
+			_01(r.m_data) = _01(m_data) + _01(a.m_data);
+			_02(r.m_data) = _02(m_data) + _02(a.m_data);
+			_10(r.m_data) = _10(m_data) + _10(a.m_data);
+			_11(r.m_data) = _11(m_data) + _11(a.m_data);
+			_12(r.m_data) = _12(m_data) + _12(a.m_data);
+			_20(r.m_data) = _20(m_data) + _20(a.m_data);
+			_21(r.m_data) = _21(m_data) + _21(a.m_data);
+			_22(r.m_data) = _22(m_data) + _22(a.m_data);
+
+			return r;
+
+		}
+
+		template <typename T>
 		Matrix<T, 3, 3> Matrix<T, 3, 3>::operator* (
 			const Matrix<T, 3, 3> &b) const
 		{
@@ -178,6 +198,26 @@ namespace mye
 		}
 
 		template <typename T>
+		Matrix<T, 3, 3> Matrix<T, 3, 3>::operator* (T s) const
+		{
+			
+			Matrix<T, 3, 3> r;
+
+			_00(r.m_data) = _00(m_data) * s;
+			_01(r.m_data) = _01(m_data) * s;
+			_02(r.m_data) = _02(m_data) * s;
+			_10(r.m_data) = _10(m_data) * s;
+			_11(r.m_data) = _11(m_data) * s;
+			_12(r.m_data) = _12(m_data) * s;
+			_20(r.m_data) = _20(m_data) * s;
+			_21(r.m_data) = _21(m_data) * s;
+			_22(r.m_data) = _22(m_data) * s;
+
+			return r;
+
+		}
+
+		template <typename T>
 		Matrix<T, 3, 3>& Matrix<T, 3, 3>::ScaleInPlace(T s)
 		{
 			_00(m_data) *= s;
@@ -189,9 +229,6 @@ namespace mye
 			_20(m_data) *= s;
 			_21(m_data) *= s;
 			_22(m_data) *= s;
-			_30(m_data) *= s;
-			_31(m_data) *= s;
-			_32(m_data) *= s;
 			return *this;
 		}
 
@@ -271,7 +308,10 @@ namespace mye
 				_00(m_data) * _11(m_data)
 				- _01(m_data) * _10(m_data);
 
-			return r.ScaleInPlace(1.0f / r.Determinant());
+			T determinant = r.Determinant();
+			assert(determinant != T(0));
+
+			return r.ScaleInPlace(T(1) / determinant);
 
 		}
 
@@ -288,6 +328,12 @@ namespace mye
 		}
 
 		template <typename T>
+		Matrix<T, 3, 3> operator* (T s, const Matrix<T, 3, 3> &m)
+		{
+			return m * s;
+		}
+
+		/*template <typename T>
 		T& Matrix<T, 3, 3>::m00(void)
 		{
 			return _00(m_data);
@@ -393,7 +439,7 @@ namespace mye
 		const T& Matrix<T, 3, 3>::m22(void) const
 		{
 			return _22(m_data);
-		}
+		}*/
 
 	}
 
