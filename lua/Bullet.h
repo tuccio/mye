@@ -5,6 +5,7 @@
 #include <btBulletDynamicsCommon.h>
 
 #include "Converters.h"
+#include "Alignment.h"
 
 namespace mye
 {

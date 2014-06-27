@@ -3,6 +3,7 @@
 #include "Utils.h"
 #include "GameObjectHandle.h"
 #include "Converters.h"
+#include "Alignment.h"
 
 #include <mye/core/Components.h>
 #include <mye/core/Game.h>

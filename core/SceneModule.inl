@@ -4,25 +4,25 @@ namespace mye
 	namespace core
 	{
 
-		mye::core::CameraComponent& SceneModule::Camera(void)
+		mye::core::Camera& SceneModule::Camera(void)
 		{
 			return *m_camera;
 		}
 
 
-		mye::core::CameraComponent* SceneModule::GetCamera(void)
+		mye::core::Camera* SceneModule::GetCamera(void)
 		{
 			return m_camera;
 		}
 
-		const mye::core::CameraComponent* SceneModule::GetCamera(void) const
+		const mye::core::Camera* SceneModule::GetCamera(void) const
 		{
 			return m_camera;
 		}
 
-		void SceneModule::SetCamera(mye::core::CameraComponent *camera)
+		void SceneModule::SetCamera(mye::core::Camera *camera)
 		{
-			CameraComponent *old = m_camera;
+			mye::core::Camera *old = m_camera;
 			m_camera = camera;
 			for (SceneCameraListener *listener : m_cameraListeners)
 			{

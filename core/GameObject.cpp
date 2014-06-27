@@ -1,6 +1,7 @@
 #include "GameObject.h"
 
 #include "Components.h"
+#include "Game.h"
 
 using namespace mye::core;
 using namespace std;
@@ -75,6 +76,7 @@ Component* GameObject::AddComponent(const Component &component)
 
 		case ComponentTypes::RIGIDBODY:
 			m_rigidbody = static_cast<RigidBodyComponent*>(newComponent);
+			Game::GetSingleton().GetPhysicsModule()->AddRigidBody(m_rigidbody->GetRigidBody());
 			break;
 
 		case ComponentTypes::TEXT2D:
@@ -135,6 +137,7 @@ void GameObject::RemoveComponent(const String &name)
 
 		case ComponentTypes::RIGIDBODY:
 			m_rigidbody = nullptr;
+			Game::GetSingleton().GetPhysicsModule()->RemoveRigidBody(m_rigidbody->GetRigidBody());
 			break;
 
 		case ComponentTypes::TEXT2D:
@@ -152,19 +155,26 @@ void GameObject::RemoveComponent(const String &name)
 void GameObject::Clear(void)
 {
 
-	for (auto it : m_components)
+	/*for (auto it : m_components)
 	{
 		delete it.second;
 	}
 
-	m_components.clear();
+	m_components.clear();*/
+
+	std::vector<String> componentNames;
+
+	for (auto p : m_components)
+	{
+		componentNames.push_back(p.first);
+	}
+
+	for (const String &n : componentNames)
+	{
+		RemoveComponent(n);
+	}
 
 	m_owner     = nullptr;
-
-	m_transform = nullptr;
-	m_behaviour = nullptr;
-	m_camera    = nullptr;
-	m_render    = nullptr;
 
 	m_entity.Clear();
 	m_name.Clear();

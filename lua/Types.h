@@ -27,6 +27,7 @@
 #define MYE_LUA_RIGIDBODY_COMPONENT "RigidBodyComponent"
 #define MYE_LUA_TEXT2D_COMPONENT "Text2DComponent"
 #define MYE_LUA_RENDER_COMPONENT "RenderComponent"
+#define MYE_LUA_CAMERA_COMPONENT "CameraComponent"
 
 #define MYE_LUA_SCRIPT_COMPONENT "ScriptComponent"
 
@@ -34,6 +35,8 @@
 #define MYE_LUA_SCRIPT "Script"
 #define MYE_LUA_BEHAVIOURSCRIPT "BehaviourScript"
 #define MYE_LUA_PROCEDURESCRIPT "ProcedureScript"
+
+#define MYE_LUA_CAMERA "Camera"
 
 #define MYE_LUA_COLORRGB "RGB"
 #define MYE_LUA_COLORRGBA "RGBA"

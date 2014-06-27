@@ -2,6 +2,7 @@
 #include "Math.h"
 #include "Types.h"
 #include "Converters.h"
+#include "Alignment.h"
 
 #include <mye/core/VariableComponent.h>
 #include <mye/core/TransformComponent.h>

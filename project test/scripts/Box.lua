@@ -19,10 +19,12 @@ function Init()
 		"BOX_SHAPE",
 		nil,
 		{ ["type"] = "box", ["halfextents"] = "1 1 1" })
+		
+	--self:AddComponent(RigidBodyComponent(box, info["mass"]))
 	
-	self:AddComponent(RigidBodyComponent(box, info["mass"]))
-	
-	self.rigidbody.position = info["position"]
+	self.rigidbody.shape       = box
+	self.rigidbody.mass        = info["mass"]
+	self.rigidbody.position    = info["position"]
 	self.rigidbody.orientation = quaternion(vec3(0, 1, 0), 45)
 	
 	self.text2d.position = vec2i(8, 1024 + (self.id - 1) * 48)
@@ -32,7 +34,15 @@ end
 
 function Update()
 
-	local text = "Box " .. self.id .. " velocity: " .. tostring(self.rigidbody.velocity) .. " position: " .. tostring(self.rigidbody.position)
+	--local text = "Box " .. self.id .. " velocity: " .. tostring(self.rigidbody.velocity) .. " position: " .. tostring(self.rigidbody.position)
+	
+	local text = nil
+	
+	if (self.rigidbody == nil) then
+		text = "Box " .. self.id .. " No rigid body attached"
+	else
+		text = "Box " .. self.id .. " velocity: " .. tostring(self.rigidbody.velocity) .. " position: " .. tostring(self.rigidbody.position) .. " mass: " .. tostring(self.rigidbody.mass)
+	end
 	
 	self.text2d.text = text
 

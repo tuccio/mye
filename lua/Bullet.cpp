@@ -1,6 +1,7 @@
 #include "Bullet.h"
 #include "Types.h"
 #include "Converters.h"
+#include "Alignment.h"
 
 #include <mye/core/BulletCollisionShape.h>
 #include <mye/core/PhysicsModule.h>

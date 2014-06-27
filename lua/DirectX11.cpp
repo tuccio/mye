@@ -2,6 +2,7 @@
 
 #include "Types.h"
 #include "Converters.h"
+#include "Alignment.h"
 
 #include <mye/win/Window.h>
 

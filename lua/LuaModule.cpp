@@ -1,6 +1,7 @@
 #include "LuaModule.h"
 
 #include "Converters.h"
+#include "Alignment.h"
 #include "Math.h"
 #include "Scene.h"
 #include "Physics.h"

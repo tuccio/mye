@@ -6,6 +6,7 @@
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
 
+#include <mye/core/AlignedAllocator.h>
 #include <mye/math/Math.h>
 
 namespace mye
@@ -33,16 +34,22 @@ namespace mye
 
 		};
 
-		class RigidBodyComponent
+		__MYE_ALIGN_16 class RigidBodyComponent
 			: public Component
 		{
 
 		public:
 
+			__MYE_ALIGN_16_HEAP
+
+				//void* operator new (size_t, void *p) { return p; }
+
+			RigidBodyComponent(void);
+
 			RigidBodyComponent(BulletCollisionShapePointer shape,
 				mye::math::Real mass);
 
-			RigidBodyComponent(const RigidBodyComponent &rb);
+			//RigidBodyComponent(const RigidBodyComponent &rb);
 
 			~RigidBodyComponent(void);
 
@@ -58,17 +65,25 @@ namespace mye
 			mye::math::Real GetMass(void) const;
 			void SetMass(const mye::math::Real &mass);
 
+			BulletCollisionShapePointer GetCollisionShape(void) const;
+			void SetCollisionShape(BulletCollisionShapePointer shape);
+
 			mye::math::Matrix4 GetWorldMatrix(void) const;
 
 			RigidBodyComponent* Clone(void) const;
+
+			btRigidBody* GetRigidBody(void);
 
 		private:
 
 			friend class MotionState;
 
-			btRigidBody                   *m_rigidbody;
-			MotionState                   *m_motionState;
+			//btRigidBody                   *m_rigidbody;
+			//MotionState                   *m_motionState;
 			BulletCollisionShapePointer    m_shape;
+
+			MotionState                    m_motionState;
+			btRigidBody                    m_rigidbody;
 
 		};
 

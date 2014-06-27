@@ -8,6 +8,8 @@
 
 #include <boost/optional.hpp>
 
+#include <mye/lua/Alignment.h>
+
 namespace mye
 {
 

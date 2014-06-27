@@ -4,6 +4,7 @@
 #include "Utils.h"
 #include "MetaMethodsOverload.h"
 #include "Converters.h"
+#include "Alignment.h"
 
 #include <mye/core/Components.h>
 #include <mye/core/Game.h>

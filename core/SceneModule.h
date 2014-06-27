@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Module.h"
-#include "CameraComponent.h"
+#include "Camera.h"
 #include "GameObject.h"
 
 #include <list>
@@ -14,7 +14,7 @@ namespace mye
 
 		struct SceneCameraListener
 		{
-			virtual void OnCameraChange(CameraComponent *oldCamera, CameraComponent *newCamera) = 0;
+			virtual void OnCameraChange(Camera *oldCamera, Camera *newCamera) = 0;
 		};
 
 		class SceneModule :
@@ -37,11 +37,11 @@ namespace mye
 				const GameObjectHandle &hObj,
 				const mye::math::AABB &oldAABB);
 
-			inline CameraComponent& Camera(void);
+			inline Camera& Camera(void);
 
-			inline mye::core::CameraComponent* GetCamera(void);
-			inline const mye::core::CameraComponent* GetCamera(void) const;
-			inline void SetCamera(mye::core::CameraComponent *camera);
+			inline mye::core::Camera* GetCamera(void);
+			inline const mye::core::Camera* GetCamera(void) const;
+			inline void SetCamera(mye::core::Camera *camera);
 
 			void AddCameraListener(SceneCameraListener *listener);
 			void RemoveCameraListener(SceneCameraListener *listener);
@@ -55,7 +55,7 @@ namespace mye
 				mye::math::AABB newAABB;
 			};
 
-			mye::core::CameraComponent *m_camera;
+			mye::core::Camera *m_camera;
 			std::list<GameObjectUpdate> m_movedObjects;
 
 			std::vector<SceneCameraListener*> m_cameraListeners;

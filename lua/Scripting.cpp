@@ -3,6 +3,7 @@
 #include "Scripting.h"
 #include "Types.h"
 #include "Converters.h"
+#include "Alignment.h"
 
 #include <mye/core/Game.h>
 #include <mye/core/Resource.h>

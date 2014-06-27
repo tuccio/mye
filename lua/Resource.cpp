@@ -9,6 +9,7 @@
 #include "ScriptResourceLoader.h"
 #include "Types.h"
 #include "Converters.h"
+#include "Alignment.h"
 
 #include <boost/optional.hpp>
 

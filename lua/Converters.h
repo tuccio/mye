@@ -372,3 +372,4 @@ namespace luabind\
 
 /*__MYE_DEFINE_RESOURCE_LUA_CONVERTER(mye::core::BulletCollisionShape)
 __MYE_DEFINE_RESOURCE_LUA_CONVERTER(mye::core::Font)*/
+

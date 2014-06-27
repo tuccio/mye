@@ -39,7 +39,7 @@ void MainWindowListener::OnCreate(mye::core::IWindow * window)
 void MainWindowListener::OnResize(IWindow *window, const Vector2i &size)
 {
 
-	CameraComponent *camera = m_game->GetSceneModule()->GetCamera();
+	Camera *camera = m_game->GetSceneModule()->GetCamera();
 
 	if (camera)
 	{
@@ -48,8 +48,8 @@ void MainWindowListener::OnResize(IWindow *window, const Vector2i &size)
 
 }
 
-void MainWindowListener::OnCameraChange(mye::core::CameraComponent *oldCamera,
-										mye::core::CameraComponent *newCamera)
+void MainWindowListener::OnCameraChange(mye::core::Camera *oldCamera,
+										mye::core::Camera *newCamera)
 {
 
 	auto size = m_game->GetGraphicsModule()->GetWindow()->GetSize();

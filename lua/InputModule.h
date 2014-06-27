@@ -8,8 +8,6 @@ namespace mye
 	{
 
 		void BindInputModule(lua_State *L);
-		void BindKeyboard(lua_State *L);
-		void BindMosue(lua_State *L);
 
 	}
 }

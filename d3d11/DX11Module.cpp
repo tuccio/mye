@@ -178,7 +178,7 @@ void DX11Module::Render(void)
 		);
 
 	SceneModule *scene = Game::GetSingleton().GetSceneModule();
-	CameraComponent *camera = scene->GetCamera();
+	Camera *camera = scene->GetCamera();
 
 	std::list<Text2DComponent*> textes;
 

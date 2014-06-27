@@ -19,7 +19,7 @@ public:
 	void OnDestroy(mye::core::IWindow *window);
 	void OnResize(mye::core::IWindow *window, const mye::math::Vector2i &size);
 
-	void OnCameraChange(mye::core::CameraComponent *oldCamera, mye::core::CameraComponent *newCamera);
+	void OnCameraChange(mye::core::Camera *oldCamera, mye::core::Camera *newCamera);
 
 private:
 

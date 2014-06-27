@@ -1,6 +1,7 @@
 #include "Math.h"
 #include "Types.h"
 #include "Converters.h"
+#include "Alignment.h"
 
 #include "MathWrappers.h"
 

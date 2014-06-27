@@ -13,12 +13,12 @@ namespace mye
 	namespace lua
 	{
 
-		boost::optional<CameraComponent*> __scene_get_camera(SceneModule &scene)
+		inline boost::optional<Camera*> __scene_get_camera(SceneModule &scene)
 		{
 
-			CameraComponent *camera = scene.GetCamera();
+			Camera *camera = scene.GetCamera();
 
-			return (camera ? boost::optional<CameraComponent*>(camera) : boost::optional<CameraComponent*>());
+			return (camera ? boost::optional<Camera*>(camera) : boost::optional<Camera*>());
 
 		}
 
@@ -31,9 +31,9 @@ namespace mye
 				class_<SceneModule>("SceneModule").
 
 					def("AddGameObject", &SceneModule::AddGameObject).
-					def("RemoveGameObject", &SceneModule::RemoveGameObject)
+					def("RemoveGameObject", &SceneModule::RemoveGameObject).
 
-					//property("camera", __scene_get_camera, &SceneModule::SetCamera)
+					property("camera", (Camera* (SceneModule::*) ()) &SceneModule::GetCamera, &SceneModule::SetCamera)
 
 
 					

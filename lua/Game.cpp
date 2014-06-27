@@ -16,15 +16,25 @@
 #include "WindowsFunctions.h"
 #include "InputModule.h"
 #include "Converters.h"
+#include "Alignment.h"
 
 #include "LuaModule.h"
 
 #include <mye/d3d11/DX11Module.h>
 #include <mye/math/Math.h>
 
+#include <boost/preprocessor/comparison/greater.hpp>
+#include <boost/preprocessor/repetition/repeat_from_to.hpp>
+#include <boost/preprocessor/control/if.hpp>
+#include <boost/preprocessor/control/iif.hpp>
+#include <boost/preprocessor/facilities/empty.hpp>
+
+#include <luabind/detail/typetraits.hpp>
+
 using namespace luabind;
 using namespace mye::core;
 using namespace mye::dx11;
+
 
 namespace mye
 {
@@ -43,6 +53,21 @@ namespace mye
 
 			module(L)
 			[
+
+				class_<Camera>(MYE_LUA_CAMERA).
+
+					def("Roll", &Camera::Roll).
+					def("Yaw", &Camera::Yaw).
+					def("Pitch", &Camera::Pitch).
+					
+					property("position", &Camera::GetPosition, &Camera::SetPosition).
+					property("orientation", &Camera::GetOrientation, &Camera::SetOrientation).
+					property("fovx", &Camera::GetFovX).
+					property("fovy", &Camera::GetFovY, &Camera::SetFovY).
+					
+					property("right", &Camera::Right).
+					property("forward", &Camera::Forward).
+					property("up", &Camera::Up),
 
 				class_<Game>(MYE_LUA_GAME).
 
@@ -68,10 +93,12 @@ namespace mye
 				class_<Component>(MYE_LUA_COMPONENT),
 
 				class_<RigidBodyComponent, Component>(MYE_LUA_RIGIDBODY_COMPONENT).
+					def(constructor<>()).
 					def(constructor<BulletCollisionShapePointer, mye::math::Real>()).
 					property("velocity", &RigidBodyComponent::GetVelocity, &RigidBodyComponent::SetVelocity).
-					property("position", &RigidBodyComponent::GetPosition, &RigidBodyComponent::SetPosition),
-
+					property("position", &RigidBodyComponent::GetPosition, &RigidBodyComponent::SetPosition).
+					property("mass", &RigidBodyComponent::GetMass, &RigidBodyComponent::SetMass).
+					property("shape",    &RigidBodyComponent::GetCollisionShape, &RigidBodyComponent::SetCollisionShape),
 
 				class_<Text2DComponent, Component>(MYE_LUA_TEXT2D_COMPONENT).
 					def(constructor<>()).
@@ -89,7 +116,6 @@ namespace mye
 			];
 
 			BindInputModule(L);
-			BindKeyboard(L);
 
 			BindScripts(L);
 			BindVariableComponent(L);
