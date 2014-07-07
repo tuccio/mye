@@ -1,10 +1,10 @@
 #include "GameObjectHandle.h"
 
+#include "Alignment.h"
+#include "Converters.h"
+#include "MetaMethodsOverload.h"
 #include "Types.h"
 #include "Utils.h"
-#include "MetaMethodsOverload.h"
-#include "Converters.h"
-#include "Alignment.h"
 
 #include <mye/core/Components.h>
 #include <mye/core/Game.h>
@@ -82,18 +82,38 @@ namespace mye
 		mye::core::String __goh_tostring(const GameObjectHandle &hObj)
 		{
 
-			mye::core::String name = LPGAMEOBJECT(hObj)->GetName();
+			mye::core::String result;
+			GameObject *go = LPGAMEOBJECT(hObj);
 
-			if (name.IsEmpty())
+			if (go)
 			{
-				return mye::core::String("<Unnamed object [") +
-					mye::core::ToString(hObj.id) +
-					mye::core::String(", ") +
-					mye::core::ToString(hObj.allocation) +
-					mye::core::String("]>");
+
+				mye::core::String name = go->GetName();
+
+				if (name.IsEmpty())
+				{
+					result = mye::core::String("<Unnamed object [") +
+						mye::core::ToString(hObj.id) +
+						mye::core::String(", ") +
+						mye::core::ToString(hObj.allocation) +
+						mye::core::String("]>");
+				}
+				else
+				{
+					result = mye::core::String("<" + name + " [") +
+						mye::core::ToString(hObj.id) +
+						mye::core::String(", ") +
+						mye::core::ToString(hObj.allocation) +
+						mye::core::String("]>");
+				}
+
+			}
+			else
+			{
+				result = mye::core::String("<Invalid object>");
 			}
 
-			return name;
+			return result;
 
 		}
 

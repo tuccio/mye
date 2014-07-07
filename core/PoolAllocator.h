@@ -2,7 +2,10 @@
 
 #include "Singleton.h"
 
-#include <memory>
+#include "Allocator.h"
+#include "AlignedAllocator.h"
+
+#include <boost/preprocessor/punctuation/comma.hpp>
 
 namespace mye
 {
@@ -10,25 +13,25 @@ namespace mye
 	namespace core
 	{
 
-		template <typename T>
+		template <typename T, typename Allocator = DefaultAllocator>
 		class PoolAllocator :
-			public mye::core::Singleton<PoolAllocator<T>>
+			public mye::core::Singleton<PoolAllocator<T, Allocator>>
 		{
 
 		public:
 
 			PoolAllocator(void);
 
-			inline void* Allocate(void);
-			inline void* AllocateNoThrow(void);
+			static inline void* Allocate(size_t size);
+			static inline void* AllocateNoThrow(size_t size);
 
-			inline void Free(void *data);
+			static inline void Free(void *data);
 
-			void Clear(void);
+			static void Clear(void);
 
 		private:
 
-			void *m_free;
+			static void *m_free;
 
 		};
 

@@ -35,12 +35,12 @@ namespace mye
 
 			void SetVertexAttribute(size_t vertexIndex,
 				VertexAttributeSemantic semantic,
-				VertexAttributeType type,
+				DataFormat type,
 				const void *data);
 
 			void GetVertexAttribute(size_t vertexIndex,
 				VertexAttributeSemantic semantic,
-				VertexAttributeType type,
+				DataFormat type,
 				void *data) const;
 
 		private:

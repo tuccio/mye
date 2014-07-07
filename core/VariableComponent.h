@@ -31,6 +31,8 @@ namespace mye
 
 			virtual std::type_index GetVariableType(void) const;
 
+			T* GetPointer(void);
+
 			const T& Get(void) const;
 			void Set(const T &v);
 

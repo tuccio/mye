@@ -54,7 +54,8 @@ namespace mye
 			const CharacterInfo& operator[] (unsigned char c) const;
 			CharacterInfo& operator[] (unsigned char c);
 
-			virtual void Use(void);
+			virtual void Bind(void);
+			virtual void Unbind(void);
 
 		protected:
 

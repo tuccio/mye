@@ -64,14 +64,17 @@ bool DX11VertexBuffer::Create(void *data, size_t n, const VertexDeclaration &vDe
 	D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
 	vertexBufferData.pSysMem = data;
 
-	m_stride = vDecl.GetSize();
+	m_stride   = vDecl.GetSize();
 	m_vertices = n;
 
 	bool success =
+		n == 0 ||
 		!HRTESTFAILED(m_device.GetDevice()->CreateBuffer(
-		&vertexBufferDesc,
-		&vertexBufferData,
-		&m_buffer));
+			&vertexBufferDesc,
+			&vertexBufferData,
+			&m_buffer));
+
+	assert(success);
 
 	return success;
 
@@ -111,10 +114,11 @@ bool DX11VertexBuffer::Create(Mesh *mesh)
 	m_vertices = mesh->GetTrianglesCount() * 3;
 
 	bool success =
-		!HRTESTFAILED(m_device.GetDevice()->CreateBuffer(
-		&vertexBufferDesc,
-		&vertexBufferData,
-		&m_buffer));
+		!HRTESTFAILED(
+			m_device.GetDevice()->CreateBuffer(
+				&vertexBufferDesc,
+				&vertexBufferData,
+				&m_buffer));
 	
 	return success;
 
@@ -175,9 +179,9 @@ bool DX11VertexBuffer::Create(Model *model)
 
 	bool success =
 		!HRTESTFAILED(m_device.GetDevice()->CreateBuffer(
-		&vertexBufferDesc,
-		pVertexBufferData,
-		&m_buffer));
+			&vertexBufferDesc,
+			pVertexBufferData,
+			&m_buffer));
 
 	
 
@@ -198,6 +202,11 @@ void DX11VertexBuffer::Bind(void)
 {
 	UINT offset = 0;
 	m_device.GetImmediateContext()->IASetVertexBuffers(0, 1, &m_buffer, &m_stride, &offset);
+}
+
+void DX11VertexBuffer::Unbind(void)
+{
+	m_device.GetImmediateContext()->IASetVertexBuffers(0, 0, nullptr, &m_stride, nullptr);
 }
 
 size_t DX11VertexBuffer::GetVerticesCount(void) const

@@ -11,53 +11,11 @@ BOOST_FUSION_ADAPT_STRUCT(
 	(std::string, initializer)
 )
 
-//BOOST_FUSION_ADAPT_STRUCT(
-//	mye::core::ParsedEntity,
-//	(std::string, name)
-//	(std::vector<mye::core::DataMember>, variables)
-//	(std::vector<mye::core::ComponentMember>, components)
-//)
-
 BOOST_FUSION_ADAPT_STRUCT(
 	mye::core::ParsedEntity,
 	(std::string, name)
 	(std::vector<mye::core::EntityMembers>, members)
 )
-
-//namespace boost
-//{
-//
-//	namespace spirit
-//	{
-//
-//		namespace traits
-//		{
-//
-//			using namespace mye::core;
-//
-//			template<>
-//			struct is_container<ParsedEntity, void> : mpl::true_{};
-//
-//			template<>
-//			struct container_value<ParsedEntity, void>
-//			{
-//				typedef boost::variant<DataMember, ComponentMember, std::string> type;
-//			};
-//
-//			template <>
-//			struct push_back_container<ParsedEntity, container_value<ParsedEntity, void>::type, void>
-//			{
-//				static bool call(ParsedEntity& c, const container_value<ParsedEntity, void>::type &val)
-//				{
-//					// TODO
-//					return true;
-//				}
-//			};
-//
-//		}
-//	}
-//
-//}
 
 namespace mye
 {

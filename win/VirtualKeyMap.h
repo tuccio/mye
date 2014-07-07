@@ -23,6 +23,11 @@ namespace mye
 				return __MYE_MAKE_KEYBOARDVK(MYE_VK_0, vkCode - 0x30);
 			}
 
+			if (vkCode >= VK_F1 && vkCode <= VK_F12)
+			{
+				return __MYE_MAKE_KEYBOARDVK(MYE_VK_F1, vkCode - VK_F1);
+			}
+
 			switch (vkCode)
 			{
 

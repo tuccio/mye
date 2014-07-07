@@ -11,6 +11,12 @@ namespace mye
 	namespace core
 	{
 
+		struct Parameter
+		{
+			mye::core::String key;
+			mye::core::String value;
+		};
+
 		class Parameters
 		{
 
@@ -19,6 +25,7 @@ namespace mye
 			typedef std::unordered_map<String, String>::const_iterator Iterator;
 
 			Parameters(void);
+			Parameters(std::initializer_list<Parameter> initializerList);
 			Parameters(const std::unordered_map<String, String> map);
 
 			~Parameters(void);
@@ -28,6 +35,7 @@ namespace mye
 			float GetFloat(const String &key) const;
 			bool GetBool(const String &key) const;
 			void* GetPointer(const String &key) const;
+			mye::math::Real GetReal(const String &key) const;
 
 			template <typename T>
 			mye::math::Matrix<T, 2, 1> GetVector2(const String &key) const;

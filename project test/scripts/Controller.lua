@@ -2,6 +2,7 @@ function Init()
 	
 	self.box1 = GameObjects:Find("box1")
 	self.box2 = GameObjects:Find("box2")
+	self.sphere = GameObjects:Find("sphere")
 	
 	self.text2d.color    = vec4(1, 1, 0, 1)
 	
@@ -13,6 +14,10 @@ function Update()
 	local pressedButtons = { }
 	
 	local sensitivity = 0.1
+	
+	if (Input.keyboard:IsPressed(Keyboard.G)) then
+		Physics.gravity = vec3(0, -2, 0)
+	end
 	
 	if (Input.mouse:IsPressed(Mouse.Mouse1)) then
 	
@@ -56,8 +61,10 @@ function Update()
 	if (Input.keyboard:IsPressed(Keyboard.Space)) then
 	
 		pressedButtons[#pressedButtons + 1] = 'Space'
-		self.box1.rigidbody.velocity = vec3(0)
-		self.box2.rigidbody.velocity = vec3(0)
+		
+		self.box1.rigidbody.velocity   = vec3(0)
+		self.box2.rigidbody.velocity   = vec3(0)
+		self.sphere.rigidbody.velocity = vec3(0)
 	
 	end
 	
@@ -93,7 +100,7 @@ function Update()
 	
 		pressedButtons[#pressedButtons + 1] = 'D'
 		
-		self.box1.rigidbody.velocity = (self.box1.rigidbody.velocity + Scene.camera.right):Clamp(-clampValue, clampValue)
+		self.box1.rigidbody.velocity = (self.box1.rigidbody.velocity + self.box1.transform.right):Clamp(-clampValue, clampValue)
 		
 	end
 	
@@ -101,7 +108,7 @@ function Update()
 	
 		pressedButtons[#pressedButtons + 1] = 'A'
 		
-		self.box1.rigidbody.velocity = (self.box1.rigidbody.velocity - Scene.camera.right):Clamp(-clampValue, clampValue)
+		self.box1.rigidbody.velocity = (self.box1.rigidbody.velocity - self.box1.transform.right):Clamp(-clampValue, clampValue)
 		
 	end
 	
@@ -109,7 +116,7 @@ function Update()
 	
 		pressedButtons[#pressedButtons + 1] = 'W'
 		
-		self.box1.rigidbody.velocity = (self.box1.rigidbody.velocity + Scene.camera.forward):Clamp(-clampValue, clampValue)
+		self.box1.rigidbody.velocity = (self.box1.rigidbody.velocity + self.box1.transform.forward):Clamp(-clampValue, clampValue)
 		
 	end
 	
@@ -117,7 +124,7 @@ function Update()
 	
 		pressedButtons[#pressedButtons + 1] = 'S'
 		
-		self.box1.rigidbody.velocity = (self.box1.rigidbody.velocity - Scene.camera.forward):Clamp(-clampValue, clampValue)
+		self.box1.rigidbody.velocity = (self.box1.rigidbody.velocity - self.box1.transform.forward):Clamp(-clampValue, clampValue)
 		
 	end
 	
@@ -125,7 +132,7 @@ function Update()
 	
 		pressedButtons[#pressedButtons + 1] = 'LeftArrow'
 		
-		self.box2.rigidbody.velocity = (self.box2.rigidbody.velocity - Scene.camera.right):Clamp(-clampValue, clampValue)
+		self.box2.rigidbody.velocity = (self.box2.rigidbody.velocity - self.box1.transform.right):Clamp(-clampValue, clampValue)
 		
 	end
 	
@@ -133,7 +140,7 @@ function Update()
 	
 		pressedButtons[#pressedButtons + 1] = 'RightArrow'
 		
-		self.box2.rigidbody.velocity = (self.box2.rigidbody.velocity + Scene.camera.right):Clamp(-clampValue, clampValue)
+		self.box2.rigidbody.velocity = (self.box2.rigidbody.velocity + self.box1.transform.right):Clamp(-clampValue, clampValue)
 		
 	end
 	
@@ -141,7 +148,7 @@ function Update()
 	
 		pressedButtons[#pressedButtons + 1] = 'UpArrow'
 		
-		self.box2.rigidbody.velocity = (self.box2.rigidbody.velocity + Scene.camera.forward):Clamp(-clampValue, clampValue)
+		self.box2.rigidbody.velocity = (self.box2.rigidbody.velocity + self.box1.transform.forward):Clamp(-clampValue, clampValue)
 		
 	end
 	
@@ -149,7 +156,7 @@ function Update()
 	
 		pressedButtons[#pressedButtons + 1] = 'DownArrow'
 		
-		self.box2.rigidbody.velocity = (self.box2.rigidbody.velocity - Scene.camera.forward):Clamp(-clampValue, clampValue)
+		self.box2.rigidbody.velocity = (self.box2.rigidbody.velocity - self.box1.transform.forward):Clamp(-clampValue, clampValue)
 		
 	end
 	

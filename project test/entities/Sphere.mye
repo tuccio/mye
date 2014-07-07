@@ -1,4 +1,23 @@
 entity Sphere
 {
 	
+	Text2DComponent(
+		vec2i(0, 0),
+		ResourceTypeManager:CreateResource(
+			"Font",
+			"verdana_regular_17",
+			nil,
+			nil),
+		"");
+		
+	RigidBodyComponent(
+		ResourceTypeManager:CreateResource(
+			"BulletCollisionShape",
+			"SPHERE_SHAPE",
+			nil,
+			{ ["type"] = "sphere", ["radius"] = "1", ["margin"] = "0" }),
+		1,
+		vec3(0, -1.17, 4.73),
+		quaternion(1, 0, 0, 0));
+	
 }

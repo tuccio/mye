@@ -115,7 +115,7 @@ void LuaModule::ShutDown(void)
 void LuaModule::Preupdate(FloatSeconds dt)
 {
 
-	luabind::globals(m_lua)["Time"]["Delta"] = luabind::object(m_lua, (float) dt);;
+	luabind::globals(m_lua)["Time"]["delta"] = luabind::object(m_lua, (float) dt);;
 
 }
 

@@ -4,8 +4,9 @@
 
 using namespace mye::core;
 
-const size_t VertexDeclaration::AttributeTypeSize[VertexAttributeType::COUNT] =
+static const size_t __dataTypeSize[static_cast<unsigned int>(DataFormat::COUNT)] =
 {
+
 	sizeof(float),
 	2 * sizeof(float),
 	3 * sizeof(float),
@@ -14,11 +15,28 @@ const size_t VertexDeclaration::AttributeTypeSize[VertexAttributeType::COUNT] =
 	2 * sizeof(int),
 	3 * sizeof(int),
 	4 * sizeof(int)
+
 };
+
+size_t mye::core::GetDataTypeSize(DataFormat type)
+{
+	return __dataTypeSize[static_cast<unsigned int>(type)];
+}
 
 VertexDeclaration::VertexDeclaration(void) :
 	m_size(0)
 {
+}
+
+VertexDeclaration::VertexDeclaration(std::initializer_list<VertexAttribute> initializerList) :
+	m_size(0)
+{
+
+	for (const VertexAttribute &a : initializerList)
+	{
+		AddAttribute(a.semantic, a.type);
+	}
+
 }
 
 
@@ -28,21 +46,21 @@ VertexDeclaration::~VertexDeclaration(void)
 
 void VertexDeclaration::AddAttribute(
 	VertexAttributeSemantic semantic,
-	VertexAttributeType type)
+	DataFormat type)
 {
-	m_attributes.push_back(Attribute(semantic, type));
-	m_size += AttributeTypeSize[static_cast<int>(type)];
+	m_attributes.push_back(VertexAttribute(semantic, type));
+	m_size += __dataTypeSize[static_cast<unsigned int>(type)];
 }
 
 void VertexDeclaration::InsertAttribute(
 	VertexAttributeSemantic semantic,
-	VertexAttributeType type,
+	DataFormat type,
 	int i)
 {
 	m_attributes.insert(m_attributes.begin() + i,
 		1,
-		Attribute(semantic, type));
-	m_size += AttributeTypeSize[static_cast<int>(type)];
+		VertexAttribute(semantic, type));
+	m_size += __dataTypeSize[static_cast<unsigned int>(type)];
 }
 
 int VertexDeclaration::GetAttributeIndex(VertexAttributeSemantic semantic) const
@@ -50,7 +68,7 @@ int VertexDeclaration::GetAttributeIndex(VertexAttributeSemantic semantic) const
 	
 	auto it = std::find_if(m_attributes.begin(),
 		m_attributes.end(),
-		[semantic] (const Attribute& a)->bool { return (a.semantic) == semantic; });
+		[semantic](const VertexAttribute& a)->bool { return (a.semantic) == semantic; });
 
 	return (it == m_attributes.end() ? -1 : it - m_attributes.begin());
 
@@ -64,7 +82,7 @@ size_t VertexDeclaration::GetAttributeOffset(VertexAttributeSemantic semantic) c
 
 	for (int i = 0; i < index; i++)
 	{
-		offset += AttributeTypeSize[static_cast<int>(m_attributes[i].type)];
+		offset += __dataTypeSize[static_cast<unsigned int>(m_attributes[i].type)];
 	}
 
 	return offset;
@@ -74,7 +92,7 @@ size_t VertexDeclaration::GetAttributeOffset(VertexAttributeSemantic semantic) c
 void VertexDeclaration::RemoveAttribute(int i)
 {
 	auto it = m_attributes.begin() + i;
-	m_size -= AttributeTypeSize[static_cast<int>(it->type)];
+	m_size -= __dataTypeSize[static_cast<unsigned int>(it->type)];
 	m_attributes.erase(it);
 }
 

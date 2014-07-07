@@ -8,8 +8,27 @@ using namespace mye::dx11;
 using namespace mye::core;
 
 DX11Device::DX11Device(void) :
+	m_device(nullptr),
 	m_blendOn(nullptr),
-	m_blendOff(nullptr)
+	m_blendOff(nullptr),
+	m_depthTestOff(nullptr),
+	m_depthTestOn(nullptr)
+{
+
+}
+
+
+DX11Device::~DX11Device(void)
+{
+
+	ReleaseCOMOptional(m_blendOn);
+	ReleaseCOMOptional(m_blendOff);
+	ReleaseCOMOptional(m_dImmediateContext);
+	ReleaseCOMOptional(m_device);
+
+}
+
+bool DX11Device::Create(void)
 {
 
 	UINT createDeviceFlags = 0x0;
@@ -19,9 +38,7 @@ DX11Device::DX11Device(void) :
 	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
-	;
-
-	if (HRTESTFAILED(D3D11CreateDevice(
+	return !HRTESTFAILED(D3D11CreateDevice(
 		0x0,
 		D3D_DRIVER_TYPE_HARDWARE,
 		0x0,
@@ -31,22 +48,23 @@ DX11Device::DX11Device(void) :
 		D3D11_SDK_VERSION,
 		&m_device,
 		&featureLevel,
-		&m_dImmediateContext)))
-	{
-		throw;
-	}
+		&m_dImmediateContext));
 
 }
 
-
-DX11Device::~DX11Device(void)
+void DX11Device::Destroy(void)
 {
 
-	ReleaseCOMIf(m_blendOn);
-	ReleaseCOMIf(m_blendOff);
-	ReleaseCOMIf(m_dImmediateContext);
-	ReleaseCOMIf(m_device);
+	ReleaseCOMOptional(m_blendOn);
+	ReleaseCOMOptional(m_blendOff);
+	ReleaseCOMOptional(m_dImmediateContext);
+	ReleaseCOMOptional(m_device);
 
+}
+
+bool DX11Device::Exists(void) const
+{
+	return m_device != nullptr;
 }
 
 /*
@@ -105,5 +123,70 @@ void DX11Device::SetBlending(bool enable)
 	}
 
 	m_dImmediateContext->OMSetBlendState((enable ? m_blendOn : m_blendOff), nullptr, 0xFFFFFFFF);
+
+}
+
+void DX11Device::SetDepthTest(bool enable)
+{
+
+	if (!m_depthTestOn)
+	{
+
+		D3D11_DEPTH_STENCIL_DESC depthStencilStateDescription;
+
+		ZeroMemory(&depthStencilStateDescription, sizeof(D3D11_DEPTH_STENCIL_DESC));
+
+		depthStencilStateDescription.DepthEnable                  = TRUE;
+		depthStencilStateDescription.DepthWriteMask               = D3D11_DEPTH_WRITE_MASK_ALL;
+		depthStencilStateDescription.DepthFunc                    = D3D11_COMPARISON_LESS;
+
+		depthStencilStateDescription.StencilEnable                = FALSE;
+		depthStencilStateDescription.StencilReadMask              = D3D11_DEFAULT_STENCIL_READ_MASK;
+		depthStencilStateDescription.StencilWriteMask             = D3D11_DEFAULT_STENCIL_WRITE_MASK;
+
+		depthStencilStateDescription.FrontFace.StencilFunc        = D3D11_COMPARISON_ALWAYS;
+		depthStencilStateDescription.BackFace.StencilFunc         = D3D11_COMPARISON_ALWAYS;
+
+		depthStencilStateDescription.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+		depthStencilStateDescription.BackFace.StencilDepthFailOp  = D3D11_STENCIL_OP_KEEP;
+		depthStencilStateDescription.FrontFace.StencilPassOp      = D3D11_STENCIL_OP_KEEP;
+		depthStencilStateDescription.BackFace.StencilPassOp       = D3D11_STENCIL_OP_KEEP;
+		depthStencilStateDescription.FrontFace.StencilFailOp      = D3D11_STENCIL_OP_KEEP;
+		depthStencilStateDescription.BackFace.StencilFailOp       = D3D11_STENCIL_OP_KEEP;
+
+		HRDEBUG(m_device->CreateDepthStencilState(&depthStencilStateDescription, &m_depthTestOn));
+
+	}
+
+	if (!m_depthTestOff)
+	{
+
+		D3D11_DEPTH_STENCIL_DESC depthStencilStateDescription;
+
+		ZeroMemory(&depthStencilStateDescription, sizeof(D3D11_DEPTH_STENCIL_DESC));
+
+		depthStencilStateDescription.DepthEnable                  = FALSE;
+		depthStencilStateDescription.DepthWriteMask               = D3D11_DEPTH_WRITE_MASK_ALL;
+		depthStencilStateDescription.DepthFunc                    = D3D11_COMPARISON_LESS;
+
+		depthStencilStateDescription.StencilEnable                = FALSE;
+		depthStencilStateDescription.StencilReadMask              = D3D11_DEFAULT_STENCIL_READ_MASK;
+		depthStencilStateDescription.StencilWriteMask             = D3D11_DEFAULT_STENCIL_WRITE_MASK;
+
+		depthStencilStateDescription.FrontFace.StencilFunc        = D3D11_COMPARISON_ALWAYS;
+		depthStencilStateDescription.BackFace.StencilFunc         = D3D11_COMPARISON_ALWAYS;
+
+		depthStencilStateDescription.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+		depthStencilStateDescription.BackFace.StencilDepthFailOp  = D3D11_STENCIL_OP_KEEP;
+		depthStencilStateDescription.FrontFace.StencilPassOp      = D3D11_STENCIL_OP_KEEP;
+		depthStencilStateDescription.BackFace.StencilPassOp       = D3D11_STENCIL_OP_KEEP;
+		depthStencilStateDescription.FrontFace.StencilFailOp      = D3D11_STENCIL_OP_KEEP;
+		depthStencilStateDescription.BackFace.StencilFailOp       = D3D11_STENCIL_OP_KEEP;
+
+		HRDEBUG(m_device->CreateDepthStencilState(&depthStencilStateDescription, &m_depthTestOff));
+
+	}
+
+	m_dImmediateContext->OMSetDepthStencilState((enable ? m_depthTestOn : m_depthTestOff), 0);
 
 }

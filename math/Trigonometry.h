@@ -1,12 +1,5 @@
 #include <cmath>
-#include <mye/core/Singleton.h>
-
-#define MYE_GET_CONSTANTS(__VAR, __TYPE) \
-	Constants<__TYPE> *constants = Constants<__TYPE>::GetSingletonPointer();\
-	if (!constants)\
-	{\
-		constants = new Constants<__TYPE>();\
-	}
+#include <type_traits>
 
 namespace mye
 {
@@ -14,48 +7,28 @@ namespace mye
 	namespace math
 	{
 
-		template <typename T>
-		class Constants :
-			public mye::core::Singleton<Constants<T>>
+		template <typename T = mye::math::Real>
+		typename std::enable_if<std::is_floating_point<T>::value, T>::type Pi(void)
 		{
+			return T(3.14159265358979323846);
+		}
 
-		public:
-
-			Constants(void)
-			{
-				m_pi = ::atan(T(1)) * T(4);
-				m_twopi = m_pi * T(2);
-			}
-
-			inline T Pi(void)
-			{
-				return m_pi;
-			}
-
-			inline T TwoPi(void)
-			{
-				return m_pi;
-			}
-
-		private:
-
-			T m_pi;
-			T m_twopi;
-
-		};
+		template <typename T = mye::math::Real>
+		typename std::enable_if<std::is_floating_point<T>::value, T>::type TwoPi(void)
+		{
+			return T(6.28318530717958647693);
+		}
 
 		template <typename T>
 		inline T Radians(T degAngle)
 		{
-			MYE_GET_CONSTANTS(constants, T);
-			return degAngle * constants->Pi() / 180.0f;
+			return degAngle * Pi<T>() / T(180);
 		}
 
 		template <typename T>
 		inline T Degrees(T radAngle)
 		{
-			MYE_GET_CONSTANTS(constants, T);
-			return radAngle * 180.f / constants->Pi();
+			return radAngle * T(180) / Pi<T>();
 		}
 
 		template <typename T>

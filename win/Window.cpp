@@ -225,6 +225,13 @@ bool Window::IsMinimized(void) const
 	return (IsIconic(m_hWnd) ? true : false);
 }
 
+void Window::Focus(void)
+{
+	SetFocus(m_hWnd);
+	ShowWindow(m_hWnd, TRUE);
+	SetWindowPos(m_hWnd, NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+}
+
 void Window::Show(void)
 {
 	ShowWindow(m_hWnd, TRUE);
@@ -237,7 +244,6 @@ void Window::Hide(void)
 
 bool Window::IsFullScreen(void) const
 {
-	throw;
 	return false;
 }
 void Window::SetFullScreen(void)
@@ -552,6 +558,9 @@ bool Window::_Create(DWORD dwExStyle,
 
 }
 
+#define __MYE_WIN_LONGPTR_TO_WINDOW(HWND) (reinterpret_cast<Window*>(GetWindowLongPtr(HWND, GWLP_USERDATA)))
+#define __MYE_WIN_WINDOW_TO_IWINDOW(WINDOW) (static_cast<mye::core::IWindow*>(WINDOW))
+
 LRESULT CALLBACK Window::WindowProc(HWND hWnd,
 									UINT uMsg,
 									WPARAM wParam,
@@ -566,7 +575,7 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd,
 		if (wParam == WA_ACTIVE)
 		{
 
-			Window *window = (Window*) GetWindowLongPtr(hWnd, GWLP_USERDATA);
+			Window *window = __MYE_WIN_LONGPTR_TO_WINDOW(hWnd);
 
 			if (window)
 			{
@@ -584,7 +593,7 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd,
 
 		{
 
-			Window *window = (Window*) GetWindowLongPtr(hWnd, GWLP_USERDATA);
+			Window *window = __MYE_WIN_LONGPTR_TO_WINDOW(hWnd);
 
 			if (window)
 			{
@@ -610,7 +619,7 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd,
 
 		{
 
-			Window *window = (Window*) GetWindowLongPtr(hWnd, GWLP_USERDATA);
+			Window *window = __MYE_WIN_LONGPTR_TO_WINDOW(hWnd);
 			unsigned int optId = LOWORD(wParam);
 
 			if (window)
@@ -638,7 +647,7 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd,
 
 		{
 
-			Window *window = (Window*) GetWindowLongPtr(hWnd, GWLP_USERDATA);
+			Window *window = __MYE_WIN_LONGPTR_TO_WINDOW(hWnd);
 
 			if (window)
 			{
@@ -653,7 +662,7 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd,
 
 		{
 
-			Window *window = (Window*) GetWindowLongPtr(hWnd, GWLP_USERDATA);
+			Window *window = __MYE_WIN_LONGPTR_TO_WINDOW(hWnd);
 
 			if (window->m_keyboard)
 			{
@@ -674,7 +683,7 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd,
 
 		{
 
-			Window *window = (Window*) GetWindowLongPtr(hWnd, GWLP_USERDATA);
+			Window *window = __MYE_WIN_LONGPTR_TO_WINDOW(hWnd);
 
 			if (window->m_keyboard)
 			{
@@ -695,7 +704,7 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd,
 
 		{
 
-			Window *window = (Window*) GetWindowLongPtr(hWnd, GWLP_USERDATA);
+			Window *window = __MYE_WIN_LONGPTR_TO_WINDOW(hWnd);
 			LPNMHDR nmh = (LPNMHDR) lParam;
 
 			if (window->m_tabs && window->m_tabs->GetHandle() == nmh->hwndFrom)
@@ -731,7 +740,7 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd,
 		if (uMsg >= WM_USER)
 		{
 
-			Window *window = (Window*) GetWindowLongPtr(hWnd, GWLP_USERDATA);
+			Window *window = __MYE_WIN_LONGPTR_TO_WINDOW(hWnd);
 
 			if (window)
 			{

@@ -23,6 +23,12 @@ namespace mye
 		}
 
 		template <typename T>
+		T* VariableComponent<T>::GetPointer(void)
+		{
+			return &m_variable;
+		}
+
+		template <typename T>
 		const T& VariableComponent<T>::Get(void) const
 		{
 			return m_variable;

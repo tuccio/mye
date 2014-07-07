@@ -3,6 +3,8 @@
 #include "Components.h"
 #include "Game.h"
 
+#include <algorithm>
+
 using namespace mye::core;
 using namespace std;
 
@@ -10,24 +12,17 @@ MYE_DEFINE_POOL_ALLOCATOR(GameObject)
 
 GameObject::GameObject(void) :
 	m_owner(nullptr),
-	m_transform(nullptr),
-	m_render(nullptr),
-	m_camera(nullptr),
-	m_behaviour(nullptr),
-	m_rigidbody(nullptr)
+	m_behaviour(nullptr)
 {
+	AddComponent(TransformComponent());
 }
 
 GameObject::GameObject(const String &name) :
 	INamedObject(name),
 	m_owner(nullptr),
-	m_transform(nullptr),
-	m_render(nullptr),
-	m_camera(nullptr),
-	m_behaviour(nullptr),
-	m_rigidbody(nullptr),
-	m_text2d(nullptr)
+	m_behaviour(nullptr)
 {
+	AddComponent(TransformComponent());
 }
 
 
@@ -41,54 +36,54 @@ GameObject::~GameObject(void)
 Component* GameObject::AddComponent(const Component &component)
 {
 
+	Component *result;
+
 	auto it = m_components.find(component.GetName());
 
 	if (it != m_components.end() && it->second != nullptr)
 	{
-		return nullptr;
+		result = nullptr;
 	}
 	else
 	{
 
-		Component *newComponent = static_cast<Component*>(component.Clone());
-		m_components[component.GetName()] = newComponent;
+		ComponentTypes componentType = component.GetComponentType();
 
-		newComponent->m_owner = this;
-
-		switch (component.GetComponentType())
+		if (componentType == ComponentTypes::TRANSFORM)
+		{
+			m_transform = static_cast<const TransformComponent&>(component);
+			m_components[m_transform.GetName()] = &m_transform;
+			result = static_cast<Component*>(&m_transform);
+		}
+		else
 		{
 
-		case ComponentTypes::TRANSFORM:
-			m_transform = static_cast<TransformComponent*>(newComponent);
-			break;
+			Component *newComponent = static_cast<Component*>(component.Clone());
+			m_components[component.GetName()] = newComponent;
 
-		case ComponentTypes::RENDER:
-			m_render = static_cast<RenderComponent*>(newComponent);
-			break;
+			newComponent->OnAttach(this);
 
-		case ComponentTypes::CAMERA:
-			m_camera = static_cast<CameraComponent*>(newComponent);
-			break;
+			switch (componentType)
+			{
 
-		case ComponentTypes::BEHAVIOUR:
-			m_behaviour = static_cast<BehaviourComponent*>(newComponent);
-			break;
+			case ComponentTypes::BEHAVIOUR:
+				m_behaviour = static_cast<BehaviourComponent*>(newComponent);
+				break;
 
-		case ComponentTypes::RIGIDBODY:
-			m_rigidbody = static_cast<RigidBodyComponent*>(newComponent);
-			Game::GetSingleton().GetPhysicsModule()->AddRigidBody(m_rigidbody->GetRigidBody());
-			break;
+			}
 
-		case ComponentTypes::TEXT2D:
+			for (auto listener : m_listeners)
+			{
+				listener->OnComponentAddition(this, newComponent);
+			}
 
-			m_text2d = static_cast<Text2DComponent*>(newComponent);
-			break;
+			result = newComponent;
 
 		}
 
-		return newComponent;
-
 	}
+
+	return result;
 
 }
 
@@ -120,31 +115,21 @@ void GameObject::RemoveComponent(const String &name)
 		{
 
 		case ComponentTypes::TRANSFORM:
-			m_transform = nullptr;
-			break;
-
-		case ComponentTypes::RENDER:
-			m_render = nullptr;
-			break;
-
-		case ComponentTypes::CAMERA:
-			m_camera = nullptr;
+			assert("Cannot remove TransformComponent from a GameObject");
 			break;
 
 		case ComponentTypes::BEHAVIOUR:
 			m_behaviour = nullptr;
+			m_entity.Clear();
 			break;
-
-		case ComponentTypes::RIGIDBODY:
-			m_rigidbody = nullptr;
-			Game::GetSingleton().GetPhysicsModule()->RemoveRigidBody(m_rigidbody->GetRigidBody());
-			break;
-
-		case ComponentTypes::TEXT2D:
-			m_text2d = nullptr;
-			break;
-
 		}
+
+		for (auto listener : m_listeners)
+		{
+			listener->OnComponentRemoval(this, it->second);
+		}
+
+		it->second->OnDetach();
 
 		delete it->second;
 		m_components.erase(it);
@@ -155,26 +140,28 @@ void GameObject::RemoveComponent(const String &name)
 void GameObject::Clear(void)
 {
 
-	/*for (auto it : m_components)
+	int n = m_components.size();
+
+	std::vector<ComponentTypes> componentTypes(n);
+	std::vector<String> componentNames(n);
+
+	for (int i = 0; i < m_components.size(); i++)
 	{
-		delete it.second;
+		componentNames[i] = m_components[i]->GetName();
+		componentTypes[i] = m_components[i]->GetComponentType();
 	}
 
-	m_components.clear();*/
-
-	std::vector<String> componentNames;
-
-	for (auto p : m_components)
+	for (int i = 0; i < n; i++)
 	{
-		componentNames.push_back(p.first);
+
+		if (componentTypes[i] != ComponentTypes::TRANSFORM)
+		{
+			RemoveComponent(componentNames[i]);
+		}
+
 	}
 
-	for (const String &n : componentNames)
-	{
-		RemoveComponent(n);
-	}
-
-	m_owner     = nullptr;
+	m_owner = nullptr;
 
 	m_entity.Clear();
 	m_name.Clear();
@@ -185,19 +172,27 @@ void GameObject::OnCreation(GameObjectsManager *owner,
 							const GameObjectHandle &handle)
 {
 
-	m_owner  = owner;
-	m_handle = handle;
+	m_owner    = owner;
+	m_handle   = handle;
 
 	m_delendum = false;
 
-	TransformComponent *t = static_cast<TransformComponent*>(AddComponent(TransformComponent()));
-
 	Init();
+
+	for (auto listener : m_listeners)
+	{
+		listener->OnGameObjectCreation(this);
+	}
 
 }
 
 void GameObject::OnDestruction(void)
 {
+
+	for (auto listener : m_listeners)
+	{
+		listener->OnGameObjectDestruction(this);
+	}
 
 	Clear();
 
@@ -220,5 +215,17 @@ void GameObject::Update(void)
 	{
 		m_behaviour->Update();
 	}
+
+}
+
+void GameObject::AddListener(GameObjectListener *listener)
+{
+	m_listeners.push_back(listener);
+}
+
+void GameObject::RemoveListener(GameObjectListener *listener)
+{
+
+	std::remove(m_listeners.begin(), m_listeners.end(), listener);
 
 }

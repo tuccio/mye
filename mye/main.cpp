@@ -37,6 +37,10 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 					 LPSTR lpCmdLine,
 					 int nCmdShow)
 {
+
+	/* Main window */
+
+	Window window;
 	
 	/*
 	 * Allocate needed managers and modules
@@ -60,25 +64,12 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 	 * Graphics setup
 	 */
 
-	DX11Device &device = static_cast<DX11Window*>(graphics.GetWindow())->GetDevice();
+	DX11Device *device = static_cast<DX11Module&>(graphics).GetDevice();
 
-	DX11BufferManager  bufferManager(device);
-	DX11ShaderManager  shaderManager(device);
-	DX11TextureManager textureManager(device);
+	DX11BufferManager  bufferManager(*device);
+	DX11ShaderManager  shaderManager(*device);
+	DX11TextureManager textureManager(*device);
 	DX11FontManager    fontManager;
-
-	std::vector<D3D11_INPUT_ELEMENT_DESC> vDesc(1);
-
-	vDesc[0].SemanticName         = "POSITION";
-	vDesc[0].SemanticIndex        = 0;	
-	vDesc[0].Format               = DXGI_FORMAT_R32G32B32_FLOAT;
-	vDesc[0].InputSlot            = 0;
-	vDesc[0].AlignedByteOffset    = 0;
-	vDesc[0].InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
-	vDesc[0].InstanceDataStepRate = 0;
-
-	shaderManager.CreateVertexShader("VertexShader.cso", true, vDesc)->Use();
-	shaderManager.CreatePixelShader("PixelShader.cso", true)->Use();
 
 	/*
 	 * Move working directory to the project folder
@@ -98,6 +89,8 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 		projectName = commandLine[1];
 	}
 
+	
+
 	/*
 	 * Create and run the game
 	 */
@@ -110,12 +103,24 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 		&audio,
 		&lua);
 
-	MainWindowListener mainWindowListener(&game);
-	graphics.GetWindow()->AddListener(&mainWindowListener);
+	/*
+	 * Setup our window
+	 */
+
+	if (!window.Create())
+	{
+		ShowErrorBox("Window creation failed.");
+		return 1;
+	}
+
+	graphics.SetWindow(&window);
+
+	MainWindowListener mainWindowListener;
+	window.AddListener(&mainWindowListener);
 
 	if (!game.Init())
 	{
-		ShowErrorBox("Initialization failed");
+		ShowErrorBox("Initialization failed.");
 		return 1;
 	}
 

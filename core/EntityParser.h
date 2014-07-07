@@ -33,7 +33,7 @@ namespace mye
 			STRING,
 			BOOL,
 			INT,
-			FLOAT,
+			REAL,
 			VEC3,
 			VEC3I,
 			VEC4,
@@ -80,7 +80,7 @@ namespace mye
 					("string",           DataTypes::STRING)
 					("bool",             DataTypes::BOOL)
 					("int",              DataTypes::INT)
-					("float",            DataTypes::FLOAT)
+					("real",             DataTypes::REAL)
 					("vec3",             DataTypes::VEC3)
 					("vec3i",            DataTypes::VEC3I)
 					("vec4",             DataTypes::VEC4)
@@ -103,7 +103,8 @@ namespace mye
 					("RenderComponent",    ComponentTypes::RENDER)
 					("CameraComponent",    ComponentTypes::CAMERA)
 					("RigidBodyComponent", ComponentTypes::RIGIDBODY)
-					("Text2DComponent",    ComponentTypes::TEXT2D);
+					("Text2DComponent",    ComponentTypes::TEXT2D)
+					("LightComponent",     ComponentTypes::LIGHT);
 
 			}
 

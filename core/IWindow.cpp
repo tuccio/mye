@@ -29,7 +29,8 @@ void IWindow::AddListener(Listener *listener)
 void IWindow::RemoveListener(Listener *listener)
 {
 
-	auto it = std::find(m_listeners.begin(),
+	auto it = std::find(
+		m_listeners.begin(),
 		m_listeners.end(),
 		listener);
 

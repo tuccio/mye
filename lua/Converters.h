@@ -7,6 +7,7 @@
 
 #include <mye/core/Resource.h>
 #include <mye/core/Font.h>
+#include <mye/core/Light.h>
 #include <mye/core/BulletCollisionShape.h>
 
 #include <mye/math/Math.h>
@@ -373,3 +374,13 @@ namespace luabind\
 /*__MYE_DEFINE_RESOURCE_LUA_CONVERTER(mye::core::BulletCollisionShape)
 __MYE_DEFINE_RESOURCE_LUA_CONVERTER(mye::core::Font)*/
 
+#define __MYE_LUA_ADAPT_ENUM_CLASS(__ENUM) namespace luabind { \
+		template <> struct default_converter<__ENUM> : native_converter_base<__ENUM>{ \
+		inline static int compute_score(lua_State *L, int index) { return lua_isnumber(L, index); } \
+		inline static __ENUM from(lua_State* L, int index) { return static_cast<__ENUM>(lua_tointeger(L, index)); } \
+		inline static void to(lua_State* L, const __ENUM &vs) { lua_pushinteger(L, static_cast<int>(vs)); } }; \
+		template <> struct default_converter<__ENUM const>  : default_converter<__ENUM>{}; \
+		template <> struct default_converter<__ENUM const&> : default_converter<__ENUM>{}; }
+
+__MYE_LUA_ADAPT_ENUM_CLASS(mye::math::VolumeSide)
+__MYE_LUA_ADAPT_ENUM_CLASS(mye::core::LightType)

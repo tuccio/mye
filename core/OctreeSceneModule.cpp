@@ -9,8 +9,8 @@ using namespace mye::math;
 OctreeSceneModule::OctreeSceneModule(const mye::math::Vector3 &center,
 									 float size,
 									 unsigned int maxdepth,
-									 unsigned int looseness) :
-	m_octree(center, size, maxdepth, looseness)
+									 unsigned int looseness)
+//	m_octree(center, size, maxdepth, looseness)
 {
 }
 
@@ -38,15 +38,19 @@ SceneModule::ObjectsList OctreeSceneModule::GetVisibleObjects(void)
 void OctreeSceneModule::AddGameObject(const GameObjectHandle &hObj)
 {
 
-	assert(Game::GetSingleton().GetGameObjectsModule()->Get(hObj) &&
-		"Non-existent object added to the scene");
+	SceneModule::AddGameObject(hObj);
 
 	m_objects.push_back(hObj);
+
 }
 
 void OctreeSceneModule::RemoveGameObject(const GameObjectHandle &hObj)
 {
+
+	SceneModule::RemoveGameObject(hObj);
+
 	m_objects.erase(std::find(m_objects.begin(), m_objects.end(), hObj));
+
 }
 
 void OctreeSceneModule::ApplyUpdates(void)
@@ -65,7 +69,7 @@ void OctreeSceneModule::Reset(
 
 }
 
-SceneModule::ObjectsList OctreeSceneModule::GetObjects(void)
+SceneModule::ObjectsList OctreeSceneModule::GetObjectsList(void)
 {
 
 	SceneModule::ObjectsList objects;

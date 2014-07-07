@@ -65,8 +65,8 @@ bool Font::LoadImpl(void)
 	if (m_texture->Load())
 	{
 
-		int imageWidth  = m_texture->GetImageWidth();
-		int imageHeight = m_texture->GetImageHeight();
+		int imageWidth  = m_texture->GetWidth();
+		int imageHeight = m_texture->GetHeight();
 
 		String file = "./fonts/" + m_name + ".xml";
 
@@ -149,7 +149,12 @@ size_t Font::CalculateSizeImpl(void)
 
 }
 
-void Font::Use(void)
+void Font::Bind(void)
+{
+
+}
+
+void Font::Unbind(void)
 {
 
 }

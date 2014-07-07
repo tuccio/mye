@@ -18,17 +18,23 @@ namespace mye
 		};
 
 		class SceneModule :
-			public Module
+			public Module,
+			public GameObjectListener
 		{
 
 		public:
 
 			typedef std::list<GameObject*> ObjectsList;
+			typedef std::list<LightComponent*> LightsList;
+			typedef std::list<Text2DComponent*> Text2DList;
 
 			SceneModule(void);
 
 			virtual ObjectsList GetVisibleObjects(void);
-			virtual ObjectsList GetObjects(void);
+			virtual ObjectsList GetObjectsList(void);
+
+			const LightsList& GetLightsList(void) const;
+			const Text2DList& GetText2DList(void) const;
 
 			virtual void AddGameObject(const GameObjectHandle &hObj);
 			virtual void RemoveGameObject(const GameObjectHandle &hObj);
@@ -46,6 +52,9 @@ namespace mye
 			void AddCameraListener(SceneCameraListener *listener);
 			void RemoveCameraListener(SceneCameraListener *listener);
 
+			void OnComponentAddition(GameObject *go, Component *component);
+			void OnComponentRemoval(GameObject *go, Component *component);
+
 		protected:
 
 			struct GameObjectUpdate
@@ -59,6 +68,9 @@ namespace mye
 			std::list<GameObjectUpdate> m_movedObjects;
 
 			std::vector<SceneCameraListener*> m_cameraListeners;
+
+			LightsList m_lights;
+			Text2DList m_textes;
 
 		};
 

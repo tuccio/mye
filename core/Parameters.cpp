@@ -8,6 +8,14 @@ Parameters::Parameters(void)
 {
 }
 
+Parameters::Parameters(std::initializer_list<Parameter> initializerList)
+{
+	for (const Parameter &p : initializerList)
+	{
+		m_map[p.key] = p.value;
+	}
+}
+
 Parameters::Parameters(const std::unordered_map<String, String> map) :
 	m_map(map)
 {
@@ -59,6 +67,22 @@ float Parameters::GetFloat(const String &key) const
 	if (!s.IsEmpty())
 	{
 		value = ParseType<float>(s);
+	}
+
+	return value;
+
+}
+
+mye::math::Real Parameters::GetReal(const String &key) const
+{
+
+	String s = GetString(key);
+
+	mye::math::Real value = 0;
+
+	if (!s.IsEmpty())
+	{
+		value = ParseType<mye::math::Real>(s);
 	}
 
 	return value;

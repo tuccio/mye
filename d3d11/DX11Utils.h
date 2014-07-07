@@ -3,10 +3,12 @@
 #pragma warning( disable : 4067 )
 
 #include <Windows.h>
+#include <d3d11.h>
+
 #include <vector>
+#include <cassert>
 
 #include <mye/core/VertexDeclaration.h>
-#include <d3d11.h>
 
 #if defined(DEBUG) | defined(_DEBUG)
 
@@ -54,7 +56,7 @@ namespace mye
 #ifndef ReleaseCOM(x)
 
 	#define ReleaseCOM(x) { x->Release(); x = nullptr; }
-	#define ReleaseCOMIf(x) { if (x) ReleaseCOM(x); }
+	#define ReleaseCOMOptional(x) { if (x) ReleaseCOM(x); }
 
 #endif
 
@@ -75,12 +77,95 @@ namespace mye
 			PIPELINE_OUTPUT_MERGER
 		};
 
+		inline DXGI_FORMAT GetDXGIFormat(mye::core::DataFormat type)
+		{
+
+			DXGI_FORMAT format;
+
+			switch (type)
+			{
+
+			case mye::core::DataFormat::FLOAT:
+				format = DXGI_FORMAT_R32_FLOAT;
+				break;
+
+			case mye::core::DataFormat::FLOAT2:
+				format = DXGI_FORMAT_R32G32_FLOAT;
+				break;
+
+			case mye::core::DataFormat::FLOAT3:
+				format = DXGI_FORMAT_R32G32B32_FLOAT;
+				break;
+
+			case mye::core::DataFormat::FLOAT4:
+				format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+				break;
+
+			case mye::core::DataFormat::INT:
+				format = DXGI_FORMAT_R32_SINT;
+				break;
+
+			case mye::core::DataFormat::INT2:
+				format = DXGI_FORMAT_R32G32_SINT;
+				break;
+
+			case mye::core::DataFormat::INT3:
+				format = DXGI_FORMAT_R32G32B32_SINT;
+				break;
+
+			case mye::core::DataFormat::INT4:
+				format = DXGI_FORMAT_R32G32B32A32_SINT;
+				break;
+
+			case mye::core::DataFormat::BYTE:
+				format = DXGI_FORMAT_R8_UINT;
+				break;
+
+			case mye::core::DataFormat::BYTE2:
+				format = DXGI_FORMAT_R8G8_UINT;
+				break;
+
+			case mye::core::DataFormat::BYTE3:
+				format = DXGI_FORMAT_R8G8B8A8_UINT;
+				break;
+
+			case mye::core::DataFormat::BYTE4:
+				format = DXGI_FORMAT_R8G8B8A8_UINT;
+				break;
+
+			case mye::core::DataFormat::RGBA32:
+				format = DXGI_FORMAT_R8G8B8A8_UNORM;
+				break;
+
+			case mye::core::DataFormat::RGB96:
+				format = DXGI_FORMAT_R32G32B32_FLOAT;
+				break;
+
+			case mye::core::DataFormat::RGBA128:
+				format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+				break;
+
+			case mye::core::DataFormat::sRGBA32:
+				format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+				break;
+
+			default:
+				format = DXGI_FORMAT_UNKNOWN;
+				break;
+
+			}
+
+			return format;
+
+		}
+
 		inline std::vector<D3D11_INPUT_ELEMENT_DESC> MakeInputElementVector(const mye::core::VertexDeclaration &vd)
 		{
 
 			std::vector<D3D11_INPUT_ELEMENT_DESC> v;
+			size_t offset = 0;
 
-			for (mye::core::VertexDeclaration::Attribute a : vd)
+			for (mye::core::VertexAttribute a : vd)
 			{
 
 				D3D11_INPUT_ELEMENT_DESC vDesc;
@@ -133,57 +218,36 @@ namespace mye
 					vDesc.SemanticIndex        = 7;
 					break;
 
+				case mye::core::VertexAttributeSemantic::NORMAL:
+					vDesc.SemanticName         = "NORMAL";
+					vDesc.SemanticIndex        = 0;
+					break;
+
+				case mye::core::VertexAttributeSemantic::TANGENT:
+					vDesc.SemanticName         = "TANGENT";
+					vDesc.SemanticIndex        = 0;
+					break;
+
+				case mye::core::VertexAttributeSemantic::BITANGENT:
+					vDesc.SemanticName         = "BITANGENT";
+					vDesc.SemanticIndex        = 0;
+					break;
+
 				default:
 					break;
 
 				}
 
-				switch (a.type)
-				{
-
-					case mye::core::VertexAttributeType::FLOAT:
-						vDesc.Format               = DXGI_FORMAT_R32_FLOAT;
-						break;
-
-					case mye::core::VertexAttributeType::FLOAT2:
-						vDesc.Format               = DXGI_FORMAT_R32G32_FLOAT;
-						break;
-
-					case mye::core::VertexAttributeType::FLOAT3:
-						vDesc.Format               = DXGI_FORMAT_R32G32B32_FLOAT;
-						break;
-
-					case mye::core::VertexAttributeType::FLOAT4:
-						vDesc.Format               = DXGI_FORMAT_R32G32B32A32_FLOAT;
-						break;
-
-					case mye::core::VertexAttributeType::INT:
-						vDesc.Format               = DXGI_FORMAT_R32_SINT;
-						break;
-
-					case mye::core::VertexAttributeType::INT2:
-						vDesc.Format               = DXGI_FORMAT_R32G32_SINT;
-						break;
-
-					case mye::core::VertexAttributeType::INT3:
-						vDesc.Format               = DXGI_FORMAT_R32G32B32_SINT;
-						break;
-
-					case mye::core::VertexAttributeType::INT4:
-						vDesc.Format               = DXGI_FORMAT_R32G32B32A32_SINT;
-						break;
-						
-					default:
-						break;
-
-				}
+				vDesc.Format = GetDXGIFormat(a.type);
 
 				vDesc.InputSlot            = 0;
-				vDesc.AlignedByteOffset    = D3D11_APPEND_ALIGNED_ELEMENT;
+				vDesc.AlignedByteOffset    = offset;
 				vDesc.InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
 				vDesc.InstanceDataStepRate = 0;
 
 				v.push_back(vDesc);
+
+				offset += mye::core::GetDataTypeSize(a.type);
 
 			}
 

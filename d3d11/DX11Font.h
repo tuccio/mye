@@ -22,7 +22,8 @@ namespace mye
 
 			~DX11Font(void);
 
-			void Use(void);
+			void Bind(void);
+			void Unbind(void);
 
 		protected:
 

@@ -12,7 +12,7 @@ class MainWindowListener :
 
 public:
 
-	MainWindowListener(mye::core::Game *game);
+	MainWindowListener(void);
 	~MainWindowListener(void);
 
 	void OnCreate(mye::core::IWindow * window);

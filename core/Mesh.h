@@ -41,13 +41,13 @@ namespace mye
 			void SetVertexAttribute(size_t triangleIndex,
 				size_t vertexIndex,
 				VertexAttributeSemantic semantic,
-				VertexAttributeType type,
+				DataFormat type,
 				const void *data);
 
 			void GetVertexAttribute(size_t triangleIndex,
 				size_t vertexIndex,
 				VertexAttributeSemantic semantic,
-				VertexAttributeType type,
+				DataFormat type,
 				void *data) const;
 
 			VectorPair GetMinMaxVertices(void) const;

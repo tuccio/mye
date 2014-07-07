@@ -6,7 +6,6 @@
 
 #include <mye/win/Window.h>
 
-#include <mye/d3d11/DX11Window.h>
 #include <mye/d3d11/DX11Module.h>
 #include <mye/d3d11/DX11Font.h>
 
@@ -28,8 +27,6 @@ namespace mye
 
 			module(L)
 			[
-
-				class_<DX11Window, Window>(MYE_LUA_DX11WINDOW),
 
 				class_<DX11Module, GraphicsModule>(MYE_LUA_DX11MODULE).
 

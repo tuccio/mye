@@ -1,0 +1,17 @@
+entity Light
+{
+	
+	bool moving(true);
+	vec3 velocity(0, 0, 0);
+	
+	LightComponent(Light(PointLight(vec3(1, 1, 1), vec3(1, 1, 1), vec3(0, 0, 0), 30)));
+	Text2DComponent(
+		vec2i(0, 0),
+		ResourceTypeManager:CreateResource(
+			"Font",
+			"verdana_regular_17",
+			nil,
+			nil),
+		"");
+
+}

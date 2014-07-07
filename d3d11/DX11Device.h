@@ -21,9 +21,15 @@ namespace mye
 			inline ID3D11Device* GetDevice(void) const;
 			inline ID3D11DeviceContext* GetImmediateContext(void) const;
 
-			//void Render(DX11VertexBuffer &vb);
+			inline ID3D11Device* operator-> (void);
+
+			bool Create(void);
+			void Destroy(void);
+
+			bool Exists(void) const;
 
 			void SetBlending(bool enable);
+			void SetDepthTest(bool enable);
 
 		private:
 
@@ -33,7 +39,15 @@ namespace mye
 			ID3D11BlendState *m_blendOff;
 			ID3D11BlendState *m_blendOn;
 
+			ID3D11DepthStencilState *m_depthTestOff;
+			ID3D11DepthStencilState *m_depthTestOn;
+
 		};
+
+		ID3D11Device* DX11Device::operator-> (void)
+		{
+			return m_device;
+		}
 
 		ID3D11Device* DX11Device::GetDevice(void) const
 		{

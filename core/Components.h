@@ -9,3 +9,4 @@
 #include "CameraComponent.h"
 #include "RigidBodyComponent.h"
 #include "Text2DComponent.h"
+#include "LightComponent.h"

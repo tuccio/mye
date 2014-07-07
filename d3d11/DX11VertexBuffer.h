@@ -32,6 +32,7 @@ namespace mye
 			void Clear(void);
 
 			void Bind(void);
+			void Unbind(void);
 
 			size_t GetVerticesCount(void) const;
 

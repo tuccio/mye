@@ -46,18 +46,21 @@ bool BulletCollisionShape::LoadImpl(void)
 
 		static __StaticBlock staticBlock;
 
-		auto it = staticBlock.shapes.find(type);
+		auto typeIt = staticBlock.shapes.find(type);
 
-		switch (it->second)
+		switch (typeIt->second)
 		{
 
 		case __ShapeType::BOX:
 
 			if (m_params.Contains("halfextents"))
 			{
-				mye::math::Vector3 h = m_params.GetVector3<float>("halfextents");
+
+				mye::math::Vector3 h = m_params.GetVector3<mye::math::Real>("halfextents");
 				m_shape = new btBoxShape(btVector3(h.x(),  h.y(), h.z()));
+
 				loaded = true;
+
 			}
 
 			break;
@@ -67,15 +70,23 @@ bool BulletCollisionShape::LoadImpl(void)
 
 			if (m_params.Contains("radius"))
 			{
-				float r = m_params.GetFloat("radius");
+
+				auto r = m_params.GetReal("radius");
 				m_shape = new btSphereShape(r);
+
 				loaded = true;
+
 			}
 
 			break;
 
 		}
 
+	}
+
+	if (loaded && m_params.Contains("margin"))
+	{
+		m_shape->setMargin(m_params.GetReal("margin"));
 	}
 
 	return loaded;

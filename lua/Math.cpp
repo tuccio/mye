@@ -292,7 +292,33 @@ namespace mye
 
 			];
 
-		}		
+		}
+
+		void BindVolumes(lua_State *L, const char *classname)
+		{
+
+			module(L)
+			[
+
+				class_<Volume<Real>>(classname).
+
+					def("TransformAffine", &Volume<Real>::TransformAffine).
+					def("Intersect", &Volume<Real>::Intersect),
+
+				class_<AABB, Volume<Real>>(classname).
+
+					def("FromCenterHalfExtents", &AABB::FromCenterHalfExtents).
+					def("FromMinMax", &AABB::FromMinMax).
+
+					property("center", &AABB::GetCenter).
+					property("halfextents", &AABB::GetHalfExtents).
+
+					property("min", &AABB::GetMinimum).
+					property("max", &AABB::GetMaximum)
+
+			];
+
+		}
 
 		void BindMath(lua_State *L)
 		{
@@ -312,6 +338,8 @@ namespace mye
 			BindQuaternion(L, MYE_LUA_QUATERNION);
 
 			BindTransform(L, MYE_LUA_TRANSFORM);
+
+			BindVolumes(L, MYE_LUA_AABB);
 
 			module(L, "Math")
 			[

@@ -1,51 +1,54 @@
 #pragma once
 
-#include <iostream>
+#include <fstream>
 
 #if _DEBUG
 
 #define __SHOWLUASTACK(lstack)	\
-	for (int i=0;i<lua_gettop(lstack)+1;i+=1)\
 	{\
-	if (lua_isnumber(lstack,i))\
+	static std::ofstream __f("lua_stack.txt");\
+for (int i = 0; i < lua_gettop(lstack) + 1; i++)\
+	{\
+if (lua_isnumber(lstack, i))\
 		{\
-		std::cout << i << ": number : " << lua_tonumber(lstack,i) << std::endl;\
+		__f << i << ": number : " << lua_tonumber(lstack, i) << std::endl; \
 		}\
-		else if (lua_isstring(lstack,i))\
+		else if (lua_isstring(lstack, i))\
 		{\
-		std::cout << i << ": string : " << lua_tostring(lstack,i) << std::endl;\
+		__f << i << ": string : " << lua_tostring(lstack, i) << std::endl; \
 		}\
-		else if (lua_istable(lstack,i))\
+		else if (lua_istable(lstack, i))\
 		{\
-		std::cout << i << ": table" << std::endl;\
+		__f << i << ": table" << std::endl; \
 		}\
-		else if (lua_iscfunction(lstack,i))\
+		else if (lua_iscfunction(lstack, i))\
 		{\
-		std::cout << i << ": cfunction" << std::endl;\
+		__f << i << ": cfunction" << std::endl; \
 		}\
-		else if (lua_isfunction(lstack,i))\
+		else if (lua_isfunction(lstack, i))\
 		{\
-		std::cout << i << ": function" << std::endl;\
+		__f << i << ": function" << std::endl; \
 		}\
-		else if (lua_isboolean(lstack,i))\
+		else if (lua_isboolean(lstack, i))\
 		{\
-		if (lua_toboolean(lstack,i)==true)\
-		std::cout << i << ": boolean : true" << std::endl;\
+if (lua_toboolean(lstack, i) == true)\
+__f << i << ": boolean : true" << std::endl; \
 			else\
-			std::cout << i << ": boolean : false" << std::endl;\
+			__f << i << ": boolean : false" << std::endl; \
 		}\
-		else if (lua_isuserdata(lstack,i))\
+		else if (lua_isuserdata(lstack, i))\
 		{\
-		std::cout << i << ": userdata" << std::endl;\
+		__f << i << ": userdata" << std::endl; \
 		}\
-		else if (lua_isnil(lstack,i))\
+		else if (lua_isnil(lstack, i))\
 		{\
-		std::cout << i << ": nil" << std::endl;\
+		__f << i << ": nil" << std::endl; \
 		}\
-		else if (lua_islightuserdata(lstack,i))\
+		else if (lua_islightuserdata(lstack, i))\
 		{\
-		std::cout << i << ": light userdata" << std::endl;\
+		__f << i << ": light userdata" << std::endl; \
 		}\
+	}\
 	}
 
 #else

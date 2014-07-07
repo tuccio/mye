@@ -18,17 +18,16 @@
 
 #include "Debug.h"
 
-#define VARIABLE_COMPONENT_CAST_GET_BEGIN(__Type)\
+#define VARIABLE_COMPONENT_GET_BEGIN
+#define VARIABLE_COMPONENT_GET_END { }
+
+#define VARIABLE_COMPONENT_GET(__Type)\
 	if (type == typeid(__Type))\
-		rvalue = object(L, boost::ref(static_cast<VariableComponent<__Type>*>(MYE_LUA_COMPONENT_UNWRAP(component))->Get()));
-
-#define VARIABLE_COMPONENT_CAST_GET_BLOCK(__Type)\
-	else if (type == typeid(__Type)) \
-		rvalue = object(L, static_cast<VariableComponent<__Type>*>(MYE_LUA_COMPONENT_UNWRAP(component))->Get());
-
-#define VARIABLE_COMPONENT_CAST_GET_ALIGNED(__Type)\
-	else if (type == typeid(__Type)) \
-		rvalue = object(L, boost::ref(static_cast<VariableComponent<__Type>*>(MYE_LUA_COMPONENT_UNWRAP(component))->Get()));
+	{\
+		VariableComponent<__Type>* vComponent = static_cast<VariableComponent<__Type>*>(MYE_LUA_COMPONENT_UNWRAP(component));\
+		rvalue = object(L, vComponent)["value"]; \
+	}\
+	else
 
 #define VARIABLE_COMPONENT_CAST_SET_BEGIN(__Type) \
 	if (type == typeid(__Type))\
@@ -66,7 +65,9 @@ namespace mye
 		int IndexOverload(lua_State *L)
 		{
 
-			//__SHOWLUASTACK(L);
+			int top = lua_gettop(L);
+
+			__SHOWLUASTACK(L);
 
 			int returnValues = 0;
 
@@ -113,16 +114,18 @@ namespace mye
 										auto tmp = static_cast<VariableComponent<void*>*>(component);
 										std::type_index type = tmp->GetVariableType();
 
-										VARIABLE_COMPONENT_CAST_GET_BEGIN(float)
-										VARIABLE_COMPONENT_CAST_GET_BLOCK(int)
-										VARIABLE_COMPONENT_CAST_GET_BLOCK(bool)
-										VARIABLE_COMPONENT_CAST_GET_BLOCK(String)
-										VARIABLE_COMPONENT_CAST_GET_BLOCK(Vector3f)
-										VARIABLE_COMPONENT_CAST_GET_BLOCK(Vector3i)
-										VARIABLE_COMPONENT_CAST_GET_BLOCK(Vector4f)
-										VARIABLE_COMPONENT_CAST_GET_BLOCK(Vector4i)
-										VARIABLE_COMPONENT_CAST_GET_BLOCK(Quaternionf)
-										VARIABLE_COMPONENT_CAST_GET_BLOCK(GameObjectHandle)
+										VARIABLE_COMPONENT_GET_BEGIN
+										VARIABLE_COMPONENT_GET(float)
+										VARIABLE_COMPONENT_GET(int)
+										VARIABLE_COMPONENT_GET(bool)
+										VARIABLE_COMPONENT_GET(String)
+										VARIABLE_COMPONENT_GET(Vector3f)
+										VARIABLE_COMPONENT_GET(Vector3i)
+										VARIABLE_COMPONENT_GET(Vector4f)
+										VARIABLE_COMPONENT_GET(Vector4i)
+										VARIABLE_COMPONENT_GET(Quaternionf)
+										VARIABLE_COMPONENT_GET(GameObjectHandle)
+										VARIABLE_COMPONENT_GET_END
 
 									}
 									break;
@@ -145,6 +148,11 @@ namespace mye
 								case ComponentTypes::RENDER:
 
 									rvalue = object(L, boost::ref(*static_cast<RenderComponent*>(component)));
+									break;
+
+								case ComponentTypes::LIGHT:
+
+									rvalue = object(L, boost::ref(*static_cast<LightComponent*>(component)));
 									break;
 
 								default:
@@ -176,7 +184,7 @@ namespace mye
 									lua_getfield(L, -1, field);
 
 									lua_replace(L, 3);
-									lua_pop(L, 1);
+									//lua_pop(L, 1);
 
 									//__SHOWLUASTACK(L);
 
@@ -198,6 +206,8 @@ namespace mye
 				returnValues = 1;
 			}
 
+			lua_settop(L, top + returnValues);
+
 			return returnValues;
 
 		}
@@ -212,6 +222,8 @@ namespace mye
 			const char *s = lua_tostring(L, 2);
 
 			Component *component = nullptr;
+
+			//__SHOWLUASTACK(L)
 
 			if (object_cast_nothrow<GameObjectHandle>(obj1))
 			{
@@ -292,6 +304,17 @@ namespace mye
 
 						auto value = object_cast<RenderComponent>(object(from_stack(L, 3)));
 						*static_cast<RenderComponent*>(component) = value;
+
+						break;
+
+					}
+
+				case ComponentTypes::LIGHT:
+
+					{
+
+						auto value = object_cast<LightComponent>(object(from_stack(L, 3)));
+						*static_cast<LightComponent*>(component) = value;
 
 						break;
 

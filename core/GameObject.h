@@ -26,16 +26,23 @@ namespace mye
 		typedef std::unordered_map<String, Component*> ComponentsList;
 		typedef std::unordered_map<String, Component*>::iterator ComponentIterator;
 
+		class GameObjectListener;
+
 		class GameObject :
 			public INamedObject
 		{
 
 		public:
 
+			MYE_DECLARE_POOL_ALLOCATOR(GameObject)
+
 			GameObject(void);
 			GameObject(const String &name);
 
 			~GameObject(void);
+
+			void AddListener(GameObjectListener *listener);
+			void RemoveListener(GameObjectListener *listener);
 
 			Component* AddComponent(const Component &component);
 			Component* GetComponent(const String &name);
@@ -47,6 +54,7 @@ namespace mye
 			inline BehaviourComponent* GetBehaviourComponent(void);
 			inline RigidBodyComponent* GetRigidBodyComponent(void);
 			inline Text2DComponent*    GetText2DComponent(void);
+			inline LightComponent*     GetLightComponent(void);
 
 			inline mye::math::AABBf    GetAABB(void);
 
@@ -65,8 +73,6 @@ namespace mye
 			inline ComponentIterator begin(void);
 			inline ComponentIterator end(void);
 
-			MYE_DECLARE_POOL_ALLOCATOR(GameObject)
-
 		private:
 
 			friend class GameObjectsManager;
@@ -82,20 +88,29 @@ namespace mye
 			GameObjectHandle    m_handle;
 			GameObjectsManager *m_owner;
 
-			TransformComponent *m_transform;
-			RenderComponent    *m_render;
-			CameraComponent    *m_camera;
+			TransformComponent  m_transform;
 			BehaviourComponent *m_behaviour;
-			RigidBodyComponent *m_rigidbody;
-			Text2DComponent    *m_text2d;
-
-			bool m_delendum;
 
 			String m_entity;
 
+			bool m_delendum : 1;
+
+			std::list<GameObjectListener*> m_listeners;
+
 		};
 
-		
+		class GameObjectListener
+		{
+
+		public:
+
+			virtual inline void OnGameObjectCreation(GameObject *gameObject) { };
+			virtual inline void OnGameObjectDestruction(GameObject *gameObject) { };
+
+			virtual inline void OnComponentAddition(GameObject *gameObject, Component *component) { };
+			virtual inline void OnComponentRemoval(GameObject *gameObject, Component *component) { };
+
+		};
 
 	}
 

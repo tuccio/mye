@@ -20,20 +20,20 @@ namespace mye
 
 			~Texture(void);
 
-			inline int GetImageHeight(void) const
+			inline int GetHeight(void) const
 			{
-				return m_imageHeight;
+				return m_height;
 			}
 
-			inline int GetImageWidth(void) const
+			inline int GetWidth(void) const
 			{
-				return m_imageWidth;
+				return m_width;
 			}
 
 		protected:
 
-			int m_imageWidth;
-			int m_imageHeight;
+			int m_width;
+			int m_height;
 
 		};
 

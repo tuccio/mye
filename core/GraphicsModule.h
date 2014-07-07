@@ -26,8 +26,6 @@ namespace mye
 
 			virtual void Render(void) = 0;
 
-			virtual mye::math::Vector2f GetPointSize(void) = 0;
-
 			const mye::math::Vector4f& GetClearColor(void) const;
 			void SetClearColor(const mye::math::Vector4f &color);
 

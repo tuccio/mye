@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <initializer_list>
 
 namespace mye
 {
@@ -20,13 +21,15 @@ namespace mye
 			TEXCOORD5,
 			TEXCOORD6,
 			TEXCOORD7,
+			TANGENT,
+			BITANGENT,
 			AMBIENT,
 			DIFFUSE,
 			SPECULAR,
 			COUNT
 		};
 
-		enum class VertexAttributeType
+		enum class DataFormat
 		{
 			FLOAT,
 			FLOAT2,
@@ -36,42 +39,55 @@ namespace mye
 			INT2,
 			INT3,
 			INT4,
+			BYTE,
+			BYTE2,
+			BYTE3,
+			BYTE4,
+			RGB24,
+			RGBA32,
+			RGB96,
+			RGBA128,
+			sRGB24,
+			sRGBA32,
 			COUNT
 		};
 
+		size_t GetDataTypeSize(DataFormat type);
+
+		struct VertexAttribute
+		{
+
+			VertexAttributeSemantic semantic;
+			DataFormat type;
+
+			VertexAttribute(VertexAttributeSemantic semantic,
+				DataFormat type) :
+				semantic(semantic),
+				type(type)
+			{
+			}
+
+		};
 
 		class VertexDeclaration
 		{
 
 		public:
 
-			struct Attribute
-			{
-				VertexAttributeSemantic semantic;
-				VertexAttributeType type;
-
-				Attribute(VertexAttributeSemantic semantic,
-					VertexAttributeType type)
-				{
-					this->semantic = semantic;
-					this->type = type;
-				}
-			};
-
-			typedef std::vector<Attribute>::const_iterator Iterator;
-
-			static const size_t AttributeTypeSize[VertexAttributeType::COUNT];
+			typedef std::vector<VertexAttribute>::const_iterator Iterator;
 
 			VertexDeclaration(void);
+			VertexDeclaration(std::initializer_list<VertexAttribute> initializerList);
+
 			~VertexDeclaration(void);
 
 			void AddAttribute(
 				VertexAttributeSemantic semantic,
-				VertexAttributeType type);
+				DataFormat type);
 
 			void InsertAttribute(
 				VertexAttributeSemantic semantic,
-				VertexAttributeType type,
+				DataFormat type,
 				int i);
 
 			int GetAttributeIndex(VertexAttributeSemantic semantic) const;
@@ -88,7 +104,7 @@ namespace mye
 
 		private:
 
-			std::vector<Attribute> m_attributes;
+			std::vector<VertexAttribute> m_attributes;
 			size_t m_size;
 
 		};

@@ -10,15 +10,17 @@ entity Box
 			"verdana_regular_17",
 			nil,
 			nil),
-		"This is Sparta!");
+		"");
 		
 	//RigidBodyComponent();
 	
-	RigidBodyComponent(ResourceTypeManager:CreateResource(
-		"BulletCollisionShape",
-		"BOX_SHAPE",
-		nil,
-		{ ["type"] = "box", ["halfextents"] = "1 1 1" }), 1);
+	RigidBodyComponent(
+		ResourceTypeManager:CreateResource(
+			"BulletCollisionShape",
+			"BOX_SHAPE",
+			nil,
+			{ ["type"] = "box", ["halfextents"] = "1 1 1", ["margin"] = "0" }),
+		1);
 	
 	/*
 	RigidBodyComponent (Box(1, 1, 1), 1, vec3(0, 0, 0), quaternion(1, 0, 0, 0));

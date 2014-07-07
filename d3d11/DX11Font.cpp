@@ -42,7 +42,12 @@ void DX11Font::UnloadImpl(void)
 	m_texture->Unload();
 
 }
-void DX11Font::Use(void)
+void DX11Font::Bind(void)
 {
 	m_texture->Bind(0);
+}
+
+void DX11Font::Unbind(void)
+{
+	m_texture->Unbind();
 }

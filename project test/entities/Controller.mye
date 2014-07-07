@@ -3,6 +3,7 @@ entity Controller
 	
 	GameObjectHandle box1;
 	GameObjectHandle box2;
+	GameObjectHandle sphere;
 	
 	Text2DComponent(
 		vec2i(8, 8),

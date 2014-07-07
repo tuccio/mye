@@ -6,9 +6,68 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
-#include "AssimpModelLoader.h"
+#include "AssimpLoader.h"
 
 using namespace mye::core;
+
+namespace mye
+{
+	namespace core
+	{
+		namespace detail
+		{
+
+			struct ModelMeshGrabber :
+				public boost::static_visitor<Mesh*>
+			{
+
+				Mesh* operator() (MeshPointer m)
+				{
+					return m.get();
+				}
+
+				Mesh* operator() (Mesh *m)
+				{
+					return m;
+				}
+
+			};
+
+			struct ModelConstMeshGrabber :
+				public boost::static_visitor<const Mesh*>
+			{
+
+				const Mesh* operator() (const MeshPointer m)
+				{
+					return m.get();
+				}
+
+				const Mesh* operator() (const Mesh *m)
+				{
+					return m;
+				}
+
+			};
+
+			struct ModelOwnedMeshesCleaner :
+				public boost::static_visitor<void>
+			{
+
+				void operator() (MeshPointer m)
+				{
+				}
+
+				void operator() (Mesh *m)
+				{
+					delete m;
+				}
+
+			};
+
+		}
+	}
+}
+
 
 Model::Model(ResourceManager *owner,
 			 const String &name,
@@ -25,12 +84,10 @@ Model::~Model(void)
 Mesh* Model::AddMesh(void)
 {
 
-	SubMesh meshRef;
-	meshRef.mesh = new Mesh(nullptr, "", nullptr);
-	meshRef.resource = false;
+	Mesh *m = new Mesh(nullptr, "", nullptr);
 
-	m_meshes.push_back(meshRef);
-	return meshRef.mesh;
+	m_meshes.push_back(SubMesh(m));
+	return m;
 
 }
 
@@ -42,22 +99,18 @@ Mesh* Model::AddMesh(const String &resourceName)
 
 	mesh->Load();
 
-	SubMesh meshRef;
-	meshRef.handle = mesh;
-	meshRef.mesh = nullptr;
-	meshRef.resource = true;
+	m_meshes.push_back(SubMesh(mesh));
 
-	m_meshes.push_back(meshRef);
-
-	return meshRef.handle.get();
+	return mesh.get();
 
 }
 
 Mesh* Model::GetMesh(int i)
 {
-	return (m_meshes[i].resource ?
-		m_meshes[i].handle.get() :
-		m_meshes[i].mesh);
+
+	detail::ModelMeshGrabber v;
+	return (m_meshes[i].apply_visitor(v));
+
 }
 
 size_t Model::GetMeshesCount(void) const
@@ -68,13 +121,11 @@ size_t Model::GetMeshesCount(void) const
 void Model::Clear(void)
 {
 
+	detail::ModelOwnedMeshesCleaner v;
+
 	for (SubMesh& meshRef : m_meshes)
 	{
-		if (!meshRef.resource)
-		{
-			meshRef.mesh->Clear();
-			delete meshRef.mesh;
-		}
+		meshRef.apply_visitor(v);
 	}
 
 	m_meshes.clear();
@@ -84,20 +135,7 @@ void Model::Clear(void)
 bool Model::LoadImpl(void)
 {
 
-	Assimp::Importer importer;
-	bool loaded = false;
-
-	const aiScene *scene = importer.ReadFile(m_name.CString(),
-		aiProcessPreset_TargetRealtime_Quality);
-
-	if (scene)
-	{
-		AssimpModelLoader modelLoader(scene);
-		loaded = modelLoader.Load(static_cast<Resource*>(this));
-		importer.FreeScene();
-	}
-
-	return loaded;
+	return AssimpLoader::LoadModel(m_name, this);
 
 }
 
@@ -106,22 +144,17 @@ void Model::UnloadImpl(void)
 	Clear();
 }
 
+
 size_t Model::CalculateSizeImpl(void)
 {
 
 	size_t size = 0;
+	detail::ModelMeshGrabber v;
 
-	for (auto meshRef : m_meshes)
+	for (SubMesh &meshRef : m_meshes)
 	{
 
-		if (!meshRef.resource)
-		{
-			size += meshRef.mesh->GetSize();
-		}
-		else
-		{
-			size += meshRef.handle->GetSize();
-		}
+		size += meshRef.apply_visitor(v)->GetSize();
 
 	}
 
@@ -144,19 +177,13 @@ Mesh::VectorPair Model::GetMinMaxVertices(void) const
 		std::numeric_limits<float>::max()
 		);
 
-	for (auto &meshRef : m_meshes)
+	for (const SubMesh &meshRef : m_meshes)
 	{
 
 		Mesh::VectorPair localMinMax;
+		detail::ModelConstMeshGrabber v;
 
-		if (!meshRef.resource)
-		{
-			localMinMax = meshRef.mesh->GetMinMaxVertices();
-		}
-		else
-		{
-			localMinMax = meshRef.handle->GetMinMaxVertices();
-		}
+		localMinMax = meshRef.apply_visitor(v)->GetMinMaxVertices();
 
 		min = min.CwiseMin(localMinMax.first);
 		max = max.CwiseMax(localMinMax.second);

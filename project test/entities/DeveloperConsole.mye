@@ -1,0 +1,6 @@
+entity DeveloperConsole
+{
+	
+	bool consoleMode(false);
+	
+}

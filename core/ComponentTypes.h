@@ -15,6 +15,7 @@ namespace mye
 			BEHAVIOUR,
 			RIGIDBODY,
 			TEXT2D,
+			LIGHT,
 			COUNT
 		};
 

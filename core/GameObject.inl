@@ -6,7 +6,7 @@ namespace mye
 
 		TransformComponent* GameObject::GetTransformComponent(void)
 		{
-			return m_transform;
+			return &m_transform;
 		}
 
 		BehaviourComponent* GameObject::GetBehaviourComponent(void)
@@ -16,22 +16,27 @@ namespace mye
 
 		RigidBodyComponent* GameObject::GetRigidBodyComponent(void)
 		{
-			return m_rigidbody;
+			return static_cast<RigidBodyComponent*>(GetComponent("rigidbody"));
 		}
 
 		RenderComponent* GameObject::GetRenderComponent(void)
 		{
-			return m_render;
+			return static_cast<RenderComponent*>(GetComponent("render"));
 		}
 
 		Text2DComponent* GameObject::GetText2DComponent(void)
 		{
-			return m_text2d;
+			return static_cast<Text2DComponent*>(GetComponent("text2d"));
 		}
 
 		CameraComponent* GameObject::GetCameraComponent(void)
 		{
-			return m_camera;
+			return static_cast<CameraComponent*>(GetComponent("camera"));
+		}
+
+		LightComponent* GameObject::GetLightComponent(void)
+		{
+			return static_cast<LightComponent*>(GetComponent("light"));
 		}
 
 		GameObjectsManager* GameObject::GetOwner(void)
@@ -51,7 +56,7 @@ namespace mye
 
 		mye::math::AABB GameObject::GetAABB(void)
 		{
-			return m_render->GetBounds().TransformAffine(m_transform->GetWorldMatrix());
+			return GetRenderComponent()->GetBounds().TransformAffine(m_transform.GetWorldMatrix());
 		}
 
 		ComponentIterator GameObject::begin(void)

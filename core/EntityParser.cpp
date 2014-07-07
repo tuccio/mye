@@ -216,7 +216,7 @@ bool EntityMembersVisitor::operator() (const DataMember &m) const
 
 		}
 
-	case DataTypes::FLOAT:
+	case DataTypes::REAL:
 
 		{
 
@@ -506,6 +506,7 @@ bool EntityMembersVisitor::operator() (const ComponentMember &m) const
 		__MYE_ENTITY_MEMBERS_VISITOR(CameraComponent,    CAMERA)
 		__MYE_ENTITY_MEMBERS_VISITOR(RigidBodyComponent, RIGIDBODY)
 		__MYE_ENTITY_MEMBERS_VISITOR(TransformComponent, TRANSFORM)
+		__MYE_ENTITY_MEMBERS_VISITOR(LightComponent,     LIGHT)
 
 	}
 

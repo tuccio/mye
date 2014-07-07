@@ -66,6 +66,7 @@ namespace mye
 			virtual void Minimize(void);
 			virtual bool IsMinimized(void) const;
 
+			virtual void Focus(void);
 			virtual void Show(void);
 			virtual void Hide(void);
 

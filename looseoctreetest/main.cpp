@@ -104,19 +104,19 @@ int main(int argc, char *argv[])
 		model.GetVertexAttribute(i,
 			0,
 			VertexAttributeSemantic::POSITION,
-			VertexAttributeType::FLOAT3,
+			DataFormat::FLOAT3,
 			&triangle.v0());
 
 		model.GetVertexAttribute(i,
 			1,
 			VertexAttributeSemantic::POSITION,
-			VertexAttributeType::FLOAT3,
+			DataFormat::FLOAT3,
 			&triangle.v1());
 
 		model.GetVertexAttribute(i,
 			2,
 			VertexAttributeSemantic::POSITION,
-			VertexAttributeType::FLOAT3,
+			DataFormat::FLOAT3,
 			&triangle.v2());
 
 		octree.Insert(triangle, BoundingAABB(triangle));
@@ -133,19 +133,19 @@ int main(int argc, char *argv[])
 		model.GetVertexAttribute(i,
 			0,
 			VertexAttributeSemantic::POSITION,
-			VertexAttributeType::FLOAT3,
+			DataFormat::FLOAT3,
 			&triangle.v0());
 
 		model.GetVertexAttribute(i,
 			1,
 			VertexAttributeSemantic::POSITION,
-			VertexAttributeType::FLOAT3,
+			DataFormat::FLOAT3,
 			&triangle.v1());
 
 		model.GetVertexAttribute(i,
 			2,
 			VertexAttributeSemantic::POSITION,
-			VertexAttributeType::FLOAT3,
+			DataFormat::FLOAT3,
 			&triangle.v2());
 
 		AABBf oldAABBt = BoundingAABB(triangle);
@@ -499,7 +499,7 @@ void CreateQuad(std::list<DX11VertexBuffer> &list,
 {
 
 	VertexDeclaration vDecl;
-	vDecl.AddAttribute(VertexAttributeSemantic::POSITION, VertexAttributeType::FLOAT3);
+	vDecl.AddAttribute(VertexAttributeSemantic::POSITION, DataFormat::FLOAT3);
 
 	DX11VertexBuffer qVB(nullptr, "", nullptr, window.GetDevice());
 

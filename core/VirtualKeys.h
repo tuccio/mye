@@ -59,6 +59,18 @@ namespace mye
 			MYE_VK_RIGHT_ARROW,
 			MYE_VK_UP_ARROW,
 			MYE_VK_DOWN_ARROW,
+			MYE_VK_F1,
+			MYE_VK_F2,
+			MYE_VK_F3,
+			MYE_VK_F4,
+			MYE_VK_F5,
+			MYE_VK_F6,
+			MYE_VK_F7,
+			MYE_VK_F8,
+			MYE_VK_F9,
+			MYE_VK_F10,
+			MYE_VK_F11,
+			MYE_VK_F12,
 			MYE_VK_COUNT
 		};
 

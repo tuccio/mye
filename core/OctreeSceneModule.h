@@ -2,7 +2,6 @@
 
 #include "SceneModule.h"
 #include "GameObject.h"
-#include "LooseOctree.h"
 
 #include <list>
 
@@ -29,7 +28,7 @@ namespace mye
 			~OctreeSceneModule(void);
 
 			SceneModule::ObjectsList GetVisibleObjects(void);
-			SceneModule::ObjectsList GetObjects(void);
+			SceneModule::ObjectsList GetObjectsList(void);
 
 			void AddGameObject(const GameObjectHandle &hObj);
 			void RemoveGameObject(const GameObjectHandle &hObj);
@@ -46,7 +45,6 @@ namespace mye
 
 			std::list<GameObjectHandle>   m_objects;
 
-			LooseOctree<GameObjectHandle> m_octree;
 			std::vector<GameObjectHandle> m_nonRenderableObjects;
 
 

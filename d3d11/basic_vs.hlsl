@@ -1,7 +1,9 @@
 #pragma pack_matrix(row_major)
 
-cbuffer cbPerObject
+cbuffer cbTransform
 {
+	float4x4 g_world;
+	float4x4 g_worldViewMatrix;
 	float4x4 g_worldViewProj;
 };
 

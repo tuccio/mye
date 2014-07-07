@@ -4,54 +4,50 @@ namespace mye
 	namespace core
 	{
 
-		template <typename T>
-		PoolAllocator<T>::PoolAllocator(void)
+		template <typename T, typename Allocator>
+		PoolAllocator<T, Allocator>::PoolAllocator(void)
 		{
 			assert(sizeof(void*) >= sizeof(void*));
 			m_free = nullptr;
 		}
 
-		template <typename T>
-		void* PoolAllocator<T>::Allocate(void)
+		template <typename T, typename Allocator>
+		void* PoolAllocator<T, Allocator>::Allocate(size_t size)
 		{
 
 			if (m_free)
 			{
 				void *firstFree = m_free;
-				memcpy(&m_free, m_free, sizeof(void*));
+				memcpy(&m_free, m_free, size);
 				return firstFree;
 			}
 			else
 			{
-				void *p = malloc(sizeof(T));
-				if (!p)
-				{
-					throw std::bad_alloc();
-				}
-				return p;
+				
+				return Allocator::Allocate(size);
 			}
 
 		}
 
-		template <typename T>
-		void* PoolAllocator<T>::AllocateNoThrow(void)
+		template <typename T, typename Allocator>
+		void* PoolAllocator<T, Allocator>::AllocateNoThrow(size_t size)
 		{
 
 			if (m_free)
 			{
 				void *firstFree = m_free;
-				memcpy(&m_free, m_free, sizeof(void*));
+				memcpy(&m_free, m_free, size);
 				return firstFree;
 			}
 			else
 			{
-				return malloc(sizeof(T));
+				return Allocator::AllocateNoThrow(size);
 			}
 
 		}
 
-		template <typename T>
-		void PoolAllocator<T>::Free(void *p)
+		template <typename T, typename Allocator>
+		void PoolAllocator<T, Allocator>::Free(void *p)
 		{
 			memcpy(p, &m_free, sizeof(void*));
 			m_free = p;
@@ -61,62 +57,26 @@ namespace mye
 
 }
 
-#define MYE_DECLARE_POOL_ALLOCATOR(__TYPE)\
-static mye::core::PoolAllocator<__TYPE> m_myePoolAllocator;\
-\
-void* operator new (std::size_t size);\
-void* operator new (std::size_t size, const std::nothrow_t);\
-void operator delete (void *p);
+#define MYE_DECLARE_POOL_ALLOCATOR_IMPL(__TYPE, __ALLOCATOR)\
+	__MYE_USE_ALLOCATOR(mye::core::PoolAllocator<__TYPE BOOST_PP_COMMA() __ALLOCATOR>)
 
-#define MYE_DEFINE_POOL_ALLOCATOR(__TYPE)\
-mye::core::PoolAllocator<__TYPE> __TYPE::m_myePoolAllocator;\
-\
-void* __TYPE::operator new (std::size_t size)\
-{\
-	return m_myePoolAllocator.Allocate();\
-}\
-void* __TYPE::operator new (std::size_t size, const std::nothrow_t)\
-{\
-return m_myePoolAllocator.AllocateNoThrow();\
-}\
-\
-void __TYPE::operator delete (void *p)\
-{\
-	return m_myePoolAllocator.Free(p);\
-}
+#define MYE_DEFINE_POOL_ALLOCATOR_IMPL(__TYPE, __ALLOCATOR)\
+void* mye::core::PoolAllocator<__TYPE, __ALLOCATOR>::m_free;
 
-#define MYE_DEFINE_TEMPLATE_POOL_ALLOCATOR(__TYPE, __T1, __T2)\
-\
-template <__T1, __T2> mye::core::PoolAllocator<__TYPE<__T1, __T2>> __TYPE<__T1, __T2>::m_myePoolAllocator;\
-\
-template <__T1, __T2> void* __TYPE<__T1, __T2>::operator new (std::size_t size)\
-{\
-	return m_myePoolAllocator.Allocate();\
-}\
-template <__T1, __T2> void* __TYPE<__T1, __T2>::operator new (std::size_t size, const std::nothrow_t)\
-{\
-	return m_myePoolAllocator.AllocateNoThrow();\
-}\
-\
-template <__T1, __T2> void __TYPE<__T1, __T2>::operator delete (void *p)\
-{\
-	return m_myePoolAllocator.Free(p);\
-}
+#define MYE_DECLARE_POOL_ALLOCATOR(__TYPE) MYE_DECLARE_POOL_ALLOCATOR_IMPL(__TYPE, mye::core::DefaultAllocator)
+#define MYE_DEFINE_POOL_ALLOCATOR(__TYPE) MYE_DEFINE_POOL_ALLOCATOR_IMPL(__TYPE, mye::core::DefaultAllocator)
 
-/*
-#define MYE_DEFINE_TEMPLATE_POOL_ALLOCATOR(__TEMPLATE, __TYPE)\
-__TEMPLATE mye::core::PoolAllocator<__TYPE> __TYPE::m_myePoolAllocator;\
-\
-__TEMPLATE void* __TYPE::operator new (std::size_t size)\
-{\
-	return m_myePoolAllocator.Allocate();\
-}\
-	__TEMPLATE void* __TYPE::operator new (std::size_t size, const std::nothrow_t)\
-{\
-	return m_myePoolAllocator.AllocateNoThrow();\
-}\
-\
-__TEMPLATE void __TYPE::operator delete (void *p)\
-{\
-	return m_myePoolAllocator.Free(p);\
-}*/
+#define MYE_DECLARE_POOL_ALLOCATOR_ALIGNED(__TYPE, __ALIGNMENT) MYE_DECLARE_POOL_ALLOCATOR_IMPL(__TYPE, mye::core::AlignedAllocator<__ALIGNMENT>)
+#define MYE_DEFINE_POOL_ALLOCATOR_ALIGNED(__TYPE, __ALIGNMENT) MYE_DEFINE_POOL_ALLOCATOR_IMPL(__TYPE, mye::core::AlignedAllocator<__ALIGNMENT>)
+
+#define MYE_DECLARE_POOL_ALLOCATOR_ALIGNED_16 MYE_DECLARE_POOL_ALLOCATOR_ALIGNED(__TYPE, 16)
+#define MYE_DEFINE_POOL_ALLOCATOR_ALIGNED_16 MYE_DEFINE_POOL_ALLOCATOR_ALIGNED(__TYPE, 16)
+
+#define MYE_DECLARE_POOL_ALLOCATOR_ALIGNED_32 MYE_DECLARE_POOL_ALLOCATOR_ALIGNED(__TYPE, 32)
+#define MYE_DEFINE_POOL_ALLOCATOR_ALIGNED_32 MYE_DEFINE_POOL_ALLOCATOR_ALIGNED(__TYPE, 32)
+
+#define MYE_DECLARE_POOL_ALLOCATOR_ALIGNED_64 MYE_DECLARE_POOL_ALLOCATOR_ALIGNED(__TYPE, 64)
+#define MYE_DEFINE_POOL_ALLOCATOR_ALIGNED_64 MYE_DEFINE_POOL_ALLOCATOR_ALIGNED(__TYPE, 64)
+
+#define MYE_DECLARE_POOL_ALLOCATOR_ALIGNED_128 MYE_DECLARE_POOL_ALLOCATOR_ALIGNED(__TYPE, 128)
+#define MYE_DEFINE_POOL_ALLOCATOR_ALIGNED_128 MYE_DEFINE_POOL_ALLOCATOR_ALIGNED(__TYPE, 128)

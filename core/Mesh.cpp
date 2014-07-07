@@ -1,11 +1,6 @@
 #include "Mesh.h"
 
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/mesh.h>
-#include <assimp/postprocess.h>
-
-#include "AssimpMeshLoader.h"
+#include "AssimpLoader.h"
 
 #include <cassert>
 
@@ -64,7 +59,7 @@ const void* Mesh::GetData(void) const
 void Mesh::SetVertexAttribute(size_t triangleIndex,
 							  size_t vertexIndex,
 							  VertexAttributeSemantic semantic,
-							  VertexAttributeType type,
+							  DataFormat type,
 							  const void *data)
 {
 	assert(vertexIndex >= 0 && vertexIndex <= 2);
@@ -74,7 +69,7 @@ void Mesh::SetVertexAttribute(size_t triangleIndex,
 void Mesh::GetVertexAttribute(size_t triangleIndex,
 							  size_t vertexIndex,
 							  VertexAttributeSemantic semantic,
-							  VertexAttributeType type,
+							  DataFormat type,
 							  void *data) const
 {
 	assert(vertexIndex >= 0 && vertexIndex <= 2);
@@ -84,27 +79,7 @@ void Mesh::GetVertexAttribute(size_t triangleIndex,
 bool Mesh::LoadImpl(void)
 {
 	
-	Assimp::Importer importer;
-	bool loaded = false;
-
-	const aiScene *scene = importer.ReadFile(m_name.CString(),
-		aiProcessPreset_TargetRealtime_Quality);
-	
-	if (scene)
-	{
-
-		if (scene->HasMeshes())
-		{
-			aiMesh *mesh = scene->mMeshes[0];
-			AssimpMeshLoader meshLoader(mesh);
-			loaded = meshLoader.Load(this);
-		}
-
-		importer.FreeScene();
-
-	}
-	
-	return loaded;
+	return AssimpLoader::LoadMesh(m_name, this);
 
 }
 
@@ -141,7 +116,7 @@ Mesh::VectorPair Mesh::GetMinMaxVertices(void) const
 		m_data.GetVertexAttribute(
 			i,
 			VertexAttributeSemantic::POSITION,
-			VertexAttributeType::FLOAT3,
+			DataFormat::FLOAT3,
 			&x
 			);
 

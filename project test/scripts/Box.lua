@@ -2,10 +2,12 @@ function Init()
 
 	Physics.gravity = vec3(0, 0, 0)
 	
+	Halt()
 	self.id = tonumber(self.name:sub(4))
 	
 	local info = { }
 	
+	Halt()
 	if (self.id == 1) then
 		info["position"] = vec3(-4, -1.17, 8.73)
 		info["mass"]     = 1

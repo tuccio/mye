@@ -24,22 +24,22 @@ PixelInputType main(VertexInputType input)
 
 }*/
 
-struct VertexInputType
+struct VSInput
 {
 	float2 position : POSITION;
 	float2 texcoord : TEXCOORD0;
 };
 
-struct PixelInputType
+struct VSOutput
 {
     float4 position : SV_POSITION;
     float2 texcoord : TEXCOORD0;
 };
 
-PixelInputType main(VertexInputType input)
+VSOutput main(VSInput input)
 {
 
-	PixelInputType output;
+	VSOutput output;
 
 	output.position = float4(input.position.x, input.position.y, 0.0f, 1.0f);
 	output.texcoord = input.texcoord;

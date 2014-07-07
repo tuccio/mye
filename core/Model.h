@@ -5,6 +5,8 @@
 
 #include <vector>
 
+#include <boost/variant.hpp>
+
 namespace mye
 {
 
@@ -35,12 +37,7 @@ namespace mye
 
 		protected:
 
-			struct SubMesh
-			{
-				MeshPointer handle;
-				Mesh *mesh;
-				bool resource;
-			};
+			typedef boost::variant<MeshPointer, Mesh*> SubMesh;
 
 			typedef std::vector<SubMesh> MeshList;
 

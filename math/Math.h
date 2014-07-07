@@ -10,6 +10,8 @@
 #include "Functions.h"
 #include "Trigonometry.h"
 
+#include "Rational.h"
+
 #include "Matrix.h"
 #include "Matrix3.h"
 #include "Matrix4.h"

@@ -124,7 +124,7 @@ void Game::ExportScene(const String &path)
 
 		CameraComponent *activeCamera = static_cast<CameraComponent*>(m_scene->GetCamera());
 
-		SceneModule::ObjectsList list = m_scene->GetObjects();
+		SceneModule::ObjectsList list = m_scene->GetObjectsList();
 
 		for (GameObject *o : list)
 		{

@@ -8,6 +8,7 @@
 
 #include <mye/core/AlignedAllocator.h>
 #include <mye/math/Math.h>
+#include <mye/math/Geometry.h>
 
 namespace mye
 {
@@ -34,20 +35,27 @@ namespace mye
 
 		};
 
-		__MYE_ALIGN_16 class RigidBodyComponent
+		__MYE_CLASS_ALIGNED_16(RigidBodyComponent)
 			: public Component
 		{
 
 		public:
 
-			__MYE_ALIGN_16_HEAP
+			__MYE_DECLARE_ALIGNED_16
 
 				//void* operator new (size_t, void *p) { return p; }
 
 			RigidBodyComponent(void);
 
-			RigidBodyComponent(BulletCollisionShapePointer shape,
+			RigidBodyComponent(
+				BulletCollisionShapePointer shape,
 				mye::math::Real mass);
+
+			RigidBodyComponent(
+				BulletCollisionShapePointer shape,
+				mye::math::Real mass,
+				const mye::math::Vector3 &position,
+				const mye::math::Quaternion &orientation);
 
 			//RigidBodyComponent(const RigidBodyComponent &rb);
 
@@ -72,18 +80,24 @@ namespace mye
 
 			RigidBodyComponent* Clone(void) const;
 
+			void OnAttach(GameObject *go);
+			void OnDetach(void);
+
 			btRigidBody* GetRigidBody(void);
 
 		private:
 
 			friend class MotionState;
+			
+			BulletCollisionShapePointer m_shape;
 
-			//btRigidBody                   *m_rigidbody;
-			//MotionState                   *m_motionState;
-			BulletCollisionShapePointer    m_shape;
+			MotionState                 m_motionState;
+			btRigidBody                 m_rigidbody;
 
-			MotionState                    m_motionState;
-			btRigidBody                    m_rigidbody;
+			btTransform                 m_initialTransform;
+
+			/*mye::math::Vector3          m_initialPosition;
+			mye::math::Quaternion       m_initialOrientation;*/
 
 		};
 

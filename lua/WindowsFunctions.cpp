@@ -23,6 +23,7 @@ namespace mye
 
 		void __win_alloc_console(void);
 		void __win_free_console(void);
+		void __win_focus_console(void);
 		void __win_message_box(const char *title, const char *msg);
 
 		void BindWindowsFunctions(lua_State *L)
@@ -36,6 +37,7 @@ namespace mye
 
 				def("AllocConsole", &__win_alloc_console),
 				def("FreeConsole", &__win_free_console),
+				def("FocusConsole", &__win_focus_console),
 
 				def("MessageBox", &__win_message_box)
 
@@ -49,8 +51,20 @@ namespace mye
 			if (AllocConsole())
 			{
 				freopen("CONOUT$", "w", stdout);
+				freopen("CONIN$",  "r", stdin);
 			}
 			
+		}
+
+		void __win_focus_console(void)
+		{
+
+			HWND hWnd = GetConsoleWindow();
+
+			SetFocus(hWnd);
+			ShowWindow(hWnd, TRUE);
+			SetWindowPos(hWnd, NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+
 		}
 
 		void __win_free_console(void)

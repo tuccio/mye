@@ -4,6 +4,8 @@
 #include "Keyboard.h"
 
 #include "String.h"
+
+#include <list>
 #include <vector>
 
 #include <mye/math/Math.h>
@@ -42,6 +44,7 @@ namespace mye
 			virtual void Minimize(void) = 0;
 			virtual bool IsMinimized(void) const = 0;
 
+			virtual void Focus(void) = 0;
 			virtual void Show(void) = 0;
 			virtual void Hide(void) = 0;
 
@@ -80,12 +83,16 @@ namespace mye
 
 		protected:
 
+			mye::core::Keyboard *m_keyboard;
+			mye::core::Mouse *m_mouse;
+
+		private:
+
 			typedef std::vector<Listener*> ListenerList;
 
 			ListenerList m_listeners;
 
-			mye::core::Keyboard *m_keyboard;
-			mye::core::Mouse *m_mouse;
+			
 
 		};
 

@@ -71,26 +71,22 @@ size_t VertexData::GetSize(void) const
 
 void VertexData::SetVertexAttribute(size_t vertexIndex,
 									VertexAttributeSemantic semantic,
-									VertexAttributeType type,
+									DataFormat type,
 									const void *data)
 {
-	memcpy(
-		m_data +
-			vertexIndex * m_declaration.GetSize() +
+	memcpy(m_data +	vertexIndex * m_declaration.GetSize() +
 			m_declaration.GetAttributeOffset(semantic),
 		data,
-		VertexDeclaration::AttributeTypeSize[static_cast<int>(type)]);
+		GetDataTypeSize(type));
 }
 
 void VertexData::GetVertexAttribute(size_t vertexIndex,
 									VertexAttributeSemantic semantic,
-									VertexAttributeType type,
+									DataFormat type,
 									void *data) const
 {
-	memcpy(
-		data,
-		m_data +
-			vertexIndex * m_declaration.GetSize() +
+	memcpy(data,
+		m_data + vertexIndex * m_declaration.GetSize() +
 			m_declaration.GetAttributeOffset(semantic),
-		VertexDeclaration::AttributeTypeSize[static_cast<int>(type)]);
+		GetDataTypeSize(type));
 }

@@ -3,18 +3,19 @@
 using namespace mye::core;
 using namespace mye::math;
 
-MainWindowListener::MainWindowListener(Game *game) :
-	m_game(game)
+MainWindowListener::MainWindowListener(void)
 {
 
-	IWindow *window = game->GetGraphicsModule()->GetWindow();
+	m_game = Game::GetSingletonPointer();
+
+	IWindow *window = m_game->GetGraphicsModule()->GetWindow();
 
 	if (window)
 	{
 		OnCreate(window);
 	}
 
-	game->GetSceneModule()->AddCameraListener(this);
+	m_game->GetSceneModule()->AddCameraListener(this);
 
 }
 
@@ -32,8 +33,7 @@ void MainWindowListener::OnDestroy(IWindow *window)
 
 void MainWindowListener::OnCreate(mye::core::IWindow * window)
 {
-	OnResize(window, window->GetSize());
-	window->AddListener(this);
+
 }
 
 void MainWindowListener::OnResize(IWindow *window, const Vector2i &size)
@@ -51,6 +51,8 @@ void MainWindowListener::OnResize(IWindow *window, const Vector2i &size)
 void MainWindowListener::OnCameraChange(mye::core::Camera *oldCamera,
 										mye::core::Camera *newCamera)
 {
+
+	// TODO: This should be done somewhere else
 
 	auto size = m_game->GetGraphicsModule()->GetWindow()->GetSize();
 

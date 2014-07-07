@@ -33,9 +33,12 @@ namespace mye
 				return m_owner;
 			}
 
+			virtual void OnAttach(GameObject *gameObject);
+			virtual void OnDetach(void);
+
 		protected:
 
-			friend class GameObject;
+			//friend class GameObject;
 
 			ComponentTypes m_type;
 			GameObject *m_owner;
