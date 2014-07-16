@@ -21,9 +21,9 @@ ModelView::ModelView(void) :
 	m_initialized(false),
 	m_toolbar(g_mainWindow, true),
 	m_bgColor(0.12f, 0.12f, 0.12f, 1.0f),
-	m_vbuffer(nullptr, "", nullptr, g_device),
-	m_PlanetBuffer(nullptr, "", nullptr, g_device),
-	m_mvpBuffer(nullptr, "", nullptr, g_device),
+	m_vbuffer(nullptr, "", nullptr, *g_dx11graphics.GetDevice()),
+	m_PlanetBuffer(nullptr, "", nullptr, *g_dx11graphics.GetDevice()),
+	m_mvpBuffer(nullptr, "", nullptr, *g_dx11graphics.GetDevice()),
 	m_transform(Transform::Identity())
 {
 	m_toolbar.SetIconSize(mye::math::Vector2i(24, 24));
@@ -75,7 +75,7 @@ void ModelView::Activate(void)
 				params["texcoords"] = "true";
 
 				m_model = ResourceTypeManager::GetSingleton().
-					CreateResource<Model>("Model", buffer, nullptr, &params);
+					CreateResource<Model>("Model", buffer, nullptr, params);
 
 				m_model->Load();
 
@@ -85,14 +85,14 @@ void ModelView::Activate(void)
 				m_vbuffer.Create(model);
 
 				auto minmax          = model->GetMinMaxVertices();
-				AABBf AABBt           = AABBf::FromMinMax(minmax.first, minmax.second);
+				AABBf box            = AABBf::FromMinMax(minmax.first, minmax.second);
 
-				Vector3f halfExtents = AABBt.GetHalfExtents();
+				Vector3f halfExtents = box.GetHalfExtents();
 				float scale          = 1.0f / (2.0f * Max(halfExtents.x(), halfExtents.y()));
 
-				Vector3f center      = AABBt.GetCenter();
+				Vector3f center      = box.GetCenter();
 
-				m_transform          = Transformf::Identity();
+				m_transform          = Transform::Identity();
 
 				m_transform.SetScale(Vector3f(scale));
 				m_transform.SetPosition(-center);
@@ -180,7 +180,7 @@ void ModelView::SetSize(const mye::math::Vector2i &size)
 
 }
 
-void ModelView::SetBackgroundColor(const mye::core::ColorRGBA &rgba)
+void ModelView::SetBackgroundColor(const mye::math::Vector4f &rgba)
 {
 	m_bgColor = rgba;
 }
@@ -261,8 +261,8 @@ void ModelView::Update(void)
 
 				m_transform.SetPosition(
 					m_transform.GetPosition() +
-					Vector3f(0, - 0.025 * delta.y(), 0) +
-					Vector3f(0.025 * delta.x(), 0, 0));
+					Vector3f(0.0f, - 0.025f * delta.y(), 0.0f) +
+					Vector3f(0.025f * delta.x(), 0.0f, 0.0f));
 
 			}
 
@@ -281,17 +281,10 @@ void ModelView::Update(void)
 void ModelView::Render(void)
 {
 
-	ID3D11DeviceContext *context = g_device.GetImmediateContext();
+	ID3D11DeviceContext *context = g_dx11graphics.GetDevice()->GetImmediateContext();
 
-	context->ClearRenderTargetView(
-		g_renderWindow.GetRenderTargetView(),
-		m_bgColor.Data());
-
-	context->ClearDepthStencilView(
-		g_renderWindow.GetDepthStencilView(),
-		D3D11_CLEAR_DEPTH,
-		1,
-		0);
+	g_depthBuffer.Clear();
+	g_swapChain.ClearBackBuffer(m_bgColor);
 
 	m_mvpBuffer.Bind(PIPELINE_VERTEX_SHADER, 0);
 
@@ -309,11 +302,11 @@ void ModelView::Render(void)
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	context->Draw(m_vbuffer.GetVerticesCount(), 0);
 
-	g_renderWindow.GetSwapChain()->Present(1, 0);
+	g_swapChain->Present(1, 0);
 
 }
 
-mye::dx11::DX11Window& ModelView::GetWindow(void)
+mye::win::Window& ModelView::GetWindow(void)
 {
 	return g_renderWindow;
 }

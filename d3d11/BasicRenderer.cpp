@@ -143,9 +143,9 @@ void BasicRenderer::Render(ID3D11RenderTargetView *target)
 
 				TransformComponent *tc = object->GetTransformComponent();
 
-				ModelPointer model = rc->GetModel();
+				MeshPointer mesh = rc->GetMesh();
 
-				if (model && model->Load())
+				if (mesh && mesh->Load())
 				{
 
 					m_transformBuffer.Bind(PIPELINE_VERTEX_SHADER, 0);
@@ -160,7 +160,7 @@ void BasicRenderer::Render(ID3D11RenderTargetView *target)
 
 					DX11VertexBuffer vertexBuffer(nullptr, "", nullptr, m_device);
 
-					vertexBuffer.Create(model.get());
+					vertexBuffer.Create(mesh.get());
 					vertexBuffer.Bind();
 
 					m_device.GetImmediateContext()->

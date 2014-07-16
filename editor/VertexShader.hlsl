@@ -5,10 +5,9 @@ cbuffer cbPerObject
 	float4x4 g_worldViewProj;
 };
 
-void main(float3 iPosition : POSITION,
-		  out float4 oPosition : SV_POSITION)
+float4 main(float3 position : POSITION, float2 texcoords : TEXCOORD, float3 normal : NORMAL) : SV_Position
 {
 
-	oPosition = mul(g_worldViewProj, float4(iPosition, 1));
+	return mul(g_worldViewProj, float4(position, 1));
 
 }

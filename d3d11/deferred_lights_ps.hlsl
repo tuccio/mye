@@ -2,6 +2,8 @@
 
 /* Constant buffers */
 
+#define PI 3.14159265
+#define GAMMA 1.8
 
 cbuffer cbLight
 {
@@ -27,13 +29,7 @@ Texture2D g_specularTexture : register(t1);
 Texture2D g_normalTexture   : register(t2);
 Texture2D g_positionTexture : register(t3);
 
-void ReadGBuffer(
-	in int2 screenPosition,
-	out float3 position,
-	out float3 normal,
-	out float3 diffuseAlbedo,
-	out float3 specularAlbedo,
-	out float specularPower)
+void ReadGBuffer(in int2 screenPosition, out float3 position, out float3 normal, out float3 diffuseAlbedo, out float3 specularAlbedo, out float specularPower)
 {
 
 	float4 packedSpecular;
@@ -49,27 +45,96 @@ void ReadGBuffer(
 	specularAlbedo = packedSpecular.xyz;
 	specularPower = packedSpecular.w;
 
+
 }
 
-void ComputeLighting(
-	in float3 position,
-	in float3 normal,
-	in float3 diffuseAlbedo,
-	in float3 specularAlbedo,
-	in float specularPower,
-	out float4 color)
+float3 Gamma(float3 color)
+{
+	return pow(color, GAMMA);
+	//return color;
+}
+
+float SchlickFresnel(float u)
+{
+	float m = clamp(1 - u, 0, 1);
+	float m2 = m * m;
+	return m2 * m2 * m;
+}
+
+float sqr(float a)
+{
+	return a * a;
+}
+
+float GTR2_aniso(float NdotH, float HdotX, float HdotY, float ax, float ay)
+{
+	return 1 / (PI * ax * ay * sqr(sqr(HdotX / ax) + sqr(HdotY / ay) + NdotH * NdotH));
+}
+
+float smithG_GGX(float Ndotv, float alphaG)
+{
+	float a = alphaG * alphaG;
+	float b = Ndotv * Ndotv;
+	return 1 / (Ndotv + sqrt(a + b - a * b));
+}
+
+float3 BRDF(in float3 L, in float3 V, in float3 N, in float3 diffuseColor, in float3 specularColor, in float roughness, in float metallic)
 {
 
-	float3 L = (lightPosition.xyz - position);
-	float distance = length(L);
+	float NdotL = dot(N, L);
+	float NdotV = dot(N, V);
 
-	L /= distance;
+	if (NdotL < 0 || NdotV < 0)
+	{
+		return float3(0, 0, 0);
+	}
 
-	float attenuation = max(0, lightRange / (distance * distance));
+	float3 H = normalize(L + V);
 
-	float3 diffuse = saturate(dot(normal, L)) * diffuseAlbedo * lightColor.xyz;
+	float NdotH = dot(N, H);
+	float LdotH = dot(L, H);
 
-	color = float4(attenuation * diffuse, 1);
+	float3 diffuseColorLinear = Gamma(diffuseColor);
+
+	float FL = SchlickFresnel(NdotL);
+	float FV = SchlickFresnel(NdotV);
+
+	float Fd90 = 0.5 + 2 * LdotH * LdotH * roughness;
+	float Fd = lerp(1, Fd90, FL) * lerp(1, Fd90, FV);
+
+	/*float aspect = sqrt(1 - anisotropic * .9);
+	float ax = max(.001, sqr(roughness) / aspect);
+	float ay = max(.001, sqr(roughness)*aspect);
+	float Ds = GTR2_aniso(NdotH, dot(H, X), dot(H, Y), ax, ay);*/
+
+	return Fd * diffuseColorLinear;
+
+}
+
+float3 BRDF_(in float3 L, in float3 V, in float3 N, in float3 diffuseColor, in float3 specularColor, in float roughness, in float metallic)
+{
+
+
+	return Gamma(diffuseColor) * max(0, dot(N, L));
+
+}
+
+void ComputeLighting(in float3 p, in float3 N, in float3 diffuseAlbedo, in float3 specularAlbedo, in float specularPower, out float4 color)
+{
+
+	// Cook-Torrance for specular and Lambert for diffuse
+
+	float3 L = (lightPosition.xyz - p);
+	float3 V = normalize(cameraPosition.xyz - p);
+
+	float lightDistance = length(L);
+
+	L /= lightDistance;
+
+	float lightAttenuation = max(0, 1 - (lightDistance / lightRange));
+
+	color = float4(Gamma(lightColor.xyz) * lightAttenuation * BRDF(L, V, N, diffuseAlbedo, specularAlbedo, 0.5, 0.0), 1);
+
 
 }
 
@@ -87,12 +152,6 @@ float4 main(float4 screenPosition : SV_Position) : SV_TARGET0
 	ReadGBuffer(screenPosition.xy, position, normal, diffuseAlbedo, specularAlbedo, specularPower);
 	ComputeLighting(position, normal, diffuseAlbedo, specularAlbedo, specularPower, color);
 
-	//float2 coords = float2(0.5f, 0.5f) * (screenPosition.xy + float2(1, 1));
-	float2 coords = screenPosition.xy;
-	//	return g_diffuseTexture.Sample(g_sampler, );
-
 	return float4(color);
-
-	//return float4(1, 1, 1, 1);
 
 }

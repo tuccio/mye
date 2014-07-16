@@ -12,7 +12,7 @@
 
 #include <cstdlib>
 
-#define OBJECT_SELECTED_NEEDED() if (!m_selected) { ShowErrorBox("No object selected", g_mainWindow.GetHandle()); return; }
+#define __ASSERT_OBJECT_SELECTED() if (!m_selected) { ShowErrorBox("No object selected", g_mainWindow.GetHandle()); return; }
 
 using namespace mye::dx11;
 using namespace mye::win;
@@ -82,7 +82,7 @@ void SceneView::_CreatePropertiesTab(void)
 		[this, propList] (void) -> void
 		{
 
-			OBJECT_SELECTED_NEEDED();
+			__ASSERT_OBJECT_SELECTED();
 
 			String objectName = static_cast<Edit*>(m_controls["PRPnameEdit"])->GetText();
 

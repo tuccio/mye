@@ -1,8 +1,9 @@
 #include "AssimpLoader.h"
 
-#include <assimp\Importer.hpp>
-#include <assimp\mesh.h>
-#include <assimp\postprocess.h>
+#include <assimp/Importer.hpp>
+#include <assimp/mesh.h>
+#include <assimp/postprocess.h>
+#include <assimp/cimport.h>
 
 using namespace mye::core;
 
@@ -16,10 +17,13 @@ bool AssimpLoader::LoadMesh(const String &filename, Mesh *mesh)
 	Assimp::Importer importer;
 	bool loaded = false;
 
-	const aiScene *scene = importer.ReadFile(filename.CString(),
-		aiProcessPreset_TargetRealtime_Quality);
+	const aiScene *scene = importer.ReadFile(
+		filename.CString(),
+		aiProcessPreset_TargetRealtime_MaxQuality);
 
-	if (scene && scene->HasMeshes())
+	if (scene &&
+		//aiApplyPostProcessing(scene, aiProcess_CalcTangentSpace) &&
+		scene->HasMeshes())
 	{
 		loaded = LoadMesh(scene->mMeshes[0], mesh);
 	}
@@ -63,16 +67,16 @@ bool AssimpLoader::LoadMesh(const aiMesh *assimpMesh, Mesh *mesh)
 	vDecl.AddAttribute(VertexAttributeSemantic::POSITION,
 		DataFormat::FLOAT3);
 
-	if (normals)
-	{
-		vDecl.AddAttribute(VertexAttributeSemantic::NORMAL,
-			DataFormat::FLOAT3);
-	}
-
 	if (texcoord0)
 	{
 		vDecl.AddAttribute(VertexAttributeSemantic::TEXCOORD0,
 			DataFormat::FLOAT2);
+	}
+
+	if (normals)
+	{
+		vDecl.AddAttribute(VertexAttributeSemantic::NORMAL,
+			DataFormat::FLOAT3);
 	}
 
 	if (tangent)

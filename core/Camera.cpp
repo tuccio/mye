@@ -33,7 +33,7 @@ void Camera::LookAt(const mye::math::Vector3 &position,
 			const mye::math::Vector3 &target)
 {
 
-	Vector3 z = (target - position).Normalized();
+	Vector3 z = (target - position).Normalize();
 	Vector3 x = up.Cross(z);
 	Vector3 y = z.Cross(x);
 
@@ -52,7 +52,7 @@ void Camera::LookAt(const mye::math::Vector3 &position,
 
 }
 
-mye::math::Quaternion Camera::GetOrientation(void) const
+Quaternion Camera::GetOrientation(void) const
 {
 	return m_orientation;
 }
@@ -64,7 +64,7 @@ void Camera::SetOrientation(const mye::math::Quaternion &direction)
 	m_frustumUptodate    = false;
 }
 
-mye::math::Vector3 Camera::GetPosition(void) const
+Vector3 Camera::GetPosition(void) const
 {
 	return m_position;
 }
@@ -76,7 +76,7 @@ void Camera::SetPosition(const mye::math::Vector3 &position)
 	m_frustumUptodate    = false;
 }
 
-void Camera::Pitch(float angle)
+void Camera::Pitch(mye::math::Real angle)
 {
 
 // 	float cosHalfAngle = Cosine(Radians(angle) * 0.5f);
@@ -95,7 +95,7 @@ void Camera::Pitch(float angle)
 
 }
 
-void Camera::Yaw(float angle)
+void Camera::Yaw(mye::math::Real angle)
 {
 
 // 	float cosHalfAngle = Cosine(Radians(angle) * 0.5f);
@@ -115,7 +115,7 @@ void Camera::Yaw(float angle)
 
 }
 
-void Camera::Roll(float angle)
+void Camera::Roll(mye::math::Real angle)
 {
 
 // 	float cosHalfAngle = Cosine(Radians(angle) * 0.5f);
@@ -137,7 +137,7 @@ void Camera::Roll(float angle)
 
 /* Projection */
 
-void Camera::SetProjection(float fovy, float aspect, float zNear, float zFar)
+void Camera::SetProjection(mye::math::Real fovy, mye::math::Real aspect, mye::math::Real zNear, mye::math::Real zFar)
 {
 	m_fovY             = Radians(fovy);
 	m_aspectRatio      = aspect;
@@ -150,19 +150,19 @@ float Camera::GetNearClipDistance(void) const
 	return m_nearClipDistance;
 }
 
-void Camera::SetNearClipDistance(float near)
+void Camera::SetNearClipDistance(mye::math::Real near)
 {
 	m_nearClipDistance         = near;
 	m_projectionMatrixUptodate = false;
 	m_frustumUptodate          = false;
 }
 
-float Camera::GetFarClipDistance(void) const
+mye::math::Real Camera::GetFarClipDistance(void) const
 {
 	return m_farClipDistance;
 }
 
-void Camera::SetFarClipDistance(float far)
+void Camera::SetFarClipDistance(mye::math::Real far)
 {
 	m_farClipDistance          = far;
 	m_projectionMatrixUptodate = false;
@@ -177,41 +177,60 @@ void Camera::SetClipDistances(float near, float far)
 	m_frustumUptodate          = false;
 }
 
-float Camera::GetClipAspectRatio(void) const
+mye::math::Real Camera::GetClipAspectRatio(void) const
 {
 	return m_aspectRatio;
 }
 
-void Camera::SetClipAspectRatio(float aspect)
+void Camera::SetClipAspectRatio(mye::math::Real aspect)
 {
 	m_aspectRatio              = aspect;
 	m_projectionMatrixUptodate = false;
 	m_frustumUptodate          = false;
 }
 
-float Camera::GetFovY(void) const
+mye::math::Real Camera::GetFovY(void) const
 {
 	return Degrees(m_fovY);
 }
 
-void Camera::SetFovY(float fovy)
+void Camera::SetFovY(mye::math::Real fovy)
 {
 	m_fovY                     = Radians(fovy);
 	m_projectionMatrixUptodate = false;
 	m_frustumUptodate          = false;
 }
 
-float Camera::GetFovX(void) const
+mye::math::Real Camera::GetFovX(void) const
 {
 	return Degrees(2.0f * Arctangent(m_aspectRatio * Tangent(0.5f * m_fovY)));
 }
 
-float  Camera::GetFovYRadians(void) const
+mye::math::Real Camera::GetFovYRadians(void) const
 {
 	return m_fovY;
 }
 
-float  Camera::GetFovXRadians(void) const
+mye::math::Real Camera::GetFovXRadians(void) const
 {
 	return 2.0f * Arctangent(m_aspectRatio * Tangent(0.5f * m_fovY));
+}
+
+Ray Camera::RayCast(const mye::math::Vector2 &screenCoords) const
+{
+
+	Matrix4 invViewProjMatrix = (GetProjectionMatrix() * GetViewMatrix()).Inverse();
+
+	Vector2 deviceCoords(
+		2 * screenCoords.x() - 1,
+		1 - 2 * screenCoords.y());
+
+	Vector4 nearH = invViewProjMatrix * Vector4(deviceCoords.xy(), 0, 1);
+	Vector4 farH  = invViewProjMatrix * Vector4(deviceCoords.xy(), 1, 1);
+
+	Vector3 near = nearH.xyz() / nearH.w();
+	Vector3 far  =  farH.xyz() /  farH.w();
+
+	return Ray(m_position, (far - near).Normalize());
+
 }

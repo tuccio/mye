@@ -37,8 +37,35 @@ LRESULT __stdcall __mye_winmouse_hook(int nCode,
 			break;
 
 		case WM_MOUSEMOVE:
-			WinMouse::GetSingleton().
-				Move(Vector2f(mhookStruct->pt.x, mhookStruct->pt.y));
+
+			{
+
+				HWND hActiveWindow = GetActiveWindow();
+				RECT windowRect, clientRect;
+
+				GetWindowRect(hActiveWindow, &windowRect);
+				GetClientRect(hActiveWindow, &clientRect);
+
+				if (clientRect.bottom != 0 && clientRect.right != 0)
+				{
+
+					LONG windowWidth = windowRect.right - windowRect.left;
+					LONG windowHeight = windowRect.bottom - windowRect.top;
+
+					Vector2f padding((windowWidth - clientRect.right) * 0.5f, (windowHeight - clientRect.bottom) * 0.5f);
+					
+					WinMouse::GetSingleton().
+						Move(
+						Vector2f(
+							(float) (mhookStruct->pt.x - windowRect.left)   / (padding.x() + clientRect.right),
+							(float) 1.0f - (windowRect.bottom - mhookStruct->pt.y) / (padding.y() + clientRect.bottom)
+						)
+					);
+
+				}
+
+			}
+			
 			break;
 
 		case WM_LBUTTONDOWN:

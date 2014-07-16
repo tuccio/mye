@@ -15,7 +15,13 @@ namespace mye
 			~Module(void);
 
 			virtual bool Init(void);
-			virtual void ShutDown(void);
+			virtual void Shutdown(void);
+
+			bool IsInitialized(void) const;
+
+		protected:
+
+			bool m_initialized;
 
 		};
 

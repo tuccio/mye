@@ -13,7 +13,7 @@ namespace mye
 	{
 
 		class PhysicsModule :
-			Module
+			public Module
 		{
 
 		public:

@@ -1,0 +1,6 @@
+entity CornellController
+{
+	
+	GameObjectHandle selected;
+	
+}

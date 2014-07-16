@@ -28,7 +28,9 @@ bool PhysicsModule::Init(void)
 	
 	//m_world->setGravity(btVector3(0.0f, -9.81f, 0.0f));
 
-	return true;
+	Module::Init();
+
+	return m_initialized;
 
 }
 

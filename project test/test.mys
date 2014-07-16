@@ -5,7 +5,7 @@
 				<min>-1.000000 -1.000000 0.000000</min>
 				<max>1.000000 1.000000 0.000000</max>
 			</aabb>
-			<model name="models/sphere.obj"/>
+			<mesh name="models/sphere.obj"/>
 		</render>
 	</gameobject>
 	<gameobject name="box1" entity="Box">
@@ -14,7 +14,7 @@
 				<min>-1.000000 -1.000000 -1.000000</min>
 				<max>1.000000 1.000000 1.000000</max>
 			</aabb>
-			<model name="models/box.obj"/>
+			<mesh name="models/box.obj"/>
 		</render>
 	</gameobject>
 	<gameobject name="camera">
@@ -37,7 +37,7 @@
 				<min>-1.000000 -1.000000 -1.000000</min>
 				<max>1.000000 1.000000 1.000000</max>
 			</aabb>
-			<model name="models/box.obj"/>
+			<mesh name="models/box.obj"/>
 		</render>
 	</gameobject>
 	<gameobject name="devconsole" entity="DeveloperConsole">

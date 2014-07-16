@@ -1,4 +1,4 @@
-#include <mye/core/AlignedAllocator.h>
+//#include <mye/core/AlignedAllocator.h>
 #include <mye/math/Math.h>
 
 namespace mye
@@ -10,24 +10,29 @@ namespace mye
 		namespace detail
 		{
 
-			__MYE_STRUCT_ALIGNED_16(TransformBuffer)
+			struct TransformBuffer
 			{
+
 				mye::math::Matrix4f world;
 				mye::math::Matrix4f worldView;
 				mye::math::Matrix4f worldViewProjection;
+
 			};
 
-			__MYE_STRUCT_ALIGNED_16(MaterialBuffer)
+			struct MaterialBuffer
 			{
 
-				mye::math::Vector4f diffuse;
-				mye::math::Vector4f specular;
+				mye::math::Vector4f color;
 
-				float specularPower;
+				float specular;
+				float roughness;
+				float metallic;
+
+				float __fill[1];
 
 			};
 
-			__MYE_STRUCT_ALIGNED_16(LightBuffer)
+			struct LightBuffer
 			{
 
 				mye::math::Vector4f color;
@@ -37,9 +42,11 @@ namespace mye
 				float spotAngle;
 				float range;
 
+				float __fill[2];
+
 			};
 
-			__MYE_STRUCT_ALIGNED_16(CameraBuffer)
+			struct CameraBuffer
 			{
 				mye::math::Vector4f position;
 			};

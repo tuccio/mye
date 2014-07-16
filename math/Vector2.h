@@ -34,8 +34,7 @@ namespace mye
 
 			inline Matrix<T, 2, 1> operator- (void) const;
 
-			inline Matrix<T, 2, 1>& Normalize(void);
-			inline Matrix<T, 2, 1> Normalized(void) const;
+			inline Matrix<T, 2, 1> Normalize(void) const;
 			inline T Length(void) const;
 
 			inline Matrix<T, 2, 1> CwiseAbs(void) const;
@@ -45,20 +44,10 @@ namespace mye
 			inline Matrix<T, 2, 1> Clamp(T minimum, T maximum);
 			inline Matrix<T, 2, 1> Clamp(const Matrix<T, 2, 1> &minimum, const Matrix<T, 2, 1> &maximum);
 
-			inline T& x(void);
-			inline const T& x(void) const;
-
-			inline T& y(void);
-			inline const T& y(void) const;
-
-			inline T& u(void);
-			inline const T& u(void) const;
-
-			inline T& v(void);
-			inline const T& v(void) const;
-
 			inline T* Data(void);
 			inline const T* Data(void) const;
+
+#include "SwizzleVector2.h"
 
 		private:
 

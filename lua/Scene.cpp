@@ -28,23 +28,18 @@ namespace mye
 			module(L)
 			[
 
+				class_<GameObjectRayIntersection>("GameObjectRayIntersection").
+					def_readwrite("hObj", &GameObjectRayIntersection::hObj).
+					def_readwrite("t",    &GameObjectRayIntersection::t),
+
 				class_<SceneModule>("SceneModule").
 
-					def("AddGameObject", &SceneModule::AddGameObject).
+				def("AddGameObject", &SceneModule::AddGameObject).
 					def("RemoveGameObject", &SceneModule::RemoveGameObject).
 
+					def("Pick", &SceneModule::Pick).
+
 					property("camera", (Camera* (SceneModule::*) ()) &SceneModule::GetCamera, &SceneModule::SetCamera)
-
-
-					
-				
-// 					void AddGameObject(const GameObjectHandle &hObj);
-// 					virtual void RemoveGameObject(const GameObjectHandle &hObj);
-// 
-// 					inline mye::core::CameraComponent* GetCamera(void);
-// 					inline const mye::core::CameraComponent* GetCamera(void) const;
-// 					inline void SetCamera(mye::core::CameraComponent *camera);
-
 
 			];
 

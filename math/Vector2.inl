@@ -110,16 +110,7 @@ namespace mye
 		}
 
 		template <typename T>
-		Matrix<T, 2, 1>& Matrix<T, 2, 1>::Normalize(void)
-		{
-			T invNorm = T(1) / Length();
-			m_data[0] *= invNorm;
-			m_data[1] *= invNorm;
-			return *this;
-		}
-
-		template <typename T>
-		Matrix<T, 2, 1> Matrix<T, 2, 1>::Normalized(void) const
+		Matrix<T, 2, 1> Matrix<T, 2, 1>::Normalize(void) const
 		{
 			T norm = Length();
 			return Matrix<T, 2, 1>(
@@ -162,54 +153,6 @@ namespace mye
 		}
 
 		template <typename T>
-		T& Matrix<T, 2, 1>::x(void)
-		{
-			return m_data[0];
-		}
-
-		template <typename T>
-		const T& Matrix<T, 2, 1>::x(void) const
-		{
-			return m_data[0];
-		}
-
-		template <typename T>
-		T& Matrix<T, 2, 1>::y(void)
-		{
-			return m_data[1];
-		}
-
-		template <typename T>
-		const T& Matrix<T, 2, 1>::y(void) const
-		{
-			return m_data[1];
-		}
-
-		template <typename T>
-		T& Matrix<T, 2, 1>::u(void)
-		{
-			return m_data[0];
-		}
-
-		template <typename T>
-		const T& Matrix<T, 2, 1>::u(void) const
-		{
-			return m_data[0];
-		}
-
-		template <typename T>
-		T& Matrix<T, 2, 1>::v(void)
-		{
-			return m_data[1];
-		}
-
-		template <typename T>
-		const T& Matrix<T, 2, 1>::v(void) const
-		{
-			return m_data[1];
-		}
-
-		template <typename T>
 		T* Matrix<T, 2, 1>::Data(void)
 		{
 			return m_data;
@@ -238,6 +181,40 @@ namespace mye
 
 			return v;
 
+		}
+
+		/* Operators */
+
+		template <typename T>
+		inline bool operator== (const Matrix<T, 2, 1> &a,
+			const Matrix<T, 2, 1> &b)
+		{
+			return a.x() == b.x() &&
+				a.y() == b.y();
+		}
+
+		template <typename T>
+		Matrix<T, 2, 1> operator+ (T a, const Matrix<T, 2, 1> &b)
+		{
+			return Matrix<T, 2, 1>(a + b.x(), a + b.y());
+		}
+
+		template <typename T>
+		Matrix<T, 2, 1> operator- (T a, const Matrix<T, 2, 1> &b)
+		{
+			return Matrix<T, 2, 1>(a - b.x(), a - b.y());
+		}
+
+		template <typename T>
+		Matrix<T, 2, 1> operator* (T a, const Matrix<T, 2, 1> &b)
+		{
+			return Matrix<T, 2, 1>(a * b.x(), a * b.y());
+		}
+
+		template <typename T>
+		Matrix<T, 2, 1> operator/ (T a, const Matrix<T, 2, 1> &b)
+		{
+			return Matrix<T, 2, 1>(a / b.x(), a / b.y());
 		}
 
 	}

@@ -69,11 +69,11 @@ void SceneView::Activate(void)
 		m_tabsWindow.AddTabsListener(this);
 
 		m_tabs.AddTab(TAB_GAME_OBJECTS, "Game Objects");
-		m_tabs.AddTab(TAB_PROPERTIES, "Properties");
-		m_tabs.AddTab(TAB_TRANSFORM, "Transform");
-		m_tabs.AddTab(TAB_RENDER, "Render");
-		m_tabs.AddTab(TAB_BEHAVIOUR, "Behaviour");
-		m_tabs.AddTab(TAB_CAMERA, "Camera");
+		m_tabs.AddTab(TAB_PROPERTIES,   "Properties");
+		m_tabs.AddTab(TAB_TRANSFORM,    "Transform");
+		m_tabs.AddTab(TAB_RENDER,       "Render");
+		m_tabs.AddTab(TAB_BEHAVIOUR,    "Behaviour");
+		m_tabs.AddTab(TAB_CAMERA,       "Camera");
 
 		_CreateGameObjectsTab();
 		_CreateRenderTab();
@@ -155,12 +155,12 @@ void SceneView::SetSize(const mye::math::Vector2i &size)
 
 }
 
-void SceneView::SetBackgroundColor(const mye::core::ColorRGBA &rgba)
+void SceneView::SetBackgroundColor(const mye::math::Vector4f &rgba)
 {
 	m_bgColor = rgba;
 }
 
-DX11Window& SceneView::GetRenderWindow(void)
+Window& SceneView::GetRenderWindow(void)
 {
 	return g_renderWindow;
 }
@@ -272,7 +272,7 @@ void SceneView::Update(void)
 			else if (mouse->IsPressed(MYE_VK_MOUSE_RIGHT))
 			{
 
-				Vector2f delta = mouse->GetDelta() * m_dragSpeed * .015f;
+				Vector2f delta = mouse->GetDelta() * m_dragSpeed * 0.015f;
 
 				Vector3f p = m_camera.GetPosition()
 					+ m_camera.Right() * delta.x()
@@ -300,7 +300,7 @@ void SceneView::Update(void)
 			m_selected->GetRenderComponent())
 		{
 
-			mye::math::AABBf AABBt = m_selected->GetAABB();
+			mye::math::AABBf AABB = m_selected->GetAABB();
 
 			TransformComponent *tc = m_selected->GetTransformComponent();
 
@@ -316,7 +316,7 @@ void SceneView::Update(void)
 			else if (mouse->IsPressed(MYE_VK_MOUSE_RIGHT))
 			{
 
-				Vector2f delta = mouse->GetDelta() * m_dragSpeed * .015f;
+				Vector2f delta = mouse->GetDelta() * m_dragSpeed * 0.015f;
 
 				Vector3f p = tc->GetPosition()
 					+ tc->Right() * delta.x()
@@ -330,7 +330,7 @@ void SceneView::Update(void)
 			else if (mouse->IsPressed(MYE_VK_MOUSE_MIDDLE))
 			{
 
-				Vector2f delta = mouse->GetDelta() * m_dragSpeed * .015f;
+				Vector2f delta = mouse->GetDelta() * m_dragSpeed * 0.015f;
 
 				Vector3f p = tc->GetPosition()
 					+ tc->Right() * delta.x()
@@ -348,7 +348,7 @@ void SceneView::Update(void)
 
 			}
 
-			g_scene.MoveGameObject(m_selected->GetHandle(), AABBt);
+			g_scene.MoveGameObject(m_selected->GetHandle(), AABB);
 
 		}
 
@@ -368,26 +368,33 @@ void SceneView::Update(void)
 void SceneView::Render(void)
 {
 
-	g_device.GetImmediateContext()->ClearRenderTargetView(
-		g_renderWindow.GetRenderTargetView(),
-		m_bgColor.Data());
+	DX11ShaderPointer vs = ResourceTypeManager::GetSingleton().GetResource<DX11VertexShader>("DX11Shader", "VertexShader.hlsl");
+	DX11ShaderPointer ps = ResourceTypeManager::GetSingleton().GetResource<DX11VertexShader>("DX11Shader", "PixelShader.hlsl");
 
-	g_device.GetImmediateContext()->ClearDepthStencilView(
-		g_renderWindow.GetDepthStencilView(),
-		D3D11_CLEAR_DEPTH,
-		1,
-		0);
+	vs->Load();
+	ps->Load();
 
-	CameraComponent *sceneCamera = g_scene.GetCamera(); 
-	CameraComponent *camera = &m_camera;
+	vs->Use();
+	ps->Use();
+
+	g_swapChain.ClearBackBuffer(m_bgColor);
+	g_depthBuffer.Clear();
+	
+	//g_dx11graphics.GetDevice()->SetRenderTargets(g_depthBuffer.GetDepthStencilView(), 1, g_swapChain.GetBackBufferRenderTargetView());
+
+	auto bb = g_swapChain.GetBackBufferRenderTargetView();
+	g_dx11graphics.GetDevice()->GetImmediateContext()->OMSetRenderTargets(1, &bb, g_depthBuffer.GetDepthStencilView());
+
+	Camera *sceneCamera = g_scene.GetCamera(); 
+	Camera *camera = &m_camera;
 
 	g_scene.SetCamera(camera);
 
 	if (camera)
 	{
 
-		DX11ConstantBuffer mvpBuffer(nullptr, "", nullptr, g_renderWindow.GetDevice());
-		mvpBuffer.Create(sizeof(float) * 16, Matrix4f(1.0f).Data());
+		DX11ConstantBuffer mvpBuffer(nullptr, "", nullptr, *g_dx11graphics.GetDevice());
+		mvpBuffer.Create(sizeof(Matrix4f), Matrix4f(1.0f).Data());
 
 		SceneModule::ObjectsList objects = g_scene.GetVisibleObjects();
 
@@ -403,26 +410,23 @@ void SceneView::Render(void)
 			{
 
 				TransformComponent *tc = object->GetTransformComponent();
-				ModelPointer model = rc->GetModel();
+				MeshPointer mesh = rc->GetMesh();
 
-				if (model)
+				if (mesh && mesh->Load())
 				{
 
-					model->Load();
-
 					mvpBuffer.Bind(PIPELINE_VERTEX_SHADER, 0);
-					mvpBuffer.SetData((viewProjection *
-						tc->GetWorldMatrix()).Data());
+					mvpBuffer.SetData((viewProjection * tc->GetWorldMatrix() * rc->GetModelMatrix()).Data());
 
-					DX11VertexBuffer vertexBuffer(nullptr, "", nullptr, g_renderWindow.GetDevice());
+					DX11VertexBuffer vertexBuffer(nullptr, "", nullptr, *g_dx11graphics.GetDevice());
 
-					vertexBuffer.Create(model.get());
+					vertexBuffer.Create(mesh.get());
 					vertexBuffer.Bind();
 
-					g_renderWindow.GetDevice().GetImmediateContext()->
+					g_dx11graphics.GetDevice()->GetImmediateContext()->
 						IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-					g_renderWindow.GetDevice().GetImmediateContext()->
+					g_dx11graphics.GetDevice()->GetImmediateContext()->
 						Draw(vertexBuffer.GetVerticesCount(), 0);
 
 					vertexBuffer.Destroy();
@@ -439,9 +443,10 @@ void SceneView::Render(void)
 
 	}
 
-	
 
-	g_renderWindow.GetSwapChain()->Present(1, 0);
+
+
+	g_swapChain->Present(1, 0);
 
 	//g_game.GetGraphicsModule()->Render();
 

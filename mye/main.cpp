@@ -2,7 +2,7 @@
 #include <mye/core/EntityManager.h>
 #include <mye/core/FontManager.h>
 #include <mye/core/ImageManager.h>
-#include <mye/core/ModelManager.h>
+#include <mye/core/MeshManager.h>
 #include <mye/core/OctreeSceneModule.h>
 #include <mye/core/PhysicsModule.h>
 #include <mye/core/ResourceManager.h>
@@ -48,7 +48,7 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 
 	ResourceTypeManager         resourceTypeManager;
 	EntityManager               entityTemplateManager;
-	ModelManager                modelManager;
+	MeshManager                 meshManager;
 	BulletCollisionShapeManager bulletCollisionShape;
 	ImageManager                imageManager;
 

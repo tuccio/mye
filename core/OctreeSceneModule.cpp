@@ -53,6 +53,40 @@ void OctreeSceneModule::RemoveGameObject(const GameObjectHandle &hObj)
 
 }
 
+GameObjectRayIntersection OctreeSceneModule::Pick(mye::math::Ray ray)
+{
+
+	SceneModule::ObjectsList objects;
+
+	mye::math::Real tMin = std::numeric_limits<mye::math::Real>::infinity();
+	GameObjectHandle rObj;
+
+	for (GameObjectHandle hObj : m_objects)
+	{
+
+		GameObject *object = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
+
+		if (object)
+		{
+			
+			RenderComponent *rc = object->GetRenderComponent();
+			mye::math::Real t;
+
+			if (rc && Intersect(ray, rc->GetBounds().
+				TransformAffine(object->GetTransformComponent()->GetWorldMatrix()), t) && t < tMin)
+			{
+				tMin = t;
+				rObj = object->GetHandle();
+			}
+
+		}
+
+	}
+
+	return { rObj, tMin };
+
+}
+
 void OctreeSceneModule::ApplyUpdates(void)
 {
 

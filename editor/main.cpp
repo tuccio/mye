@@ -31,10 +31,11 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 					 int nCmdShow)
 {
 
-	DX11ShaderManager shaderManager(g_device);
-	DX11BufferManager vertexBufferManager(g_device);
-	MeshManager meshManager;
-	ModelManager modelManager;
+	if (!g_dx11graphics.GetDevice()->Create())
+	{
+		ShowErrorBox("Cannot create DX11 device");
+		exit(1);
+	}
 
 	MainWindowListener mainWindowListener;
 
@@ -62,19 +63,64 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 	p.x          = -1;
 	p.y          = -1;
 
-	g_renderWindow.SetMSAA(DX11Window::MSAA_4x);
-	g_renderWindow.CreateChild(g_mainWindow, p);
-
-	if (!g_renderWindow.Init())
+	if (!g_renderWindow.CreateChild(g_mainWindow, p))
 	{
-		ShowErrorBox("Error while initiating rendering window\nConsult logs for more details");
+		ShowErrorBox("Error while creating window");
 		exit(1);
 	}
+
+	g_dx11graphics.SetWindow(&g_renderWindow);
+
+	DX11ShaderManager shaderManager(*g_dx11graphics.GetDevice());
+	DX11BufferManager vertexBufferManager(*g_dx11graphics.GetDevice());
+	MeshManager meshManager;
+	ModelManager modelManager;
+
+	DX11SwapChainConfiguration swapChainConf;
+
+	swapChainConf.device     = g_dx11graphics.GetDevice();
+	swapChainConf.format     = DataFormat::RGBA32;
+
+	swapChainConf.msaa       = MSAA::MSAA_OFF;
+	swapChainConf.window     = &g_renderWindow;
+	swapChainConf.fullscreen = false;
+
+	swapChainConf.width      = 0;
+	swapChainConf.height     = 0;
+
+	swapChainConf.refresh    = mye::math::Rational<unsigned int>(1, 60);
+
+	g_swapChain = DX11SwapChain(swapChainConf);
+
+	DX11DepthBufferConfiguration depthBufferConf;
+
+	depthBufferConf.device = g_dx11graphics.GetDevice();
+	depthBufferConf.height = 0;
+	depthBufferConf.width  = 0;
+
+	g_depthBuffer = DX11DepthBuffer(depthBufferConf);
+
+	if (!g_dx11graphics.Init())
+	{
+		ShowErrorBox("Cannot initialize DX11");
+		exit(1);
+	}
+
+	if (!g_swapChain.Create() ||
+		!g_depthBuffer.Create())
+	{
+		ShowErrorBox("Error while initiating swapchain");
+		exit(1);
+	}
+
+	
 
 	g_mainWindow.SetSplitScreen(1, 1);
 	g_mainWindow.SetSplitView(0, 0, &g_sceneView);
 	g_mainWindow.ResizeViews();
 
+	mainWindowListener.OnResize(&g_mainWindow, g_mainWindow.GetSize());
+	
 	CompileShaders();
 
 	MSG msg;

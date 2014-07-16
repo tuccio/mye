@@ -41,6 +41,8 @@ namespace mye
 
 			int m_wheelDelta;
 
+			bool m_firstUpdate;
+
 		};
 
 	}

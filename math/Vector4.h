@@ -14,6 +14,7 @@ namespace mye
 
 			Matrix(void);
 			Matrix(T v);
+			Matrix(const Matrix<T, 2, 1> &xy, T z, T w);
 			Matrix(const Matrix<T, 3, 1> &v, T w);
 			Matrix(T x, T y, T z, T w);
 
@@ -35,8 +36,7 @@ namespace mye
 
 			inline Matrix<T, 4, 1> operator- (void) const;
 
-			inline Matrix<T, 4, 1>& Normalize(void);
-			inline Matrix<T, 4, 1> Normalized(void) const;
+			inline Matrix<T, 4, 1> Normalize(void) const;
 			inline T Length(void) const;
 
 			inline Matrix<T, 4, 1> CwiseAbs(void) const;
@@ -46,32 +46,10 @@ namespace mye
 			inline Matrix<T, 4, 1> Clamp(T minimum, T maximum);
 			inline Matrix<T, 4, 1> Clamp(const Matrix<T, 4, 1> &minimum, const Matrix<T, 4, 1> &maximum);
 
-			inline T& x(void);
-			inline const T& x(void) const;
-
-			inline T& y(void);
-			inline const T& y(void) const;
-
-			inline T& z(void);
-			inline const T& z(void) const;
-
-			inline T& w(void);
-			inline const T& w(void) const;
-
-			inline T& r(void);
-			inline const T& r(void) const;
-
-			inline T& g(void);
-			inline const T& g(void) const;
-
-			inline T& b(void);
-			inline const T& b(void) const;
-
-			inline T& a(void);
-			inline const T& a(void) const;
-
 			inline T* Data(void);
 			inline const T* Data(void) const;
+
+#include "SwizzleVector4.h"
 			
 		private:
 

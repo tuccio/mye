@@ -2,6 +2,7 @@
 
 #include <mye/core/AlignedAllocator.h>
 #include <mye/core/GraphicsModule.h>
+#include <mye/core/Time.h>
 
 #include <mye/win/Window.h>
 
@@ -19,15 +20,13 @@
 #include "DeferredLightingRenderer.h"
 #include "Text2DRenderer.h"
 
-#define __MYE_DEFERRED_LIGHTING_RENDER_TARGETS 4
+#define __MYE_FPS_COUNTER_BUFFER_SIZE 10
 
 namespace mye
 {
 
 	namespace dx11
 	{
-
-		
 
 		class DX11Module :
 			public mye::core::GraphicsModule,
@@ -42,9 +41,11 @@ namespace mye
 			~DX11Module(void);
 
 			bool Init(void);
-			void ShutDown(void);
+			void Shutdown(void);
 
 			void Render(void);
+
+			float GetFPS(void) const;
 
 			inline DX11Device* GetDevice(void);
 
@@ -68,6 +69,12 @@ namespace mye
 			Text2DRenderer           m_text2dRenderer;
 			BasicRenderer            m_basicRenderer;
 			DeferredLightingRenderer m_deferredLighthingRenderer;
+
+			// FPS Counter
+
+			mye::core::LapStopWatch m_stopWatch;
+			mye::core::Milliseconds m_stopWatchBuffer[__MYE_FPS_COUNTER_BUFFER_SIZE];
+			int                     m_stopWatchBufferHead;
 
 		};
 

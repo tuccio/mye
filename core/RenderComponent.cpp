@@ -9,6 +9,7 @@ RenderComponent::RenderComponent(void) :
 	m_bounds(AABB::FromMinMax(Vector3(0), Vector3(0))),
 	m_modelMatrix(1)
 {
+	m_material = { Vector4(1), 1, 0, 0 };
 }
 
 
@@ -31,14 +32,14 @@ void RenderComponent::SetVisible(bool val)
 	return m_vertexData;
 }*/
 
-mye::core::ModelPointer RenderComponent::GetModel(void)
+mye::core::MeshPointer RenderComponent::GetMesh(void)
 {
-	return m_model;
+	return m_mesh;
 }
 
-void RenderComponent::SetModel(ModelPointer model)
+void RenderComponent::SetMesh(MeshPointer mesh)
 {
-	m_model = model;
+	m_mesh = mesh;
 }
 
 const mye::math::AABB& RenderComponent::GetBounds(void) const
@@ -49,6 +50,21 @@ const mye::math::AABB& RenderComponent::GetBounds(void) const
 void RenderComponent::SetBounds(const mye::math::AABB &bounds)
 {
 	m_bounds = bounds;
+}
+
+Material*  RenderComponent::GetMaterialPointer(void)
+{
+	return &m_material;
+}
+
+const Material&  RenderComponent::GetMaterial(void) const
+{
+	return m_material;
+}
+
+void  RenderComponent::SetMaterial(const Material &material)
+{
+	m_material = material;
 }
 
 RenderComponent* RenderComponent::Clone(void) const

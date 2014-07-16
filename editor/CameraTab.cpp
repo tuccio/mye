@@ -12,7 +12,7 @@
 
 #include <cstdlib>
 
-#define OBJECT_SELECTED_NEEDED() if (!m_selected) { ShowErrorBox("No object selected", g_mainWindow.GetHandle()); return; }
+#define __ASSERT_OBJECT_SELECTED() if (!m_selected) { ShowErrorBox("No object selected", g_mainWindow.GetHandle()); return; }
 
 using namespace mye::dx11;
 using namespace mye::win;
@@ -144,7 +144,7 @@ void SceneView::_CreateCameraTab(void)
 		[this] (void) -> void
 	{
 
-		OBJECT_SELECTED_NEEDED();
+		__ASSERT_OBJECT_SELECTED();
 
 		Checkbox *cameraCheckbox = static_cast<Checkbox*>(m_controls["CAMcameraCheckbox"]);
 		Checkbox *defaultCheckbox = static_cast<Checkbox*>(m_controls["CAMdefaultCheckbox"]);
@@ -164,17 +164,17 @@ void SceneView::_CreateCameraTab(void)
 
 			camera->LookAt(
 				Vector3f(
-					atoi(static_cast<Edit*>(m_controls["CAMpositionXEdit"])->GetText().CString()),
-					atoi(static_cast<Edit*>(m_controls["CAMpositionYEdit"])->GetText().CString()),
-					atoi(static_cast<Edit*>(m_controls["CAMpositionZEdit"])->GetText().CString())),
+					ParseType<float>(static_cast<Edit*>(m_controls["CAMpositionXEdit"])->GetText()),
+					ParseType<float>(static_cast<Edit*>(m_controls["CAMpositionYEdit"])->GetText()),
+					ParseType<float>(static_cast<Edit*>(m_controls["CAMpositionZEdit"])->GetText())),
 				Vector3f(
-					atoi(static_cast<Edit*>(m_controls["CAMupXEdit"])->GetText().CString()),
-					atoi(static_cast<Edit*>(m_controls["CAMupYEdit"])->GetText().CString()),
-					atoi(static_cast<Edit*>(m_controls["CAMupZEdit"])->GetText().CString())),
+					ParseType<float>(static_cast<Edit*>(m_controls["CAMupXEdit"])->GetText()),
+					ParseType<float>(static_cast<Edit*>(m_controls["CAMupYEdit"])->GetText()),
+					ParseType<float>(static_cast<Edit*>(m_controls["CAMupZEdit"])->GetText())),
 				Vector3f(
-					atoi(static_cast<Edit*>(m_controls["CAMlookAtXEdit"])->GetText().CString()),
-					atoi(static_cast<Edit*>(m_controls["CAMlookAtYEdit"])->GetText().CString()),
-					atoi(static_cast<Edit*>(m_controls["CAMlookAtZEdit"])->GetText().CString())));
+					ParseType<float>(static_cast<Edit*>(m_controls["CAMlookAtXEdit"])->GetText()),
+					ParseType<float>(static_cast<Edit*>(m_controls["CAMlookAtYEdit"])->GetText()),
+					ParseType<float>(static_cast<Edit*>(m_controls["CAMlookAtZEdit"])->GetText())));
 
 			if (defaultCheckbox->IsChecked())
 			{

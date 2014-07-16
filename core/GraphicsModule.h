@@ -26,13 +26,20 @@ namespace mye
 
 			virtual void Render(void) = 0;
 
-			const mye::math::Vector4f& GetClearColor(void) const;
-			void SetClearColor(const mye::math::Vector4f &color);
+			virtual float GetFPS(void) const = 0;
+
+			const mye::math::Vector4 & GetClearColor(void) const;
+			void SetClearColor(const mye::math::Vector4 &color);
+
+			bool GetVSync(void) const;
+			void SetVSync(bool vsync);
 
 		protected:
 
 			IWindow            *m_mainWindowPointer;
-			mye::math::Vector4f m_clearColor;
+			mye::math::Vector4  m_clearColor;
+
+			bool                m_vsync;
 
 		};
 

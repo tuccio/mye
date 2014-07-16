@@ -43,8 +43,6 @@ namespace mye
 			mye::math::Transform m_transform;
 			mye::math::Matrix4   m_matrix;
 
-			bool m_changed;
-
 		};
 
 	}

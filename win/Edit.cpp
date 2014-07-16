@@ -62,8 +62,13 @@ String Edit::GetText(void) const
 {
 	size_t len = Edit_GetTextLength(m_hEdit);
 	String s(len);
-	Edit_GetText(m_hEdit, &s[0], len + 1);
-	s.UpdateLength();
+
+	if (len > 0)
+	{
+		Edit_GetText(m_hEdit, &s[0], len + 1);
+		s.UpdateLength();
+	}
+	
 	return s;
 }
 

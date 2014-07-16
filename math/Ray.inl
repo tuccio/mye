@@ -5,6 +5,26 @@ namespace mye
 	{
 
 		template <typename T>
+		RayTempl<T>::RayTempl(void)
+		{
+
+		}
+
+		template <typename T>
+		RayTempl<T>::RayTempl(const Matrix<T, 3, 1> &origin, const Matrix<T, 3, 1> &direction) :
+			m_origin(origin),
+			m_direction(direction)
+		{
+
+		}
+
+		template <typename T>
+		RayTempl<T>::~RayTempl(void)
+		{
+
+		}
+
+		template <typename T>
 		Matrix<T, 3, 1>& RayTempl<T>::Origin(void)
 		{
 			return m_origin;
@@ -53,7 +73,7 @@ namespace mye
 		}
 
 		template <typename T>
-		Matrix<T, 3, 1> RayTempl<T>::At(T t) const
+		Matrix<T, 3, 1> RayTempl<T>::Evaluate(T t) const
 		{
 			return m_origin + t * m_direction;
 		}

@@ -7,6 +7,7 @@
 
 #include <mye/core/Game.h>
 #include <mye/core/Resource.h>
+#include <mye/core/ResourceTypeManager.h>
 
 #include <luabind/luabind.hpp>
 
@@ -24,11 +25,26 @@ namespace mye
 	namespace lua
 	{
 
+		void __script_reload(const mye::core::String name)
+		{
+
+			auto r = ResourceTypeManager::GetSingleton().GetResource("LuaScript", name);
+
+			if (r)
+			{
+				r->Unload();
+				r->Load();
+			}
+
+		}
+
 		void BindScripts(lua_State *L)
 		{
 
 			module(L)
 			[
+
+				def("ReloadScript", &__script_reload),
 
 				class_<LuaModule>(MYE_LUA_LUAMODULE).
 

@@ -120,18 +120,18 @@ bool DX11Texture::Create(int width, int height, mye::core::DataFormat format)
 
 	D3D11_TEXTURE2D_DESC tex2dDesc;
 
-	tex2dDesc.Width = m_width;
-	tex2dDesc.Height = m_height;
+	tex2dDesc.Width              = max(1, m_width);
+	tex2dDesc.Height             = max(1, m_height);
 
-	tex2dDesc.MipLevels = 1;
-	tex2dDesc.ArraySize = 1;
-	tex2dDesc.Format = GetDXGIFormat(m_format);
-	tex2dDesc.SampleDesc.Count = 1;
+	tex2dDesc.MipLevels          = 1;
+	tex2dDesc.ArraySize          = 1;
+	tex2dDesc.Format             = GetDXGIFormat(m_format);
+	tex2dDesc.SampleDesc.Count   = 1;
 	tex2dDesc.SampleDesc.Quality = 0;
-	tex2dDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
-	tex2dDesc.MiscFlags = 0;
-	tex2dDesc.Usage = D3D11_USAGE_DEFAULT;
-	tex2dDesc.CPUAccessFlags = 0;
+	tex2dDesc.BindFlags          = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+	tex2dDesc.MiscFlags          = 0;
+	tex2dDesc.Usage              = D3D11_USAGE_DEFAULT;
+	tex2dDesc.CPUAccessFlags     = 0;
 
 	if (!HRTESTFAILED(m_device.GetDevice()->CreateTexture2D(&tex2dDesc, nullptr, &m_texture)) &&
 		CreateViews())

@@ -21,8 +21,18 @@ namespace mye
 
 		void Mouse::Move(const mye::math::Vector2 &position)
 		{
-			m_delta = position - m_position;
+
+			if (!m_firstUpdate)
+			{
+				m_delta = position - m_position;
+			}
+			else
+			{
+				m_firstUpdate = false;
+			}
+			
 			m_position = position;
+
 		}
 
 		mye::math::Vector2 Mouse::GetPosition(void) const

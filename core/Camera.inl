@@ -54,17 +54,18 @@ namespace mye
 				return m_projectionMatrix;
 			}
 
- 			float yScale = 1.0f / mye::math::Tangent(m_fovY * 0.5f);
- 			float xScale = yScale / m_aspectRatio;
- 			float invDepth = 1.0f / (m_farClipDistance - m_nearClipDistance);
-			float Q = m_farClipDistance / (m_farClipDistance - m_nearClipDistance);
+ 			mye::math::Real yScale   = mye::math::Real(1) / mye::math::Tangent(m_fovY * mye::math::Real(0.5f));
+ 			mye::math::Real xScale   = yScale / m_aspectRatio;
+ 			mye::math::Real invDepth = mye::math::Real(1) / (m_farClipDistance - m_nearClipDistance);
+
+			mye::math::Real Q = m_farClipDistance * invDepth;
 
 			mye::math::Matrix4 projectionMatrix(0);
 
 			projectionMatrix.m00() = xScale;
 			projectionMatrix.m11() = yScale;
 			projectionMatrix.m22() = Q;
-			projectionMatrix.m32() = 1;
+			projectionMatrix.m32() = mye::math::Real(1);
 			projectionMatrix.m23() = - Q * m_nearClipDistance;
 
 			return projectionMatrix;

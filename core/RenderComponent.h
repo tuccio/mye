@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Component.h"
-#include "Model.h"
+#include "Material.h"
+#include "Mesh.h"
 
 #include <mye/math/Geometry.h>
 
@@ -25,14 +26,18 @@ namespace mye
 
 			//VertexDataPointer GetVertexData(void);
 
-			ModelPointer GetModel(void);
-			void SetModel(ModelPointer model);
+			MeshPointer GetMesh(void);
+			void SetMesh(MeshPointer mesh);
+
+			Material* GetMaterialPointer(void);
+			const Material& GetMaterial(void) const;
+			void SetMaterial(const Material &material);
 
 			const mye::math::AABB& GetBounds(void) const;
 			void SetBounds(const mye::math::AABB &bounds);
 
-			const mye::math::Matrix4f& GetModelMatrix(void) const;
-			void SetModelMatrix(const mye::math::Matrix4f &matrix);
+			const mye::math::Matrix4& GetModelMatrix(void) const;
+			void SetModelMatrix(const mye::math::Matrix4 &matrix);
 
 			RenderComponent* Clone(void) const;
 			
@@ -41,10 +46,12 @@ namespace mye
 			bool m_visible;
 			
 			//VertexDataPointer m_vertexData;
-			ModelPointer m_model;
+			MeshPointer m_mesh;
+
+			Material m_material;
 			
 			mye::math::AABB     m_bounds;
-			mye::math::Matrix4f m_modelMatrix;
+			mye::math::Matrix4  m_modelMatrix;
 
 
 			

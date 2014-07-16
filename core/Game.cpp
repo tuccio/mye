@@ -39,7 +39,7 @@ Game::~Game(void)
 bool Game::Init(void)
 {
 
-#define __MYE_TRY_INIT_MODULE(x) if (!(x)->Init()) return false;
+#define __MYE_TRY_INIT_MODULE(x) if (!(x)->IsInitialized() && !(x)->Init()) return false;
 
 	__MYE_TRY_INIT_MODULE(m_gameobjects)
 	__MYE_TRY_INIT_MODULE(m_scene)
@@ -277,42 +277,42 @@ void Game::ExportScene(const String &path)
 
 						gameObjectNode->append_node(renderNode);
 
-						String AABBtMin = (ToString(rc->GetBounds().GetMinimum().x()) +
+						String AABBmin = (ToString(rc->GetBounds().GetMinimum().x()) +
 							" " +
 							ToString(rc->GetBounds().GetMinimum().y()) +
 							" " +
 							ToString(rc->GetBounds().GetMinimum().z()));
 
-						String AABBtMax = (ToString(rc->GetBounds().GetMaximum().x()) +
+						String AABBmax = (ToString(rc->GetBounds().GetMaximum().x()) +
 							" " +
 							ToString(rc->GetBounds().GetMaximum().y()) +
 							" " +
 							ToString(rc->GetBounds().GetMaximum().z()));
 
-						rapidxml::xml_node<> *AABBt = document.allocate_node(
+						rapidxml::xml_node<> *AABB = document.allocate_node(
 							rapidxml::node_element,
-							"AABBt");
+							"aabb");
 
-						rapidxml::xml_node<> *model = document.allocate_node(
+						rapidxml::xml_node<> *mesh = document.allocate_node(
 							rapidxml::node_element,
-							"model");
+							"mesh");
 
-						model->append_attribute(document.allocate_attribute(
+						mesh->append_attribute(document.allocate_attribute(
 							"name",
-							document.allocate_string(rc->GetModel().get()->GetName().CString())));
+							document.allocate_string(rc->GetMesh().get()->GetName().CString())));
 
-						AABBt->append_node(document.allocate_node(
+						AABB->append_node(document.allocate_node(
 							rapidxml::node_element,
 							"min",
-							document.allocate_string(AABBtMin.CString())));
+							document.allocate_string(AABBmin.CString())));
 
-						AABBt->append_node(document.allocate_node(
+						AABB->append_node(document.allocate_node(
 							rapidxml::node_element,
 							"max",
-							document.allocate_string(AABBtMax.CString())));
+							document.allocate_string(AABBmax.CString())));
 
-						renderNode->append_node(AABBt);
-						renderNode->append_node(model);
+						renderNode->append_node(AABB);
+						renderNode->append_node(mesh);
 
 					}
 
@@ -515,32 +515,120 @@ void Game::ImportScene(const String &file, std::list<GameObject*> *allocatedObje
 
 				gameObject->AddComponent(RenderComponent());
 
-				rapidxml::xml_node<> *AABBtNode = render->first_node("AABBt");
+				rapidxml::xml_node<> *AABBnode = render->first_node("aabb");
 
-				if (AABBtNode)
+				if (AABBnode)
 				{
 
-					rapidxml::xml_node<> *AABBtMin = AABBtNode->first_node("min");
-					rapidxml::xml_node<> *AABBtMax = AABBtNode->first_node("max");
+					rapidxml::xml_node<> *AABBmin = AABBnode->first_node("min");
+					rapidxml::xml_node<> *AABBmax = AABBnode->first_node("max");
 
-					gameObject->GetRenderComponent()->SetBounds(AABBf::FromMinMax(
-						ParseVector3<float>(AABBtMin->value()),
-						ParseVector3<float>(AABBtMax->value())));
+					gameObject->GetRenderComponent()->SetBounds(AABB::FromMinMax(
+						ParseVector3<mye::math::Real>(AABBmin->value()),
+						ParseVector3<mye::math::Real>(AABBmax->value())));
 
 				}
 
-				rapidxml::xml_node<> *modelNode = render->first_node("model");
+				rapidxml::xml_node<> *meshNode = render->first_node("mesh");
 
-				if (modelNode)
+				if (meshNode)
 				{
 
-					rapidxml::xml_attribute<> *modelName = modelNode->first_attribute("name");
+					rapidxml::xml_attribute<> *modelName = meshNode->first_attribute("name");
 
-					ModelPointer model = ResourceTypeManager::GetSingleton().
-						CreateResource<Model>("Model", modelName->value());
+					MeshPointer mesh = ResourceTypeManager::GetSingleton().
+						CreateResource<Mesh>("Mesh", modelName->value());
 
-					gameObject->GetRenderComponent()->SetModel(model);
+					gameObject->GetRenderComponent()->SetMesh(mesh);
 
+				}
+
+				rapidxml::xml_node<> *materialNode = render->first_node("material");
+
+				if (materialNode)
+				{
+
+					rapidxml::xml_attribute<> *color = materialNode->first_attribute("color");
+					rapidxml::xml_attribute<> *roughness = materialNode->first_attribute("roughness");
+					rapidxml::xml_attribute<> *specular = materialNode->first_attribute("specular");
+					rapidxml::xml_attribute<> *metallic = materialNode->first_attribute("metallic");
+
+					Material material;
+
+					material.color     = ParseVector4<mye::math::Real>(color->value());
+					material.roughness = ParseType<mye::math::Real>(roughness->value());
+					material.specular  = ParseType<mye::math::Real>(specular->value());
+					material.metallic  = ParseType<mye::math::Real>(metallic->value());
+
+					gameObject->GetRenderComponent()->SetMaterial(material);
+
+				}
+
+				
+
+			}
+
+			/*
+			 * Light component
+			 */
+
+			rapidxml::xml_node<> *light = gameObjectNode->first_node("light");
+
+			if (light)
+			{
+
+				LightComponent *lightComponent = static_cast<LightComponent*>(gameObject->AddComponent(LightComponent()));
+
+				rapidxml::xml_attribute<> *type = light->first_attribute("type");
+
+				if (type->value() == "pointlight")
+				{
+					lightComponent->SetType(LightType::POINTLIGHT);
+				}
+				else if (type->value() == "spotlight")
+				{
+					lightComponent->SetType(LightType::SPOTLIGHT);
+				}
+				else if (type->value() == "directional")
+				{
+					lightComponent->SetType(LightType::DIRECTIONAL);
+				}
+
+				rapidxml::xml_node<> *position = light->first_node("position");
+				rapidxml::xml_node<> *color = light->first_node("color");
+				rapidxml::xml_node<> *intensity = light->first_node("intensity");
+				rapidxml::xml_node<> *range = light->first_node("range");
+				rapidxml::xml_node<> *direction = light->first_node("direction");
+				rapidxml::xml_node<> *spotAngle = light->first_node("spotAngle");
+
+				if (position)
+				{
+					lightComponent->SetPosition(ParseVector3<mye::math::Real>(position->value()));
+				}
+
+				if (color)
+				{
+					lightComponent->SetColor(ParseVector3<mye::math::Real>(color->value()));
+				}
+
+				if (intensity)
+				{
+					lightComponent->SetIntensity(ParseType<mye::math::Real>(intensity->value()));
+				}
+
+				if (range)
+				{
+					lightComponent->SetRange(ParseType<mye::math::Real>(range->value()));
+				}
+
+				if (direction)
+				{
+					lightComponent->SetDirection(ParseVector3<mye::math::Real>(direction->value()));
+				}
+
+				if (spotAngle)
+				{
+					lightComponent->SetSpotAngle(ParseType<mye::math::Real>(spotAngle->value()));
 				}
 
 			}

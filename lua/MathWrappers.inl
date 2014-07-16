@@ -16,11 +16,18 @@ namespace mye
 
 		template <int N, typename T>
 		mye::math::Matrix<T, N, 1> __vec_add(
+			T a,
+			const mye::math::Matrix<T, N, 1> &b)
+		{
+			return a + b;
+		}
+
+		template <int N, typename T>
+		mye::math::Matrix<T, N, 1> __vec_add(
 			const mye::math::Matrix<T, N, 1> &a,
 			T b)
 		{
-			mye::math::Matrix<T, N, 1> v(b);
-			return a + v;
+			return a + b;
 		}
 
 		template <int N, typename T>
@@ -33,11 +40,18 @@ namespace mye
 
 		template <int N, typename T>
 		mye::math::Matrix<T, N, 1> __vec_sub(
+			T a,
+			const mye::math::Matrix<T, N, 1> &b)
+		{
+			return a - b;
+		}
+
+		template <int N, typename T>
+		mye::math::Matrix<T, N, 1> __vec_sub(
 			const mye::math::Matrix<T, N, 1> &a,
 			T b)
 		{
-			mye::math::Matrix<T, N, 1> v(b);
-			return a - v;
+			return a - b;
 		}
 
 		template <int N, typename T>
@@ -52,6 +66,14 @@ namespace mye
 		mye::math::Matrix<T, N, 1> __vec_mul(
 			const mye::math::Matrix<T, N, 1> &a,
 			T b)
+		{
+			return a * b;
+		}
+
+		template <int N, typename T>
+		mye::math::Matrix<T, N, 1> __vec_mul(
+			T a,
+			const mye::math::Matrix<T, N, 1> &b)
 		{
 			return a * b;
 		}
@@ -68,6 +90,14 @@ namespace mye
 		mye::math::Matrix<T, N, 1> __vec_div(
 			const mye::math::Matrix<T, N, 1> &a,
 			T b)
+		{
+			return a / b;
+		}
+
+		template <int N, typename T>
+		mye::math::Matrix<T, N, 1> __vec_div(
+			T a,
+			const mye::math::Matrix<T, N, 1> &b)
 		{
 			return a / b;
 		}
@@ -96,6 +126,8 @@ namespace mye
 		{
 			return a[I];
 		}
+
+		
 
 // 		template <typename T>
 // 		T __vec_get<3, T, 0>(const mye::math::Matrix<T, 3, 1> &a)

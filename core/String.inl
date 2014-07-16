@@ -138,7 +138,7 @@ namespace mye
 			}
 
 			m_string[m_length - 1] = c;
-			m_string[m_length] = 0;
+			m_string[m_length]     = 0;
 
 			return *this;
 

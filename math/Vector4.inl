@@ -19,6 +19,15 @@ namespace mye
 		}
 
 		template <typename T>
+		Matrix<T, 4, 1>::Matrix(const Matrix<T, 2, 1> &xy, T z, T w)
+		{
+			m_data[0] = xy.x();
+			m_data[1] = xy.y();
+			m_data[2] = z;
+			m_data[3] = w;
+		}
+
+		template <typename T>
 		Matrix<T, 4, 1>::Matrix(const Matrix<T, 3, 1> &v, T w)
 		{
 			m_data[0] = v.x();
@@ -138,18 +147,7 @@ namespace mye
 		}
 
 		template <typename T>
-		Matrix<T, 4, 1>& Matrix<T, 4, 1>::Normalize(void)
-		{
-			T invNorm = T(1) / Length();
-			m_data[0] *= invNorm;
-			m_data[1] *= invNorm;
-			m_data[2] *= invNorm;
-			m_data[3] *= invNorm;
-			return *this;
-		}
-
-		template <typename T>
-		Matrix<T, 4, 1> Matrix<T, 4, 1>::Normalized(void) const
+		Matrix<T, 4, 1> Matrix<T, 4, 1>::Normalize(void) const
 		{
 			T norm = Length();
 			return Matrix<T, 4, 1>(
@@ -200,102 +198,6 @@ namespace mye
 		}
 
 		template <typename T>
-		T& Matrix<T, 4, 1>::x(void)
-		{
-			return m_data[0];
-		}
-
-		template <typename T>
-		const T& Matrix<T, 4, 1>::x(void) const
-		{
-			return m_data[0];
-		}
-
-		template <typename T>
-		T& Matrix<T, 4, 1>::y(void)
-		{
-			return m_data[1];
-		}
-
-		template <typename T>
-		const T& Matrix<T, 4, 1>::y(void) const
-		{
-			return m_data[1];
-		}
-
-		template <typename T>
-		T& Matrix<T, 4, 1>::z(void)
-		{
-			return m_data[2];
-		}
-
-		template <typename T>
-		const T& Matrix<T, 4, 1>::z(void) const
-		{
-			return m_data[2];
-		}
-
-		template <typename T>
-		T& Matrix<T, 4, 1>::w(void)
-		{
-			return m_data[3];
-		}
-
-		template <typename T>
-		const T& Matrix<T, 4, 1>::w(void) const
-		{
-			return m_data[3];
-		}
-
-		template <typename T>
-		T& Matrix<T, 4, 1>::r(void)
-		{
-			return m_data[0];
-		}
-
-		template <typename T>
-		const T& Matrix<T, 4, 1>::r(void) const
-		{
-			return m_data[0];
-		}
-
-		template <typename T>
-		T& Matrix<T, 4, 1>::g(void)
-		{
-			return m_data[1];
-		}
-
-		template <typename T>
-		const T& Matrix<T, 4, 1>::g(void) const
-		{
-			return m_data[1];
-		}
-
-		template <typename T>
-		T& Matrix<T, 4, 1>::b(void)
-		{
-			return m_data[2];
-		}
-
-		template <typename T>
-		const T& Matrix<T, 4, 1>::b(void) const
-		{
-			return m_data[2];
-		}
-
-		template <typename T>
-		T& Matrix<T, 4, 1>::a(void)
-		{
-			return m_data[3];
-		}
-
-		template <typename T>
-		const T& Matrix<T, 4, 1>::a(void) const
-		{
-			return m_data[3];
-		}
-
-		template <typename T>
 		T* Matrix<T, 4, 1>::Data(void)
 		{
 			return m_data;
@@ -326,6 +228,42 @@ namespace mye
 
 			return v;
 
+		}
+
+		/* Operators */
+
+		template <typename T>
+		inline bool operator== (const Matrix<T, 4, 1> &a,
+			const Matrix<T, 4, 1> &b)
+		{
+			return a.x() == b.x() &&
+				a.y() == b.y() &&
+				a.z() == b.z() &&
+				a.w() == b.w();
+		}
+
+		template <typename T>
+		Matrix<T, 4, 1> operator+ (T a, const Matrix<T, 4, 1> &b)
+		{
+			return Matrix<T, 4, 1>(a + b.x(), a + b.y(), a + b.z(), a + b.w());
+		}
+
+		template <typename T>
+		Matrix<T, 4, 1> operator- (T a, const Matrix<T, 4, 1> &b)
+		{
+			return Matrix<T, 4, 1>(a - b.x(), a - b.y(), a - b.z(), a - b.w());
+		}
+
+		template <typename T>
+		Matrix<T, 4, 1> operator* (T a, const Matrix<T, 4, 1> &b)
+		{
+			return Matrix<T, 4, 1>(a * b.x(), a * b.y(), a * b.z(), a * b.w());
+		}
+
+		template <typename T>
+		Matrix<T, 4, 1> operator/ (T a, const Matrix<T, 4, 1> &b)
+		{
+			return Matrix<T, 4, 1>(a / b.x(), a / b.y(), a / b.z(), a / b.w());
 		}
 
 	}

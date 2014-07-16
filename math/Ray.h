@@ -13,6 +13,8 @@ namespace mye
 		public:
 
 			RayTempl(void);
+			RayTempl(const Matrix<T, 3, 1> &origin, const Matrix<T, 3, 1> &direction);
+
 			~RayTempl(void);
 
 			inline Matrix<T, 3, 1>& Origin(void);
@@ -25,7 +27,7 @@ namespace mye
 			inline const Matrix<T, 3, 1>& GetDirection(void) const;
 			inline void SetDirection(const Matrix<T, 3, 1> &direction);
 
-			inline Matrix<T, 3, 1> At(T t) const;
+			inline Matrix<T, 3, 1> Evaluate(T t) const;
 			
 		private:
 

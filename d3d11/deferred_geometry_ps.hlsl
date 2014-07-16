@@ -4,9 +4,10 @@
 
 cbuffer cbMaterial
 {
-	float3 g_diffuse;
-	float3 g_specular;
-	float  g_specularPower;
+	float3 g_color;
+	float  g_specular;
+	float  g_roughness;
+	float  g_metallic;
 };
 
 /* Input/Output structures */
@@ -38,8 +39,8 @@ PSOutput main(PSInput input) : SV_TARGET
 	
 	PSOutput output;
 
-	output.diffuseAlbedo  = float4(g_diffuse, 1);
-	output.specularAlbedo = float4(g_specular, g_specularPower);
+	output.diffuseAlbedo  = float4(g_color, 1);
+	output.specularAlbedo = float4(g_color, g_specular);
 
 	output.normal         = float4(normalize(input.normalWS), 1);
 	output.position       = float4(input.positionWS, 1);

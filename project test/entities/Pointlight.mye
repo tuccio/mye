@@ -1,0 +1,6 @@
+entity Pointlight
+{
+	
+	LightComponent();
+	
+}

@@ -1,6 +1,9 @@
 #include <cmath>
 #include <type_traits>
 
+#define __MYE_MATH_PI    3.14159265358979323846
+#define __MYE_MATH_TWOPI 6.28318530717958647693
+
 namespace mye
 {
 
@@ -10,25 +13,37 @@ namespace mye
 		template <typename T = mye::math::Real>
 		typename std::enable_if<std::is_floating_point<T>::value, T>::type Pi(void)
 		{
-			return T(3.14159265358979323846);
+			return T(__MYE_MATH_PI);
 		}
 
 		template <typename T = mye::math::Real>
 		typename std::enable_if<std::is_floating_point<T>::value, T>::type TwoPi(void)
 		{
-			return T(6.28318530717958647693);
+			return T(__MYE_MATH_TWOPI);
 		}
 
 		template <typename T>
 		inline T Radians(T degAngle)
 		{
-			return degAngle * Pi<T>() / T(180);
+			return degAngle * T(__MYE_MATH_PI) / T(180);
 		}
 
 		template <typename T>
 		inline T Degrees(T radAngle)
 		{
-			return radAngle * T(180) / Pi<T>();
+			return radAngle * T(180) / T(__MYE_MATH_PI);
+		}
+
+		template <typename T>
+		inline Matrix<T, 3, 1> Degrees(const Matrix<T, 3, 1> &angles)
+		{
+			return Matrix<T, 3, 1>(Degrees(angles.x()), Degrees(angles.y()), Degrees(angles.z()));
+		}
+
+		template <typename T>
+		inline Matrix<T, 3, 1> Radians(const Matrix<T, 3, 1> &angles)
+		{
+			return Matrix<T, 3, 1>(Radians(angles.x()), Radians(angles.y()), Radians(angles.z()));
 		}
 
 		template <typename T>

@@ -8,6 +8,8 @@
 #include "Game.h"
 #include "Resource.h"
 
+#include "MetaMethodsOverload.h"
+
 #include <mye/core/String.h>
 #include <mye/core/ResourceTypeManager.h>
 
@@ -76,11 +78,12 @@ void LuaModule::OpenAllLibraries(void)
 	luaL_openlibs(m_lua);
 	luabind::open(m_lua);
 
+
 	BindResources(m_lua);
 	BindMath(m_lua);
 	BindScene(m_lua);
 	BindPhysics(m_lua);
-	BindGame(m_lua);
+	BindGame(m_lua);	
 
 }
 
@@ -89,6 +92,9 @@ bool LuaModule::Init(void)
 
 	m_lua = luaL_newstate();
 	OpenAllLibraries();
+
+	OverloadLuabindMetamethod(m_lua, "__index", &IndexOverload);
+	OverloadLuabindMetamethod(m_lua, "__newindex", &NewIndexOverload);
 
 	Game &game = Game::GetSingleton();
 
@@ -103,6 +109,8 @@ bool LuaModule::Init(void)
 	luabind::globals(m_lua)["Time"]                = luabind::newtable(m_lua);
 	luabind::globals(m_lua)["ResourceTypeManager"] = boost::ref(ResourceTypeManager::GetSingleton());
 
+	luaL_dostring(m_lua, "math.randomseed(os.time())");
+
 	return true;
 
 }
@@ -115,7 +123,7 @@ void LuaModule::ShutDown(void)
 void LuaModule::Preupdate(FloatSeconds dt)
 {
 
-	luabind::globals(m_lua)["Time"]["delta"] = luabind::object(m_lua, (float) dt);;
+	luabind::globals(m_lua)["Time"]["delta"] = luabind::object(m_lua, (float) dt);
 
 }
 

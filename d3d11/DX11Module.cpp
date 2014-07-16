@@ -20,7 +20,9 @@ DX11Module::DX11Module(void) :
 
 	m_basicRenderer             (m_device, nullptr),
 	m_deferredLighthingRenderer (m_device, nullptr),
-	m_text2dRenderer            (m_device)
+	m_text2dRenderer            (m_device),
+
+	m_stopWatchBufferHead(0)
 
 {
 
@@ -33,7 +35,9 @@ DX11Module::DX11Module(Window *window) :
 
 	m_basicRenderer             (m_device, nullptr),
 	m_deferredLighthingRenderer (m_device, nullptr),
-	m_text2dRenderer            (m_device)
+	m_text2dRenderer            (m_device),
+
+	m_stopWatchBufferHead(0)
 
 {
 
@@ -49,34 +53,40 @@ DX11Module::~DX11Module(void)
 bool DX11Module::Init(void)
 {
 
-	bool initialized = false;
+	if (m_window)
+	{
+		m_window->Show();
+	}	
 
-	m_window->Show();
-
-	if (m_device.Create() &&
-		m_swapChain.Create())
+	if ((m_device.Exists() || m_device.Create()) &&
+		(m_swapChain.Exists() || m_swapChain.Create()))
 	{
 
 		OnResize(m_window, m_window->GetSize());
 
-		RasterizerInfo rasterizeInfo = { false, CullMode::BACK };
+		RasterizerInfo rasterizeInfo = { false, CullMode::NONE };
 		DX11RasterizerState rasterizeState(m_device, rasterizeInfo);
 
 		rasterizeState.Use();
 
-		initialized = m_basicRenderer.Init() &&
+		if (m_basicRenderer.Init() &&
 			m_deferredLighthingRenderer.Init() &&
-			m_text2dRenderer.Init();
+			m_text2dRenderer.Init())
+		{
+			m_stopWatch.Start();
+			Module::Init();
+		}
 
 	}
 
-	return initialized;
+	return m_initialized;
 
 }
 
-void DX11Module::ShutDown(void)
+void DX11Module::Shutdown(void)
 {
 
+	m_stopWatch.Stop();
 	m_basicRenderer.Shutdown();
 	m_deferredLighthingRenderer.Shutdown();
 	m_text2dRenderer.Shutdown();
@@ -100,7 +110,10 @@ void DX11Module::Render(void)
 
 	m_text2dRenderer.Render(backBuffer);
 
-	m_swapChain->Present(1, 0);
+	m_swapChain->Present((m_vsync ? 1 : 0), 0);
+
+	m_stopWatchBuffer[m_stopWatchBufferHead] = m_stopWatch.Lap();
+	m_stopWatchBufferHead = (m_stopWatchBufferHead + 1) % __MYE_FPS_COUNTER_BUFFER_SIZE;
 
 }
 
@@ -172,7 +185,6 @@ void DX11Module::FreeWindow(void)
 void DX11Module::OnResize(IWindow *window, const mye::math::Vector2i &size)
 {
 
-
 	if (m_swapChain.Exists())
 	{
 		m_swapChain.Resize(size.x(), size.y());
@@ -187,11 +199,25 @@ void DX11Module::OnResize(IWindow *window, const mye::math::Vector2i &size)
 		viewPort.MaxDepth = 1.0f;
 		viewPort.TopLeftX = 0.0f;
 		viewPort.TopLeftY = 0.0f;
-		viewPort.Width = (float)size.x();
-		viewPort.Height = (float)size.y();
+		viewPort.Width    = (float) size.x();
+		viewPort.Height   = (float) size.y();
 
 		m_device.GetImmediateContext()->RSSetViewports(1, &viewPort);
 
 	}
+
+}
+
+float DX11Module::GetFPS(void) const
+{
+
+	Milliseconds t = 0;
+
+	for (int i = 0; i < __MYE_FPS_COUNTER_BUFFER_SIZE; i++)
+	{
+		t = t + m_stopWatchBuffer[i];
+	}
+
+	return (1000 * __MYE_FPS_COUNTER_BUFFER_SIZE) / (float) t;
 
 }

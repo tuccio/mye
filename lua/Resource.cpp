@@ -12,6 +12,7 @@
 #include "Alignment.h"
 
 #include <boost/optional.hpp>
+#include <boost/bind.hpp>
 
 using namespace mye::core;
 
@@ -81,14 +82,14 @@ namespace mye
 
 		}
 
-		String sup(const mye::math::Vector2i &v, FontPointer f, const String &t)
-		{
-			return ToString(v.x()) + " " + ToString(v.y()) + ";" + f->GetName() + ";" + t;
-		}
-
 		bool __res_load(Resource &r)
 		{
 			return r.Load();
+		}
+
+		void __res_unload(Resource &r)
+		{
+			r.Unload();
 		}
 
 		ResourcePointer __res_create_resource(
@@ -120,7 +121,12 @@ namespace mye
 
 					def("Load", &Resource::Load).
 					def("Load", &__res_load).
+					//def("Load", luabind::make_function(L, boost::bind(&Resource::Load, _1, false))).
+
 					def("Unload", &Resource::Unload).
+					def("Unload", &__res_unload).
+					//def("Unload", luabind::make_function(L, boost::bind(&Resource::Unload, _1, false))).
+
 					def("Free", &Resource::Free).
 					def("CalculateSize", &Resource::CalculateSize).
 
@@ -141,7 +147,8 @@ namespace mye
 
 				class_<ResourceTypeManager>(MYE_LUA_RESOURCETYPEMANAGER).
 
-					def("CreateResource", &__res_create_resource),
+					def("CreateResource", &__res_create_resource).
+					def("GetResource", &ResourceTypeManager::GetResource),
 
 				class_<ManualResourceLoader>(MYE_LUA_MANUALRESOURCELOADER),
 
@@ -152,9 +159,7 @@ namespace mye
 					def(constructor<ScriptResourceLoaderPointer>()).
 					def(constructor<>()),
 
-				class_<Font, Resource>(MYE_LUA_FONT),
-
-				def("sup", &sup)
+				class_<Font, Resource>(MYE_LUA_FONT)
 
 			];
 

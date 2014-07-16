@@ -3,10 +3,13 @@
 
 using namespace mye::core;
 
-Mouse::Mouse(void)
+Mouse::Mouse(void) :
+	m_wheelDelta(0),
+	m_position(0, 0),
+	m_delta(0, 0),
+	m_firstUpdate(true)
 {
 	memset(m_keys, 0, sizeof(m_keys));
-	m_wheelDelta = 0;
 }
 
 Mouse::~Mouse(void)

@@ -9,7 +9,7 @@ Light::Light(void)
 Light::Light(
 	LightType type,
 	const mye::math::Vector3 &color,
-	const mye::math::Vector3 &intensity,
+	mye::math::Real intensity,
 	const mye::math::Vector3 &position,
 	const mye::math::Vector3 &direction,
 	mye::math::Real spotAngle,
@@ -59,12 +59,12 @@ void Light::SetColor(const mye::math::Vector3 &color)
 	m_color = color;
 }
 
-const mye::math::Vector3& Light::GetIntensity(void) const
+mye::math::Real Light::GetIntensity(void) const
 {
 	return m_intensity;
 }
 
-void Light::SetIntensity(const mye::math::Vector3 &intensity)
+void Light::SetIntensity(mye::math::Real intensity)
 {
 	m_intensity = intensity;
 }

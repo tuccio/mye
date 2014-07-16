@@ -147,7 +147,7 @@ void GameObject::Clear(void)
 
 	for (int i = 0; i < m_components.size(); i++)
 	{
-		componentNames[i] = m_components[i]->GetName();
+	componentNames[i] = m_components[i]->GetName();
 		componentTypes[i] = m_components[i]->GetComponentType();
 	}
 

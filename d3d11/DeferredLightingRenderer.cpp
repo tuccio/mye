@@ -213,9 +213,9 @@ void DeferredLightingRenderer::Render(ID3D11RenderTargetView *target)
 
 				TransformComponent *tc = object->GetTransformComponent();
 
-				ModelPointer model = rc->GetModel();
+				MeshPointer mesh = rc->GetMesh();
 
-				if (model && model->Load())
+				if (mesh && mesh->Load())
 				{
 
 					detail::TransformBuffer transformBuffer;
@@ -227,18 +227,21 @@ void DeferredLightingRenderer::Render(ID3D11RenderTargetView *target)
 					m_transformBuffer.Bind(PIPELINE_VERTEX_SHADER, 0);
 					m_transformBuffer.SetData(&transformBuffer);
 
+					const Material& material = rc->GetMaterial();
+
 					detail::MaterialBuffer materialBuffer;
 
-					materialBuffer.diffuse = mye::math::Vector4f(1, 0, 0, 1);
-					materialBuffer.specular = mye::math::Vector4f(0, 0, 1, 1);
-					materialBuffer.specularPower = 100.0f;
+					materialBuffer.color     = material.color;
+					materialBuffer.specular  = material.specular;
+					materialBuffer.metallic  = material.metallic;
+					materialBuffer.roughness = material.roughness;
 
 					m_materialBuffer.Bind(PIPELINE_PIXEL_SHADER, 0);
 					m_materialBuffer.SetData(&materialBuffer);
 
 					DX11VertexBuffer vertexBuffer(nullptr, "", nullptr, m_device);
 
-					vertexBuffer.Create(model.get());
+					vertexBuffer.Create(mesh.get());
 					vertexBuffer.Bind();
 
 					m_device.GetImmediateContext()->

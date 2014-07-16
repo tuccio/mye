@@ -3,9 +3,10 @@
 using namespace mye::core;
 using namespace mye::math;
 
-#define __MYE_TRANSFORM_UPDATE_NOTIFICATION() { (m_matrix).m33() = -1; m_changed = true; }
+#define __MYE_TRANSFORM_UPDATE_NOTIFICATION() { (m_matrix).m33() = -1; }
 #define __MYE_TRANSFORM_MATRIX_IS_VALID(matrix) ((matrix).m33() == 1)
 #define __MYE_TRANSFORM_MATRIX_VALIDATE(matrix) ((matrix).m33() = 1)
+#define __MYE_TRANSFORM_MATRIX_INVALIDATE(matrix) ((matrix).m33() = -1)
 
 TransformComponent::TransformComponent(void) :
 	Component(ComponentTypes::TRANSFORM, "transform"),
@@ -54,7 +55,8 @@ const Quaternion& TransformComponent::GetOrientation(void) const
 void TransformComponent::SetOrientation(const Quaternion &orientation)
 {
 	m_transform.SetOrientation(orientation);
-	__MYE_TRANSFORM_UPDATE_NOTIFICATION();
+	//__MYE_TRANSFORM_UPDATE_NOTIFICATION();
+	__MYE_TRANSFORM_MATRIX_INVALIDATE(m_matrix);
 }
 
 const Matrix4& TransformComponent::GetWorldMatrix(void)
@@ -86,18 +88,21 @@ Vector3 TransformComponent::Forward(void) const
 
 void TransformComponent::Preupdate(void)
 {
-	m_changed = false;
+	
 }
 
 bool TransformComponent::Postupdate(mye::math::Matrix4 &oldTransform)
 {
 
-	if (m_changed)
+	bool changed = false;
+
+	if (!__MYE_TRANSFORM_MATRIX_IS_VALID(m_matrix))
 	{
 		oldTransform = m_matrix;
 		__MYE_TRANSFORM_MATRIX_VALIDATE(oldTransform);
+		changed = true;
 	}
 
-	return m_changed;
+	return changed;
 
 }

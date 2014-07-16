@@ -12,7 +12,7 @@
 
 #include <cstdlib>
 
-#define OBJECT_SELECTED_NEEDED() if (!m_selected) { ShowErrorBox("No object selected", g_mainWindow.GetHandle()); return; }
+#define __ASSERT_OBJECT_SELECTED() if (!m_selected) { ShowErrorBox("No object selected", g_mainWindow.GetHandle()); return; }
 
 using namespace mye::dx11;
 using namespace mye::win;
@@ -56,7 +56,7 @@ void SceneView::_CreateBehaviourTab(void)
 		[this] (void) -> void
 	{
 
-		OBJECT_SELECTED_NEEDED();
+		__ASSERT_OBJECT_SELECTED();
 
 		Checkbox *behaviourCheckbox = static_cast<Checkbox*>(m_controls["BVRbehaviourCheckbox"]);
 

@@ -19,6 +19,10 @@ function Update()
 		Physics.gravity = vec3(0, -2, 0)
 	end
 	
+	local up = vec3(0, 1, 0)
+	local right = vec3(1, 0, 0)
+	local forward = vec3(1, 0, 1)
+	
 	if (Input.mouse:IsPressed(Mouse.Mouse1)) then
 	
 		pressedButtons[#pressedButtons + 1] = 'Mouse 1'

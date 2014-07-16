@@ -21,7 +21,7 @@ namespace mye
 		{
 
 			PointLight(const mye::math::Vector3 &color,
-			           const mye::math::Vector3 &intensity,
+			           const mye::math::Real intensity,
 			           const mye::math::Vector3 &position,
 			           mye::math::Real range) :
 				color(color),
@@ -32,7 +32,7 @@ namespace mye
 			}
 
 			mye::math::Vector3 color;
-			mye::math::Vector3 intensity;
+			mye::math::Real intensity;
 			mye::math::Vector3 position;
 
 			mye::math::Real range;
@@ -49,10 +49,10 @@ namespace mye
 			Light(
 				LightType type,
 				const mye::math::Vector3 &color,
-				const mye::math::Vector3 &intensity,
+				const mye::math::Real intensity,
 				const mye::math::Vector3 &position,
 				const mye::math::Vector3 &direction,
-				mye::math::Real spotAngles,
+				mye::math::Real spotAngle,
 				mye::math::Real range);
 
 			Light(const PointLight &pointlight);
@@ -65,8 +65,8 @@ namespace mye
 			const mye::math::Vector3& GetColor(void) const;
 			void SetColor(const mye::math::Vector3 &color);
 
-			const mye::math::Vector3& GetIntensity(void) const;
-			void SetIntensity(const mye::math::Vector3 &intensity);
+			mye::math::Real GetIntensity(void) const;
+			void SetIntensity(mye::math::Real intensity);
 
 			const mye::math::Vector3& GetPosition(void) const;
 			void SetPosition(const mye::math::Vector3 &position);
@@ -85,7 +85,7 @@ namespace mye
 			LightType m_type;
 
 			mye::math::Vector3 m_color;
-			mye::math::Vector3 m_intensity;
+			mye::math::Real m_intensity;
 
 			mye::math::Vector3 m_position;
 			mye::math::Vector3 m_direction;

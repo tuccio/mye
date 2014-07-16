@@ -39,10 +39,10 @@
 
 #define MYE_LUA_LIGHT                 "Light"
 #define MYE_LUA_POINTLIGHT            "PointLight"
+
 #define MYE_LUA_CAMERA                "Camera"
 
-#define MYE_LUA_COLORRGB              "RGB"
-#define MYE_LUA_COLORRGBA             "RGBA"
+#define MYE_LUA_MATERIAL              "Material"
 
 #define MYE_LUA_FONT                  "Font"
 
@@ -66,6 +66,7 @@
 #define MYE_LUA_QUATERNION            "quaternion"
 #define MYE_LUA_TRANSFORM             "transform"
 
+#define MYE_LUA_RAY                   "Ray"
 #define MYE_LUA_AABB                  "AABB"
 
 #define MYE_LUA_WIN                   "Windows"

@@ -3,7 +3,6 @@
 #include "View.h"
 
 #include <mye/d3d11/DX11Device.h>
-#include <mye/d3d11/DX11Window.h>
 
 #include <mye/core/Camera.h>
 #include <mye/core/GameObject.h>
@@ -33,7 +32,7 @@ public:
 
 	void Resize(const mye::math::Vector2i &size);
 
-	void SetBackgroundColor(const mye::core::ColorRGBA &rgba);
+	void SetBackgroundColor(const mye::math::Vector4f &rgba);
 
 	void OnTabShow(int index);
 	void OnTabHide(int index);
@@ -45,7 +44,7 @@ public:
 	void Update(void);
 	void Render(void);
 
-	mye::dx11::DX11Window& GetRenderWindow(void);
+	mye::win::Window& GetRenderWindow(void);
 
 private:
 
@@ -72,7 +71,7 @@ private:
 	mye::win::Tabs m_tabs;
 	mye::win::Window m_tabsWindow;
 
-	mye::core::ColorRGBA m_bgColor;
+	mye::math::Vector4f m_bgColor;
 
 	mye::win::Window m_gameObjectsTab;
 	mye::win::Window m_renderTab;

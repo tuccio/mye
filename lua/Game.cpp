@@ -10,13 +10,13 @@
 
 #include "Game.h"
 #include "DirectX11.h"
-#include "Scripting.h"
+#include "Alignment.h"
+#include "Converters.h"
 #include "GameObjectHandle.h"
+#include "InputModule.h"
+#include "Scripting.h"
 #include "VariableComponent.h"
 #include "WindowsFunctions.h"
-#include "InputModule.h"
-#include "Converters.h"
-#include "Alignment.h"
 
 #include "LuaModule.h"
 
@@ -52,6 +52,8 @@ namespace mye
 
 		void __graphics_module_reinterpret(const mye::core::String &type);
 
+		boost::reference_wrapper<Material> __mye_get_material(RenderComponent &rc);
+
 		void BindGame(lua_State *L)
 		{
 
@@ -64,7 +66,7 @@ namespace mye
 
 				class_<PointLight>(MYE_LUA_POINTLIGHT).
 
-				def(constructor<const mye::math::Vector3&, const mye::math::Vector3&, const mye::math::Vector3&, mye::math::Real>()).
+				def(constructor<const mye::math::Vector3&, mye::math::Real, const mye::math::Vector3&, mye::math::Real>()).
 
 					def_readwrite("position", &PointLight::position).
 					def_readwrite("color", &PointLight::color).
@@ -76,35 +78,50 @@ namespace mye
 					enum_("LightType")
 					[
 						value("Directional", static_cast<int>(LightType::DIRECTIONAL)),
-						value("Pointlight", static_cast<int>(LightType::POINTLIGHT)),
-						value("Spotlight", static_cast<int>(LightType::SPOTLIGHT))
+						value("Pointlight",  static_cast<int>(LightType::POINTLIGHT)),
+						value("Spotlight",   static_cast<int>(LightType::SPOTLIGHT))
 					].
 
 					def(constructor<>()).
 					def(constructor<const PointLight &>()).
 
-					property("position", &Light::GetPosition, &Light::SetPosition).
-					property("color", &Light::GetColor, &Light::SetColor).
+					property("position",  &Light::GetPosition,  &Light::SetPosition).
+					property("color",     &Light::GetColor,     &Light::SetColor).
 					property("intensity", &Light::GetIntensity, &Light::SetIntensity).
 					property("direction", &Light::GetDirection, &Light::SetDirection).
 					property("spotAngle", &Light::GetSpotAngle, &Light::SetSpotAngle).
-					property("range", &Light::GetRange, &Light::SetRange).
-					property("type", &Light::GetType, &Light::SetType),
+					property("range",     &Light::GetRange,     &Light::SetRange).
+					property("type",      &Light::GetType,      &Light::SetType),
 
 				class_<Camera>(MYE_LUA_CAMERA).
 
-					def("Roll", &Camera::Roll).
-					def("Yaw", &Camera::Yaw).
+					def("Roll",  &Camera::Roll).
+					def("Yaw",   &Camera::Yaw).
 					def("Pitch", &Camera::Pitch).
 
-					property("position", &Camera::GetPosition, &Camera::SetPosition).
-					property("orientation", &Camera::GetOrientation, &Camera::SetOrientation).
-					property("fovx", &Camera::GetFovX).
-					property("fovy", &Camera::GetFovY, &Camera::SetFovY).
+					def("RayCast", &Camera::RayCast).
+					def("GetViewMatrix", (const mye::math::Matrix4& (Camera::*) ()) &Camera::GetViewMatrix).
+					def("GetProjectionMatrix", (const mye::math::Matrix4& (Camera::*) ()) &Camera::GetProjectionMatrix).
 
-					property("right", &Camera::Right).
+					property("position",    &Camera::GetPosition,         &Camera::SetPosition).
+					property("orientation", &Camera::GetOrientation,      &Camera::SetOrientation).
+					property("fovx",        &Camera::GetFovX).
+					property("fovy",        &Camera::GetFovY,             &Camera::SetFovY).
+					property("near",        &Camera::GetNearClipDistance, &Camera::SetNearClipDistance).
+					property("far",         &Camera::GetFarClipDistance,  &Camera::SetFarClipDistance).
+
+					property("right",   &Camera::Right).
 					property("forward", &Camera::Forward).
-					property("up", &Camera::Up),
+					property("up",      &Camera::Up),
+
+				class_<Material>(MYE_LUA_MATERIAL).
+					
+					def(constructor<>()).
+
+					def_readwrite("color", &Material::color).
+					def_readwrite("metallic", &Material::metallic).
+					def_readwrite("specular", &Material::specular).
+					def_readwrite("roughness", &Material::roughness),
 
 				class_<Game>(MYE_LUA_GAME).
 
@@ -123,9 +140,13 @@ namespace mye
 
 				class_<GraphicsModule>(MYE_LUA_GRAPHICSMODULE).
 
-					def("GetWindow", (IWindow* (GraphicsModule::*) (void)) &GraphicsModule::GetWindow).
 					def("HasWindow", &GraphicsModule::HasWindow).
-					def("Reinterpret", &__graphics_module_reinterpret),
+					def("Reinterpret", &__graphics_module_reinterpret).
+
+					property("window", (IWindow* (GraphicsModule::*) (void)) &GraphicsModule::GetWindow).
+					property("clearColor", &GraphicsModule::GetClearColor, &GraphicsModule::SetClearColor).
+					property("vsync", &GraphicsModule::GetVSync, &GraphicsModule::SetVSync).
+					property("fps", &GraphicsModule::GetFPS),
 
 				class_<Component>(MYE_LUA_COMPONENT),
 
@@ -162,11 +183,13 @@ namespace mye
 				class_<RenderComponent, Component>(MYE_LUA_RENDER_COMPONENT).
 
 					def(constructor<>()).
-					property("matrix", &RenderComponent::GetModelMatrix, &RenderComponent::SetModelMatrix),
+					property("mesh", &RenderComponent::GetMesh, &RenderComponent::SetMesh).
+					property("matrix", &RenderComponent::GetModelMatrix, &RenderComponent::SetModelMatrix).
+					property("material", &__mye_get_material),
 
 				class_<LightComponent, bases<Component, Light>>(MYE_LUA_LIGHT_COMPONENT).
 					def(constructor<>()).
-					def(constructor<const Light &>())					
+					def(constructor<const Light&>())					
 
 			];
 
@@ -197,14 +220,9 @@ namespace mye
 					def("Show", &IWindow::Show).
 					def("Hide", &IWindow::Hide).
 
-					def("GetCaption", &IWindow::GetCaption).
-					def("SetCaption", &IWindow::SetCaption).
-
-					def("GetSize", &IWindow::GetSize).
-					def("SetSize", &IWindow::SetSize).
-
-					def("GetPosition", &IWindow::GetPosition).
-					def("SetPosition", &IWindow::SetPosition)
+					property("caption", &IWindow::GetCaption, &IWindow::SetCaption).
+					property("size", &IWindow::GetSize, &IWindow::SetSize).
+					property("position", &IWindow::GetPosition, &IWindow::SetPosition)
 
 			];
 
@@ -228,6 +246,12 @@ namespace mye
 			}
 
 		}
+
+		boost::reference_wrapper<Material> __mye_get_material(RenderComponent &rc)
+		{
+			return boost::ref(*rc.GetMaterialPointer());
+		}
+
 	}
 
 }

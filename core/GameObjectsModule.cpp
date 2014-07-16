@@ -26,7 +26,7 @@ void GameObjectsModule::Update(void)
 
 		Matrix4 oldTransform;
 
-		if (object->GetTransformComponent()->Postupdate(oldTransform) && rc)
+		if (rc && object->GetTransformComponent()->Postupdate(oldTransform))
 		{
 			Game::GetSingleton().GetSceneModule()->
 				MoveGameObject(*it, rc->GetBounds().TransformAffine(oldTransform));

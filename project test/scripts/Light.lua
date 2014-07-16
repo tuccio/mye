@@ -16,8 +16,6 @@ function Update()
 	if (self.moving) then
 		v = 2
 	end
-	
-	Halt()
 
 	if (self.transform.position.x >= 10) then
 		self.velocity.x = - v
@@ -37,4 +35,8 @@ function Update()
 	
 	self.text2d.text = "Light position: " .. tostring(self.transform.position) .. "\nvelocity: " .. tostring(self.velocity) .. "\nmoving: " .. tostring(self.moving)
 
+end
+
+function Stop()
+	self.moving = false
 end

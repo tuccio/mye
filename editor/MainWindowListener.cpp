@@ -177,3 +177,43 @@ void MainWindowListener::OnMenuSelected(IDGenerator::ID id)
 	}
 
 }
+
+void MainWindowListener::OnResize(mye::core::IWindow *window, const mye::math::Vector2i &size)
+{
+
+	if (g_renderWindow.Exists())
+	{
+
+		Camera *camera = g_scene.GetCamera();
+
+		auto renderWindowSize = g_renderWindow.GetSize();
+
+		if (camera)
+		{
+			camera->SetClipAspectRatio((float)renderWindowSize.x() / renderWindowSize.y());
+		}
+
+		if (g_swapChain.Exists())
+		{
+			g_swapChain.Resize(renderWindowSize.x(), renderWindowSize.y());
+		}
+
+		if (g_swapChain.Exists())
+		{
+
+			D3D11_VIEWPORT viewPort;
+
+			viewPort.MinDepth = 0.0f;
+			viewPort.MaxDepth = 1.0f;
+			viewPort.TopLeftX = 0.0f;
+			viewPort.TopLeftY = 0.0f;
+			viewPort.Width = (float)renderWindowSize.x();
+			viewPort.Height = (float)renderWindowSize.y();
+
+			g_dx11graphics.GetDevice()->GetImmediateContext()->RSSetViewports(1, &viewPort);
+
+		}
+
+	}
+
+}

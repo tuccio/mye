@@ -84,6 +84,11 @@ void SceneModule::RemoveGameObject(const GameObjectHandle &hObj)
 
 }
 
+GameObjectRayIntersection SceneModule::Pick(mye::math::Ray ray)
+{
+	return { GameObjectHandle(), -1 };
+}
+
 void SceneModule::AddCameraListener(SceneCameraListener *listener)
 {
 	m_cameraListeners.push_back(listener);

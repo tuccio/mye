@@ -4,21 +4,39 @@
 using namespace mye::core;
 
 
-Module::Module(void)
+Module::Module(void) :
+	m_initialized(false)
 {
 }
 
 
 Module::~Module(void)
 {
+
+	if (m_initialized)
+	{
+		Shutdown();
+	}
+
 }
 
 bool Module::Init(void)
 {
-	return true;
+	
+	m_initialized = true;
+
+	return m_initialized;
+
 }
 
-void Module::ShutDown(void)
+void Module::Shutdown(void)
 {
 
+	m_initialized = false;
+
+}
+
+bool Module::IsInitialized(void) const
+{
+	return m_initialized;
 }

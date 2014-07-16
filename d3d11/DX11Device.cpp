@@ -190,3 +190,33 @@ void DX11Device::SetDepthTest(bool enable)
 	m_dImmediateContext->OMSetDepthStencilState((enable ? m_depthTestOn : m_depthTestOff), 0);
 
 }
+
+void DX11Device::SetRenderTargets(ID3D11DepthStencilView *depthStencilView, int n, ...)
+{
+
+	if (n <= 0)
+	{
+		m_dImmediateContext->OMSetRenderTargets(0, nullptr, depthStencilView);
+	}
+	else
+	{
+
+		std::vector<ID3D11RenderTargetView*> renderTargets(n);
+
+		va_list args;
+		va_start(args, n);
+
+		for (int i = 0; i < n; i++)
+		{
+			
+			renderTargets[i] = va_arg(args, ID3D11RenderTargetView*);
+
+		}
+
+		va_end(args);
+
+		m_dImmediateContext->OMSetRenderTargets(n, &renderTargets[0], depthStencilView);
+
+	}
+
+}

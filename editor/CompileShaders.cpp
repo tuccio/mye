@@ -11,18 +11,16 @@ using namespace mye::dx11;
 
 void CompileShaders(void)
 {
+	
+	VertexDeclaration vDecl;
+
+	vDecl.AddAttribute(VertexAttributeSemantic::POSITION, DataFormat::FLOAT3);
+	vDecl.AddAttribute(VertexAttributeSemantic::TEXCOORD0, DataFormat::FLOAT2);
+	vDecl.AddAttribute(VertexAttributeSemantic::NORMAL, DataFormat::FLOAT3);
+
+	std::vector<D3D11_INPUT_ELEMENT_DESC> vDesc = MakeInputElementVector(vDecl);
 
 	Parameters params;
-
-	std::vector<D3D11_INPUT_ELEMENT_DESC> vDesc(1);
-
-	vDesc[0].SemanticName         = "POSITION";
-	vDesc[0].SemanticIndex        = 0;	
-	vDesc[0].Format               = DXGI_FORMAT_R32G32B32_FLOAT;
-	vDesc[0].InputSlot            = 0;
-	vDesc[0].AlignedByteOffset    = 0;
-	vDesc[0].InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
-	vDesc[0].InstanceDataStepRate = 0;
 
 	params["type"] = "vertex";
 	params["inputLayoutVector"] = PointerToString(static_cast<void*>(&vDesc));
@@ -32,7 +30,7 @@ void CompileShaders(void)
 			"DX11Shader",
 			"VertexShader.hlsl",
 			nullptr,
-			&params);
+			params);
 
 	DX11VertexShader *vertexShader = static_cast<DX11VertexShader*>(hShader.get());
 
@@ -51,7 +49,7 @@ void CompileShaders(void)
 
 	}
 
-	params.clear();
+	params.Clear();
 	params["type"] = "pixel";
 
 	hShader = ResourceTypeManager::GetSingleton().
@@ -59,7 +57,7 @@ void CompileShaders(void)
 			"DX11Shader",
 			"PixelShader.hlsl",
 			nullptr,
-			&params);
+			params);
 
 	DX11PixelShader *pixelShader = static_cast<DX11PixelShader*>(hShader.get());
 

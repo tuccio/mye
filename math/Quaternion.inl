@@ -86,27 +86,20 @@ namespace mye
 		}
 
 		template <typename T>
-		QuaternionTempl<T>& QuaternionTempl<T>::Normalize(void)
+		QuaternionTempl<T> QuaternionTempl<T>::Normalize(void) const
 		{
+
+			QuaternionTempl<T> q;
+
 			float invNorm = 1.0f / Norm();
 
-			m_data[3] *= invNorm;
-			m_data[0] *= invNorm;
-			m_data[1] *= invNorm;
-			m_data[2] *= invNorm;
-		}
+			q.m_data[3] = m_data[3] * invNorm;
+			q.m_data[0] = m_data[0] * invNorm;
+			q.m_data[1] = m_data[1] * invNorm;
+			q.m_data[2] = m_data[2] * invNorm;
 
-		template <typename T>
-		QuaternionTempl<T> QuaternionTempl<T>::Normalized(void) const
-		{
-			float invNorm = 1.0f / Norm();
+			return q;
 
-			return QuaternionTempl<T>(
-				m_data[3] * invNorm,
-				m_data[0] * invNorm,
-				m_data[1] * invNorm,
-				m_data[2] * invNorm
-				);
 		}
 
 		template <typename T>

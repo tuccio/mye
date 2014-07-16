@@ -10,15 +10,15 @@ namespace mye
 
 			Matrix<T, 3, 3> r;
 
-			float twoXSquared = 2 * q.x() * q.x();
-			float twoYSquared = 2 * q.y() * q.y();
-			float twoZSquared = 2 * q.z() * q.z();
-			float twoXY       = 2 * q.x() * q.y();
-			float twoWZ       = 2 * q.w() * q.z();
-			float twoXZ       = 2 * q.x() * q.z();
-			float twoWY       = 2 * q.w() * q.y();
-			float twoYZ       = 2 * q.y() * q.z();
-			float twoWX       = 2 * q.w() * q.x();
+			T twoXSquared = T(2) * q.x() * q.x();
+			T twoYSquared = T(2) * q.y() * q.y();
+			T twoZSquared = T(2) * q.z() * q.z();
+			T twoXY = T(2) * q.x() * q.y();
+			T twoWZ = T(2) * q.w() * q.z();
+			T twoXZ = T(2) * q.x() * q.z();
+			T twoWY = T(2) * q.w() * q.y();
+			T twoYZ = T(2) * q.y() * q.z();
+			T twoWX = T(2) * q.w() * q.x();
 
 			r.m00() = T(1) - twoYSquared - twoZSquared;
 			r.m01() = twoXY - twoWZ;
@@ -42,15 +42,15 @@ namespace mye
 
 			Matrix<T, 4, 4> r;
 
-			float twoXSquared = 2 * q.x() * q.x();
-			float twoYSquared = 2 * q.y() * q.y();
-			float twoZSquared = 2 * q.z() * q.z();
-			float twoXY       = 2 * q.x() * q.y();
-			float twoWZ       = 2 * q.w() * q.z();
-			float twoXZ       = 2 * q.x() * q.z();
-			float twoWY       = 2 * q.w() * q.y();
-			float twoYZ       = 2 * q.y() * q.z();
-			float twoWX       = 2 * q.w() * q.x();
+			T twoXSquared = T(2) * q.x() * q.x();
+			T twoYSquared = T(2) * q.y() * q.y();
+			T twoZSquared = T(2) * q.z() * q.z();
+			T twoXY = T(2) * q.x() * q.y();
+			T twoWZ = T(2) * q.w() * q.z();
+			T twoXZ = T(2) * q.x() * q.z();
+			T twoWY = T(2) * q.w() * q.y();
+			T twoYZ = T(2) * q.y() * q.z();
+			T twoWX = T(2) * q.w() * q.x();
 
 			r.m00() = T(1) - twoYSquared - twoZSquared;
 			r.m01() = twoXY - twoWZ;
@@ -82,15 +82,15 @@ namespace mye
 
 			Matrix<T, 4, 4> r;
 
-			float twoXSquared = 2 * q.x() * q.x();
-			float twoYSquared = 2 * q.y() * q.y();
-			float twoZSquared = 2 * q.z() * q.z();
-			float twoXY       = 2 * q.x() * q.y();
-			float twoWZ       = 2 * q.w() * q.z();
-			float twoXZ       = 2 * q.x() * q.z();
-			float twoWY       = 2 * q.w() * q.y();
-			float twoYZ       = 2 * q.y() * q.z();
-			float twoWX       = 2 * q.w() * q.x();
+			T twoXSquared = T(2) * q.x() * q.x();
+			T twoYSquared = T(2) * q.y() * q.y();
+			T twoZSquared = T(2) * q.z() * q.z();
+			T twoXY       = T(2) * q.x() * q.y();
+			T twoWZ       = T(2) * q.w() * q.z();
+			T twoXZ       = T(2) * q.x() * q.z();
+			T twoWY       = T(2) * q.w() * q.y();
+			T twoYZ       = T(2) * q.y() * q.z();
+			T twoWX       = T(2) * q.w() * q.x();
 
 			r.m00() = T(1) - twoYSquared - twoZSquared;
 			r.m01() = twoXY - twoWZ;
@@ -113,6 +113,20 @@ namespace mye
 			r.m33() = T(1);
 
 			return r;
+
+		}
+
+		template <typename T>
+		Matrix<T, 3, 1> EulerAngles(const QuaternionTempl<T> &q)
+		{
+
+			T twoZSquared = T(2) * q.z() * q.z();
+
+			return Matrix<T, 3, 1>(
+				std::atan2(T(2) * q.y() * q.w() - T(2) * q.x() * q.z(), T(1) - T(2) * q.y() * q.y() - twoZSquared),
+				std::asin (T(2) * q.x() * q.y() + T(2) * q.z() * q.w()),
+				std::atan2(T(2) * q.x() * q.w() - T(2) * q.y() * q.z(), T(1) - T(2) * q.x() * q.x() - twoZSquared)
+				);
 
 		}
 

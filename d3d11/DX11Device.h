@@ -31,6 +31,8 @@ namespace mye
 			void SetBlending(bool enable);
 			void SetDepthTest(bool enable);
 
+			void SetRenderTargets(ID3D11DepthStencilView *depthStencilView, int n, ...);
+
 		private:
 
 			ID3D11Device *m_device;

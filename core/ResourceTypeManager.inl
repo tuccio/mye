@@ -32,6 +32,7 @@ namespace mye
 		boost::shared_ptr<ResourceType> ResourceTypeManager::GetResource(const String &type,
 			const String &name)
 		{
+
 			ResourceManager *manager = GetResourceManager(type);
 
 			if (manager)
@@ -40,12 +41,22 @@ namespace mye
 			}
 
 			return boost::shared_ptr<ResourceType>();
+
 		}
 
 		boost::shared_ptr<Resource> ResourceTypeManager::GetResource(const String &type,
 			const String &name)
 		{
-			return GetResource(type, name);
+
+			ResourceManager *manager = GetResourceManager(type);
+
+			if (manager)
+			{
+				return manager->GetResource<Resource>(name);
+			}
+
+			return boost::shared_ptr<Resource>();
+
 		}
 
 	}

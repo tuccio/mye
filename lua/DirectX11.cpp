@@ -28,9 +28,7 @@ namespace mye
 			module(L)
 			[
 
-				class_<DX11Module, GraphicsModule>(MYE_LUA_DX11MODULE).
-
-					def("SetClearColor", &DX11Module::SetClearColor),
+				class_<DX11Module, GraphicsModule>(MYE_LUA_DX11MODULE),
 
 				class_<DX11Font, Font>(MYE_LUA_DX11FONT)
 

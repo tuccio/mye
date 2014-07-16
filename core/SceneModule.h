@@ -17,6 +17,12 @@ namespace mye
 			virtual void OnCameraChange(Camera *oldCamera, Camera *newCamera) = 0;
 		};
 
+		struct GameObjectRayIntersection
+		{
+			GameObjectHandle hObj;
+			mye::math::Real t;
+		};
+
 		class SceneModule :
 			public Module,
 			public GameObjectListener
@@ -38,6 +44,8 @@ namespace mye
 
 			virtual void AddGameObject(const GameObjectHandle &hObj);
 			virtual void RemoveGameObject(const GameObjectHandle &hObj);
+
+			virtual GameObjectRayIntersection Pick(mye::math::Ray ray);
 			
 			inline void MoveGameObject(
 				const GameObjectHandle &hObj,

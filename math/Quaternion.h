@@ -23,8 +23,7 @@ namespace mye
 			inline Matrix<T, 3, 1> Rotate(const Matrix<T, 3, 1> &p) const;
 
 			inline T Norm(void) const;
-			inline QuaternionTempl& Normalize(void);
-			inline QuaternionTempl Normalized(void) const;
+			inline QuaternionTempl Normalize(void) const;
 
 			inline QuaternionTempl operator+ (const QuaternionTempl &q) const;
 			inline QuaternionTempl operator- (const QuaternionTempl &q) const;

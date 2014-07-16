@@ -3,14 +3,12 @@
 #include "View.h"
 
 #include <mye/d3d11/DX11Device.h>
-#include <mye/d3d11/DX11Window.h>
 #include <mye/d3d11/DX11VertexBuffer.h>
 #include <mye/d3d11/DX11ConstantBuffer.h>
 
 #include <mye/win/Toolbar.h>
 
-#include <mye/core/AssimpModelLoader.h>
-#include <mye/core/ColorRGBA.h>
+#include <mye/core/AssimpLoader.h>
 #include <mye/core/Camera.h>
 #include <mye/core/Model.h>
 
@@ -34,9 +32,9 @@ public:
 	void Update(void);
 	void Render(void);
 
-	void SetBackgroundColor(const mye::core::ColorRGBA &rgba);
+	void SetBackgroundColor(const mye::math::Vector4f &rgba);
 
-	mye::dx11::DX11Window& GetWindow(void);
+	mye::win::Window& GetWindow(void);
 
 private:
 
@@ -44,7 +42,7 @@ private:
 
 	/* View members */
 
-	mye::core::ColorRGBA m_bgColor;
+	mye::math::Vector4f m_bgColor;
 
 	mye::win::Toolbar m_toolbar;
 
@@ -58,8 +56,6 @@ private:
 	} m_inputMode;
 
 	/* Content members */
-
-	mye::core::AssimpModelLoader m_modelLoader;
 
 	mye::core::ModelPointer m_model;
 	mye::math::Transform m_transform;

@@ -20,5 +20,7 @@ public:
 
 	void OnMenuSelected(mye::win::IDGenerator::ID id);
 
+	void OnResize(mye::core::IWindow *window, const mye::math::Vector2i &size);
+
 };
 

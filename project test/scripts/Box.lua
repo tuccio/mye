@@ -2,12 +2,10 @@ function Init()
 
 	Physics.gravity = vec3(0, 0, 0)
 	
-	Halt()
 	self.id = tonumber(self.name:sub(4))
 	
 	local info = { }
 	
-	Halt()
 	if (self.id == 1) then
 		info["position"] = vec3(-4, -1.17, 8.73)
 		info["mass"]     = 1
@@ -35,6 +33,24 @@ function Init()
 end
 
 function Update()
+
+	-- http://codea.io/talk/discussion/1781/pastel-bon-bons-another-experiment-with-hsv/p1
+	local pastelH2RGB = function (h, strength)
+		local s = strength / 2 + 0.25
+		local r, g, b = 1, 1, 1
+		local i = h * 3
+		local x = (i % 1) * (1 - s)
+		if i < 1 then r, g = 1 - x, s + x
+		elseif i < 2 then r, b = s + x, 1 - x
+		else g, b = 1 - x, s + x end
+		return vec4(r, g, b, 1)
+	end
+
+	if (self.render.material.color == vec4(1, 1, 1, 1)) then
+		
+		self.render.material.color = pastelH2RGB(math.random(), 0.35)
+		
+	end
 
 	--local text = "Box " .. self.id .. " velocity: " .. tostring(self.rigidbody.velocity) .. " position: " .. tostring(self.rigidbody.position)
 	

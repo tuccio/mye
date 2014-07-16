@@ -8,13 +8,17 @@ local verdana = ResourceTypeManager:CreateResource(
 	
 verdana:Load()
 
-local controller = GameObjects:CreateEntity("Controller", "controller")
+--local light = GameObjects:CreateEntity("Pointlight", "light1")
+--Scene:AddGameObject(light)
+
+--[[local controller = GameObjects:CreateEntity("Controller", "controller")
 
 Scene:AddGameObject(controller)
 
-local light = GameObjects:CreateEntity("Light", "light1")
+local light = GameObjects:CreateEntity("MovingLight", "light1")
 
 Scene:AddGameObject(light)
+--]]
 
 --[[
 Windows.AllocConsole()
