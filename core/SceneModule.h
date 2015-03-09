@@ -47,15 +47,13 @@ namespace mye
 
 			virtual GameObjectRayIntersection Pick(mye::math::Ray ray);
 			
-			inline void MoveGameObject(
-				const GameObjectHandle &hObj,
-				const mye::math::AABB &oldAABB);
+			inline void MoveGameObject(const GameObjectHandle &hObj, const mye::math::AABB &oldAABB);
 
 			inline Camera& Camera(void);
 
-			inline mye::core::Camera* GetCamera(void);
-			inline const mye::core::Camera* GetCamera(void) const;
-			inline void SetCamera(mye::core::Camera *camera);
+			inline       mye::core::Camera * GetCamera(void);
+			inline const mye::core::Camera * GetCamera(void) const;
+			inline                    void   SetCamera(mye::core::Camera * camera);
 
 			void AddCameraListener(SceneCameraListener *listener);
 			void RemoveCameraListener(SceneCameraListener *listener);

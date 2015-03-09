@@ -54,9 +54,9 @@ namespace mye
 				return m_projectionMatrix;
 			}
 
- 			mye::math::Real yScale   = mye::math::Real(1) / mye::math::Tangent(m_fovY * mye::math::Real(0.5f));
- 			mye::math::Real xScale   = yScale / m_aspectRatio;
- 			mye::math::Real invDepth = mye::math::Real(1) / (m_farClipDistance - m_nearClipDistance);
+			mye::math::Real yScale   = mye::math::Real(1) / mye::math::Tangent(m_fovY * mye::math::Real(0.5f));
+			mye::math::Real xScale   = yScale / m_aspectRatio;
+			mye::math::Real invDepth = mye::math::Real(1) / (m_farClipDistance - m_nearClipDistance);
 
 			mye::math::Real Q = m_farClipDistance * invDepth;
 
@@ -72,7 +72,7 @@ namespace mye
 
 		}
 
-		const mye::math::Matrix4& Camera::GetViewMatrix(void)
+		const mye::math::Matrix4 & Camera::GetViewMatrix(void)
 		{
 
 			if (!m_viewMatrixUptodate)
@@ -83,7 +83,7 @@ namespace mye
 			return m_viewMatrix;
 		}
 
-		const mye::math::Matrix4& Camera::GetProjectionMatrix(void)
+		const mye::math::Matrix4 & Camera::GetProjectionMatrix(void)
 		{
 
 			if (!m_projectionMatrixUptodate)
@@ -97,7 +97,7 @@ namespace mye
 
 		void Camera::UpdateProjection(void)
 		{
-			m_projectionMatrix = const_cast<const Camera*>(this)->GetProjectionMatrix();
+			m_projectionMatrix = const_cast<const Camera *>(this)->GetProjectionMatrix();
 			m_projectionMatrixUptodate = true;
 		}
 
@@ -112,7 +112,7 @@ namespace mye
 				);
 		}
 
-		const mye::math::Frustum& Camera::GetFrustum(void)
+		const mye::math::Frustum & Camera::GetFrustum(void)
 		{
 
 			if (!m_frustumUptodate)

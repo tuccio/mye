@@ -34,7 +34,7 @@ namespace mye
 
 		};
 
-		typedef boost::shared_ptr<DX11Font> DX11FontPointer;
+		typedef std::shared_ptr<DX11Font> DX11FontPointer;
 
 	}
 

@@ -21,7 +21,7 @@ namespace mye
 
 			ComponentTypes GetComponentType(void) const;
 
-			CameraComponent* Clone(void) const;
+			CameraComponent * Clone(void) const;
 
 		};
 

@@ -10,3 +10,5 @@
 #include "RigidBodyComponent.h"
 #include "Text2DComponent.h"
 #include "LightComponent.h"
+#include "KeyboardComponent.h"
+#include "MouseComponent.h"

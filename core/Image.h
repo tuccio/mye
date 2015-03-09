@@ -46,7 +46,7 @@ namespace mye
 
 		};
 
-		typedef boost::shared_ptr<Image> ImagePointer;
+		typedef std::shared_ptr<Image> ImagePointer;
 
 	}
 

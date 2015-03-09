@@ -5,7 +5,7 @@
 
 using namespace mye::core;
 
-FileInputStream::FileInputStream(const String &file) :
+FileInputStream::FileInputStream(const String & file) :
 	m_begin(0),
 	m_end(0),
 	m_eof(false)
@@ -25,7 +25,7 @@ FileInputStream::~FileInputStream(void)
 {
 }
 
-FileInputStream& FileInputStream::operator>> (String &s)
+FileInputStream & FileInputStream::operator>> (String & s)
 {
 
 	if (m_file)
@@ -62,6 +62,7 @@ FileInputStream& FileInputStream::operator>> (String &s)
 				if (m_buffer[m_begin] != ' '  &&
 					m_buffer[m_begin] != '\n' &&
 					m_buffer[m_begin] != '\r' &&
+					m_buffer[m_begin] != '\t' &&
 					m_buffer[m_begin] != '\0')
 				{
 					reading = true;
@@ -93,6 +94,7 @@ FileInputStream& FileInputStream::operator>> (String &s)
 				if (m_buffer[m_begin] != ' '  &&
 					m_buffer[m_begin] != '\n' &&
 					m_buffer[m_begin] != '\r' &&
+					m_buffer[m_begin] != '\t' &&
 					m_buffer[m_begin] != '\0')
 				{
 					v.push_back(m_buffer[m_begin++]);
@@ -115,7 +117,7 @@ FileInputStream& FileInputStream::operator>> (String &s)
 
 }
 
-size_t FileInputStream::Read(void *data, size_t size)
+size_t FileInputStream::Read(void * data, size_t size)
 {
 	
 	size_t read = 0;

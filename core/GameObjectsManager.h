@@ -20,8 +20,8 @@ namespace mye
 
 		};
 
-		inline bool operator== (const GameObjectHandle& a,
-			const GameObjectHandle& b);
+		inline bool operator== (const GameObjectHandle & a,
+			const GameObjectHandle & b);
 
 		class GameObjectHandleIDHasher
 		{
@@ -40,20 +40,22 @@ namespace mye
 
 		public:
 
-			ActiveGameObjectsIterator(GameObjectsManager *gom,
-				std::list<GameObjectHandle> *list,
-				const std::list<GameObjectHandle>::iterator &it);
+			ActiveGameObjectsIterator(GameObjectsManager * gom,
+				std::list<GameObjectHandle> * list,
+				const std::list<GameObjectHandle>::iterator & it);
 
-			ActiveGameObjectsIterator& operator++ (void);
-			bool operator != (const ActiveGameObjectsIterator&) const;
+			ActiveGameObjectsIterator & operator++ (void);
+			ActiveGameObjectsIterator   operator++ (int);
 
-			GameObjectHandle operator* (void) const;
+			bool operator != (const ActiveGameObjectsIterator &) const;
+
+			GameObjectHandle operator * (void) const;
 
 		private:
 
-			std::list<GameObjectHandle> *m_list;
-			std::list<GameObjectHandle>::iterator m_it;
-			GameObjectsManager *m_gom;
+			std::list<GameObjectHandle>           * m_list;
+			std::list<GameObjectHandle>::iterator   m_it;
+			GameObjectsManager                    * m_gom;
 
 		};
 
@@ -70,20 +72,20 @@ namespace mye
 			GameObjectHandle Create(void);
 			GameObjectHandle Create(const String& name);
 
-			GameObjectHandle CreateEntity(const String &entity);
-			GameObjectHandle CreateEntity(const String &entity,
-				const String &name);
+			GameObjectHandle CreateEntity(const String & entity);
+			GameObjectHandle CreateEntity(const String & entity,
+				const String & name);
 
 // 			void Rename(const GameObjectHandle &hObj,
 // 				const String &name);
 
-			void Destroy(const GameObjectHandle &hObj);
+			void Destroy(const GameObjectHandle & hObj);
 
-			inline GameObject* Get(const GameObjectHandle &hObj);
+			inline GameObject * Get(const GameObjectHandle & hObj);
 
-			void Rename(const GameObjectHandle &hObj, const String &name);
+			void Rename(const GameObjectHandle & hObj, const String & name);
 
-			GameObjectHandle Find(const String &name);
+			GameObjectHandle Find(const String & name);
 
 			Iterator begin(void);
 			Iterator end(void);
@@ -93,9 +95,9 @@ namespace mye
 		protected:
 
 			inline GameObjectHandle CreateHandle(void);
-			inline void FreeHandle(const GameObjectHandle &hObj);
+			inline void FreeHandle(const GameObjectHandle & hObj);
 
-			typedef std::unordered_map<GameObjectHandle, GameObject*, GameObjectHandleIDHasher> ObjectsHashMap;
+			typedef std::unordered_map<GameObjectHandle, GameObject *, GameObjectHandleIDHasher> ObjectsHashMap;
 			typedef std::unordered_multimap<String, GameObjectHandle> ObjectsNamesMap;
 
 			ObjectsHashMap  m_objects;
@@ -113,7 +115,7 @@ namespace mye
 				GameObject *object;
 			};
 
-			__ObjectInfo __InstantiateObject(const String &name);
+			__ObjectInfo __InstantiateObject(const String & name);
 			void         __InitObject(__ObjectInfo);
 
 		};

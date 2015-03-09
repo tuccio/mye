@@ -6,6 +6,7 @@
 #include <sstream>
 
 #include <iterator>
+#include <iostream>
 
 #include <mye/math/Geometry.h>
 
@@ -30,10 +31,10 @@ namespace mye
 			class Iterator;
 
 			String(void);
-			String(String &&string);
+			String(String && string);
 			String(size_t length);
-			String(const char *string);
-			String(const String &string);
+			String(const char * string);
+			String(const String & string);
 
 			~String(void);
 

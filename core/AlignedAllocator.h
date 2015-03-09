@@ -2,8 +2,13 @@
 
 #include <malloc.h>
 #include <cstdio>
+#include <cstddef>
 
 #include "Allocator.h"
+
+#ifdef max
+#undef max
+#endif
 
 namespace mye
 {
@@ -15,7 +20,7 @@ namespace mye
 		struct AlignedAllocator
 		{
 
-			static inline void* Allocate(size_t size)
+			static inline void * Allocate(size_t size)
 			{
 
 				void *p = _aligned_malloc(size, Alignment);
@@ -29,15 +34,47 @@ namespace mye
 
 			}
 
-			static inline void* AllocateNoThrow(size_t size)
+			static inline void * AllocateNoThrow(size_t size)
 			{
 				return _aligned_malloc(size, Alignment);
 			}
 
-			static inline void  Free(void *p)
+			static inline void Free(void *p)
 			{
 				_aligned_free(p);
 			}
+
+		};
+
+		template <typename T, size_t Alignment>
+		struct STLAlignedAllocator
+		{
+
+			typedef T value_type;
+			typedef T* pointer;
+			typedef const T* const_pointer;
+			typedef T& reference;
+			typedef const T& const_reference;
+			typedef std::size_t size_type;
+			typedef std::ptrdiff_t difference_type;
+
+			template< class U >
+			struct rebind { typedef STLAlignedAllocator<U, Alignment> other; };
+
+			pointer address(reference x) const { return &x; }
+			const_pointer address(const_reference x) const { return &x; }
+
+			pointer allocate(size_type n, std::allocator<void>::const_pointer hint = 0) { return static_cast<pointer>(AlignedAllocator<Alignment>::Allocate();) }
+			void deallocate(pointer p, size_type n) { AlignedAllocator<Alignment>::Free(p); }
+
+			size_type max_size() const { return std::numeric_limits<size_type>::max(); }
+
+			template< class U, class... Args >
+			void construct(U * p, Args && ... args) { new ((void*)p) U(std::forward(args) ...); }
+
+			template< class U >
+			void destroy(U * p) { p->~U(); }
+
 
 		};
 

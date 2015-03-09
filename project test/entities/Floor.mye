@@ -1,0 +1,17 @@
+entity Floor
+{
+	
+	component rigidbody(
+		CollisionShape(
+			'FLOOR_SHAPE',
+			{
+				'type' : 'box',
+				'halfextents' : '10 0.1 10',
+				'margin' : '0'
+			}
+		),                       /* collision shape */
+		0,                       /* mass */
+		vec3(0, -5, 0),          /* position */
+		quaternion(1, 0, 0, 0)); /* orientation */
+	
+};

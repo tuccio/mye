@@ -1,9 +1,12 @@
 #pragma once
 
 #include <lua.hpp>
-#include <luabind/luabind.hpp>
 
-#define LPLUASTATE (((mye::lua::LuaModule*) mye::core::Game::GetSingleton().GetScriptModule())->GetLuaState())
+#include <mye/core/Game.h>
+#include "LuaModule.h"
+
+#define MYE_GET_LUA_MODULE() (static_cast<mye::lua::LuaModule*>(mye::core::Game::GetSingleton().GetScriptModule()))
+#define MYE_GET_LUA_STATE()  (MYE_GET_LUA_MODULE()->GetLuaState())
 
 namespace mye
 {

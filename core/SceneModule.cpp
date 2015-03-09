@@ -18,20 +18,20 @@ SceneModule::ObjectsList SceneModule::GetObjectsList(void)
 	return ObjectsList();
 }
 
-const SceneModule::LightsList& SceneModule::GetLightsList(void) const
+const SceneModule::LightsList & SceneModule::GetLightsList(void) const
 {
 	return m_lights;
 }
 
-const SceneModule::Text2DList& SceneModule::GetText2DList(void) const
+const SceneModule::Text2DList & SceneModule::GetText2DList(void) const
 {
 	return m_textes;
 }
 
-void SceneModule::AddGameObject(const GameObjectHandle &hObj)
+void SceneModule::AddGameObject(const GameObjectHandle & hObj)
 {
 
-	GameObject *go = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
+	GameObject * go = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
 
 	assert(go && "Non-existent object added to the scene");
 
@@ -57,10 +57,10 @@ void SceneModule::AddGameObject(const GameObjectHandle &hObj)
 
 }
 
-void SceneModule::RemoveGameObject(const GameObjectHandle &hObj)
+void SceneModule::RemoveGameObject(const GameObjectHandle & hObj)
 {
 
-	GameObject *go = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
+	GameObject * go = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
 
 	if (go)
 	{
@@ -89,12 +89,12 @@ GameObjectRayIntersection SceneModule::Pick(mye::math::Ray ray)
 	return { GameObjectHandle(), -1 };
 }
 
-void SceneModule::AddCameraListener(SceneCameraListener *listener)
+void SceneModule::AddCameraListener(SceneCameraListener * listener)
 {
 	m_cameraListeners.push_back(listener);
 }
 
-void SceneModule::RemoveCameraListener(SceneCameraListener *listener)
+void SceneModule::RemoveCameraListener(SceneCameraListener * listener)
 {
 
 	auto it = std::find(m_cameraListeners.begin(), m_cameraListeners.end(), listener);
@@ -106,7 +106,7 @@ void SceneModule::RemoveCameraListener(SceneCameraListener *listener)
 
 }
 
-void SceneModule::OnComponentAddition(GameObject *go, Component *component)
+void SceneModule::OnComponentAddition(GameObject * go, Component * component)
 {
 
 	switch (component->GetComponentType())
@@ -127,7 +127,7 @@ void SceneModule::OnComponentAddition(GameObject *go, Component *component)
 
 }
 
-void SceneModule::OnComponentRemoval(GameObject *go, Component *component)
+void SceneModule::OnComponentRemoval(GameObject * go, Component * component)
 {
 
 	switch (component->GetComponentType())

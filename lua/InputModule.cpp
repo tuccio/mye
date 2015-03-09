@@ -1,18 +1,13 @@
 #include "InputModule.h"
 #include "Types.h"
 #include "Converters.h"
-#include "Alignment.h"
 
 #include <mye/core/Game.h>
 #include <mye/core/Keyboard.h>
 #include <mye/core/Mouse.h>
 
-#include <boost/ref.hpp>
-
-#include <luabind/luabind.hpp>
-
 using namespace mye::core;
-using namespace luabind;
+using namespace luapp11;
 
 namespace mye
 {
@@ -20,117 +15,98 @@ namespace mye
 	namespace lua
 	{
 
-		boost::reference_wrapper<Keyboard> __in_get_keyboard(InputModule &input);
-
-		boost::reference_wrapper<Mouse> __in_get_mouse(InputModule &input);
-
-		void BindInputModule(lua_State *L)
+		void BindInputModule(luapp11::State state)
 		{
 
-			module(L)
+			state
 			[
 
-				class_<InputModule>(MYE_LUA_INPUTMODULE).
+				Class<InputModule>(MYE_LUA_INPUTMODULE).
 
-					def("HasKeyboard", &InputModule::HasKeyboard).
-					property("keyboard", &__in_get_keyboard).
-					property("mouse", &__in_get_mouse),
+					Function("HasKeyboard", &InputModule::HasKeyboard).
+					Property("keyboard",    (Keyboard * (InputModule::*) (void)) &InputModule::GetKeyboard).
+					Property("mouse",       (Mouse * (InputModule::*) (void)) &InputModule::GetMouse),
 
-				class_<Keyboard>(MYE_LUA_KEYBOARD).
+				Enum<KeyboardVK>("KeyboardVK")
+					("A", KeyboardVK::MYE_VK_A)
+					("B", KeyboardVK::MYE_VK_B)
+					("C", KeyboardVK::MYE_VK_C)
+					("D", KeyboardVK::MYE_VK_D)
+					("E", KeyboardVK::MYE_VK_E)
+					("F", KeyboardVK::MYE_VK_F)
+					("G", KeyboardVK::MYE_VK_G)
+					("H", KeyboardVK::MYE_VK_H)
+					("I", KeyboardVK::MYE_VK_I)
+					("J", KeyboardVK::MYE_VK_J)
+					("K", KeyboardVK::MYE_VK_K)
+					("L", KeyboardVK::MYE_VK_L)
+					("M", KeyboardVK::MYE_VK_M)
+					("N", KeyboardVK::MYE_VK_N)
+					("O", KeyboardVK::MYE_VK_O)
+					("P", KeyboardVK::MYE_VK_P)
+					("Q", KeyboardVK::MYE_VK_Q)
+					("R", KeyboardVK::MYE_VK_R)
+					("S", KeyboardVK::MYE_VK_S)
+					("T", KeyboardVK::MYE_VK_T)
+					("U", KeyboardVK::MYE_VK_U)
+					("V", KeyboardVK::MYE_VK_V)
+					("W", KeyboardVK::MYE_VK_W)
+					("X", KeyboardVK::MYE_VK_X)
+					("Y", KeyboardVK::MYE_VK_Y)
+					("Z", KeyboardVK::MYE_VK_Z)
 
-					enum_("KeyboardVK")
-					[
+					("Space",      KeyboardVK::MYE_VK_SPACE)
+					("Enter",      KeyboardVK::MYE_VK_ENTER)
+					("Esc",        KeyboardVK::MYE_VK_ESC)
+					("Shift",      KeyboardVK::MYE_VK_LSHIFT)
+					("RightShift", KeyboardVK::MYE_VK_RSHIFT)
+					("Alt",        KeyboardVK::MYE_VK_LALT)
+					("RightAlt",   KeyboardVK::MYE_VK_RALT)
+					("Ctrl",       KeyboardVK::MYE_VK_LCTRL)
+					("RightCtrl",  KeyboardVK::MYE_VK_RCTRL)
+					("Tab",        KeyboardVK::MYE_VK_TAB)
+					("Backspace",  KeyboardVK::MYE_VK_BACKSPACE)
+					("LeftArrow",  KeyboardVK::MYE_VK_LEFT_ARROW)
+					("RightArrow", KeyboardVK::MYE_VK_RIGHT_ARROW)
+					("UpArrow",    KeyboardVK::MYE_VK_UP_ARROW)
+					("DownArrow",  KeyboardVK::MYE_VK_DOWN_ARROW)
 
-						value("A",          KeyboardVK::MYE_VK_A),
-						value("B",          KeyboardVK::MYE_VK_B),
-						value("C",          KeyboardVK::MYE_VK_C),
-						value("D",          KeyboardVK::MYE_VK_D),
-						value("E",          KeyboardVK::MYE_VK_E),
-						value("F",          KeyboardVK::MYE_VK_F),
-						value("G",          KeyboardVK::MYE_VK_G),
-						value("H",          KeyboardVK::MYE_VK_H),
-						value("I",          KeyboardVK::MYE_VK_I),
-						value("J",          KeyboardVK::MYE_VK_J),
-						value("K",          KeyboardVK::MYE_VK_K),
-						value("L",          KeyboardVK::MYE_VK_L),
-						value("M",          KeyboardVK::MYE_VK_M),
-						value("N",          KeyboardVK::MYE_VK_N),
-						value("O",          KeyboardVK::MYE_VK_O),
-						value("P",          KeyboardVK::MYE_VK_P),
-						value("Q",          KeyboardVK::MYE_VK_Q),
-						value("R",          KeyboardVK::MYE_VK_R),
-						value("S",          KeyboardVK::MYE_VK_S),
-						value("T",          KeyboardVK::MYE_VK_T),
-						value("U",          KeyboardVK::MYE_VK_U),
-						value("V",          KeyboardVK::MYE_VK_V),
-						value("W",          KeyboardVK::MYE_VK_W),
-						value("X",          KeyboardVK::MYE_VK_X),
-						value("Y",          KeyboardVK::MYE_VK_Y),
-						value("Z",          KeyboardVK::MYE_VK_Z),
+					("F1",  KeyboardVK::MYE_VK_F1)
+					("F2",  KeyboardVK::MYE_VK_F2)
+					("F3",  KeyboardVK::MYE_VK_F3)
+					("F4",  KeyboardVK::MYE_VK_F4)
+					("F5",  KeyboardVK::MYE_VK_F5)
+					("F6",  KeyboardVK::MYE_VK_F6)
+					("F7",  KeyboardVK::MYE_VK_F7)
+					("F8",  KeyboardVK::MYE_VK_F8)
+					("F9",  KeyboardVK::MYE_VK_F9)
+					("F10", KeyboardVK::MYE_VK_F10)
+					("F11", KeyboardVK::MYE_VK_F11)
+					("F12", KeyboardVK::MYE_VK_F12),
 
-						value("Space",      KeyboardVK::MYE_VK_SPACE),
-						value("Enter",      KeyboardVK::MYE_VK_ENTER),
-						value("Esc",        KeyboardVK::MYE_VK_ESC),
-						value("Shift",      KeyboardVK::MYE_VK_LSHIFT),
-						value("RightShift", KeyboardVK::MYE_VK_RSHIFT),
-						value("Alt",        KeyboardVK::MYE_VK_LALT),
-						value("RightAlt",   KeyboardVK::MYE_VK_RALT),
-						value("Ctrl",       KeyboardVK::MYE_VK_LCTRL),
-						value("RightCtrl",  KeyboardVK::MYE_VK_RCTRL),
-						value("Tab",        KeyboardVK::MYE_VK_TAB),
-						value("Backspace",  KeyboardVK::MYE_VK_BACKSPACE),
-						value("LeftArrow",  KeyboardVK::MYE_VK_LEFT_ARROW),
-						value("RightArrow", KeyboardVK::MYE_VK_RIGHT_ARROW),
-						value("UpArrow",    KeyboardVK::MYE_VK_UP_ARROW),
-						value("DownArrow",  KeyboardVK::MYE_VK_DOWN_ARROW),
+				Class<Keyboard>(MYE_LUA_KEYBOARD).
 
-						value("F1",         KeyboardVK::MYE_VK_F1),
-						value("F2",         KeyboardVK::MYE_VK_F2),
-						value("F3",         KeyboardVK::MYE_VK_F3),
-						value("F4",         KeyboardVK::MYE_VK_F4),
-						value("F5",         KeyboardVK::MYE_VK_F5),
-						value("F6",         KeyboardVK::MYE_VK_F6),
-						value("F7",         KeyboardVK::MYE_VK_F7),
-						value("F8",         KeyboardVK::MYE_VK_F8),
-						value("F9",         KeyboardVK::MYE_VK_F9),
-						value("F10",        KeyboardVK::MYE_VK_F10),
-						value("F11",        KeyboardVK::MYE_VK_F11),
-						value("F12",        KeyboardVK::MYE_VK_F12)
+					Function("IsPressed", &Keyboard::IsPressed),
 
-					].
+				Enum<MouseVK>("MouseVK")
 
-					def("IsPressed", &Keyboard::IsPressed),
+					("Left",   MouseVK::MYE_VK_MOUSE_LEFT)
+					("Right",  MouseVK::MYE_VK_MOUSE_RIGHT)
+					("Middle", MouseVK::MYE_VK_MOUSE_MIDDLE)
+					("Mouse1", MouseVK::MYE_VK_MOUSE_LEFT)
+					("Mouse2", MouseVK::MYE_VK_MOUSE_RIGHT)
+					("Mouse3", MouseVK::MYE_VK_MOUSE_MIDDLE),
 
-					class_<Mouse>(MYE_LUA_MOUSE).
+				Class<Mouse>(MYE_LUA_MOUSE).
 
-					enum_("MouseVK")
-					[
-						value("Left", MouseVK::MYE_VK_MOUSE_LEFT),
-						value("Right", MouseVK::MYE_VK_MOUSE_RIGHT),
-						value("Middle", MouseVK::MYE_VK_MOUSE_MIDDLE),
-						value("Mouse1", MouseVK::MYE_VK_MOUSE_LEFT),
-						value("Mouse2", MouseVK::MYE_VK_MOUSE_RIGHT),
-						value("Mouse3", MouseVK::MYE_VK_MOUSE_MIDDLE)
-					].
+					Property("position",  &Mouse::GetPosition).
+					Property("delta",     &Mouse::GetDelta).
+					Property("wheel",     &Mouse::GetWheelDelta).
 
-					property("position", &Mouse::GetPosition).
-					property("delta", &Mouse::GetDelta).
-					property("wheel", &Mouse::GetWheelDelta).
-
-					def("IsPressed", &Mouse::IsPressed)
+					Function("IsPressed", &Mouse::IsPressed)
 
 			];
 
-		}
-
-		boost::reference_wrapper<Keyboard> __in_get_keyboard(InputModule &input)
-		{
-			return boost::ref(*input.GetKeyboard());
-		}
-
-		boost::reference_wrapper<Mouse> __in_get_mouse(InputModule &input)
-		{
-			return boost::ref(*input.GetMouse());
 		}
 
 	}

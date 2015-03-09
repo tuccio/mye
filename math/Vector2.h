@@ -24,6 +24,8 @@ namespace mye
 
 			inline T Dot(const Matrix<T, 2, 1> &v) const;
 
+			inline bool operator== (const Matrix<T, 2, 1> &b) const;
+
 			inline Matrix<T, 2, 1> operator+ (const Matrix<T, 2, 1> &b) const;
 			inline Matrix<T, 2, 1> operator- (const Matrix<T, 2, 1> &b) const;
 

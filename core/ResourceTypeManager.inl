@@ -3,7 +3,7 @@ namespace mye
 	namespace core
 	{
 		template <typename ResourceType>
-		boost::shared_ptr<ResourceType> ResourceTypeManager::CreateResource(const String &type,
+		std::shared_ptr<ResourceType> ResourceTypeManager::CreateResource(const String &type,
 			const String &name,
 			ManualResourceLoader *manual,
 			const Parameters &params)
@@ -16,11 +16,11 @@ namespace mye
 				return manager->CreateResource<ResourceType>(name, manual, params);
 			}
 
-			return boost::shared_ptr<ResourceType>();
+			return std::shared_ptr<ResourceType>();
 
 		}
 
-		boost::shared_ptr<Resource> ResourceTypeManager::CreateResource(const String &type,
+		std::shared_ptr<Resource> ResourceTypeManager::CreateResource(const String &type,
 			const String &name,
 			ManualResourceLoader *manual,
 			const Parameters &params)
@@ -29,7 +29,7 @@ namespace mye
 		}
 
 		template <typename ResourceType>
-		boost::shared_ptr<ResourceType> ResourceTypeManager::GetResource(const String &type,
+		std::shared_ptr<ResourceType> ResourceTypeManager::GetResource(const String &type,
 			const String &name)
 		{
 
@@ -40,11 +40,11 @@ namespace mye
 				return manager->GetResource<ResourceType>(name);
 			}
 
-			return boost::shared_ptr<ResourceType>();
+			return std::shared_ptr<ResourceType>();
 
 		}
 
-		boost::shared_ptr<Resource> ResourceTypeManager::GetResource(const String &type,
+		std::shared_ptr<Resource> ResourceTypeManager::GetResource(const String &type,
 			const String &name)
 		{
 
@@ -55,7 +55,7 @@ namespace mye
 				return manager->GetResource<Resource>(name);
 			}
 
-			return boost::shared_ptr<Resource>();
+			return std::shared_ptr<Resource>();
 
 		}
 

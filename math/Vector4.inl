@@ -81,6 +81,15 @@ namespace mye
 				m_data[2] * v.m_data[2] +
 				m_data[3] * v.m_data[3];
 		}
+		
+		template <typename T>
+		bool Matrix<T, 4, 1>::operator== (const Matrix<T, 4, 1> &b) const
+		{
+			return m_data[0] == b.m_data[0] &&
+				m_data[1] == b.m_data[1] &&
+				m_data[2] == b.m_data[2] &&
+				m_data[3] == b.m_data[3];
+		}
 
 		template <typename T>
 		Matrix<T, 4, 1> Matrix<T, 4, 1>::operator+ (const Matrix<T, 4, 1> &b) const

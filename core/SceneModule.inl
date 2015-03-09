@@ -30,9 +30,7 @@ namespace mye
 			}
 		}
 
-		void SceneModule::MoveGameObject(
-			const GameObjectHandle &hObj,
-			const mye::math::AABB &oldAABB)
+		void SceneModule::MoveGameObject(const GameObjectHandle &hObj, const mye::math::AABB &oldAABB)
 		{
 			GameObjectUpdate update = { hObj, oldAABB };
 			m_movedObjects.push_back(update);

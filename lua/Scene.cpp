@@ -1,10 +1,8 @@
 #include "Scene.h"
 
-#include <luabind/luabind.hpp>
-
 #include <mye/core/SceneModule.h>
 
-using namespace luabind;
+using namespace luapp11;
 using namespace mye::core;
 
 namespace mye
@@ -13,19 +11,37 @@ namespace mye
 	namespace lua
 	{
 
-		inline boost::optional<Camera*> __scene_get_camera(SceneModule &scene)
+		/*inline boost::optional<Camera*> __scene_get_camera(SceneModule &scene)
 		{
 
 			Camera *camera = scene.GetCamera();
 
 			return (camera ? boost::optional<Camera*>(camera) : boost::optional<Camera*>());
 
-		}
+		}*/
 
-		void BindScene(lua_State *L)
+		void BindScene(State state)
 		{
 
-			module(L)
+			state
+			[
+
+				Class<GameObjectRayIntersection>("GameObjectRayIntersection").
+
+					Property("hObj", &GameObjectRayIntersection::hObj).
+					Property("t", &GameObjectRayIntersection::t),
+
+				Class<SceneModule>("SceneModule").
+
+					Function("AddGameObject", &SceneModule::AddGameObject).
+					Function("RemoveGameObject", &SceneModule::RemoveGameObject).
+					Function("Pick", &SceneModule::Pick).
+
+					Property("camera", (Camera * (SceneModule::*) ()) &SceneModule::GetCamera, &SceneModule::SetCamera)
+
+			];
+
+			/*module(L)
 			[
 
 				class_<GameObjectRayIntersection>("GameObjectRayIntersection").
@@ -41,7 +57,7 @@ namespace mye
 
 					property("camera", (Camera* (SceneModule::*) ()) &SceneModule::GetCamera, &SceneModule::SetCamera)
 
-			];
+			];*/
 
 		}
 

@@ -1,13 +1,15 @@
-function Init()
+local DeveloperConsole = { }
 
-	Windows.AllocConsole()
+function DeveloperConsole:Init()
+
+	Windows.CreateConsole()
 	Game:GetMainWindow():Focus()
 	
 end
 
-function Update()
+function DeveloperConsole:Update()
 
-	if (not Input.keyboard:IsPressed(Keyboard.F1) and self.consoleMode) then
+	if (not Input.keyboard:IsPressed(KeyboardVK.F1) and self.consoleMode) then
 	
 		Windows.FocusConsole()
 		local code = io.read()
@@ -20,10 +22,12 @@ function Update()
 			f()
 		end
 		
-	elseif (Input.keyboard:IsPressed(Keyboard.F1)) then
+	elseif (Input.keyboard:IsPressed(KeyboardVK.F1)) then
 	
 		self.consoleMode = true
 		
 	end
 
 end
+
+return DeveloperConsole

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Script.h"
+#include <mye/core/Script.h>
 
-#include <luabind/luabind.hpp>
+#include <lua++11/lua++11.h>
 
 namespace mye
 {
@@ -11,37 +11,32 @@ namespace mye
 	{
 
 		class BehaviourScript :
-			public Script
+			public mye::core::Script
 		{
 
 		public:
 
 			BehaviourScript(void);
-			BehaviourScript(LuaModule &luaModule,
-				const mye::core::String &name);
+			BehaviourScript(const mye::core::String &name);
 
 			~BehaviourScript(void);
 
-			template <typename R>
-			inline R Call(const mye::core::String &f) const;
-
-			template <typename R, typename T1>
-			inline R Call(const mye::core::String &f, T1 arg1) const;
-
-			template <typename R, typename T1, typename T2>
-			inline R Call(const mye::core::String &f, T1 arg1, T2 arg2) const;
+			inline luapp11::LuaBehaviour GetBehaviour(void) const
+			{
+				return m_behaviour;
+			}
 
 		protected:
 
 			bool LoadImpl(void);
 			void UnloadImpl(void);
 
+			luapp11::LuaBehaviour m_behaviour;
+
 		};
 
-		typedef boost::shared_ptr<BehaviourScript> BehaviourScriptPointer;
+		typedef std::shared_ptr<BehaviourScript> BehaviourScriptPointer;
 
 	}
 
 }
-
-#include "BehaviourScript.inl"

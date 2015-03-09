@@ -227,14 +227,14 @@ void DeferredLightingRenderer::Render(ID3D11RenderTargetView *target)
 					m_transformBuffer.Bind(PIPELINE_VERTEX_SHADER, 0);
 					m_transformBuffer.SetData(&transformBuffer);
 
-					const Material& material = rc->GetMaterial();
+					MaterialPointer material = rc->GetMaterial();
 
 					detail::MaterialBuffer materialBuffer;
 
-					materialBuffer.color     = material.color;
-					materialBuffer.specular  = material.specular;
-					materialBuffer.metallic  = material.metallic;
-					materialBuffer.roughness = material.roughness;
+					materialBuffer.color     = material->GetDiffuseColor();
+					materialBuffer.specular  = material->GetSpecular();
+					materialBuffer.metallic  = material->GetMetallic();
+					materialBuffer.roughness = material->GetRoughness();
 
 					m_materialBuffer.Bind(PIPELINE_PIXEL_SHADER, 0);
 					m_materialBuffer.SetData(&materialBuffer);

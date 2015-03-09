@@ -1,9 +1,13 @@
 #pragma once
 
+#include "Allocator.h"
 #include "Component.h"
+#include "VariableTypes.h"
+
 #include <mye/math/Geometry.h>
 
 #include <typeindex>
+#include <type_traits>
 
 namespace mye
 {
@@ -14,111 +18,151 @@ namespace mye
 		template <typename T>
 		class VariableConstraint;
 
-		template <typename T>
-		class VariableComponent :
+
+		class VariableRTTI :
 			public Component
 		{
 
 		public:
 
+			inline VariableTypes GetType(void) const
+			{
+				return m_type;
+			}
+
+			Component * Clone(void) const = 0;
+
+		protected:
+
+			VariableRTTI(const String & name, VariableTypes type) :
+				Component(ComponentTypes::VARIABLE, name)
+			{
+				m_type = type;
+			}
+
+			VariableTypes m_type;
+
+		};
+
+		template <typename T, typename Allocator = DefaultAllocator>
+		class VariableComponent :
+			public VariableRTTI
+		{
+
+		public:
+
 			VariableComponent(const String &name);
-/*
-			VariableComponent(const String &name,
-				const std::vector<VariableConstraint<T>*> &constraints)*/
 			~VariableComponent(void);
 
-			VariableComponent* Clone(void) const;
+			VariableComponent * Clone(void) const;
 
-			virtual std::type_index GetVariableType(void) const;
+			inline T * GetPointer(void);
 
-			T* GetPointer(void);
+			inline const T & Get(void) const;
+			inline void Set(const T &v);
 
-			const T& Get(void) const;
-			void Set(const T &v);
-
-/*
-			void AddConstraint(const VariableConstraint<T>& constraint);
-			bool FitsConstraints(const T &value) const;
-			void ClearConstraints(void);*/
+			__MYE_USE_ALLOCATOR(Allocator)
 
 		private:
 
 			T m_variable;
-			//std::vector<VariableConstraint<T>*> m_constraints;
 
 		};
 
-		/*template <>
-		class __declspec(align(16)) VariableComponent<Transform> :
-			public Component
-		{
+		typedef    VariableComponent<mye::math::Vector2> Vector2VariableComponent;
+		typedef    VariableComponent<mye::math::Vector3> Vector3VariableComponent;
+		typedef    VariableComponent<mye::math::Vector4> Vector4VariableComponent;
+				  
+		typedef   VariableComponent<mye::math::Vector2i> Vector2iVariableComponent;
+		typedef   VariableComponent<mye::math::Vector3i> Vector3iVariableComponent;
+		typedef   VariableComponent<mye::math::Vector4i> Vector4iVariableComponent;
+				  
+		typedef                  VariableComponent<bool> BoolVariableComponent;
+		typedef                   VariableComponent<int> IntVariableComponent;
+		typedef       VariableComponent<mye::math::Real> RealVariableComponent;
+				     
+		typedef                VariableComponent<String> StringVariableComponent;
+		typedef      VariableComponent<GameObjectHandle> GameObjectVariableComponent;
 
-		public:
+		typedef VariableComponent<mye::math::Quaternion> QuaternionVariableComponent;
 
-			VariableComponent(const String &name);
-			~VariableComponent(void);
+		//typedef    VariableComponent<mye::math::Matrix2> Matrix2VariableComponent;
+		typedef    VariableComponent<mye::math::Matrix3> Matrix3VariableComponent;
+		typedef    VariableComponent<mye::math::Matrix4> Matrix4VariableComponent;
 
-			VariableComponent<Transform>* Clone(void) const;
+		//class VariableComponent_
+		//{
 
-			virtual std::type_index GetVariableType(void) const;
+		//public:
 
-			const Transform& Get(void) const;
-			void Set(const Transform &t);
+		//	VariableComponent_(void) { }
 
-		private:
+		//	template <typename T>
+		//	T * Get(const String &name)
+		//	{
+		//		
+		//		T * result = nullptr;
 
-			Transform m_transform;
+		//		auto it = m_map.find(name);
 
-			template <typename T>
-			class VariableConstraint
-			{
+		//		if (it != m_map.end())
+		//		{
+		//			assert(it->second.type == VariableTraits<T>::type::value);
+		//			return static_cast<T*>(&m_data[it->second.offset]);
+		//		}
 
-			public:
+		//		return result;
 
-				virtual bool fits(const T& value) const;
+		//	}
 
-			};
+		//	bool RetrieveType(const String &name, VariableTypes &type)
+		//	{
 
-			template <typename T>
-			class InclusiveMaxConstraint
-			{
+		//		bool success = false;
+		//		auto it = m_map.find(name);
 
-			public:
+		//		if (it != m_map.end())
+		//		{
+		//			type = it->second.type;
+		//			success = true;
+		//		}
 
-				InclusiveMaxConstraint(const T &max);
+		//		return success;
 
-				bool fits(const T &value) const
-				{
-					return value <= m_max;
-				}
+		//	}
 
-			private:
+		//	template <typename T>
+		//	bool Add(const String &name)
+		//	{
 
-				T m_max;
 
-			};
+		//		bool success = false;
+		//		auto it = m_map.find(name);
 
-			template <typename T>
-			class InclusiveMinConstraint
-			{
+		//		if (it != m_map.end())
+		//		{
+		//			size_t aligment = VariableTraits<T>::alignment::value;
+		//			success = true;
+		//		}
 
-			public:
+		//		return success;
 
-				InclusiveMinConstraint(const T &min);
+		//	}
 
-				bool fits(const T &value) const
-				{
-					return value >= m_min;
-				}
+		//private:
 
-			private:
+		//	static struct VariableInfo
+		//	{
+		//		size_t        offset;
+		//		VariableTypes type;
+		//	};
 
-				T m_min;
+		//	typedef std::unordered_map<String, VariableInfo> VariablesMap;
 
-			};
+		//	std::vector<unsigned char> m_data;
+		//	              VariablesMap m_map;
 
-		};*/
-
+		//};
 
 	}
 

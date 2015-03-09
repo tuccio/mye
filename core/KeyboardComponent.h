@@ -1,17 +1,17 @@
-/*
 #pragma once
 
-#include "Keyboard.h"
 #include "Component.h"
+
+#include "InputModule.h"
 
 namespace mye
 {
 
 	namespace core
 	{
-
 		class KeyboardComponent :
-			public Component
+			public Component,
+			public KeyboardListener
 		{
 
 		public:
@@ -19,12 +19,17 @@ namespace mye
 			KeyboardComponent(void);
 			~KeyboardComponent(void);
 
-			KeyboardComponent* Clone(void) const;
+			KeyboardComponent * Clone(void) const;
+
+			void OnAttach(GameObject * gameObject);
+			void OnDetach(void);
+
+			void OnKeyboardKeyPress(KeyboardVK key);
+			void OnKeyboardKeyRelease(KeyboardVK key, FloatSeconds time);
+			void OnKeyboardKeyHold(KeyboardVK key, FloatSeconds time);
 
 		};
 
 	}
 
 }
-
-*/

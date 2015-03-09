@@ -21,7 +21,7 @@ ComponentTypes Component::GetComponentType(void) const
 	return m_type;
 }
 
-void Component::OnAttach(GameObject *go)
+void Component::OnAttach(GameObject * go)
 {
 	m_owner = go;
 }

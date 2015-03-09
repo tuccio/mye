@@ -49,6 +49,12 @@ namespace mye
 		}
 
 		template <typename T>
+		QuaternionTempl<T>& TransformTempl<T>::Orientation(void)
+		{
+			return m_orientation;
+		}
+
+		template <typename T>
 		const Matrix<T, 3, 1>& TransformTempl<T>::GetPosition(void) const
 		{
 			return m_position;
@@ -61,6 +67,12 @@ namespace mye
 		}
 
 		template <typename T>
+		Matrix<T, 3, 1>& TransformTempl<T>::Position(void)
+		{
+			return m_position;
+		}
+
+		template <typename T>
 		const Matrix<T, 3, 1>& TransformTempl<T>::GetScale(void) const
 		{
 			return m_scale;
@@ -70,6 +82,12 @@ namespace mye
 		void TransformTempl<T>::SetScale(const Matrix<T, 3, 1> &scale)
 		{
 			m_scale = scale;
+		}
+
+		template <typename T>
+		Matrix<T, 3, 1>& TransformTempl<T>::Scale(void)
+		{
+			return m_scale;
 		}
 
 		template <typename T>

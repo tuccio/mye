@@ -4,6 +4,10 @@ namespace mye
 	namespace core
 	{
 
+		inline std::ostream& operator<< (std::ostream &os, const mye::core::String &s)
+		{
+			return os << s.CString();
+		}
 
 		const char* String::CString(void) const
 		{
@@ -399,7 +403,9 @@ namespace mye
 		{
 
 			mye::math::Matrix<T, 2, 1> v;
-			std::stringstream ss(s.CString());
+
+			std::stringstream ss;
+			ss << s << std::endl;
 
 			ss >> v.x() >> v.y();
 
@@ -412,7 +418,9 @@ namespace mye
 		{
 
 			mye::math::Matrix<T, 3, 1> v;
-			std::stringstream ss(s.CString());
+
+			std::stringstream ss;
+			ss << s << std::endl;
 
 			ss >> v.x() >> v.y() >> v.z();
 
@@ -425,7 +433,9 @@ namespace mye
 		{
 
 			mye::math::Matrix<T, 4, 1> v;
-			std::stringstream ss(s.CString());
+
+			std::stringstream ss;
+			ss << s << std::endl;
 
 			ss >> v.x() >> v.y() >> v.z() >> v.w();
 
@@ -438,7 +448,9 @@ namespace mye
 		{
 
 			mye::math::QuaternionTempl<T> q;
-			std::stringstream ss(s.CString());
+
+			std::stringstream ss;
+			ss << s << std::endl;
 
 			ss >> q.w() >> q.x() >> q.y() >> q.z();
 
@@ -451,9 +463,11 @@ namespace mye
 		{
 
 			T x;
-			std::stringstream ss(s.CString());
 
-			ss >> x;
+			std::stringstream ss;
+			ss << s << std::endl;
+
+			ss >> std::boolalpha >> x;
 
 			return x;
 
@@ -585,8 +599,6 @@ namespace std
 			return h;
 
 		}
-
-		
 
 	};
 

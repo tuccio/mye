@@ -1,7 +1,9 @@
 #pragma once
 
 #include <mye/math/Math.h>
+#include <vector>
 
+#include "Time.h"
 #include "VirtualKeys.h"
 
 namespace mye
@@ -9,6 +11,14 @@ namespace mye
 
 	namespace core
 	{
+
+		class MouseListener;
+
+		struct MousePressedKey
+		{
+			MouseVK key;
+			StopWatch  timer;
+		};
 
 		class Mouse
 		{
@@ -32,6 +42,16 @@ namespace mye
 			inline int GetWheelDelta(void) const;
 			inline void SetWheelDelta(int wheelDelta);
 
+			void AddListener(MouseListener * listener);
+			void RemoveListener(MouseListener * listener);
+
+			void NotifyHeldKeys(void);
+
+		protected:
+
+			std::vector<MouseListener*> m_listeners;
+			std::vector<MousePressedKey>        m_pressedKeys;
+
 		private:
 
 			bool m_keys[MYE_VK_MOUSE_COUNT];
@@ -42,6 +62,20 @@ namespace mye
 			int m_wheelDelta;
 
 			bool m_firstUpdate;
+
+		};
+
+		class MouseListener
+		{
+
+		public:
+
+			virtual void OnMouseKeyPress(MouseVK key) { }
+			virtual void OnMouseKeyRelease(MouseVK key, FloatSeconds time) { }
+			virtual void OnMouseKeyHold(MouseVK key, FloatSeconds time) { }
+
+			virtual void OnMouseMove(const mye::math::Vector2 & from,
+									 const mye::math::Vector2 & to) { }
 
 		};
 

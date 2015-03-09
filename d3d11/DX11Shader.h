@@ -40,7 +40,7 @@ namespace mye
 
 		};
 
-		typedef boost::shared_ptr<DX11Shader> DX11ShaderPointer;
+		typedef std::shared_ptr<DX11Shader> DX11ShaderPointer;
 
 	}
 

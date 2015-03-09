@@ -1,12 +1,15 @@
+--Physics.gravity = vec3(0, -1, 0)
+
 --Windows.MessageBox("Main", "Main running!")
 
+--[[
 local verdana = ResourceTypeManager:CreateResource(
 	"Font",
 	"verdana_regular_17",
 	nil,
 	nil)
 	
-verdana:Load()
+verdana:Load() ]]--
 
 --local light = GameObjects:CreateEntity("Pointlight", "light1")
 --Scene:AddGameObject(light)

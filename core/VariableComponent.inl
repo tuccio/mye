@@ -4,49 +4,41 @@ namespace mye
 	namespace core
 	{
 
-		template <typename T>
-		VariableComponent<T>::VariableComponent(const String &name) :
-			Component(ComponentTypes::VARIABLE,
-			name)
+		template <typename T, typename Allocator>
+		VariableComponent<T, Allocator>::VariableComponent(const String &name) :
+			VariableRTTI(name, VariableTraits<T>::type::value)
 		{
 		}
 
-		template <typename T>
-		VariableComponent<T>::~VariableComponent(void)
+		template <typename T, typename Allocator>
+		VariableComponent<T, Allocator>::~VariableComponent(void)
 		{
 		}
 
-		template <typename T>
-		VariableComponent<T>* VariableComponent<T>::Clone(void) const
+		template <typename T, typename Allocator>
+		VariableComponent<T, Allocator> * VariableComponent<T, Allocator>::Clone(void) const
 		{
 			return new VariableComponent<T>(*this);
 		}
 
-		template <typename T>
-		T* VariableComponent<T>::GetPointer(void)
+		template <typename T, typename Allocator>
+		T * VariableComponent<T, Allocator>::GetPointer(void)
 		{
 			return &m_variable;
 		}
 
-		template <typename T>
-		const T& VariableComponent<T>::Get(void) const
+		template <typename T, typename Allocator>
+		const T & VariableComponent<T, Allocator>::Get(void) const
 		{
 			return m_variable;
 		}
 
-		template <typename T>
-		void VariableComponent<T>::Set(const T& v)
+		template <typename T, typename Allocator>
+		void VariableComponent<T, Allocator>::Set(const T& v)
 		{
 			m_variable = v;
-		}
-
-		template <typename T>
-		std::type_index VariableComponent<T>::GetVariableType(void) const
-		{
-			return typeid(T);
 		}
 
 	}
 
 }
-

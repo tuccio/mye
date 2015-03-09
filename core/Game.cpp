@@ -1,5 +1,4 @@
 #include "Game.h"
-
 #include "Logger.h"
 #include "Stream.h"
 
@@ -11,16 +10,20 @@
 
 #include <rapidxml_utils.hpp>
 
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+
 using namespace mye::core;
 using namespace mye::math;
 
-Game::Game(InputModule       *input,
-		   GameObjectsModule *gameobjects,
-		   SceneModule       *scene,
-		   PhysicsModule     *physics,
-		   GraphicsModule    *graphics,
-		   AudioModule       *audio,
-		   ScriptModule      *script) :
+Game::Game(
+	       InputModule       * input,
+		   GameObjectsModule * gameobjects,
+		   SceneModule       * scene,
+		   PhysicsModule     * physics,
+		   GraphicsModule    * graphics,
+		   AudioModule       * audio,
+		   ScriptModule      * script) :
 	m_input(input),
 	m_gameobjects(gameobjects),
 	m_scene(scene),
@@ -66,37 +69,37 @@ void Game::Quit(void)
 	exit(0);
 }
 
-InputModule* Game::GetInputModule(void)
+InputModule * Game::GetInputModule(void)
 {
 	return m_input;
 }
 
-GameObjectsModule* Game::GetGameObjectsModule(void)
+GameObjectsModule * Game::GetGameObjectsModule(void)
 {
 	return m_gameobjects;
 }
 
-SceneModule* Game::GetSceneModule(void)
+SceneModule * Game::GetSceneModule(void)
 {
 	return m_scene;
 }
 
-PhysicsModule* Game::GetPhysicsModule(void)
+PhysicsModule * Game::GetPhysicsModule(void)
 {
 	return m_physics;
 }
 
-GraphicsModule* Game::GetGraphicsModule(void)
+GraphicsModule * Game::GetGraphicsModule(void)
 {
 	return m_graphics;
 }
 
-AudioModule* Game::GetAudioModule(void)
+AudioModule * Game::GetAudioModule(void)
 {
 	return m_audio;
 }
 
-ScriptModule* Game::GetScriptModule(void)
+ScriptModule * Game::GetScriptModule(void)
 {
 	return m_script;
 }
@@ -543,7 +546,7 @@ void Game::ImportScene(const String &file, std::list<GameObject*> *allocatedObje
 
 				}
 
-				rapidxml::xml_node<> *materialNode = render->first_node("material");
+				/*rapidxml::xml_node<> *materialNode = render->first_node("material");
 
 				if (materialNode)
 				{
@@ -562,7 +565,7 @@ void Game::ImportScene(const String &file, std::list<GameObject*> *allocatedObje
 
 					gameObject->GetRenderComponent()->SetMaterial(material);
 
-				}
+				}*/
 
 				
 

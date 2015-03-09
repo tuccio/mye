@@ -105,13 +105,13 @@ void DX11Module::Render(void)
 
 	m_swapChain.ClearBackBuffer(m_clearColor);
 
-	//m_basicRenderer.Render(backBuffer);
-	m_deferredLighthingRenderer.Render(backBuffer);
+	m_basicRenderer.Render(backBuffer);
+	//m_deferredLighthingRenderer.Render(backBuffer);
 
 	m_text2dRenderer.Render(backBuffer);
 
 	m_swapChain->Present((m_vsync ? 1 : 0), 0);
-
+	
 	m_stopWatchBuffer[m_stopWatchBufferHead] = m_stopWatch.Lap();
 	m_stopWatchBufferHead = (m_stopWatchBufferHead + 1) % __MYE_FPS_COUNTER_BUFFER_SIZE;
 
@@ -155,6 +155,8 @@ void DX11Module::SetWindow(Window *window)
 			OnResize(window, clientSize);
 
 		}
+
+		//ShowCursor(FALSE);
 
 	}
 
@@ -205,6 +207,9 @@ void DX11Module::OnResize(IWindow *window, const mye::math::Vector2i &size)
 		m_device.GetImmediateContext()->RSSetViewports(1, &viewPort);
 
 	}
+
+	/*RECT rect = { 0, 0, size.x(), size.y() };
+	ClipCursor(&rect);*/
 
 }
 

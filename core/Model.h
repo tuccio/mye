@@ -52,7 +52,7 @@ namespace mye
 
 		};
 
-		typedef boost::shared_ptr<Model> ModelPointer;
+		typedef std::shared_ptr<Model> ModelPointer;
 
 	}
 

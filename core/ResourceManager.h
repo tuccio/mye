@@ -21,18 +21,18 @@ namespace mye
 			~ResourceManager(void);
 			
 			template <typename ResourceType>
-			boost::shared_ptr<ResourceType> CreateResource(const String &name,
+			std::shared_ptr<ResourceType> CreateResource(const String &name,
 				ManualResourceLoader *manual = nullptr,
 				const Parameters &params = Parameters());
 
-			inline boost::shared_ptr<Resource> CreateResource(const String &name,
+			inline std::shared_ptr<Resource> CreateResource(const String &name,
 				ManualResourceLoader *manual = nullptr,
 				const Parameters &params = Parameters());
 
 			template <typename ResourceType>
-			boost::shared_ptr<ResourceType> GetResource(const String &name);
+			std::shared_ptr<ResourceType> GetResource(const String &name);
 
-			inline boost::shared_ptr<Resource> GetResource(const String &name);
+			inline std::shared_ptr<Resource> GetResource(const String &name);
 
 			void FreeResource(const String &name);
 

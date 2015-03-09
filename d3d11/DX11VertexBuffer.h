@@ -49,7 +49,7 @@ namespace mye
 
 		};
 
-		typedef boost::shared_ptr<DX11VertexBuffer> DX11VertexBufferPointer;
+		typedef std::shared_ptr<DX11VertexBuffer> DX11VertexBufferPointer;
 
 	}
 }

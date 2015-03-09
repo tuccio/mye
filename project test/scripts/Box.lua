@@ -1,5 +1,18 @@
-function Init()
+local Box = { }
 
+function Box:Init()
+
+	self.id = tonumber(self.name:sub(4))
+	
+	if (self.id == 1) then
+		self.rigidbody.position = vec3(-4, -1.17, 8.73)
+		self.rigidbody.mass = 0.7
+	else
+		self.rigidbody.position = vec3(4, -1.17, 8.73)
+		self.rigidbody.mass = 2
+	end
+	
+--[[
 	Physics.gravity = vec3(0, 0, 0)
 	
 	self.id = tonumber(self.name:sub(4))
@@ -29,11 +42,13 @@ function Init()
 	
 	self.text2d.position = vec2i(8, 1024 + (self.id - 1) * 48)
 	self.text2d.color    = vec4(0, 1, 0, 1)
+]]--
 
 end
 
-function Update()
+function Box:Update()
 
+--[[
 	-- http://codea.io/talk/discussion/1781/pastel-bon-bons-another-experiment-with-hsv/p1
 	local pastelH2RGB = function (h, strength)
 		local s = strength / 2 + 0.25
@@ -63,9 +78,38 @@ function Update()
 	end
 	
 	self.text2d.text = text
+]]--
+	
+	
 
 end
 
-function Finalize()
+function Box:OnKeyboardKeyPress(key)
 
 end
+
+function Box:OnKeyboardKeyRelease(key, t)
+
+	print('Released key after ' .. tostring(t) .. ' seconds')
+
+end
+
+function Box:OnKeyboardKeyHold(key, t)
+
+	if key == KeyboardVK.F then
+	
+		local force = vec3(0.3, 0, 0)
+	
+		local f = nil
+		
+		if (self.id ~= 1) then
+			force = - (2 * force)
+		end
+	
+		self.rigidbody:ApplyForce(force)
+		
+	end
+	
+end
+
+return Box

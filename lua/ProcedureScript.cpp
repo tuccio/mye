@@ -1,5 +1,6 @@
 #include "ProcedureScript.h"
 #include "Utils.h"
+#include "LuaModule.h"
 
 #include <lua.hpp>
 
@@ -10,9 +11,8 @@ ProcedureScript::ProcedureScript(void)
 
 }
 
-ProcedureScript::ProcedureScript(LuaModule &luaModule,
-								 const mye::core::String &name) :
-	Script(luaModule, name)
+ProcedureScript::ProcedureScript(const mye::core::String &name) :
+	Script(MYE_GET_LUA_MODULE(), name)
 {
 }
 
@@ -23,39 +23,38 @@ ProcedureScript::~ProcedureScript(void)
 bool ProcedureScript::LoadImpl(void)
 {
 
-	LuaStackCleaner stackCleaner(m_lua);
+	bool loaded = false;
 
-	if (!luaL_loadfile(m_lua, (m_scriptDirectory + m_name + ".lua").CString()))
+	LuaModule * module = static_cast<LuaModule*>(m_owner);
+
+	lua_State * L = module->GetLuaState();
+
+	LuaStackCleaner stackCleaner(L);
+
+	mye::core::String dir;
+
+	if (m_params.Contains("directory"))
 	{
-
-		// Create _ENV for sandbox
-
-		lua_newtable(m_lua);
-
-		// Create its metatable
-		lua_newtable(m_lua);
-		lua_getglobal(m_lua, "_G");
-
-		lua_setfield(m_lua, -2, "__index");
-		lua_setmetatable(m_lua, -2);
-
-		const char *upvalue = lua_setupvalue(m_lua, -2, 1);
-
-		if (upvalue != nullptr)
-		{
-
-			assert(strncmp(upvalue, "_ENV", 4) == 0);
-
-			m_registryReference = luaL_ref(m_lua, LUA_REGISTRYINDEX);
-			return true;
-
-		}
-
+		dir = m_params.GetString("directory");
+	}
+	else
+	{
+		dir = module->GetScriptDirectory();
 	}
 
-	m_error = lua_tostring(m_lua, -1);
+	mye::core::String fullpath = dir + m_name + MYE_LUA_SCRIPT_EXTENSION;
 
-	return false;
+	if (!luaL_loadfile(L, fullpath.CString()))
+	{
+		m_script = luapp11::FromStack(L, -1);
+		loaded = true;
+	}
+	else
+	{
+		m_error = lua_tostring(L, -1);
+	}
+
+	return loaded;
 
 }
 

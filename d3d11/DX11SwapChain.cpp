@@ -117,9 +117,9 @@ bool DX11SwapChain::CreateSwapChain(void)
 
 	}
 
-	IDXGIDevice  *dxgiDevice;
-	IDXGIAdapter *dxgiAdapter;
-	IDXGIFactory *dxgiFactory;
+	IDXGIDevice  *dxgiDevice  = nullptr;
+	IDXGIAdapter *dxgiAdapter = nullptr;
+	IDXGIFactory *dxgiFactory = nullptr;
 
 	bool success = (
 		!HRTESTFAILED(m_swapChainConfiguration.device->GetDevice()->

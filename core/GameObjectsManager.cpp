@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Entity.h"
 #include "ResourceTypeManager.h"
+#include "Utils.h"
 
 using namespace mye::core;
 
@@ -34,7 +35,7 @@ GameObjectHandle GameObjectsManager::Create(void)
 
 }
 
-GameObjectHandle GameObjectsManager::Create(const String& name)
+GameObjectHandle GameObjectsManager::Create(const String & name)
 {
 
 	__ObjectInfo objectInfo = __InstantiateObject(name);
@@ -44,15 +45,15 @@ GameObjectHandle GameObjectsManager::Create(const String& name)
 
 }
 
-GameObjectHandle GameObjectsManager::CreateEntity(const String& entity)
+GameObjectHandle GameObjectsManager::CreateEntity(const String & entity)
 {
 
 	return CreateEntity(entity, String());
 
 }
 
-GameObjectHandle GameObjectsManager::CreateEntity(const String &entity,
-												  const String &name)
+GameObjectHandle GameObjectsManager::CreateEntity(const String & entity,
+												  const String & name)
 {
 
 	__ObjectInfo objectInfo;
@@ -63,27 +64,52 @@ GameObjectHandle GameObjectsManager::CreateEntity(const String &entity,
 	Parameters params;
 	params["type"] = "behaviour";
 
-	mye::lua::BehaviourScriptPointer s = ResourceTypeManager::GetSingleton().
-		CreateResource<mye::lua::BehaviourScript>("LuaScript", entity, nullptr, params);
+	mye::core::ScriptPointer s = ResourceTypeManager::GetSingleton().
+		CreateResource<Script>("Script", entity, nullptr, params);
 
-	if (e &&
-		e->Load() &&
-		s &&
-		s->Load())
+	if (e && e->Load())
 	{
 
-		objectInfo = __InstantiateObject(name);
-
-		objectInfo.object->m_entity = entity;
-
-		for (Component *c : *e)
+		if (s && s->Load())
 		{
-			objectInfo.object->AddComponent(*c);
+
+			objectInfo = __InstantiateObject(name);
+
+			objectInfo.object->m_entity = entity;
+
+			if (!e->Instantiate(objectInfo.object))
+			{
+				FreeHandle(objectInfo.handle);
+				delete objectInfo.object;
+				objectInfo = { GameObjectHandle(), nullptr };
+			}
+			else
+			{
+
+				objectInfo.object->AddComponent(new BehaviourComponent(s));
+				__InitObject(objectInfo);
+
+			}
+
+		}
+		else
+		{
+
+			String error("Cannot load entity script ");
+			error += s->GetName();
+
+			RuntimeError(error);
+
 		}
 
-		objectInfo.object->AddComponent(BehaviourComponent(s));
+	}
+	else
+	{
 
-		__InitObject(objectInfo);
+		String error("Cannot load entity declaration ");
+		error += e->GetName();
+
+		RuntimeError(error);
 
 	}
 
@@ -97,13 +123,15 @@ GameObjectHandle GameObjectsManager::CreateEntity(const String &entity,
 // 	throw;
 // }
 
-void GameObjectsManager::Destroy(const GameObjectHandle &hObj)
+void GameObjectsManager::Destroy(const GameObjectHandle & hObj)
 {
 
 	GameObject *o = Get(hObj);
 
 	if (o)
 	{
+
+		o->OnDestruction();
 
 		String name = o->GetName();
 
@@ -133,7 +161,7 @@ void GameObjectsManager::Destroy(const GameObjectHandle &hObj)
 
 }
 
-GameObjectHandle GameObjectsManager::Find(const String &name)
+GameObjectHandle GameObjectsManager::Find(const String & name)
 {
 
 	auto eqr = m_namedObjects.equal_range(name);
@@ -147,7 +175,7 @@ GameObjectHandle GameObjectsManager::Find(const String &name)
 
 }
 
-void GameObjectsManager::Rename(const GameObjectHandle &hObj, const String &name)
+void GameObjectsManager::Rename(const GameObjectHandle & hObj, const String & name)
 {
 
 	GameObject *o = Get(hObj);
@@ -198,17 +226,23 @@ GameObjectsManager::Iterator GameObjectsManager::end(void)
 	return Iterator(this, &m_activeObjects, m_activeObjects.end());
 }
 
-ActiveGameObjectsIterator::ActiveGameObjectsIterator(GameObjectsManager *gom,
-													 std::list<GameObjectHandle> *list,
-													 const std::list<GameObjectHandle>::iterator &it) :
+ActiveGameObjectsIterator::ActiveGameObjectsIterator(GameObjectsManager * gom,
+													 std::list<GameObjectHandle> * list,
+													 const std::list<GameObjectHandle>::iterator & it) :
 	m_it(it),
 	m_list(list),
 	m_gom(gom)
 {
 
+
+	while (m_it != m_list->end() && m_gom->Get(*m_it) == nullptr)
+	{
+		m_it++;
+	};
+
 }
 
-ActiveGameObjectsIterator& ActiveGameObjectsIterator::operator++ (void)
+ActiveGameObjectsIterator & ActiveGameObjectsIterator::operator++ (void)
 {
 	
 	do 
@@ -220,7 +254,18 @@ ActiveGameObjectsIterator& ActiveGameObjectsIterator::operator++ (void)
 
 }
 
-bool ActiveGameObjectsIterator::operator != (const ActiveGameObjectsIterator& it) const
+ActiveGameObjectsIterator ActiveGameObjectsIterator::operator++ (int)
+{
+
+	ActiveGameObjectsIterator it = *this;
+
+	++(*this);
+
+	return it;
+
+}
+
+bool ActiveGameObjectsIterator::operator != (const ActiveGameObjectsIterator & it) const
 {
 	return it.m_it != m_it;
 }
@@ -230,7 +275,7 @@ GameObjectHandle ActiveGameObjectsIterator::operator* (void) const
 	return *m_it;
 }
 
-GameObjectsManager::__ObjectInfo GameObjectsManager::__InstantiateObject(const String &name)
+GameObjectsManager::__ObjectInfo GameObjectsManager::__InstantiateObject(const String & name)
 {
 
 	__ObjectInfo objectInfo;

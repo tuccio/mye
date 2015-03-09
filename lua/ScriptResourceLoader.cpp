@@ -1,10 +1,10 @@
 #include "ScriptResourceLoader.h"
+#include "Utils.h"
 
 using namespace mye::lua;
+using namespace mye::core;
 
-ScriptResourceLoader::ScriptResourceLoader(LuaModule &luaModule,
-										   const mye::core::String &name) :
-	BehaviourScript(luaModule, name)
+ScriptResourceLoader::ScriptResourceLoader(const mye::core::String &name)
 {
 }
 
@@ -13,22 +13,12 @@ ScriptResourceLoader::~ScriptResourceLoader(void)
 {
 }
 
-bool ScriptResourceLoader::Load(bool background)
-{
-	return BehaviourScript::Load(background);
-}
-
-void ScriptResourceLoader::Unload(bool background)
-{
-	BehaviourScript::Unload(background);
-}
-
 bool ScriptResourceLoader::Load(Resource *resource)
 {
-	return Call<bool, Resource*>("Load", resource);
+	return m_loader.Call<bool, Resource*>("Load", std::forward<Resource*>(resource));
 }
 
 void ScriptResourceLoader::Unload(Resource *resource)
 {
-	Call<void, Resource*>("Unload", resource);
+	m_loader.Call<void, Resource*>("Unload", std::forward<Resource*>(resource));
 }

@@ -5,11 +5,21 @@ using namespace mye::math;
 
 RenderComponent::RenderComponent(void) :
 	Component(ComponentTypes::RENDER, "render"),
-	m_visible(true),
+	m_visible(false),
 	m_bounds(AABB::FromMinMax(Vector3(0), Vector3(0))),
 	m_modelMatrix(1)
 {
-	m_material = { Vector4(1), 1, 0, 0 };
+}
+
+RenderComponent::RenderComponent(MeshPointer mesh, MaterialPointer material, const Matrix4 & modelMatrix) :
+	Component(ComponentTypes::RENDER, "render"),
+	m_visible(true),
+	m_material(material),
+	m_modelMatrix(modelMatrix)
+{
+
+	SetMesh(mesh);
+	
 }
 
 
@@ -39,7 +49,19 @@ mye::core::MeshPointer RenderComponent::GetMesh(void)
 
 void RenderComponent::SetMesh(MeshPointer mesh)
 {
+
 	m_mesh = mesh;
+
+	if (m_mesh && m_mesh->Load())
+	{
+		auto minmax = mesh->GetMinMaxVertices();
+		m_bounds = AABB::FromMinMax(minmax.first, minmax.second);
+	}
+	else
+	{
+		m_bounds = AABB::FromMinMax(Vector3(0), Vector3(0));
+	}
+
 }
 
 const mye::math::AABB& RenderComponent::GetBounds(void) const
@@ -52,17 +74,12 @@ void RenderComponent::SetBounds(const mye::math::AABB &bounds)
 	m_bounds = bounds;
 }
 
-Material*  RenderComponent::GetMaterialPointer(void)
-{
-	return &m_material;
-}
-
-const Material&  RenderComponent::GetMaterial(void) const
+MaterialPointer RenderComponent::GetMaterial(void) const
 {
 	return m_material;
 }
 
-void  RenderComponent::SetMaterial(const Material &material)
+void RenderComponent::SetMaterial(const MaterialPointer & material)
 {
 	m_material = material;
 }

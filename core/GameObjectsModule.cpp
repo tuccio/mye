@@ -7,13 +7,13 @@ using namespace mye::math;
 void GameObjectsModule::PostDestroy(GameObjectHandle hObj)
 {
 	m_destructionQueue.push_back(hObj);
-	Get(hObj)->m_delendum = true;
+	Get(hObj)->m_deleteFlag = true;
 }
 
 void GameObjectsModule::Update(void)
 {
 
-	for (Iterator it = begin(); it != end(); ++it)
+	/*for (Iterator it = begin(); it != end(); ++it)
 	{
 
 		GameObject *object = Get(*it);
@@ -32,7 +32,7 @@ void GameObjectsModule::Update(void)
 				MoveGameObject(*it, rc->GetBounds().TransformAffine(oldTransform));
 		}
 		
-	}
+	}*/
 
 // 	for (GameObjectHandle hObj : *this)
 // 	{

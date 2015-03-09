@@ -5,7 +5,7 @@
 #include "Parameters.h"
 
 #include <unordered_map>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #define MYE_DEFAULT_GROUP ""
 #define MYE_CONTAINS_PARAMETER(__PARAMSLIST, __PARAM) (__PARAMSLIST.find(__PARAM) != __PARAMSLIST.end())
@@ -36,26 +36,26 @@ namespace mye
 		public:
 
 			template <typename T, typename R>
-			inline static boost::shared_ptr<T> StaticCast(boost::shared_ptr<R> r)
+			inline static std::shared_ptr<T> StaticCast(std::shared_ptr<R> r)
 			{
-				return boost::static_pointer_cast<T, R>(r);
+				return std::static_pointer_cast<T, R>(r);
 			}
 
 			template <typename T, typename R>
-			inline static boost::shared_ptr<T> DynamicCast(boost::shared_ptr<R> r)
+			inline static std::shared_ptr<T> DynamicCast(std::shared_ptr<R> r)
 			{
-				return boost::dynamic_pointer_cast<T, R>(r);
+				return std::dynamic_pointer_cast<T, R>(r);
 			}
 
 			template <typename T, typename R>
-			inline static boost::shared_ptr<T> ReinterpretCast(boost::shared_ptr<R> r)
+			inline static std::shared_ptr<T> ReinterpretCast(std::shared_ptr<R> r)
 			{
-				return boost::reinterpret_pointer_cast<T, R>(r);
+				return std::reinterpret_pointer_cast<T, R>(r);
 			}
 
-			Resource(ResourceManager *owner,
-				const String &name,
-				ManualResourceLoader *manual);
+			Resource(ResourceManager * owner,
+					 const String & name,
+					 ManualResourceLoader * manual);
 
 			~Resource(void);
 
@@ -83,10 +83,11 @@ namespace mye
 
 			virtual size_t CalculateSizeImpl(void) = 0;
 
-			ResourceManager *m_owner;
+			ResourceManager      *m_owner;
 			ManualResourceLoader *m_manual;
 
-			ResourceLoadState m_loadingState;
+			ResourceLoadState     m_loadingState;
+
 			size_t m_size;
 
 			Parameters m_params;
@@ -94,7 +95,7 @@ namespace mye
 
 		};
 
-		typedef boost::shared_ptr<Resource> ResourcePointer;
+		typedef std::shared_ptr<Resource> ResourcePointer;
 
 	}
 

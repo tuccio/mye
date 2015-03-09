@@ -11,7 +11,7 @@ namespace mye
 		struct DefaultAllocator
 		{
 
-			static inline void* Allocate(size_t size)
+			static inline void * Allocate(size_t size)
 			{
 
 				void *p = malloc(size);
@@ -30,7 +30,7 @@ namespace mye
 				return malloc(size);
 			}
 
-			static inline void  Free(void *p)
+			static inline void Free(void *p)
 			{
 				free(p);
 			}

@@ -31,7 +31,7 @@ namespace mye
 			WinMouse* GetMouse(void);
 			const mye::core::Mouse* GetMouse(void) const;
 
-			void ResetDeltas(void);
+			void Postupdate(void);
 
 		private:
 

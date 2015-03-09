@@ -16,15 +16,19 @@ namespace mye
 			Camera(void);
 			~Camera(void);
 
-			void LookAt(const mye::math::Vector3 &position,
-				const mye::math::Vector3 &up,
-				const mye::math::Vector3 &target);
+			void LookAt(const mye::math::Vector3 & position,
+				const mye::math::Vector3 & up,
+				const mye::math::Vector3 & target);
 
 			mye::math::Quaternion GetOrientation(void) const;
 			void SetOrientation(const mye::math::Quaternion &orientation);
 
+			mye::math::Quaternion & Orientation(void);
+
 			mye::math::Vector3 GetPosition(void) const;
-			void SetPosition(const mye::math::Vector3 &position);
+			void SetPosition(const mye::math::Vector3 & position);
+
+			mye::math::Vector3 & Position(void);
 
 			void SetProjection(mye::math::Real fovy, mye::math::Real aspect, mye::math::Real zNear, mye::math::Real zFar);
 
@@ -62,11 +66,11 @@ namespace mye
 			inline mye::math::Matrix4 GetViewMatrix(void) const;
 			inline mye::math::Matrix4 GetProjectionMatrix(void) const;
 
-			inline const mye::math::Matrix4& GetViewMatrix(void);
-			inline const mye::math::Matrix4& GetProjectionMatrix(void);
+			inline const mye::math::Matrix4 & GetViewMatrix(void);
+			inline const mye::math::Matrix4 & GetProjectionMatrix(void);
 
-			inline mye::math::Frustum GetFrustum(void) const;
-			inline const mye::math::Frustum& GetFrustum(void);
+			inline mye::math::Frustum         GetFrustum(void) const;
+			inline const mye::math::Frustum & GetFrustum(void);
 
 			mye::math::Ray RayCast(const mye::math::Vector2 &screenCoords) const;
 

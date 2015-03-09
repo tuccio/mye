@@ -1,11 +1,15 @@
-function Init()
+local Sphere = { }
 
-	self.text2d.position = vec2i(8, 1120)
-	self.text2d.color    = vec4(0, 1, 0, 1)
+function Sphere:Init()
+
+	--self.text2d.position = vec2i(8, 1120)
+	--self.text2d.color    = vec4(0, 1, 0, 1)
 
 end
 
-function Update()
+function Sphere:Update()
+
+--[[
 
 	if (Input.keyboard:IsPressed(Keyboard.M)) then
 		self.render.matrix = Math.ScaleMatrix4(vec3(1.1)) * self.render.matrix
@@ -24,5 +28,9 @@ function Update()
 	end
 	
 	self.text2d.text = text
+	
+]]--
 
 end
+
+return Sphere

@@ -28,9 +28,9 @@ Camera::~Camera(void)
 
 /* View */
 
-void Camera::LookAt(const mye::math::Vector3 &position,
-			const mye::math::Vector3 &up,
-			const mye::math::Vector3 &target)
+void Camera::LookAt(const mye::math::Vector3 & position,
+					const mye::math::Vector3 & up,
+					const mye::math::Vector3 & target)
 {
 
 	Vector3 z = (target - position).Normalize();
@@ -57,11 +57,16 @@ Quaternion Camera::GetOrientation(void) const
 	return m_orientation;
 }
 
-void Camera::SetOrientation(const mye::math::Quaternion &direction)
+void Camera::SetOrientation(const mye::math::Quaternion & direction)
 {
 	m_orientation        = direction;
 	m_viewMatrixUptodate = false;
 	m_frustumUptodate    = false;
+}
+
+Quaternion & Camera::Orientation(void)
+{
+	return m_orientation;
 }
 
 Vector3 Camera::GetPosition(void) const
@@ -69,11 +74,16 @@ Vector3 Camera::GetPosition(void) const
 	return m_position;
 }
 
-void Camera::SetPosition(const mye::math::Vector3 &position)
+void Camera::SetPosition(const mye::math::Vector3 & position)
 {
 	m_position           = position;
 	m_viewMatrixUptodate = false;
 	m_frustumUptodate    = false;
+}
+
+Vector3 & Camera::Position(void)
+{
+	return m_position;
 }
 
 void Camera::Pitch(mye::math::Real angle)
@@ -216,14 +226,13 @@ mye::math::Real Camera::GetFovXRadians(void) const
 	return 2.0f * Arctangent(m_aspectRatio * Tangent(0.5f * m_fovY));
 }
 
-Ray Camera::RayCast(const mye::math::Vector2 &screenCoords) const
+Ray Camera::RayCast(const mye::math::Vector2 & screenCoords) const
 {
 
 	Matrix4 invViewProjMatrix = (GetProjectionMatrix() * GetViewMatrix()).Inverse();
 
-	Vector2 deviceCoords(
-		2 * screenCoords.x() - 1,
-		1 - 2 * screenCoords.y());
+	Vector2 deviceCoords(2 * screenCoords.x() - 1,
+						 1 - 2 * screenCoords.y());
 
 	Vector4 nearH = invViewProjMatrix * Vector4(deviceCoords.xy(), 0, 1);
 	Vector4 farH  = invViewProjMatrix * Vector4(deviceCoords.xy(), 1, 1);

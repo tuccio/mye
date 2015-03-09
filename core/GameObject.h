@@ -44,29 +44,26 @@ namespace mye
 			void AddListener(GameObjectListener *listener);
 			void RemoveListener(GameObjectListener *listener);
 
-			Component* AddComponent(const Component &component);
-			Component* GetComponent(const String &name);
-			void       RemoveComponent(const String &name);
+			Component * AddComponent(const Component &component);
+			Component * AddComponent(Component * component);
 
-			inline TransformComponent* GetTransformComponent(void);
-			inline RenderComponent*    GetRenderComponent(void);
-			inline CameraComponent*    GetCameraComponent(void);
-			inline BehaviourComponent* GetBehaviourComponent(void);
-			inline RigidBodyComponent* GetRigidBodyComponent(void);
-			inline Text2DComponent*    GetText2DComponent(void);
-			inline LightComponent*     GetLightComponent(void);
+			Component * GetComponent(const String &name);
+			     void   RemoveComponent(const String &name);
 
-			inline mye::math::AABBf    GetAABB(void);
+			inline TransformComponent * GetTransformComponent(void);
+			inline    RenderComponent * GetRenderComponent(void);
+			inline    CameraComponent * GetCameraComponent(void);
+			inline BehaviourComponent * GetBehaviourComponent(void);
+			inline RigidBodyComponent * GetRigidBodyComponent(void);
+			inline    Text2DComponent * GetText2DComponent(void);
+			inline     LightComponent * GetLightComponent(void);
 
-			inline GameObjectsManager* GetOwner(void);
-			inline GameObjectHandle    GetHandle(void);
+			inline    mye::math::AABB   GetAABB(void);
 
-			inline const String&       GetEntityType(void) const;
+			inline GameObjectsManager * GetOwner(void);
+			inline   GameObjectHandle   GetHandle(void);
 
-			/* Script Callbacks */
-
-			void Init(void);
-			void Update(void);
+			inline       const String & GetEntityType(void) const;
 
 			void Clear(void);
 
@@ -78,24 +75,23 @@ namespace mye
 			friend class GameObjectsManager;
 			friend class GameObjectsModule;
 
-			void OnCreation(GameObjectsManager *owner,
-				const GameObjectHandle &handle);
+			void OnCreation(GameObjectsManager * owner, const GameObjectHandle & handle);
 
 			void OnDestruction(void);
+			
+			    ComponentsList   m_components;
 
-			ComponentsList      m_components;
+			  GameObjectHandle   m_handle;
+			GameObjectsManager * m_owner;
 
-			GameObjectHandle    m_handle;
-			GameObjectsManager *m_owner;
-
-			TransformComponent  m_transform;
-			BehaviourComponent *m_behaviour;
+			TransformComponent   m_transform;
+			BehaviourComponent * m_behaviour;
 
 			String m_entity;
-
-			bool m_delendum : 1;
-
 			std::list<GameObjectListener*> m_listeners;
+
+			bool m_deleteFlag : 1;
+
 
 		};
 

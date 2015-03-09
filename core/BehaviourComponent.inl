@@ -9,8 +9,6 @@ namespace mye
 			return m_script;
 		}
 
-		
-
 	}
 
 }

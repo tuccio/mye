@@ -24,14 +24,14 @@ namespace mye
 
 		public:
 
-			MotionState(RigidBodyComponent *rb);
+			MotionState(RigidBodyComponent * rb);
 
-			void getWorldTransform(btTransform& worldTrans) const;
-			void setWorldTransform(const btTransform& worldTrans);
+			void getWorldTransform(btTransform & worldTrans) const;
+			void setWorldTransform(const btTransform & worldTrans);
 
 		private:
 
-			RigidBodyComponent *m_rigidbody;
+			RigidBodyComponent * m_rigidbody;
 
 		};
 
@@ -47,43 +47,44 @@ namespace mye
 
 			RigidBodyComponent(void);
 
-			RigidBodyComponent(
-				BulletCollisionShapePointer shape,
-				mye::math::Real mass);
+			RigidBodyComponent(BulletCollisionShapePointer shape,
+							   mye::math::Real mass);
 
-			RigidBodyComponent(
-				BulletCollisionShapePointer shape,
-				mye::math::Real mass,
-				const mye::math::Vector3 &position,
-				const mye::math::Quaternion &orientation);
+			RigidBodyComponent(BulletCollisionShapePointer shape,
+							   mye::math::Real mass,
+							   const mye::math::Vector3 & position,
+							   const mye::math::Quaternion & orientation);
 
 			//RigidBodyComponent(const RigidBodyComponent &rb);
 
 			~RigidBodyComponent(void);
 
 			mye::math::Vector3 GetVelocity(void) const;
-			void SetVelocity(const mye::math::Vector3 &v);
+			void SetVelocity(const mye::math::Vector3 & v);
 
 			mye::math::Vector3 GetPosition(void) const;
-			void SetPosition(const mye::math::Vector3 &v);
+			void SetPosition(const mye::math::Vector3 & v);
 
 			mye::math::Quaternion GetOrientation(void) const;
-			void SetOrientation(const mye::math::Quaternion &v);
+			void SetOrientation(const mye::math::Quaternion & v);
 
 			mye::math::Real GetMass(void) const;
-			void SetMass(const mye::math::Real &mass);
+			void SetMass(const mye::math::Real & mass);
 
 			BulletCollisionShapePointer GetCollisionShape(void) const;
 			void SetCollisionShape(BulletCollisionShapePointer shape);
 
 			mye::math::Matrix4 GetWorldMatrix(void) const;
 
-			RigidBodyComponent* Clone(void) const;
+			void ApplyForce(const mye::math::Vector3 & f);
+			void ApplyImpulse(const mye::math::Vector3 & f);
 
-			void OnAttach(GameObject *go);
+			RigidBodyComponent * Clone(void) const;
+
+			void OnAttach(GameObject * go);
 			void OnDetach(void);
 
-			btRigidBody* GetRigidBody(void);
+			btRigidBody * GetRigidBody(void);
 
 		private:
 

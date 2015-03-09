@@ -2,6 +2,7 @@
 #include "DX11VertexShader.h"
 #include "DX11PixelShader.h"
 
+#include <mye/core/Debug.h>
 #include <mye/core/Utils.h>
 
 using namespace mye::dx11;

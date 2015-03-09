@@ -16,15 +16,16 @@ namespace mye
 
 		public:
 
-			virtual bool HasKeyboard(void) const;
-			virtual Keyboard* GetKeyboard(void);
-			virtual const Keyboard* GetKeyboard(void) const;
+			virtual           bool   HasKeyboard(void) const;
 
-			virtual bool HasMouse(void) const;
-			virtual Mouse* GetMouse(void);
-			virtual const Mouse* GetMouse(void) const;
+			virtual       Keyboard * GetKeyboard(void);
+			virtual const Keyboard * GetKeyboard(void) const;
 
-			virtual void ResetDeltas(void);
+			virtual           bool   HasMouse(void) const;
+			virtual          Mouse * GetMouse(void);
+			virtual    const Mouse * GetMouse(void) const;
+
+			virtual           void   Postupdate(void);
 
 		};
 

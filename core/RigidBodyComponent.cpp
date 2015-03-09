@@ -17,7 +17,7 @@ RigidBodyComponent::RigidBodyComponent(void) :
 }
 
 RigidBodyComponent::RigidBodyComponent(BulletCollisionShapePointer shape,
-	mye::math::Real mass) :
+									   mye::math::Real mass) :
 	Component(ComponentTypes::RIGIDBODY, "rigidbody"),
 	m_shape(shape),
 	m_motionState(this),
@@ -29,11 +29,10 @@ RigidBodyComponent::RigidBodyComponent(BulletCollisionShapePointer shape,
 
 }
 
-RigidBodyComponent::RigidBodyComponent(
-	BulletCollisionShapePointer shape,
-	mye::math::Real mass,
-	const Vector3 &position,
-	const Quaternion &orientation) :
+RigidBodyComponent::RigidBodyComponent(BulletCollisionShapePointer shape,
+									   mye::math::Real mass,
+									   const Vector3 &position,
+									   const Quaternion &orientation) :
 	Component(ComponentTypes::RIGIDBODY, "rigidbody"),
 	m_shape(shape),
 	m_motionState(this),
@@ -55,10 +54,10 @@ RigidBodyComponent::~RigidBodyComponent(void)
 
 }
 
-RigidBodyComponent* RigidBodyComponent::Clone(void) const
+RigidBodyComponent * RigidBodyComponent::Clone(void) const
 {
 
-	RigidBodyComponent *rb = new RigidBodyComponent(m_shape, GetMass());
+	RigidBodyComponent * rb = new RigidBodyComponent(m_shape, GetMass());
 
 	if (m_owner)
 	{
@@ -73,7 +72,7 @@ RigidBodyComponent* RigidBodyComponent::Clone(void) const
 
 }
 
-void RigidBodyComponent::OnAttach(GameObject *go)
+void RigidBodyComponent::OnAttach(GameObject * go)
 {
 
 	Component::OnAttach(go);
@@ -98,7 +97,7 @@ mye::math::Vector3 RigidBodyComponent::GetVelocity(void) const
 	return mye::math::Vector3(v.x(), v.y(), v.z());
 }
 
-void RigidBodyComponent::SetVelocity(const mye::math::Vector3 &v)
+void RigidBodyComponent::SetVelocity(const mye::math::Vector3 & v)
 {
 	m_rigidbody.setLinearVelocity(btVector3(v.x(), v.y(), v.z()));
 }
@@ -115,7 +114,7 @@ mye::math::Vector3 RigidBodyComponent::GetPosition(void) const
 
 }
 
-void RigidBodyComponent::SetPosition(const mye::math::Vector3 &x)
+void RigidBodyComponent::SetPosition(const mye::math::Vector3 & x)
 {
 	
 	btTransform t;
@@ -168,7 +167,7 @@ void RigidBodyComponent::SetCollisionShape(BulletCollisionShapePointer shape)
 
 	shape->Load();
 	m_rigidbody.setCollisionShape(shape.get()->GetShape());
-
+	
 }
 
 mye::math::Matrix4 RigidBodyComponent::GetWorldMatrix(void) const
@@ -185,6 +184,16 @@ mye::math::Matrix4 RigidBodyComponent::GetWorldMatrix(void) const
 
 }
 
+void RigidBodyComponent::ApplyForce(const mye::math::Vector3 & f)
+{
+	m_rigidbody.applyCentralForce(btVector3(f.x(), f.y(), f.z()));
+}
+
+void RigidBodyComponent::ApplyImpulse(const mye::math::Vector3 & f)
+{
+	m_rigidbody.applyCentralImpulse(btVector3(f.x(), f.y(), f.z()));
+}
+
 btRigidBody* RigidBodyComponent::GetRigidBody(void)
 {
 	return &m_rigidbody;
@@ -192,13 +201,13 @@ btRigidBody* RigidBodyComponent::GetRigidBody(void)
 
 /* MotionState updates the Transform Component (used for culling and rendering */
 
-MotionState::MotionState(RigidBodyComponent *rb) :
+MotionState::MotionState(RigidBodyComponent * rb) :
 	m_rigidbody(rb)
 {
 
 }
 
-void MotionState::getWorldTransform(btTransform& world) const
+void MotionState::getWorldTransform(btTransform & world) const
 {
 
 	if (m_rigidbody->m_owner)
@@ -224,16 +233,16 @@ void MotionState::getWorldTransform(btTransform& world) const
 
 }
 
-void MotionState::setWorldTransform(const btTransform& world)
+void MotionState::setWorldTransform(const btTransform & world)
 {
 
 	if (m_rigidbody->m_owner)
 	{
 
-		auto *tc = m_rigidbody->m_owner->GetTransformComponent();
+		auto * tc = m_rigidbody->m_owner->GetTransformComponent();
 
-		const btVector3    &btPosition = world.getOrigin();
-		const btQuaternion &btOrientation = world.getRotation();
+		const btVector3    & btPosition    = world.getOrigin();
+		const btQuaternion & btOrientation = world.getRotation();
 
 		tc->SetPosition(mye::math::Vector3(btPosition.x(), btPosition.y(), btPosition.z()));
 		tc->SetOrientation(mye::math::Quaternion(btOrientation.w(), btOrientation.x(), btOrientation.y(), btOrientation.z()));

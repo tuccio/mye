@@ -4,42 +4,42 @@ namespace mye
 	namespace core
 	{
 
-		TransformComponent* GameObject::GetTransformComponent(void)
+		TransformComponent * GameObject::GetTransformComponent(void)
 		{
 			return &m_transform;
 		}
 
-		BehaviourComponent* GameObject::GetBehaviourComponent(void)
+		BehaviourComponent * GameObject::GetBehaviourComponent(void)
 		{
 			return m_behaviour;
 		}
 
-		RigidBodyComponent* GameObject::GetRigidBodyComponent(void)
+		RigidBodyComponent * GameObject::GetRigidBodyComponent(void)
 		{
 			return static_cast<RigidBodyComponent*>(GetComponent("rigidbody"));
 		}
 
-		RenderComponent* GameObject::GetRenderComponent(void)
+		RenderComponent * GameObject::GetRenderComponent(void)
 		{
 			return static_cast<RenderComponent*>(GetComponent("render"));
 		}
 
-		Text2DComponent* GameObject::GetText2DComponent(void)
+		Text2DComponent * GameObject::GetText2DComponent(void)
 		{
 			return static_cast<Text2DComponent*>(GetComponent("text2d"));
 		}
 
-		CameraComponent* GameObject::GetCameraComponent(void)
+		CameraComponent * GameObject::GetCameraComponent(void)
 		{
 			return static_cast<CameraComponent*>(GetComponent("camera"));
 		}
 
-		LightComponent* GameObject::GetLightComponent(void)
+		LightComponent * GameObject::GetLightComponent(void)
 		{
 			return static_cast<LightComponent*>(GetComponent("light"));
 		}
 
-		GameObjectsManager* GameObject::GetOwner(void)
+		GameObjectsManager * GameObject::GetOwner(void)
 		{
 			return m_owner;
 		}
@@ -49,7 +49,7 @@ namespace mye
 			return m_handle;
 		}
 
-		const String& GameObject::GetEntityType(void) const
+		const String & GameObject::GetEntityType(void) const
 		{
 			return m_entity;
 		}

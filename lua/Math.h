@@ -1,6 +1,6 @@
 #pragma once
 
-#include "LuaModule.h"
+#include <lua++11/lua++11.h>
 
 namespace mye
 {
@@ -8,7 +8,7 @@ namespace mye
 	namespace lua
 	{
 
-		void BindMath(lua_State *L);
+		void BindMath(luapp11::State state);
 
 	}
 

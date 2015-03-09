@@ -1,0 +1,25 @@
+entity Test
+{
+
+	vec2  v2(0, 1);
+	vec2i v2i(0, 1);
+	
+	vec3  v3(0, 1, 2);
+	vec3i v3i(0, 1, 2);
+	
+	vec4  v4(0, 1, 2, 3);
+	vec4i v4i(0, 1, 2, 3);
+	
+	quaternion q(1, 0, 0, 0);
+	
+	GameObject o;
+	
+	string label = 'test';
+	
+	bool t = true;
+	bool f = false;
+	
+	int  leet = 1337;
+	real pi   = 3.14159265359;
+	
+};

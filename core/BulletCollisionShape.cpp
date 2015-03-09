@@ -120,19 +120,19 @@ void BulletCollisionShape::Clear(void)
 /* Manager */
 
 BulletCollisionShapeManager::BulletCollisionShapeManager(void) :
-	ResourceManager("BulletCollisionShape")
+	ResourceManager("CollisionShape")
 {
 
 }
 
-BulletCollisionShape* BulletCollisionShapeManager::CreateImpl(const String &name,
-								 ManualResourceLoader *manual,
-								 const Parameters &params)
+BulletCollisionShape * BulletCollisionShapeManager::CreateImpl(const String & name,
+															   ManualResourceLoader * manual,
+															   const Parameters & params)
 {
 	return new BulletCollisionShape(this, name, manual);
 }
 
- void BulletCollisionShapeManager::FreeImpl(Resource* resource)
+ void BulletCollisionShapeManager::FreeImpl(Resource * resource)
  {
 	 static_cast<BulletCollisionShape*>(resource)->Clear();
  }

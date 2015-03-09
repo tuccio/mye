@@ -1,6 +1,6 @@
 entity DeveloperConsole
 {
 	
-	bool consoleMode(false);
+	bool consoleMode = false;
 	
-}
+};

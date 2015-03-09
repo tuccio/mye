@@ -20,6 +20,8 @@ namespace mye
 		public:
 
 			Logger(void);
+			Logger(const char *events, const char *errors);
+
 			~Logger(void);
 
 			void OpenEventLogFile(const String &file);

@@ -191,7 +191,7 @@ namespace mye
 
 		template <typename T>
 		void FrustumTempl<T>::TransformAffine(Volume &volume,
-			const Matrix<T, 4, 4> &t) const
+											  const Matrix<T, 4, 4> &t) const
 		{
 
 			FrustumTempl<T> &f = static_cast<FrustumTempl<T>&>(volume);

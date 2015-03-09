@@ -3,21 +3,19 @@
 #include "Scripting.h"
 #include "Types.h"
 #include "Converters.h"
-#include "Alignment.h"
 
 #include <mye/core/Game.h>
 #include <mye/core/Resource.h>
 #include <mye/core/ResourceTypeManager.h>
 
-#include <luabind/luabind.hpp>
-
 #include "Game.h"
 #include "LuaModule.h"
 #include "GameObjectHandle.h"
 
-using namespace luabind;
 using namespace mye::core;
 using namespace mye::lua;
+
+using namespace luapp11;
 
 namespace mye
 {
@@ -38,10 +36,31 @@ namespace mye
 
 		}
 
-		void BindScripts(lua_State *L)
+		void BindScripts(State state)
 		{
 
-			module(L)
+			state
+			[
+
+				Function("ReloadScript", &__script_reload),
+
+				Class<LuaModule>(MYE_LUA_LUAMODULE).
+
+					Function("LoadBehaviour",            &LuaModule::LoadBehaviour).
+					Function("LoadProcedure",            &LuaModule::LoadProcedure).
+					Function("LoadScriptResourceLoader", &LuaModule::LoadScriptResourceLoader),
+
+				Class<Script, mye::core::Resource>(MYE_LUA_SCRIPT),
+
+				//Class<BehaviourScript, Script>(MYE_LUA_BEHAVIOURSCRIPT),
+
+				Class<ProcedureScript, Script>(MYE_LUA_PROCEDURESCRIPT).
+
+					Function("Run", &ProcedureScript::Run)
+
+			];
+
+			/*module(L)
 			[
 
 				def("ReloadScript", &__script_reload),
@@ -60,7 +79,7 @@ namespace mye
 
 					def("Run", &ProcedureScript::Run)				
 
-			];
+			];*/
 
 		}
 

@@ -21,27 +21,26 @@ namespace mye
 
 		public:
 
-			Component(ComponentTypes type,
-				const String &name);
+			Component(ComponentTypes type, const String & name);
 
 			virtual ~Component(void) = 0;
 
 			ComponentTypes GetComponentType(void) const;
 
-			inline GameObject* GetOwner(void)
+			inline GameObject * GetOwner(void)
 			{
 				return m_owner;
 			}
 
-			virtual void OnAttach(GameObject *gameObject);
+			virtual void OnAttach(GameObject * gameObject);
 			virtual void OnDetach(void);
 
 		protected:
 
-			//friend class GameObject;
+			friend class GameObject;
 
-			ComponentTypes m_type;
-			GameObject *m_owner;
+			ComponentTypes   m_type;
+			GameObject     * m_owner;
 
 		};
 	}

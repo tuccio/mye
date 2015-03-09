@@ -14,15 +14,15 @@ namespace mye
 		public:
 
 			INamedObject(void);
-			INamedObject(const String &name);
+			INamedObject(const String & name);
 
 			~INamedObject(void);
 
-			const String& GetName(void) const;
+			const String & GetName(void) const;
 
 		protected:
 
-			void SetName(const String &name);
+			void SetName(const String & name);
 			String m_name;			
 
 		};

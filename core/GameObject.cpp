@@ -33,10 +33,10 @@ GameObject::~GameObject(void)
 
 /* Components */
 
-Component* GameObject::AddComponent(const Component &component)
+Component * GameObject::AddComponent(const Component & component)
 {
 
-	Component *result;
+	Component * result;
 
 	auto it = m_components.find(component.GetName());
 
@@ -87,7 +87,67 @@ Component* GameObject::AddComponent(const Component &component)
 
 }
 
-Component* GameObject::GetComponent(const String &name)
+Component * GameObject::AddComponent(Component * component)
+{
+
+	Component * result;
+
+	auto it = m_components.find(component->GetName());
+
+	if (it != m_components.end() && it->second != nullptr)
+	{
+
+		if (component->GetComponentType() == ComponentTypes::TRANSFORM)
+		{
+			m_transform = static_cast<const TransformComponent &>(*component);
+			m_transform.OnAttach(this);
+			result = &m_transform;
+			delete component;
+		}
+		else
+		{
+			result = nullptr;
+		}
+
+	}
+	else
+	{
+
+		ComponentTypes componentType = component->GetComponentType();
+
+		Component * newComponent = component;
+		m_components[newComponent->GetName()] = newComponent;
+
+		if (newComponent->GetOwner())
+		{
+			newComponent->OnDetach();
+		}
+
+		newComponent->OnAttach(this);
+
+		switch (componentType)
+		{
+
+		case ComponentTypes::BEHAVIOUR:
+			m_behaviour = static_cast<BehaviourComponent *>(newComponent);
+			break;
+
+		}
+
+		for (auto listener : m_listeners)
+		{
+			listener->OnComponentAddition(this, newComponent);
+		}
+
+		result = newComponent;
+
+	}
+
+	return result;
+
+}
+
+Component * GameObject::GetComponent(const String & name)
 {
 
 	auto it = m_components.find(name);
@@ -103,7 +163,7 @@ Component* GameObject::GetComponent(const String &name)
 
 }
 
-void GameObject::RemoveComponent(const String &name)
+void GameObject::RemoveComponent(const String & name)
 {
 
 	auto it = m_components.find(name);
@@ -140,14 +200,14 @@ void GameObject::RemoveComponent(const String &name)
 void GameObject::Clear(void)
 {
 
-	int n = m_components.size();
+	/*int n = m_components.size();
 
 	std::vector<ComponentTypes> componentTypes(n);
 	std::vector<String> componentNames(n);
 
 	for (int i = 0; i < m_components.size(); i++)
 	{
-	componentNames[i] = m_components[i]->GetName();
+		componentNames[i] = m_components[i]->GetName();
 		componentTypes[i] = m_components[i]->GetComponentType();
 	}
 
@@ -159,6 +219,23 @@ void GameObject::Clear(void)
 			RemoveComponent(componentNames[i]);
 		}
 
+	}*/
+
+	std::vector<String> components;
+
+	for (auto p : m_components)
+	{
+
+		if (p.second->GetComponentType() != ComponentTypes::TRANSFORM)
+		{
+			components.push_back(p.first);
+		}
+
+	}
+
+	for (auto & c : components)
+	{
+		RemoveComponent(c);
 	}
 
 	m_owner = nullptr;
@@ -168,16 +245,16 @@ void GameObject::Clear(void)
 
 }
 
-void GameObject::OnCreation(GameObjectsManager *owner,
-							const GameObjectHandle &handle)
+void GameObject::OnCreation(GameObjectsManager * owner,
+							const GameObjectHandle & handle)
 {
 
 	m_owner    = owner;
 	m_handle   = handle;
 
-	m_delendum = false;
+	m_deleteFlag = false;
 
-	Init();
+	Game::GetSingleton().GetScriptModule()->Init(m_handle);
 
 	for (auto listener : m_listeners)
 	{
@@ -189,6 +266,8 @@ void GameObject::OnCreation(GameObjectsManager *owner,
 void GameObject::OnDestruction(void)
 {
 
+	Game::GetSingleton().GetScriptModule()->Finalize(m_handle);
+
 	for (auto listener : m_listeners)
 	{
 		listener->OnGameObjectDestruction(this);
@@ -198,32 +277,12 @@ void GameObject::OnDestruction(void)
 
 }
 
-void GameObject::Init(void)
-{
-
-	if (m_behaviour)
-	{
-		m_behaviour->Init();
-	}
-
-}
-
-void GameObject::Update(void)
-{
-
-	if (m_behaviour)
-	{
-		m_behaviour->Update();
-	}
-
-}
-
-void GameObject::AddListener(GameObjectListener *listener)
+void GameObject::AddListener(GameObjectListener * listener)
 {
 	m_listeners.push_back(listener);
 }
 
-void GameObject::RemoveListener(GameObjectListener *listener)
+void GameObject::RemoveListener(GameObjectListener * listener)
 {
 
 	std::remove(m_listeners.begin(), m_listeners.end(), listener);

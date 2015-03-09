@@ -14,7 +14,7 @@ String::String(void)
 	m_size   = 0;
 }
 
-String::String(String &&string) :
+String::String(String && string) :
 	m_string(string.m_string),
 	m_length(string.m_length),
 	m_size(string.m_size)
@@ -32,7 +32,7 @@ String::String(size_t length) :
 	Resize(length);
 }
 
-String::String(const char *string) :
+String::String(const char * string) :
 	m_string(nullptr),
 	m_length(0),
 	m_size(0)
@@ -48,7 +48,7 @@ String::String(const char *string) :
 	
 }
 
-String::String(const String &string) :
+String::String(const String & string) :
 	m_length(string.m_length)
 {
 

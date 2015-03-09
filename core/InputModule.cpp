@@ -32,15 +32,23 @@ const Mouse* InputModule::GetMouse(void) const
 	return nullptr;
 }
 
-void InputModule::ResetDeltas(void)
+void InputModule::Postupdate(void)
 {
 
-	Mouse *mouse = GetMouse();
+	Keyboard * keyboard = GetKeyboard();
+
+	if (keyboard)
+	{
+		keyboard->NotifyHeldKeys();
+	}
+
+	Mouse * mouse = GetMouse();
 
 	if (mouse)
 	{
 		mouse->ResetDelta();
 		mouse->SetWheelDelta(0);
+		keyboard->NotifyHeldKeys();
 	}
 
 }

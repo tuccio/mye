@@ -15,13 +15,14 @@ namespace mye
 
 		public:
 
-			WinGame(mye::core::InputModule *input,
-				mye::core::GameObjectsModule *gameobjects,
-				mye::core::SceneModule *scene,
-				mye::core::PhysicsModule *physics,
-				mye::core::GraphicsModule *graphics,
-				mye::core::AudioModule *audio,
-				mye::core::ScriptModule *script);
+			WinGame(
+				mye::core::InputModule       * input,
+				mye::core::GameObjectsModule * gameobjects,
+				mye::core::SceneModule       * scene,
+				mye::core::PhysicsModule     * physics,
+				mye::core::GraphicsModule    * graphics,
+				mye::core::AudioModule       * audio,
+				mye::core::ScriptModule      * script);
 
 			~WinGame(void);
 

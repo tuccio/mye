@@ -4,7 +4,7 @@ namespace mye
 	namespace core
 	{
 
-		boost::shared_ptr<Resource> ResourceManager::CreateResource(const String &name,
+		std::shared_ptr<Resource> ResourceManager::CreateResource(const String &name,
 			ManualResourceLoader *manual,
 			const Parameters &params)
 		{
@@ -12,7 +12,7 @@ namespace mye
 		}
 
 		template <typename ResourceType>
-		boost::shared_ptr<ResourceType> ResourceManager::CreateResource(const String &name,
+		std::shared_ptr<ResourceType> ResourceManager::CreateResource(const String &name,
 			ManualResourceLoader *manual,
 			const Parameters &params)
 		{
@@ -23,27 +23,27 @@ namespace mye
 
 			if (it != m_resources.end())
 			{
-				return boost::static_pointer_cast<ResourceType>(it->second);
+				return Resource::StaticCast<ResourceType>(it->second);
 			}
 
-			Resource *r = CreateImpl(name, manual, params);
+			Resource * r = CreateImpl(name, manual, params);
 			r->SetParametersList(params);
 
 			auto it2 = m_resources.insert(std::pair<String, ResourcePointer>(name, ResourcePointer(r)));
 			
 			Unlock();
 
-			return boost::static_pointer_cast<ResourceType>(it2.first->second);
+			return Resource::StaticCast<ResourceType>(it2.first->second);
 
 		}
 
-		boost::shared_ptr<Resource> ResourceManager::GetResource(const String &name)
+		std::shared_ptr<Resource> ResourceManager::GetResource(const String &name)
 		{
 			return GetResource<Resource>(name);
 		}
 
 		template <typename ResourceType>
-		boost::shared_ptr<ResourceType> ResourceManager::GetResource(const String &name)
+		std::shared_ptr<ResourceType> ResourceManager::GetResource(const String &name)
 		{
 
 			Lock();
@@ -56,7 +56,7 @@ namespace mye
 
 			Unlock();
 
-			return boost::static_pointer_cast<ResourceType>(r);
+			return Resource::StaticCast<ResourceType>(r);
 
 		}
 

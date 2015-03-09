@@ -22,7 +22,7 @@ namespace mye
 
 		};
 
-		typedef boost::shared_ptr<GPUBuffer> GPUBufferPointer;
+		typedef std::shared_ptr<GPUBuffer> GPUBufferPointer;
 
 	}
 

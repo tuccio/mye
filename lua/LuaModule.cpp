@@ -1,7 +1,6 @@
 #include "LuaModule.h"
 
 #include "Converters.h"
-#include "Alignment.h"
 #include "Math.h"
 #include "Scene.h"
 #include "Physics.h"
@@ -19,8 +18,8 @@ using namespace mye::lua;
 using namespace mye::core;
 
 LuaModule::LuaModule(const mye::core::String &folder) :
-	m_scriptDirectory(folder),
-	mye::core::ResourceManager("LuaScript")
+m_scriptDirectory(folder),
+mye::core::ResourceManager("Script")
 {
 }
 
@@ -29,42 +28,24 @@ LuaModule::~LuaModule(void)
 {
 }
 
-lua_State* LuaModule::GetLuaState(void)
+lua_State * LuaModule::GetLuaState(void)
 {
-	return m_lua;
+	return m_state.GetState();
 }
 
-const mye::core::String& LuaModule::GetScriptDirectory(void) const
+const mye::core::String & LuaModule::GetScriptDirectory(void) const
 {
 	return m_scriptDirectory;
 }
 
 bool LuaModule::RunFile(const String &file)
 {
-
-	if (luaL_loadfile(m_lua, file.CString()) ||
-		lua_pcall(m_lua, 0, 0, 0))
-	{
-		m_lastError = lua_tostring(m_lua, -1);
-		return false;
-	}
-
-	return true;
-
+	return m_state.RunFile(file.CString());
 }
 
 bool LuaModule::RunString(const String &code)
 {
-
-	if (luaL_loadstring(m_lua, code.CString()) ||
-		lua_pcall(m_lua, 0, 0, 0))
-	{
-		m_lastError = lua_tostring(m_lua, -1);
-		return false;
-	}
-
-	return true;
-
+	return m_state.RunCode(code.CString());
 }
 
 String LuaModule::GetLastError(void) const
@@ -75,41 +56,41 @@ String LuaModule::GetLastError(void) const
 void LuaModule::OpenAllLibraries(void)
 {
 
-	luaL_openlibs(m_lua);
-	luabind::open(m_lua);
+	m_state.OpenLibraries();
 
-
-	BindResources(m_lua);
-	BindMath(m_lua);
-	BindScene(m_lua);
-	BindPhysics(m_lua);
-	BindGame(m_lua);	
+	BindResources(m_state);
+	BindMath(m_state);
+	BindScene(m_state);
+	BindPhysics(m_state);
+	BindGame(m_state);
 
 }
 
 bool LuaModule::Init(void)
 {
 
-	m_lua = luaL_newstate();
+	m_state.Create();
 	OpenAllLibraries();
 
-	OverloadLuabindMetamethod(m_lua, "__index", &IndexOverload);
-	OverloadLuabindMetamethod(m_lua, "__newindex", &NewIndexOverload);
+	/*OverloadLuabindMetamethod(m_lua, "__index", &IndexOverload);
+	OverloadLuabindMetamethod(m_lua, "__newindex", &NewIndexOverload);*/
 
-	Game &game = Game::GetSingleton();
+	Game * game = Game::GetSingletonPointer();
 
-	luabind::globals(m_lua)["Game"]        = boost::ref(game);
-	luabind::globals(m_lua)["GameObjects"] = boost::ref(*game.GetGameObjectsModule());
-	luabind::globals(m_lua)["Script"]      = boost::ref(*this);
-	luabind::globals(m_lua)["Input"]       = boost::ref(*game.GetInputModule());
-	luabind::globals(m_lua)["Graphics"]    = boost::ref(*game.GetGraphicsModule());
-	luabind::globals(m_lua)["Physics"]     = boost::ref(*game.GetPhysicsModule());
-	luabind::globals(m_lua)["Scene"]       = boost::ref(*game.GetSceneModule());
+	auto globals = m_state.GetGlobalTable();;
 
-	luabind::globals(m_lua)["Time"]                = luabind::newtable(m_lua);
-	luabind::globals(m_lua)["ResourceTypeManager"] = boost::ref(ResourceTypeManager::GetSingleton());
+	globals["Game"]        = game;
+	globals["GameObjects"] = game->GetGameObjectsModule();
+	globals["Script"]      = this;
+	globals["Input"]       = game->GetInputModule();
+	globals["Graphics"]    = game->GetGraphicsModule();
+	globals["Physics"]     = game->GetPhysicsModule();
+	globals["Scene"]       = game->GetSceneModule();
 
-	luaL_dostring(m_lua, "math.randomseed(os.time())");
+	//globals["Time"]                = luabind::newtable(m_lua);
+	globals["ResourceTypeManager"] = ResourceTypeManager::GetSingletonPointer();
+
+	m_state.RunCode("math.randomseed(os.time())");
 
 	return true;
 
@@ -117,20 +98,192 @@ bool LuaModule::Init(void)
 
 void LuaModule::ShutDown(void)
 {
-	lua_close(m_lua);
+	m_state.Destroy();
 }
 
 void LuaModule::Preupdate(FloatSeconds dt)
 {
 
-	luabind::globals(m_lua)["Time"]["delta"] = luabind::object(m_lua, (float) dt);
+	//luabind::globals(m_lua)["Time"]["delta"] = luabind::object(m_lua, (float) dt);
+
+	//m_state.GetGlobalTable()["Time"]["delta"] = (float) dt;
+
+	for (auto msg : m_messages)
+	{
+		
+		switch (msg.message)
+		{
+
+		case SCRIPT_MESSAGE_KEYBOARD_PRESSED:
+
+			{
+
+				luapp11::Object o(m_state, msg.hObj);
+				KeyboardVK key = static_cast<KeyboardVK>(msg.code);
+
+				try
+				{
+					o.Call<void>("OnKeyboardKeyPress", std::forward<KeyboardVK>(key));
+				}
+				catch (...) { }
+
+			}
+
+			break;
+
+		case SCRIPT_MESSAGE_KEYBOARD_RELEASED:
+
+			{
+
+				luapp11::Object o(m_state, msg.hObj);
+				KeyboardVK key = static_cast<KeyboardVK>(msg.code);
+
+				try
+				{
+					o.Call<void>("OnKeyboardKeyRelease", std::forward<KeyboardVK>(key), std::forward<float>(msg.data.f));
+				}
+				catch (...) { }
+
+			}
+
+			break;
+
+		case SCRIPT_MESSAGE_KEYBOARD_HELD:
+
+		{
+
+			luapp11::Object o(m_state, msg.hObj);
+			KeyboardVK key = static_cast<KeyboardVK>(msg.code);
+
+			try
+			{
+				o.Call<void>("OnKeyboardKeyHold", std::forward<KeyboardVK>(key), std::forward<float>(msg.data.f));
+			}
+			catch (...) { }
+
+		}
+
+			break;
+
+		case SCRIPT_MESSAGE_MOUSE_PRESSED:
+
+		{
+
+			luapp11::Object o(m_state, msg.hObj);
+			MouseVK key = static_cast<MouseVK>(msg.code);
+
+			try
+			{
+				o.Call<void>("OnMouseKeyPress", std::forward<MouseVK>(key));
+			}
+			catch (...) { }
+
+		}
+
+			break;
+
+		case SCRIPT_MESSAGE_MOUSE_RELEASED:
+
+		{
+
+			luapp11::Object o(m_state, msg.hObj);
+			MouseVK key = static_cast<MouseVK>(msg.code);
+
+			try
+			{
+				o.Call<void>("OnMouseKeyRelease", std::forward<MouseVK>(key), std::forward<float>(msg.data.f));
+			}
+			catch (...) { }
+
+		}
+
+			break;
+
+		case SCRIPT_MESSAGE_MOUSE_HELD:
+
+		{
+
+			luapp11::Object o(m_state, msg.hObj);
+			MouseVK key = static_cast<MouseVK>(msg.code);
+
+			try
+			{
+				o.Call<void>("OnMouseKeyHold", std::forward<MouseVK>(key), std::forward<float>(msg.data.f));
+			}
+			catch (...) { }
+
+		}
+
+		case SCRIPT_MESSAGE_MOUSE_MOVED:
+
+		{
+
+			luapp11::Object o(m_state, msg.hObj);
+			MouseVK key = static_cast<MouseVK>(msg.code);
+
+			const mye::math::Vector2 from(msg.data.f4[0], msg.data.f4[1]);
+			const mye::math::Vector2 to(msg.data.f4[2], msg.data.f4[3]);
+
+			try
+			{
+				o.Call<void>("OnMouseMove", from, to);
+			}
+			catch (...) { }
+
+		}
+
+			break;
+
+		}
+
+	}
+
+	m_messages.clear();
 
 }
 
-BehaviourScriptPointer LuaModule::LoadBehaviour(const mye::core::String &name)
+void LuaModule::Init(GameObjectHandle hObj)
+{
+	luapp11::Object o(m_state, hObj);
+
+	try
+	{
+		o.Call<void>("Init");
+	}
+	catch (...) { }
+	
+}
+
+void LuaModule::Finalize(GameObjectHandle hObj)
+{
+
+	luapp11::Object o(m_state, hObj);
+
+	try
+	{
+		o.Call<void>("Finalize");
+	}
+	catch (...) { }
+	
+}
+
+void LuaModule::Update(GameObjectsModule::Iterator it)
+{
+	GameObjectHandle hObj = *it;
+	luapp11::Object o(m_state, hObj);
+
+	try
+	{
+		o.Call<void>("Update");
+	}
+	catch (...) { }
+}
+
+BehaviourScriptPointer LuaModule::LoadBehaviour(const String &name)
 {
 
 	Parameters params;
+
 	params["type"] = "behaviour";
 
 	BehaviourScriptPointer script = CreateResource<BehaviourScript>(name, nullptr, params);
@@ -147,7 +300,9 @@ BehaviourScriptPointer LuaModule::LoadBehaviour(const mye::core::String &name)
 ProcedureScriptPointer LuaModule::LoadProcedure(const mye::core::String &name)
 {
 
+
 	Parameters params;
+
 	params["type"] = "procedure";
 
 	ProcedureScriptPointer script = CreateResource<ProcedureScript>(name, nullptr, params);
@@ -161,7 +316,7 @@ ProcedureScriptPointer LuaModule::LoadProcedure(const mye::core::String &name)
 
 }
 
-ScriptResourceLoaderPointer LuaModule::LoadScriptResourceLoader(const mye::core::String &name)
+ScriptResourceLoaderPointer LuaModule::LoadScriptResourceLoader(const String &name)
 {
 
 	Parameters params;
@@ -171,19 +326,20 @@ ScriptResourceLoaderPointer LuaModule::LoadScriptResourceLoader(const mye::core:
 
 	if (script)
 	{
-		script->Load();
+		script->Load(false);
 	}
+
 
 	return script;
 
 }
 
-Script* LuaModule::CreateImpl(const String &name,
-							  ManualResourceLoader *manual,
-							  const Parameters &params)
+Script * LuaModule::CreateImpl(const String &name,
+							   ManualResourceLoader *manual,
+							   const Parameters &params)
 {
 
-	Script *script = nullptr;
+	Script * script = nullptr;
 
 	if (params.Contains("type"))
 	{
@@ -192,21 +348,21 @@ Script* LuaModule::CreateImpl(const String &name,
 
 		if (type == "behaviour")
 		{
-			script = new BehaviourScript(*this, name);
+			script = new BehaviourScript(name);
 		}
 		else if (type == "resource loader")
 		{
-			script = new ScriptResourceLoader(*this, name);
+			script = new ScriptResourceLoader(name);
 		}
 		else if (type == "procedure")
 		{
-			script = new ProcedureScript(*this, name);
+			script = new ProcedureScript(name);
 		}
 
 	}
 	else
 	{
-		script = new ProcedureScript(*this, name);
+		script = new ProcedureScript(name);
 	}
 
 	return script;

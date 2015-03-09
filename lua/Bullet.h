@@ -1,11 +1,9 @@
-#include <lua.hpp>
-#include <luabind/luabind.hpp>
+#include <lua++11/lua++11.h>
 
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
 
 #include "Converters.h"
-#include "Alignment.h"
 
 namespace mye
 {
@@ -13,7 +11,7 @@ namespace mye
 	namespace lua
 	{
 
-		void BindBullet(lua_State *L);
+		void BindBullet(luapp11::State state);
 
 	}
 

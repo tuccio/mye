@@ -60,8 +60,9 @@ const Mouse* MouseKeyboardInput::GetMouse(void) const
 	return &m_mouse;
 }
 
-void MouseKeyboardInput::ResetDeltas(void)
+void MouseKeyboardInput::Postupdate(void)
 {
-	m_mouse.ResetDelta();
-	m_mouse.SetWheelDelta(0);
+
+	InputModule::Postupdate();
+
 }

@@ -58,6 +58,13 @@ namespace mye
 		}
 
 		template <typename T>
+		bool Matrix<T, 2, 1>::operator== (const Matrix<T, 2, 1> &b) const
+		{
+			return m_data[0] == b.m_data[0] &&
+				m_data[1] == b.m_data[1];
+		}
+
+		template <typename T>
 		Matrix<T, 2, 1> Matrix<T, 2, 1>::operator+ (const Matrix<T, 2, 1> &b) const
 		{
 			return Matrix<T, 2, 1>(

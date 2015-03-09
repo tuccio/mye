@@ -1,8 +1,10 @@
 #pragma once
 
 #include "String.h"
-#include "Components.h"
+#include "GameObject.h"
 #include "Resource.h"
+
+#include "EntityInstantiation.h"
 
 namespace mye
 {
@@ -19,21 +21,12 @@ namespace mye
 			typedef std::vector<Component*>::iterator Iterator;
 
 			Entity(ResourceManager *owner,
-				const String &name,
+				const String & name,
 				ManualResourceLoader *manual);
 
-			void Insert(Component *c);
+			bool Instantiate(GameObject * object);
+
 			void Clear(void);
-
-			inline Iterator begin(void)
-			{
-				return m_components.begin();
-			}
-
-			inline Iterator end(void)
-			{
-				return m_components.end();
-			}
 
 		protected:
 
@@ -44,11 +37,11 @@ namespace mye
 
 		private:
 
-			std::vector<Component*> m_components;
+			entity::EntityDefinition m_entity;
 
 		};
 
-		typedef boost::shared_ptr<Entity> EntityPointer;
+		typedef std::shared_ptr<Entity> EntityPointer;
 
 	}
 

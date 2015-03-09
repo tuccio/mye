@@ -4,7 +4,7 @@
 
 using namespace mye::lua;
 using namespace mye::core;
-using namespace luabind;
+using namespace luapp11;
 
 namespace mye
 {
@@ -12,17 +12,17 @@ namespace mye
 	namespace lua
 	{
 
-		void BindPhysics(lua_State *L)
+		void BindPhysics(luapp11::State state)
 		{
 
-			BindBullet(L);
+			BindBullet(state);
 
-			module(L)
+			state
 			[
 
-				class_<PhysicsModule>("__PhysicsModule").
-					def("GetBodiesCount", &PhysicsModule::GetBodiesCount).
-					property("gravity", &PhysicsModule::GetGravity, &PhysicsModule::SetGravity)
+				Class<PhysicsModule>("__PhysicsModule").
+					Function("GetBodiesCount", &PhysicsModule::GetBodiesCount).
+					Property("gravity", &PhysicsModule::GetGravity, &PhysicsModule::SetGravity)
 
 			];
 

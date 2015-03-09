@@ -16,13 +16,13 @@ namespace mye
 
 		public:
 
-			BulletCollisionShape(ResourceManager *owner,
-				const String &name,
-				ManualResourceLoader *manual);
+			BulletCollisionShape(ResourceManager * owner,
+								 const String & name,
+								 ManualResourceLoader *manual);
 
 			~BulletCollisionShape(void);
 
-			btCollisionShape* GetShape(void);
+			btCollisionShape * GetShape(void);
 
 			void Clear(void);
 
@@ -34,11 +34,11 @@ namespace mye
 
 		private:
 
-			btCollisionShape *m_shape;
+			btCollisionShape * m_shape;
 
 		};
 
-		typedef boost::shared_ptr<BulletCollisionShape>  BulletCollisionShapePointer;
+		typedef std::shared_ptr<BulletCollisionShape> BulletCollisionShapePointer;
 
 		class BulletCollisionShapeManager :
 			public ResourceManager
@@ -50,11 +50,11 @@ namespace mye
 
 		protected:
 
-			BulletCollisionShape* CreateImpl(const String &name,
-				ManualResourceLoader *manual,
-				const Parameters &params);
+			BulletCollisionShape * CreateImpl(const String & name,
+				ManualResourceLoader * manual,
+				const Parameters & params);
 
-			virtual void FreeImpl(Resource* resource);
+			virtual void FreeImpl(Resource * resource);
 
 		};
 

@@ -1,5 +1,4 @@
-#include <lua.hpp>
-#include <luabind/luabind.hpp>
+#include <lua++11/lua++11.h>
 
 namespace mye
 {
@@ -7,7 +6,7 @@ namespace mye
 	namespace lua
 	{
 
-		void BindResources(lua_State *L);
+		void BindResources(luapp11::State state);
 
 	}
 

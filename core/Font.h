@@ -72,7 +72,7 @@ namespace mye
 
 		};
 
-		typedef boost::shared_ptr<Font> FontPointer;
+		typedef std::shared_ptr<Font> FontPointer;
 
 	}
 

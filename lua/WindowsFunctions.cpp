@@ -6,14 +6,12 @@
 
 #include <Windows.h>
 
-#include <luabind/luabind.hpp>
-
 #include <mye/core/IWindow.h>
 #include <mye/win/Window.h>
+#include <mye/win/Utils.h>
 
-using namespace luabind;
+using namespace luapp11;
 using namespace mye::core;
-using namespace mye::win;
 
 namespace mye
 {
@@ -21,61 +19,45 @@ namespace mye
 	namespace lua
 	{
 
-		void __win_alloc_console(void);
-		void __win_free_console(void);
-		void __win_focus_console(void);
-		void __win_message_box(const char *title, const char *msg);
-
-		void BindWindowsFunctions(lua_State *L)
+		void BindWindowsFunctions(State state)
 		{
 
-			module(L, MYE_LUA_WIN)
+			state
+			[
+
+				Namespace(MYE_LUA_WIN)
+				[
+
+					Class<mye::win::Window, IWindow>(MYE_LUA_WINDOW).
+						Constructor<>(),
+
+					Function("CreateConsole",  &mye::win::CreateConsole),
+					Function("DestroyConsole", &mye::win::DestroyConsole),
+					Function("FocusConsole",   &mye::win::FocusConsole),
+
+					Function("PopupMessage",   &mye::win::PopupMessage)
+
+				]
+
+			];
+
+			/*module(L, MYE_LUA_WIN)
 			[
 				
 				class_<mye::win::Window, IWindow>(MYE_LUA_WINDOW).
 					def(constructor<>()),
 
-				def("AllocConsole", &__win_alloc_console),
-				def("FreeConsole", &__win_free_console),
-				def("FocusConsole", &__win_focus_console),
+				def("CreateConsole", &mye::win::CreateConsole),
+				def("DestroyConsole", &mye::win::DestroyConsole),
+				def("FocusConsole", &mye::win::FocusConsole),
 
-				def("MessageBox", &__win_message_box)
+				def("MessageBox", &mye::win::MessageBox)
 
-			];
-
-		}
-
-		void __win_alloc_console(void)
-		{
-
-			if (AllocConsole())
-			{
-				freopen("CONOUT$", "w", stdout);
-				freopen("CONIN$",  "r", stdin);
-			}
-			
-		}
-
-		void __win_focus_console(void)
-		{
-
-			HWND hWnd = GetConsoleWindow();
-
-			SetFocus(hWnd);
-			ShowWindow(hWnd, TRUE);
-			SetWindowPos(hWnd, NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+			];*/
 
 		}
 
-		void __win_free_console(void)
-		{
-			FreeConsole();
-		}
-
-		void __win_message_box(const char *title, const char *msg)
-		{
-			MessageBox(NULL, msg, title, MB_OK);
-		}
+		
 
 	}
 

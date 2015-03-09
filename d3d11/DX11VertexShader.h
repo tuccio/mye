@@ -42,7 +42,7 @@ namespace mye
 
 		};
 
-		typedef boost::shared_ptr<DX11VertexShader> DX11VertexShaderPointer;
+		typedef std::shared_ptr<DX11VertexShader> DX11VertexShaderPointer;
 
 	}
 }

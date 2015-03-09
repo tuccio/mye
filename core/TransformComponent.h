@@ -16,32 +16,80 @@ namespace mye
 		public:
 
 			TransformComponent(void);
+
+			TransformComponent(const mye::math::Vector3 & position,
+							   const mye::math::Quaternion & orientation,
+							   const mye::math::Vector3 & scale);
+
 			~TransformComponent(void);
 
-			TransformComponent* Clone(void) const;
+			TransformComponent * Clone(void) const;
 
-			const mye::math::Vector3& GetPosition(void) const;
-			void SetPosition(const mye::math::Vector3 &position);
+			inline const mye::math::Vector3 & GetPosition(void) const
+			{
+				return m_transform.GetPosition();
+			}
 
-			const mye::math::Vector3& GetScale(void) const;
-			void SetScale(const mye::math::Vector3 &scale);
+			inline void SetPosition(const mye::math::Vector3 & position)
+			{
+				return m_transform.SetPosition(position);
+			}
 
-			const mye::math::Quaternion& GetOrientation(void) const;
-			void SetOrientation(const mye::math::Quaternion &orientation);
+			inline mye::math::Vector3 & Position(void)
+			{
+				return m_transform.Position();
+			}
 
-			const mye::math::Matrix4& GetWorldMatrix(void);
+			inline const mye::math::Vector3 & GetScale(void) const
+			{
+				return m_transform.GetScale();
+			}
 
-			mye::math::Vector3 Up(void) const;
-			mye::math::Vector3 Right(void) const;
-			mye::math::Vector3 Forward(void) const;
+			inline void SetScale(const mye::math::Vector3 &scale)
+			{
+				m_transform.SetScale(scale);
+			}
 
-			void Preupdate(void);
-			bool Postupdate(mye::math::Matrix4 &oldTransform);
+			mye::math::Vector3 & Scale(void)
+			{
+				return m_transform.Scale();
+			}
+
+			inline const mye::math::Quaternion & GetOrientation(void) const
+			{
+				return m_transform.GetOrientation();
+			}
+
+			inline void SetOrientation(const mye::math::Quaternion & orientation)
+			{
+				return m_transform.SetOrientation(orientation);
+			}
+
+			mye::math::Quaternion & Orientation(void)
+			{
+				return m_transform.Orientation();
+			}
+
+			mye::math::Matrix4 GetWorldMatrix(void);
+
+			inline mye::math::Vector3 Up(void) const
+			{
+				return m_transform.GetOrientation().Rotate(mye::math::Vector3(0, 1, 0));
+			}
+
+			inline mye::math::Vector3 Right(void) const
+			{
+				return m_transform.GetOrientation().Rotate(mye::math::Vector3(1, 0, 0));
+			}
+
+			inline mye::math::Vector3 Forward(void) const
+			{
+				return m_transform.GetOrientation().Rotate(mye::math::Vector3(0, 0, 1));
+			}
 
 		private:
 
 			mye::math::Transform m_transform;
-			mye::math::Matrix4   m_matrix;
 
 		};
 

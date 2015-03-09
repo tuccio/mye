@@ -4,6 +4,7 @@
 #include "ResourceManager.h"
 #include "Parameters.h"
 
+#include <memory>
 #include <string>
 #include <unordered_map>
 
@@ -30,21 +31,21 @@ namespace mye
 			ResourceManager* GetResourceManager(const String &type);
 
 			template <typename ResourceType>
-			inline boost::shared_ptr<ResourceType> CreateResource(const String &type,
+			inline std::shared_ptr<ResourceType> CreateResource(const String &type,
 				const String &name,
 				ManualResourceLoader *manual = nullptr,
 				const Parameters &params = Parameters());
 
-			inline boost::shared_ptr<Resource> CreateResource(const String &type,
+			inline std::shared_ptr<Resource> CreateResource(const String &type,
 				const String &name,
 				ManualResourceLoader *manual = nullptr,
 				const Parameters &params = Parameters());
 			
 			template <typename ResourceType>
-			inline boost::shared_ptr<ResourceType> GetResource(const String &type,
+			inline std::shared_ptr<ResourceType> GetResource(const String &type,
 				const String &name);
 
-			inline boost::shared_ptr<Resource> GetResource(const String &type,
+			inline std::shared_ptr<Resource> GetResource(const String &type,
 				const String &name);
 
 		private:

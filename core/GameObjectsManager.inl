@@ -4,7 +4,7 @@ namespace mye
 	namespace core
 	{
 
-		size_t GameObjectHandleIDHasher::operator()(const mye::core::GameObjectHandle &hObj) const
+		size_t GameObjectHandleIDHasher::operator() (const mye::core::GameObjectHandle &hObj) const
 		{
 			return std::hash<int>() (hObj.id);
 		}

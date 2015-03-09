@@ -6,6 +6,10 @@
 	<gameobject name="devconsole" entity="DeveloperConsole">
 	</gameobject>
 	
+	<gameobject name="lightsspawner" entity="LightsSpawner">
+	</gameobject>
+	
+	<!--
 	<gameobject name="light1">
 		<light type="pointlight">
 			<position>0 1.98 0</position>
@@ -14,6 +18,7 @@
 			<range>2.2</range>			
 		</light>
 	</gameobject>
+	-->
 	
 	<gameobject name="camera">
 		<transform>

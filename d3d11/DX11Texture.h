@@ -70,7 +70,7 @@ namespace mye
 
 		};
 
-		typedef boost::shared_ptr<DX11Texture> DX11TexturePointer;
+		typedef std::shared_ptr<DX11Texture> DX11TexturePointer;
 
 		ID3D11RenderTargetView* DX11Texture::GetRenderTargetView(void)
 		{

@@ -7,11 +7,20 @@
 #include "BehaviourScript.h"
 #include "ProcedureScript.h"
 #include "ScriptResourceLoader.h"
-#include "Script.h"
 #include "Utils.h"
 
 #include <lua.hpp>
-#include <luabind/luabind.hpp>
+
+#include <lua++11/lua++11.h>
+
+//#ifdef MYE_DEBUG
+//#define MYE_LUA_SCRIPT_EXTENSION ".lua"
+//#else
+//#define MYE_LUA_SCRIPT_EXTENSION ".luac"
+//#endif
+
+#define MYE_LUA_SCRIPT_EXTENSION ".lua"
+
 
 namespace mye
 {
@@ -36,12 +45,14 @@ namespace mye
 
 			void Preupdate(mye::core::FloatSeconds dt);
 
-			template <typename T>
-			T Create(const mye::core::String &name, const std::vector<std::string> &initializer);
+			void Init(mye::core::GameObjectHandle hObj);
+			void Finalize(mye::core::GameObjectHandle hObj);
 
-			lua_State* GetLuaState(void);
+			void Update(mye::core::GameObjectsModule::Iterator it);
 
-			const mye::core::String& GetScriptDirectory(void) const;
+			lua_State * GetLuaState(void);
+
+			const mye::core::String & GetScriptDirectory(void) const;
 			mye::core::String GetLastError(void) const;
 
 			BehaviourScriptPointer      LoadBehaviour(const mye::core::String &name);
@@ -53,7 +64,7 @@ namespace mye
 
 		protected:
 
-			Script* CreateImpl(const mye::core::String &name,
+			mye::core::Script * CreateImpl(const mye::core::String &name,
 				mye::core::ManualResourceLoader *manual,
 				const mye::core::Parameters &params);
 
@@ -63,72 +74,13 @@ namespace mye
 
 			void OpenAllLibraries(void);
 
-			lua_State *m_lua;
+			luapp11::State    m_state;
+			
 			mye::core::String m_lastError;
 			mye::core::String m_scriptDirectory;
 
 		};
 		
-
-	}
-
-}
-
-namespace mye
-{
-
-	namespace core
-	{
-
-		template <typename T>
-		struct ScriptObjectCreator
-		{
-
-			static boost::optional<T> Create(const mye::core::String &name, const mye::core::String &initializer)
-			{
-
-				// TODO: Sandbox
-
-				lua_State *lua = LPLUASTATE;
-				mye::lua::LuaStackCleaner stackCleaner(lua);
-
-				mye::core::String code(511);
-
-				code = "return ";
-				code += name;
-				code += "(";
-				code += initializer;
-
-				/*bool first = true;
-
-				for (auto &s : initializer)
-				{
-
-					if (!first)
-					{
-						code += ",";
-					}
-					else
-					{
-						first = false;
-					}
-					
-					code += s.c_str();
-
-				}*/
-
-				code += ")";
-
-				if (luaL_dostring(lua, code.CString()))
-				{
-					return boost::optional<T>();
-				}
-
-				return luabind::object_cast_nothrow<T>(luabind::object(luabind::from_stack(lua, -1)));
-
-			}
-
-		};
 
 	}
 

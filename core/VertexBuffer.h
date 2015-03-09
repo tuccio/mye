@@ -25,7 +25,7 @@ namespace mye
 
 		};
 
-		typedef boost::shared_ptr<VertexBuffer> VertexBufferPointer;
+		typedef std::shared_ptr<VertexBuffer> VertexBufferPointer;
 
 	}
 

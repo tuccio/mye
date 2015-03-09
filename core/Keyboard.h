@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Time.h"
 #include "VirtualKeys.h"
 #include <vector>
 
@@ -9,12 +10,18 @@ namespace mye
 	namespace core
 	{
 
+		class KeyboardListener;
+
+		struct KeyboardPressedKey
+		{
+			KeyboardVK key;
+			StopWatch  timer;
+		};
+
 		class Keyboard
 		{
 
 		public:
-
-			class KeyboardListener;
 
 			Keyboard(void);
 			~Keyboard(void);
@@ -26,12 +33,15 @@ namespace mye
 
 			bool Hook(void);
 
-			void AddListener(KeyboardListener *listener);
-			void RemoveListener(KeyboardListener *listener);
+			void AddListener(KeyboardListener * listener);
+			void RemoveListener(KeyboardListener * listener);
+
+			void NotifyHeldKeys(void);
 
 		protected:
 
 			std::vector<KeyboardListener*> m_listeners;
+			std::vector<KeyboardPressedKey>        m_pressedKeys;
 
 		private:
 
@@ -45,12 +55,13 @@ namespace mye
 
 		public:
 
-			virtual void OnKeyPress(KeyboardVK key);
-			virtual void OnKeyRelease(KeyboardVK key);
+			virtual void OnKeyboardKeyPress(KeyboardVK key);
+			virtual void OnKeyboardKeyRelease(KeyboardVK key, FloatSeconds time);
+			virtual void OnKeyboardKeyHold(KeyboardVK key, FloatSeconds time);
 
 		};
 
-	}
+	}	
 
 }
 

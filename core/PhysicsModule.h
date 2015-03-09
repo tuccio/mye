@@ -26,21 +26,21 @@ namespace mye
 
 			void Update(FloatSeconds dt);
 
-			void AddRigidBody(btRigidBody *rigidbody);
-			void RemoveRigidBody(btRigidBody *rigidbody);
+			void AddRigidBody(btRigidBody * rigidbody);
+			void RemoveRigidBody(btRigidBody * rigidbody);
 
 			mye::math::Vector3 GetGravity(void) const;
-			void SetGravity(const mye::math::Vector3 &g);
+			void SetGravity(const mye::math::Vector3 & g);
 
 			size_t GetBodiesCount(void) const;
 
 		private:
 
-			btDefaultCollisionConfiguration        *m_config;
-			btCollisionDispatcher                  *m_dispatcher;
-			btBroadphaseInterface                  *m_cache;
-			btSequentialImpulseConstraintSolver    *m_solver;
-			btDiscreteDynamicsWorld                *m_world;
+			btDefaultCollisionConfiguration     * m_config;
+			btCollisionDispatcher               * m_dispatcher;
+			btBroadphaseInterface               * m_cache;
+			btSequentialImpulseConstraintSolver * m_solver;
+			btDiscreteDynamicsWorld             * m_world;
 			//btAlignedObjectArray<btCollisionShape*> m_shapes;
 
 		};

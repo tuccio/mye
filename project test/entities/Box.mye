@@ -3,28 +3,44 @@ entity Box
 	
 	int id;
 	
-	Text2DComponent(
+	/*Text2DComponent(
 		vec2i(0, 0),
 		ResourceTypeManager:CreateResource(
 			"Font",
 			"verdana_regular_17",
 			nil,
 			nil),
-		"");
+		"");*/
 		
 	//RigidBodyComponent();
 	
-	RigidBodyComponent(
+	
+	
+	/*RigidBodyComponent(
 		ResourceTypeManager:CreateResource(
 			"BulletCollisionShape",
 			"BOX_SHAPE",
 			nil,
 			{ ["type"] = "box", ["halfextents"] = "1 1 1", ["margin"] = "0" }),
-		1);
+		1);*/
 	
 	/*
 	RigidBodyComponent (Box(1, 1, 1), 1, vec3(0, 0, 0), quaternion(1, 0, 0, 0));
 	render =("box.obj", AABB(...), Transform(..))
 	*/
 	
-}
+	component rigidbody(
+		CollisionShape(
+			'BOX_SHAPE',
+			{
+				'type' : 'box',
+				'halfextents' : '0.5 0.5 0.5',
+				'margin' : '0'
+			}
+		), 1);
+		
+	component render(Mesh('./models/box.obj', { }), null, mat4(1));
+	
+	component keyboard;
+	
+};

@@ -16,6 +16,8 @@ namespace mye
 			RIGIDBODY,
 			TEXT2D,
 			LIGHT,
+			KEYBOARD,
+			MOUSE,
 			COUNT
 		};
 

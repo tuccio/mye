@@ -84,7 +84,7 @@ bool Resource::Load(bool background)
 		}
 		else
 		{
-			// TODO: Load parallelo risorse
+			// TODO: Background load
 		}
 
 	}
@@ -111,7 +111,7 @@ void Resource::Unload(bool background)
 		}
 		else
 		{
-			// TODO: Unload parallelo risorse
+			// TODO: Background free
 		}
 
 	}
@@ -137,7 +137,7 @@ void Resource::Free(bool background)
 		}
 		else
 		{
-			// TODO
+			// TODO: Background free
 		}
 
 	}

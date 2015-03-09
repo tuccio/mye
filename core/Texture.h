@@ -37,7 +37,7 @@ namespace mye
 
 		};
 
-		typedef boost::shared_ptr<Texture> TexturePointer;
+		typedef std::shared_ptr<Texture> TexturePointer;
 
 	}
 

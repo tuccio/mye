@@ -1,10 +1,8 @@
 #pragma once
 
 #include "Component.h"
-#include "Entity.h"
+#include "Script.h"
 #include "Time.h"
-
-#include <mye/lua/BehaviourScript.h>
 
 namespace mye
 {
@@ -19,25 +17,20 @@ namespace mye
 		public:
 
 			BehaviourComponent(void);
-			BehaviourComponent(const mye::lua::BehaviourScriptPointer &s);
+			BehaviourComponent(const ScriptPointer & script);
 
 			~BehaviourComponent(void);
 
-			void Init(void);
-			void Update(void);
+			inline ScriptPointer GetScript(void) { return m_script; }
 
-			BehaviourComponent* Clone(void) const;
-
-			inline mye::lua::BehaviourScriptPointer GetScript(void);
+			BehaviourComponent * Clone(void) const;
 
 		private:
 
-			mye::lua::BehaviourScriptPointer m_script;
+			ScriptPointer m_script;
 
 		};
 
 	}
 
 }
-
-#include "BehaviourComponent.inl"

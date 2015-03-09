@@ -2,13 +2,15 @@
 
 #include "LuaModule.h"
 
+#include <lua++11/lua++11.h>
+
 namespace mye
 {
 
 	namespace lua
 	{
 
-		void BindVariableComponent(lua_State *L);
+		void BindVariableComponent(luapp11::State state);
 
 	}
 

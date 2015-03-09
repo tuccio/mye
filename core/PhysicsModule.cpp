@@ -59,12 +59,12 @@ void PhysicsModule::Update(FloatSeconds dt)
 
 }
 
-void PhysicsModule::AddRigidBody(btRigidBody *rigidbody)
+void PhysicsModule::AddRigidBody(btRigidBody * rigidbody)
 {
 	m_world->addRigidBody(rigidbody);
 }
 
-void PhysicsModule::RemoveRigidBody(btRigidBody *rigidbody)
+void PhysicsModule::RemoveRigidBody(btRigidBody * rigidbody)
 {
 	m_world->removeRigidBody(rigidbody);
 }
@@ -75,7 +75,7 @@ mye::math::Vector3 PhysicsModule::GetGravity(void) const
 	return mye::math::Vector3(g.x(), g.y(), g.z());
 }
 
-void PhysicsModule::SetGravity(const mye::math::Vector3 &g)
+void PhysicsModule::SetGravity(const mye::math::Vector3 & g)
 {
 	m_world->setGravity(btVector3(g.x(), g.y(), g.z()));
 }

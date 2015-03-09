@@ -1,4 +1,3 @@
-#include "Alignment.h"
 #include "Converters.h"
 #include "Math.h"
 #include "MetaMethodsOverload.h"
@@ -8,11 +7,6 @@
 
 #include <mye/math/Math.h>
 #include <mye/math/Geometry.h>
-
-#include <luabind/luabind.hpp>
-#include <luabind/operator.hpp>
-
-#include <luabind/return_reference_to_policy.hpp>
 
 #include <algorithm>
 #include <sstream>
@@ -26,7 +20,7 @@
 #include <boost/preprocessor/punctuation/comma.hpp>
 #include <boost/preprocessor/repetition/repeat.hpp>
 
-using namespace luabind;
+using namespace luapp11;
 using namespace mye::math;
 
 #define __MYE_LUA_MAKE_IJ_FROM_SIZE(N, S) BOOST_PP_CAT(BOOST_PP_DIV(N, S), BOOST_PP_MOD(N, S))
@@ -63,10 +57,10 @@ namespace mye
 		};
 
 		template <typename T, int SourceVectorSize>
-		static void __math_vec_push(lua_State *L, const Matrix<T, SourceVectorSize, 1> &sv, const std::vector<int> &swizzleResult)
+		static void __math_vec_push(lua_State * L, const Matrix<T, SourceVectorSize, 1> &sv, const std::vector<int> &swizzleResult)
 		{
 
-			object rvalue;
+			Object rvalue;
 
 			switch (swizzleResult.size())
 			{
@@ -75,7 +69,7 @@ namespace mye
 			{
 
 				Matrix<T, 2, 1> ov(sv[swizzleResult[0]], sv[swizzleResult[1]]);
-				rvalue = object(L, ov);
+				rvalue = Object(L, ov);
 
 			}
 				break;
@@ -84,7 +78,7 @@ namespace mye
 			{
 
 				Matrix<T, 3, 1> ov(sv[swizzleResult[0]], sv[swizzleResult[1]], sv[swizzleResult[2]]);
-				rvalue = object(L, ov);
+				rvalue = Object(L, ov);
 			}
 
 				break;
@@ -93,7 +87,7 @@ namespace mye
 			{
 
 				Matrix<T, 4, 1> ov(sv[swizzleResult[0]], sv[swizzleResult[1]], sv[swizzleResult[2]], sv[swizzleResult[3]]);
-				rvalue = object(L, ov);
+				rvalue = Object(L, ov);
 			}
 
 				break;
@@ -106,7 +100,7 @@ namespace mye
 
 			if (rvalue)
 			{
-				rvalue.push(L);
+				rvalue.Push();
 			}
 			else
 			{
@@ -160,12 +154,12 @@ namespace mye
 			mye::math::Vector4,
 			mye::math::Vector4i> VectorVariant;
 
-		VectorVariant __math_vec_from_object(luabind::object stackObject)
+		VectorVariant __math_vec_from_object(Object object)
 		{
 
 			VectorVariant v;
-
-			if (auto v3 = object_cast_nothrow<mye::math::Vector3>(stackObject))
+			//if (object.IsCastable<mye::math::Vector3>)
+			/*if (auto v3 = object_cast_nothrow<mye::math::Vector3>(stackObject))
 			{
 				v = v3.get();
 			}
@@ -188,7 +182,7 @@ namespace mye
 			else if (auto v2i = object_cast_nothrow<mye::math::Vector2i>(stackObject))
 			{
 				v = v2i.get();
-			}
+			}*/
 
 			return v;
 
@@ -220,7 +214,7 @@ namespace mye
 		{
 
 			int returnValues = 0;
-			object stackObject(from_stack(L, 1));
+			Object stackObject(FromStack(L, 1));
 
 			VectorVariant v = __math_vec_from_object(stackObject);
 
@@ -243,12 +237,58 @@ namespace mye
 		}
 
 		template <typename T>
-		void BindVector4(lua_State *L, const char *classname)
+		void BindVector4(State state, const char *classname)
 		{
 
 			typedef Matrix<T, 4, 1> VectorType;
+			
+			state
+			[
 
-			module(L)
+				Class<VectorType>(classname).
+
+					Constructor<>().
+					Constructor<T>().
+					Constructor<T, T, T, T>().
+					Constructor<const Matrix<T, 2, 1> &, T, T>().
+					Constructor<const Matrix<T, 3, 1>&, T>().
+					Constructor<const VectorType &>().
+
+					Operator(Operand<const VectorType &>() + Operand<const VectorType &>()).
+					Operator(Operand<const VectorType &>() + Operand<T>()).
+					Operator(Operand<T>() + Operand<const VectorType &>()).
+
+					Operator(Operand<const VectorType &>() - Operand<const VectorType &>()).
+					Operator(Operand<const VectorType &>() - Operand<T>()).
+					Operator(Operand<T>() - Operand<const VectorType &>()).
+
+					Operator(Operand<const VectorType &>() * Operand<const VectorType &>()).
+					Operator(Operand<const VectorType &>() * Operand<T>()).
+					Operator(Operand<T>() * Operand<const VectorType &>()).
+
+					Operator(Operand<const VectorType &>() / Operand<const VectorType &>()).
+					Operator(Operand<const VectorType &>() / Operand<T>()).
+					Operator(Operand<T>() / Operand<const VectorType &>()).
+
+					Operator(Operand<const VectorType &>() == Operand<const VectorType &>()).
+
+					Operator(- Operand<const VectorType &>()).
+
+					ToString(&__vec_tostring<4, T>).
+
+					Property("x", &__vec_get<4, T, 0>, &__vec_set<4, T, 0>).
+					Property("y", &__vec_get<4, T, 1>, &__vec_set<4, T, 1>).
+					Property("z", &__vec_get<4, T, 2>, &__vec_set<4, T, 2>).
+					Property("w", &__vec_get<4, T, 3>, &__vec_set<4, T, 3>).
+
+					Function("Normalize", &VectorType::Normalize).
+
+					Function("Clamp", (VectorType(VectorType::*) (T, T)) &VectorType::Clamp).
+					Function("Clamp", (VectorType(VectorType::*) (const VectorType&, const VectorType&)) &VectorType::Clamp)
+
+			];
+
+			/*module(L)
 			[
 
 				class_<VectorType>(classname).
@@ -288,77 +328,163 @@ namespace mye
 				def("Clamp", (VectorType (VectorType::*) (T, T)) &VectorType::Clamp).
 				def("Clamp", (VectorType (VectorType::*) (const VectorType&, const VectorType&)) &VectorType::Clamp)
 
-			];
+			];*/
 
-			RegisterIndexOverload<VectorType>(&VectorSwizzle);
+			//RegisterIndexOverload<VectorType>(&VectorSwizzle);
 
 		}
 
 		template <typename T>
-		void BindVector3(lua_State *L, const char *classname)
+		void BindVector3(State state, const char *classname)
 		{
 
 			typedef Matrix<T, 3, 1> VectorType;
 
-			module(L)
+			state
 			[
 
-				class_<VectorType>(classname).
+				Class<VectorType>(classname).
 
-				def(constructor<>()).
-				def(constructor<T>()).
-				def(constructor<T, T, T>()).
-				def(constructor<const Matrix<T, 2, 1>&, T>()).
-				def(constructor<const VectorType&>()).
+				Constructor<>().
+				Constructor<T>().
+				Constructor<T, T, T>().
+				Constructor<const Matrix<T, 2, 1> &, T>().
+				Constructor<const VectorType &>().
 
-				def("__add", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_add<3, T>).
-				def("__add", (VectorType (*) (const VectorType&, T)) &__vec_add<3, T>).
-				def("__add", (VectorType (*) (T, const VectorType&)) &__vec_add<3, T>).
+				Operator(Operand<const VectorType &>() + Operand<const VectorType &>()).
+				Operator(Operand<const VectorType &>() + Operand<T>()).
+				Operator(Operand<T>() + Operand<const VectorType &>()).
 
-				def("__sub", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_sub<3, T>).
-				def("__sub", (VectorType (*) (const VectorType&, T)) &__vec_sub<3, T>).
-				def("__sub", (VectorType (*) (T, const VectorType&)) &__vec_sub<3, T>).
+				Operator(Operand<const VectorType &>() - Operand<const VectorType &>()).
+				Operator(Operand<const VectorType &>() - Operand<T>()).
+				Operator(Operand<T>() - Operand<const VectorType &>()).
 
-				def("__mul", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_mul<3, T>).
-				def("__mul", (VectorType (*) (const VectorType&, T)) &__vec_mul<3, T>).
-				def("__mul", (VectorType (*) (T, const VectorType&)) &__vec_mul<3, T>).
+				Operator(Operand<const VectorType &>() * Operand<const VectorType &>()).
+				Operator(Operand<const VectorType &>() * Operand<T>()).
+				Operator(Operand<T>() * Operand<const VectorType &>()).
 
-				def("__div", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_div<3, T>).
-				def("__div", (VectorType (*) (const VectorType&, T)) &__vec_div<3, T>).
-				def("__div", (VectorType (*) (T, const VectorType&)) &__vec_div<3, T>).
+				Operator(Operand<const VectorType &>() / Operand<const VectorType &>()).
+				Operator(Operand<const VectorType &>() / Operand<T>()).
+				Operator(Operand<T>() / Operand<const VectorType &>()).
 
-				def(const_self == const_self).
+				Operator(Operand<const VectorType &>() == Operand<const VectorType &>()).
 
-				def(- const_self).
+				Operator(- Operand<const VectorType &>()).
 
-				def("__tostring", &__vec_tostring<3, T>).
+				ToString(&__vec_tostring<3, T>).
 
-				property("x", &__vec_get<3, T, 0>, &__vec_set<3, T, 0>).
-				property("y", &__vec_get<3, T, 1>, &__vec_set<3, T, 1>).
-				property("z", &__vec_get<3, T, 2>, &__vec_set<3, T, 2>).
+				Property("x", &__vec_get<3, T, 0>, &__vec_set<3, T, 0>).
+				Property("y", &__vec_get<3, T, 1>, &__vec_set<3, T, 1>).
+				Property("z", &__vec_get<3, T, 2>, &__vec_set<3, T, 2>).
 
-				/*property("x", (T (VectorType::*) ()) &VectorType::x).
-				property("y", (T (VectorType::*) ()) &VectorType::y).
-				property("z", (T (VectorType::*) ()) &VectorType::z).*/
+				Function("Normalize", &VectorType::Normalize).
 
-				def("Normalize", &VectorType::Normalize).
-
-				def("Clamp", (VectorType (VectorType::*) (T, T)) &VectorType::Clamp).
-				def("Clamp", (VectorType (VectorType::*) (const VectorType&, const VectorType&)) &VectorType::Clamp)
+				Function("Clamp", (VectorType(VectorType::*) (T, T)) &VectorType::Clamp).
+				Function("Clamp", (VectorType(VectorType::*) (const VectorType&, const VectorType&)) &VectorType::Clamp)
 
 			];
 
-			RegisterIndexOverload<VectorType>(&VectorSwizzle);
+			//module(L)
+			//[
+
+			//	class_<VectorType>(classname).
+
+			//	def(constructor<>()).
+			//	def(constructor<T>()).
+			//	def(constructor<T, T, T>()).
+			//	def(constructor<const Matrix<T, 2, 1>&, T>()).
+			//	def(constructor<const VectorType&>()).
+
+			//	def("__add", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_add<3, T>).
+			//	def("__add", (VectorType (*) (const VectorType&, T)) &__vec_add<3, T>).
+			//	def("__add", (VectorType (*) (T, const VectorType&)) &__vec_add<3, T>).
+
+			//	def("__sub", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_sub<3, T>).
+			//	def("__sub", (VectorType (*) (const VectorType&, T)) &__vec_sub<3, T>).
+			//	def("__sub", (VectorType (*) (T, const VectorType&)) &__vec_sub<3, T>).
+
+			//	def("__mul", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_mul<3, T>).
+			//	def("__mul", (VectorType (*) (const VectorType&, T)) &__vec_mul<3, T>).
+			//	def("__mul", (VectorType (*) (T, const VectorType&)) &__vec_mul<3, T>).
+
+			//	def("__div", (VectorType (*) (const VectorType&, const VectorType&)) &__vec_div<3, T>).
+			//	def("__div", (VectorType (*) (const VectorType&, T)) &__vec_div<3, T>).
+			//	def("__div", (VectorType (*) (T, const VectorType&)) &__vec_div<3, T>).
+
+			//	def(const_self == const_self).
+
+			//	def(- const_self).
+
+			//	def("__tostring", &__vec_tostring<3, T>).
+
+			//	property("x", &__vec_get<3, T, 0>, &__vec_set<3, T, 0>).
+			//	property("y", &__vec_get<3, T, 1>, &__vec_set<3, T, 1>).
+			//	property("z", &__vec_get<3, T, 2>, &__vec_set<3, T, 2>).
+
+			//	/*property("x", (T (VectorType::*) ()) &VectorType::x).
+			//	property("y", (T (VectorType::*) ()) &VectorType::y).
+			//	property("z", (T (VectorType::*) ()) &VectorType::z).*/
+
+			//	def("Normalize", &VectorType::Normalize).
+
+			//	def("Clamp", (VectorType (VectorType::*) (T, T)) &VectorType::Clamp).
+			//	def("Clamp", (VectorType (VectorType::*) (const VectorType&, const VectorType&)) &VectorType::Clamp)
+
+			//];
+
+			//RegisterIndexOverload<VectorType>(&VectorSwizzle);
 
 		}
 
 		template <typename T>
-		void BindVector2(lua_State *L, const char *classname)
+		void BindVector2(State state, const char *classname)
 		{
 
 			typedef Matrix<T, 2, 1> VectorType;
 
-			module(L)
+			state
+			[
+
+				Class<VectorType>(classname).
+
+				Constructor<>().
+				Constructor<T>().
+				Constructor<T, T>().
+				Constructor<const VectorType &>().
+
+				Operator(Operand<const VectorType &>() + Operand<const VectorType &>()).
+				Operator(Operand<const VectorType &>() + Operand<T>()).
+				Operator(Operand<T>() + Operand<const VectorType &>()).
+
+				Operator(Operand<const VectorType &>() - Operand<const VectorType &>()).
+				Operator(Operand<const VectorType &>() - Operand<T>()).
+				Operator(Operand<T>() - Operand<const VectorType &>()).
+
+				Operator(Operand<const VectorType &>() * Operand<const VectorType &>()).
+				Operator(Operand<const VectorType &>() * Operand<T>()).
+				Operator(Operand<T>() * Operand<const VectorType &>()).
+
+				Operator(Operand<const VectorType &>() / Operand<const VectorType &>()).
+				Operator(Operand<const VectorType &>() / Operand<T>()).
+				Operator(Operand<T>() / Operand<const VectorType &>()).
+
+				Operator(Operand<const VectorType &>() == Operand<const VectorType &>()).
+
+				Operator(- Operand<const VectorType &>()).
+
+				ToString(&__vec_tostring<2, T>).
+
+				Property("x", &__vec_get<2, T, 0>, &__vec_set<2, T, 0>).
+				Property("y", &__vec_get<2, T, 1>, &__vec_set<2, T, 1>).
+
+				Function("Normalize", &VectorType::Normalize).
+
+				Function("Clamp", (VectorType(VectorType::*) (T, T)) &VectorType::Clamp).
+				Function("Clamp", (VectorType(VectorType::*) (const VectorType&, const VectorType&)) &VectorType::Clamp)
+
+			];
+
+		/*	module(L)
 				[
 
 					class_<VectorType>(classname).
@@ -401,13 +527,41 @@ namespace mye
 				];
 
 			RegisterIndexOverload<VectorType>(&VectorSwizzle);
-
+*/
 		}
 
-		void BindQuaternion(lua_State *L, const char *classname)
+		void BindQuaternion(State state, const char *classname)
 		{
 
-			module(L)
+			state
+			[
+
+				Class<Quaternion>(classname).
+
+					Constructor<>().
+					Constructor<Real, Real, Real, Real>().
+					Constructor<const Vector3&, Real>().
+					Constructor<const Quaternion &>().
+
+					Operator(Operand<const Quaternion &>() * Operand<const Quaternion &>()).
+
+					//Operator(Operand<const Quaternion &>() == Operand<const Quaternion &>()).
+
+					Function("Inverse",   &Quaternion::Inverse).
+					Function("Conjugate", &Quaternion::Conjugate).
+
+					Function("Normalize", &Quaternion::Normalize).
+
+					ToString(&__quat_tostring<Real>).
+
+					Property("w", &__quat_get<Real, 3>, &__quat_set<Real, 3>).
+					Property("x", &__quat_get<Real, 0>, &__quat_set<Real, 0>).
+					Property("y", &__quat_get<Real, 1>, &__quat_set<Real, 1>).
+					Property("z", &__quat_get<Real, 2>, &__quat_set<Real, 2>)
+
+			];
+
+			/*module(L)
 			[
 
 				class_<Quaternion>(classname).
@@ -430,52 +584,111 @@ namespace mye
 					property("y", &__quat_get<Real, 1>, &__quat_set<Real, 1>).
 					property("z", &__quat_get<Real, 2>, &__quat_set<Real, 2>)
 
-			];
+			];*/
 
 		}
 
 		template <typename T>
-		void BindMatrix3(lua_State *L, const char *classname)
+		void BindMatrix3(State state, const char *classname)
 		{
 
 			typedef Matrix<T, 3, 3> MatrixType;
 
-			module(L)
-				[
+			state
+			[
 
-					class_<MatrixType>(classname).
+				Class<MatrixType>(classname).
 
-					def(constructor<>()).
-					def(constructor<T>()).
-					def(constructor<const MatrixType&>()).
+					Constructor<>().
+					Constructor<T>().
+					Constructor<const MatrixType &>().
 
-					__MYE_LUA_DEFINE_MATRIX3_PROPERTIES()
+					//__MYE_LUA_DEFINE_MATRIX3_PROPERTIES()
 
-					def("Inverse", &MatrixType::Inverse).
-					def("Transpose", &MatrixType::Transpose).
-					def("Determinant", &Matrix4f::Determinant).
+					Function("Inverse",     &MatrixType::Inverse).
+					Function("Transpose",   &MatrixType::Transpose).
+					Function("Determinant", &MatrixType::Determinant).
 
-					def(const_self * const_self).
-					def(const_self + const_self).
+					Operator(Operand<const MatrixType &>() == Operand<const MatrixType &>()).
 
-					def(const_self * other<T>()).
-					def(other<T>() * const_self).
+					Operator(Operand<const MatrixType &>() * Operand<const MatrixType &>()).
+					Operator(Operand<const MatrixType &>() + Operand<const MatrixType &>()).
+					//Operator(Operand<const MatrixType &>() - Operand<const MatrixType &>()).
 
-					def(const_self * other<Matrix<T, 3, 1>>()).
+					Operator(Operand<const MatrixType &>() * Operand<T>()).
+					//Operator(Operand<const MatrixType &>() / Operand<T>()).
 
-					def(const_self == const_self)
+					Operator(Operand<const MatrixType &>() * Operand<const Vector3 &>())
 
-				];
+
+			];
+
+		/*	module(L)
+			[
+
+				class_<MatrixType>(classname).
+
+				def(constructor<>()).
+				def(constructor<T>()).
+				def(constructor<const MatrixType&>()).
+
+				__MYE_LUA_DEFINE_MATRIX3_PROPERTIES()
+
+				def("Inverse", &MatrixType::Inverse).
+				def("Transpose", &MatrixType::Transpose).
+				def("Determinant", &Matrix4f::Determinant).
+
+				def(const_self * const_self).
+				def(const_self + const_self).
+
+				def(const_self * other<T>()).
+				def(other<T>() * const_self).
+
+				def(const_self * other<Matrix<T, 3, 1>>()).
+
+				def(const_self == const_self)
+
+			];*/
 
 		}
 
 		template <typename T>
-		void BindMatrix4(lua_State *L, const char *classname)
+		void BindMatrix4(State state, const char *classname)
 		{
 
 			typedef Matrix<T, 4, 4> MatrixType;
 
-			module(L)
+			state
+			[
+
+				Class<MatrixType>(classname).
+
+					Constructor<>().
+					Constructor<T>().
+					Constructor<const MatrixType &>().
+					Constructor<const Matrix<T, 3, 3> &>().
+
+					//__MYE_LUA_DEFINE_MATRIX4_PROPERTIES()
+
+					Function("Inverse",     &MatrixType::Inverse).
+					Function("Transpose",   &MatrixType::Transpose).
+					Function("Determinant", &MatrixType::Determinant).
+
+					Operator(Operand<const MatrixType &>() == Operand<const MatrixType &>()).
+
+					Operator(Operand<const MatrixType &>() * Operand<const MatrixType &>()).
+					Operator(Operand<const MatrixType &>() + Operand<const MatrixType &>()).
+					//Operator(Operand<const MatrixType &>() - Operand<const MatrixType &>()).
+
+					Operator(Operand<const MatrixType &>() * Operand<T>()).
+					//Operator(Operand<const MatrixType &>() / Operand<T>()).
+
+					Operator(Operand<const MatrixType &>() * Operand<const Vector4 &>())
+
+
+			];
+
+			/*module(L)
 			[
 
 				class_<MatrixType>(classname).
@@ -501,14 +714,30 @@ namespace mye
 
 					def(const_self == const_self)
 
-			];
+			];*/
 
 		}
 
-		void BindTransform(lua_State *L, const char *classname)
+		void BindTransform(State state, const char *classname)
 		{
 
-			module(L)
+			state
+			[
+
+				Class<Transform>(classname).
+
+					Constructor<>().
+					Constructor<const Matrix<Real, 3, 1> &, const Quaternion &, const Matrix<Real, 3, 1> &>().
+
+					Property("orientation", &Transform::GetOrientation, &Transform::SetOrientation).
+					Property("position",    &Transform::GetPosition,    &Transform::SetPosition).
+					Property("scale",       &Transform::GetScale,       &Transform::SetScale).
+
+					Property("matrix",      &Transform::GetSRTMatrix)
+
+			];
+
+			/*module(L)
 			[
 
 				class_<Transform>(classname).
@@ -522,14 +751,35 @@ namespace mye
 
 					property("matrix", &Transform::GetSRTMatrix)
 
-			];
+			];*/
 
 		}
 
-		void BindVolumes(lua_State *L, const char *classname)
+		void BindVolumes(State state, const char *classname)
 		{
 
-			module(L)
+			state
+			[
+
+				Class<Volume<Real>>(classname).
+
+					Function("TransformAffine", &Volume<Real>::TransformAffine).
+					Function("Intersect", &Volume<Real>::Intersect),
+
+				Class<AABB, Volume<Real>>(classname).
+
+					Function("FromCenterHalfExtents", &AABB::FromCenterHalfExtents).
+					Function("FromMinMax",            &AABB::FromMinMax).
+
+					Property("center",      &AABB::GetCenter).
+					Property("halfextents", &AABB::GetHalfExtents).
+
+					Property("min", &AABB::GetMinimum).
+					Property("max", &AABB::GetMaximum)
+
+			];
+
+			/*module(L)
 			[
 
 				class_<Volume<Real>>(classname).
@@ -548,14 +798,29 @@ namespace mye
 					property("min", &AABB::GetMinimum).
 					property("max", &AABB::GetMaximum)
 
-			];
+			];*/
 
 		}
 
-		void BindRay(lua_State *L, const char *classname)
+		void BindRay(State state, const char *classname)
 		{
 
-			module(L)
+			state
+			[
+
+				Class<Ray>(classname).
+
+				Constructor<>().
+				Constructor<const mye::math::Vector3 &, const mye::math::Vector3 &>().
+
+				Function("Evaluate",  &Ray::Evaluate).
+
+				Property("origin",    &Ray::GetOrigin,    &Ray::SetOrigin).
+				Property("direction", &Ray::GetDirection, &Ray::SetDirection)
+
+			];
+
+			/*module(L)
 			[
 
 				class_<Ray>(classname).
@@ -568,34 +833,59 @@ namespace mye
 					property("origin",    &Ray::GetOrigin,    &Ray::SetOrigin).
 					property("direction", &Ray::GetDirection, &Ray::SetDirection)
 
-			];
+			];*/
 
 		}
 
-		void BindMath(lua_State *L)
+		void BindMath(State state)
 		{
 
-			BindVector2<Real> (L, MYE_LUA_VEC2);
-			BindVector2<int>  (L, MYE_LUA_VEC2I);
+			BindVector2<Real> (state, MYE_LUA_VEC2);
+			BindVector2<int>  (state, MYE_LUA_VEC2I);
 							  
-			BindVector3<Real> (L, MYE_LUA_VEC3);
-			BindVector3<int>  (L, MYE_LUA_VEC3I);
+			BindVector3<Real> (state, MYE_LUA_VEC3);
+			BindVector3<int>  (state, MYE_LUA_VEC3I);
 							  
-			BindVector4<Real> (L, MYE_LUA_VEC4);
-			BindVector4<int>  (L, MYE_LUA_VEC4I);
+			BindVector4<Real> (state, MYE_LUA_VEC4);
+			BindVector4<int>  (state, MYE_LUA_VEC4I);
 							  
-			BindMatrix3<Real> (L, MYE_LUA_MAT3);
-			BindMatrix4<Real> (L, MYE_LUA_MAT4);
+			BindMatrix3<Real> (state, MYE_LUA_MAT3);
+			BindMatrix4<Real> (state, MYE_LUA_MAT4);
 							  
-			BindQuaternion    (L, MYE_LUA_QUATERNION);
+			BindQuaternion    (state, MYE_LUA_QUATERNION);
 							  
-			BindTransform     (L, MYE_LUA_TRANSFORM);
+			BindTransform     (state, MYE_LUA_TRANSFORM);
 							  
-			BindVolumes       (L, MYE_LUA_AABB);
+			BindVolumes       (state, MYE_LUA_AABB);
 
-			BindRay           (L, MYE_LUA_RAY);
+			BindRay           (state, MYE_LUA_RAY);
 
-			module(L, "Math")
+
+			state
+			[
+
+				Namespace("Math")
+				[
+				
+					Function("TranslationMatrix4",         &TranslationMatrix4<Real>),
+					Function("RotationMatrix3",            &RotationMatrix3<Real>),
+					Function("RotationMatrix4",            &RotationMatrix4<Real>),
+					Function("RotationTranslationMatrix4", &RotationTranslationMatrix4<Real>),
+					Function("ScaleMatrix4",               &ScaleMatrix4<Real>),
+
+					Function("EulerAngles", &EulerAngles<Real>),
+
+					Function("Degrees", (Real(*) (Real)) &Degrees<Real>),
+					Function("Degrees", (Vector3(*) (const Vector3&)) &Degrees<Real>),
+
+					Function("Radians", (Real(*) (Real)) &Radians<Real>),
+					Function("Radians", (Vector3(*) (const Vector3&)) &Radians<Real>)
+
+				]
+
+			];
+
+			/*module(L, "Math")
 			[
 
 				def("TranslationMatrix4",         &TranslationMatrix4<Real>),
@@ -612,7 +902,7 @@ namespace mye
 				def("Radians", (Real(*) (Real)) &Radians<Real>),
 				def("Radians", (Vector3(*) (const Vector3&)) &Radians<Real>)
 
-			];
+			];*/
 
 		}
 

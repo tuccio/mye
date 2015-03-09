@@ -56,15 +56,23 @@ void WinGame::Run(void)
 		FloatSeconds dt(m_timer.Lap());
 
 		m_script->Preupdate(dt);
+		//m_objects->Preupdate(dt);
 
-		m_gameobjects->Update();
-		m_gameobjects->FinalizeUpdate();
+		/*m_gameobjects->Update()
+		m_gameobjects->FinalizeUpdate();*/
+
+		for (auto it = m_gameobjects->begin(); it != m_gameobjects->end(); it++)
+		{
+			m_script->Update(it);
+		}
 
 		m_physics->Update(dt);
 		//m_scene->Update();
 		m_graphics->Render();
 
-		m_input->ResetDeltas();
+		m_input->Postupdate();
+
+		m_gameobjects->FinalizeUpdate();
 
 	}
 	while (msg.message != WM_QUIT);

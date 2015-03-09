@@ -1,0 +1,49 @@
+<scene module="octree" size="1024" center="0 0 0" maxdepth="32">
+<!--
+	<gameobject name="sphere" entity="Sphere">
+		<render>
+			<aabb>
+				<min>-1.000000 -1.000000 0.000000</min>
+				<max>1.000000 1.000000 0.000000</max>
+			</aabb>
+			<mesh name="models/sphere.obj"/>
+		</render>
+	</gameobject>
+	<gameobject name="box1" entity="Box">
+		<render>
+			<aabb>
+				<min>-1.000000 -1.000000 -1.000000</min>
+				<max>1.000000 1.000000 1.000000</max>
+			</aabb>
+			<mesh name="models/box.obj"/>
+		</render>
+	</gameobject>
+	<gameobject name="camera">
+		<transform>
+			<position>0.000000 0.000000 0.000000</position>
+			<scale>1.000000 1.000000 1.000000</scale>
+			<orientation>1.000000 0.000000 0.000000 0.000000</orientation>
+		</transform>
+		<camera active="true">
+			<position>0.000000 0.000000 -5.000000</position>
+			<orientation>1.000000 0.000000 0.000000 0.000000</orientation>
+			<fovy>60.000000</fovy>
+			<znear>1.000000</znear>
+			<zfar>100.000000</zfar>
+		</camera>
+	</gameobject>
+	<gameobject name="box2" entity="Box">
+		<render>
+			<aabb>
+				<min>-1.000000 -1.000000 -1.000000</min>
+				<max>1.000000 1.000000 1.000000</max>
+			</aabb>
+			<mesh name="models/box.obj"/>
+		</render>
+	</gameobject>
+	<gameobject name="devconsole" entity="DeveloperConsole">
+	</gameobject>
+-->
+
+</scene>
+

@@ -13,6 +13,13 @@ Logger::Logger(void) :
 {
 }
 
+Logger::Logger(const char *events, const char *errors) :
+	m_errorFile(errors),
+	m_eventFile(events)
+{
+
+}
+
 
 Logger::~Logger(void)
 {

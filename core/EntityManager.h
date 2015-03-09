@@ -15,15 +15,24 @@ namespace mye
 
 		public:
 
-			EntityManager(const String &entityDirectory = "");
+			EntityManager(const String & entityDirectory = "");
+
+			inline const mye::core::String & GetDefaultDirectory(void) const
+			{
+				return m_defaultDirectory;
+			}
 
 		protected:
 
-			Entity* CreateImpl(const String &name,
+			Entity * CreateImpl(const String &name,
 				ManualResourceLoader *manual,
 				const Parameters &params);
 
 			virtual void FreeImpl(Resource* resource);
+
+		private:
+
+			String m_defaultDirectory;
 
 		};
 

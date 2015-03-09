@@ -17,12 +17,12 @@ namespace mye
 	namespace core
 	{
 
-		String PointerToString(const void *p);
-		void* StringToPointer(const String &str);
+		String PointerToString(const void * p);
+		void * StringToPointer(const String & str);
 
-		void RuntimeError(const String &error);
+		void RuntimeError(const String & error);
 
-		std::vector<String> SplitCommandLine(const String &cmd);
+		std::vector<String> SplitCommandLine(const String & cmd);
 
 	}
 }

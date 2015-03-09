@@ -2,7 +2,9 @@
 
 #include "VertexData.h"
 #include "Resource.h"
+
 #include <mye/math/Math.h>
+
 #include <utility>
 
 namespace mye
@@ -66,7 +68,7 @@ namespace mye
 
 		};
 
-		typedef boost::shared_ptr<Mesh> MeshPointer;
+		typedef std::shared_ptr<Mesh> MeshPointer;
 
 	}
 

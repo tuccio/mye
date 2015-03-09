@@ -6,11 +6,8 @@
 #include <mye/core/Game.h>
 #include <mye/core/InputModule.h>
 
-#include <luabind/luabind.hpp>
-
 #include "Game.h"
 #include "DirectX11.h"
-#include "Alignment.h"
 #include "Converters.h"
 #include "GameObjectHandle.h"
 #include "InputModule.h"
@@ -29,11 +26,10 @@
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 
-#include <luabind/detail/typetraits.hpp>
-
-using namespace luabind;
 using namespace mye::core;
 using namespace mye::dx11;
+
+using namespace luapp11;
 
 
 namespace mye
@@ -42,187 +38,191 @@ namespace mye
 	namespace lua
 	{
 
-		void __mye_halt(void)
-		{
-			bool halt = true;
-			assert(halt);
-		}
-
 		IWindow* __game_get_window(Game &game);
 
 		void __graphics_module_reinterpret(const mye::core::String &type);
 
-		boost::reference_wrapper<Material> __mye_get_material(RenderComponent &rc);
-
-		void BindGame(lua_State *L)
+		void BindGame(luapp11::State state)
 		{
 
-			BindGameObjectHandle(L);			
+			BindGameObjectHandle(state);			
 
-			module(L)
+			state
 			[
 
-				def("Halt", &__mye_halt),
+				Class<PointLight>(MYE_LUA_POINTLIGHT).
 
-				class_<PointLight>(MYE_LUA_POINTLIGHT).
+					Constructor<const mye::math::Vector3&, mye::math::Real, const mye::math::Vector3&, mye::math::Real>().
 
-				def(constructor<const mye::math::Vector3&, mye::math::Real, const mye::math::Vector3&, mye::math::Real>()).
+					Property("position",  &PointLight::position).
+					Property("color",     &PointLight::color).
+					Property("intensity", &PointLight::intensity).
+					Property("range",     &PointLight::range),
 
-					def_readwrite("position", &PointLight::position).
-					def_readwrite("color", &PointLight::color).
-					def_readwrite("intensity", &PointLight::intensity).
-					def_readwrite("range", &PointLight::range),
+				Enum<LightType>("LightType")
 
-				class_<Light>(MYE_LUA_LIGHT).
+					("Directional", LightType::DIRECTIONAL)
+					("Pointlight",  LightType::POINTLIGHT)
+					("Spotlight",   LightType::SPOTLIGHT),
 
-					enum_("LightType")
-					[
-						value("Directional", static_cast<int>(LightType::DIRECTIONAL)),
-						value("Pointlight",  static_cast<int>(LightType::POINTLIGHT)),
-						value("Spotlight",   static_cast<int>(LightType::SPOTLIGHT))
-					].
+				Class<Light>(MYE_LUA_LIGHT).
 
-					def(constructor<>()).
-					def(constructor<const PointLight &>()).
+					Constructor<>().
+					Constructor<const PointLight &>().
 
-					property("position",  &Light::GetPosition,  &Light::SetPosition).
-					property("color",     &Light::GetColor,     &Light::SetColor).
-					property("intensity", &Light::GetIntensity, &Light::SetIntensity).
-					property("direction", &Light::GetDirection, &Light::SetDirection).
-					property("spotAngle", &Light::GetSpotAngle, &Light::SetSpotAngle).
-					property("range",     &Light::GetRange,     &Light::SetRange).
-					property("type",      &Light::GetType,      &Light::SetType),
+					Property("position",  &Light::GetPosition,  &Light::SetPosition).
+					Property("color",     &Light::GetColor,     &Light::SetColor).
+					Property("intensity", &Light::GetIntensity, &Light::SetIntensity).
+					Property("direction", &Light::GetDirection, &Light::SetDirection).
+					Property("spotAngle", &Light::GetSpotAngle, &Light::SetSpotAngle).
+					Property("range",     &Light::GetRange,     &Light::SetRange).
+					Property("type",      &Light::GetType,      &Light::SetType),
 
-				class_<Camera>(MYE_LUA_CAMERA).
+				Class<Camera>(MYE_LUA_CAMERA).
 
-					def("Roll",  &Camera::Roll).
-					def("Yaw",   &Camera::Yaw).
-					def("Pitch", &Camera::Pitch).
+					Function("LookAt", &Camera::LookAt).
 
-					def("RayCast", &Camera::RayCast).
-					def("GetViewMatrix", (const mye::math::Matrix4& (Camera::*) ()) &Camera::GetViewMatrix).
-					def("GetProjectionMatrix", (const mye::math::Matrix4& (Camera::*) ()) &Camera::GetProjectionMatrix).
+					Function("Roll",  &Camera::Roll).
+					Function("Yaw",   &Camera::Yaw).
+					Function("Pitch", &Camera::Pitch).
 
-					property("position",    &Camera::GetPosition,         &Camera::SetPosition).
-					property("orientation", &Camera::GetOrientation,      &Camera::SetOrientation).
-					property("fovx",        &Camera::GetFovX).
-					property("fovy",        &Camera::GetFovY,             &Camera::SetFovY).
-					property("near",        &Camera::GetNearClipDistance, &Camera::SetNearClipDistance).
-					property("far",         &Camera::GetFarClipDistance,  &Camera::SetFarClipDistance).
+					Function("RayCast", &Camera::RayCast).
 
-					property("right",   &Camera::Right).
-					property("forward", &Camera::Forward).
-					property("up",      &Camera::Up),
+					Function("GetViewMatrix",       (const mye::math::Matrix4& (Camera::*) ()) &Camera::GetViewMatrix).
+					Function("GetProjectionMatrix", (const mye::math::Matrix4& (Camera::*) ()) &Camera::GetProjectionMatrix).
 
-				class_<Material>(MYE_LUA_MATERIAL).
+					Property("position",    &Camera::GetPosition,         &Camera::SetPosition).
+					Property("orientation", &Camera::GetOrientation,      &Camera::SetOrientation).
+					Property("fovx",        &Camera::GetFovX).
+					Property("fovy",        &Camera::GetFovY,             &Camera::SetFovY).
+					Property("near",        &Camera::GetNearClipDistance, &Camera::SetNearClipDistance).
+					Property("far",         &Camera::GetFarClipDistance,  &Camera::SetFarClipDistance).
+
+					Property("right",   &Camera::Right).
+					Property("forward", &Camera::Forward).
+					Property("up",      &Camera::Up),
+
+				/*Class<Material>(MYE_LUA_MATERIAL).
 					
-					def(constructor<>()).
+					Constructor<>().
 
-					def_readwrite("color", &Material::color).
-					def_readwrite("metallic", &Material::metallic).
-					def_readwrite("specular", &Material::specular).
-					def_readwrite("roughness", &Material::roughness),
+					Property("color",     &Material::color).
+					Property("metallic",  &Material::metallic).
+					Property("specular",  &Material::specular).
+					Property("roughness", &Material::roughness),*/
 
-				class_<Game>(MYE_LUA_GAME).
+				Class<Game>(MYE_LUA_GAME).
 
-					def("GetMainWindow", &__game_get_window).
-					def("Quit", &Game::Quit),
+					Function("GetMainWindow", &__game_get_window).
+					Function("Quit", &Game::Quit),
 
-				class_<GameObjectsModule>(MYE_LUA_GAMEOBJECTSMODULE).
+				Class<GameObjectsModule, GameObjectsManager>(MYE_LUA_GAMEOBJECTSMODULE).
 
-					def("Create", (GameObjectHandle(GameObjectsModule::*) (void)) &GameObjectsModule::Create).
-					def("Create", (GameObjectHandle(GameObjectsModule::*) (const mye::core::String&)) &GameObjectsModule::Create).
+					Function("Create", (GameObjectHandle(GameObjectsModule::*) (void)) &GameObjectsModule::Create).
+					Function("Create", (GameObjectHandle(GameObjectsModule::*) (const mye::core::String&)) &GameObjectsModule::Create).
 
-					def("CreateEntity", (GameObjectHandle(GameObjectsModule::*) (const mye::core::String&)) &GameObjectsModule::CreateEntity).
-					def("CreateEntity", (GameObjectHandle(GameObjectsModule::*) (const mye::core::String&, const mye::core::String&)) &GameObjectsModule::CreateEntity).
+					Function("CreateEntity", (GameObjectHandle(GameObjectsModule::*) (const mye::core::String&)) &GameObjectsModule::CreateEntity).
+					Function("CreateEntity", (GameObjectHandle(GameObjectsModule::*) (const mye::core::String&, const mye::core::String&)) &GameObjectsModule::CreateEntity).
 
-					def("Find", &GameObjectsModule::Find),
+					Function("Find", &GameObjectsModule::Find),
 
-				class_<GraphicsModule>(MYE_LUA_GRAPHICSMODULE).
+				Class<GraphicsModule>(MYE_LUA_GRAPHICSMODULE).
 
-					def("HasWindow", &GraphicsModule::HasWindow).
-					def("Reinterpret", &__graphics_module_reinterpret).
+					Function("HasWindow",   &GraphicsModule::HasWindow).
+					Function("Reinterpret", &__graphics_module_reinterpret).
 
-					property("window", (IWindow* (GraphicsModule::*) (void)) &GraphicsModule::GetWindow).
-					property("clearColor", &GraphicsModule::GetClearColor, &GraphicsModule::SetClearColor).
-					property("vsync", &GraphicsModule::GetVSync, &GraphicsModule::SetVSync).
-					property("fps", &GraphicsModule::GetFPS),
+					Property("window", (IWindow* (GraphicsModule::*) (void)) &GraphicsModule::GetWindow).
 
-				class_<Component>(MYE_LUA_COMPONENT),
+					Property("clearColor", &GraphicsModule::GetClearColor, &GraphicsModule::SetClearColor).
+					Property("vsync",      &GraphicsModule::GetVSync, &GraphicsModule::SetVSync).
+					Property("fps",        &GraphicsModule::GetFPS),
 
-				class_<TransformComponent, Component, mye::math::Transform>(MYE_LUA_TRANSFORM_COMPONENT).
+				Class<Component>(MYE_LUA_COMPONENT),
 
-					property("position", &TransformComponent::GetPosition, &TransformComponent::SetPosition).
-					property("orientation", &TransformComponent::GetOrientation, &TransformComponent::SetOrientation).
-					property("scale", &TransformComponent::GetScale, &TransformComponent::SetScale).
+				Class<TransformComponent, Component>(MYE_LUA_TRANSFORM_COMPONENT).
 
-					property("up", &TransformComponent::Up).
-					property("right", &TransformComponent::Right).
-					property("forward", &TransformComponent::Forward),
+					Property("position",    &TransformComponent::Position,    &TransformComponent::SetPosition).
+					Property("orientation", &TransformComponent::Orientation, &TransformComponent::SetOrientation).
+					Property("scale",       &TransformComponent::Scale,       &TransformComponent::SetScale).
 
-				class_<RigidBodyComponent, Component>(MYE_LUA_RIGIDBODY_COMPONENT).
+					Property("up",      &TransformComponent::Up).
+					Property("right",   &TransformComponent::Right).
+					Property("forward", &TransformComponent::Forward),
 
-					def(constructor<>()).
-					def(constructor<BulletCollisionShapePointer, mye::math::Real>()).
-					def(constructor<BulletCollisionShapePointer, mye::math::Real, const mye::math::Vector3&, const mye::math::Quaternion&>()).
-					property("velocity", &RigidBodyComponent::GetVelocity, &RigidBodyComponent::SetVelocity).
-					property("position", &RigidBodyComponent::GetPosition, &RigidBodyComponent::SetPosition).
-					property("mass", &RigidBodyComponent::GetMass, &RigidBodyComponent::SetMass).
-					property("shape", &RigidBodyComponent::GetCollisionShape, &RigidBodyComponent::SetCollisionShape),
+				Class<RigidBodyComponent, Component>(MYE_LUA_RIGIDBODY_COMPONENT).
 
-				class_<Text2DComponent, Component>(MYE_LUA_TEXT2D_COMPONENT).
+					Constructor<>().
+					Constructor<BulletCollisionShapePointer, mye::math::Real>().
+					Constructor<BulletCollisionShapePointer, mye::math::Real, const mye::math::Vector3&, const mye::math::Quaternion&>().
 
-					def(constructor<>()).
-					def(constructor<const mye::math::Vector2i &, FontPointer, const mye::core::String &>()).
-					property("text", &Text2DComponent::GetText, &Text2DComponent::SetText).
-					property("position", &Text2DComponent::GetPosition, &Text2DComponent::SetPosition).
-					property("font", &Text2DComponent::GetFont, &Text2DComponent::SetFont).
-					property("pointsize", &Text2DComponent::GetPointSize, &Text2DComponent::SetPointSize).
-					property("color", &Text2DComponent::GetColor, &Text2DComponent::SetColor),
+					Function("ApplyForce", &RigidBodyComponent::ApplyForce).
+					Function("ApplyImpulse", &RigidBodyComponent::ApplyImpulse).
 
-				class_<RenderComponent, Component>(MYE_LUA_RENDER_COMPONENT).
+					Property("velocity", &RigidBodyComponent::GetVelocity,       &RigidBodyComponent::SetVelocity).
+					Property("position", &RigidBodyComponent::GetPosition,       &RigidBodyComponent::SetPosition).
+					Property("mass",     &RigidBodyComponent::GetMass,           &RigidBodyComponent::SetMass).
+					Property("shape",    &RigidBodyComponent::GetCollisionShape, &RigidBodyComponent::SetCollisionShape),
 
-					def(constructor<>()).
-					property("mesh", &RenderComponent::GetMesh, &RenderComponent::SetMesh).
-					property("matrix", &RenderComponent::GetModelMatrix, &RenderComponent::SetModelMatrix).
-					property("material", &__mye_get_material),
+				Class<Text2DComponent, Component>(MYE_LUA_TEXT2D_COMPONENT).
 
-				class_<LightComponent, bases<Component, Light>>(MYE_LUA_LIGHT_COMPONENT).
-					def(constructor<>()).
-					def(constructor<const Light&>())					
+					Constructor<>().
+					Constructor<const mye::math::Vector2i &, FontPointer, const mye::core::String &>().
+
+					Property("text",      &Text2DComponent::GetText,      &Text2DComponent::SetText).
+					Property("position",  &Text2DComponent::GetPosition,  &Text2DComponent::SetPosition).
+					Property("font",      &Text2DComponent::GetFont,      &Text2DComponent::SetFont).
+					Property("pointsize", &Text2DComponent::GetPointSize, &Text2DComponent::SetPointSize).
+					Property("color",     &Text2DComponent::GetColor,     &Text2DComponent::SetColor),
+
+				Class<RenderComponent, Component>(MYE_LUA_RENDER_COMPONENT).
+
+					Constructor<>().
+
+					Property("mesh",     &RenderComponent::GetMesh,            &RenderComponent::SetMesh).
+					Property("matrix",   &RenderComponent::GetModelMatrix,     &RenderComponent::SetModelMatrix).
+					Property("material", &RenderComponent::GetMaterial,        &RenderComponent::SetMaterial),
+
+				Class<LightComponent, Component, Light>(MYE_LUA_LIGHT_COMPONENT).
+
+					Constructor<>().
+					Constructor<const Light&>(),
+
+				Class<CameraComponent, Component, Camera>(MYE_LUA_CAMERA_COMPONENT).
+
+					Constructor<>()
 
 			];
 
-			BindInputModule(L);
+			BindInputModule(state);
 
-			BindScripts(L);
-			BindVariableComponent(L);
+			BindScripts(state);
+			BindVariableComponent(state);
 
-			BindWindow(L);
-			BindWindowsFunctions(L);
+			BindWindow(state);
+			BindWindowsFunctions(state);
 
-			BindDirectX11(L);
+			BindDirectX11(state);
 
 		}
 
-		void BindWindow(lua_State *L)
+		void BindWindow(luapp11::State state)
 		{
 
-			module(L)
+			state
 			[
 
-				class_<IWindow>(MYE_LUA_WINDOW).
+				Class<IWindow>(MYE_LUA_WINDOW).
 
-					def("Create", (bool (IWindow::*) (void)) &IWindow::Create).
-					def("Destroy", &IWindow::Destroy).
+					Function("Create", (bool (IWindow::*) (void)) &IWindow::Create).
+					Function("Destroy", &IWindow::Destroy).
 
-					def("Focus", &IWindow::Focus).
-					def("Show", &IWindow::Show).
-					def("Hide", &IWindow::Hide).
+					Function("Focus", &IWindow::Focus).
+					Function("Show",  &IWindow::Show).
+					Function("Hide",  &IWindow::Hide).
 
-					property("caption", &IWindow::GetCaption, &IWindow::SetCaption).
-					property("size", &IWindow::GetSize, &IWindow::SetSize).
-					property("position", &IWindow::GetPosition, &IWindow::SetPosition)
+					Property("caption",  &IWindow::GetCaption, &IWindow::SetCaption).
+					Property("size",     &IWindow::GetSize, &IWindow::SetSize).
+					Property("position", &IWindow::GetPosition, &IWindow::SetPosition)
 
 			];
 
@@ -236,20 +236,15 @@ namespace mye
 		void __graphics_module_reinterpret(const mye::core::String &type)
 		{
 
-			Game& game = Game::GetSingleton();
+			/*Game& game = Game::GetSingleton();
 			lua_State *L = static_cast<LuaModule*>(game.GetScriptModule())->GetLuaState();
 
 			if (type == "DX11")
 			{
 				DX11Module &dx11 = *static_cast<DX11Module*>(game.GetGraphicsModule());
 				globals(L)["Graphics"] = object(L, boost::ref(dx11));
-			}
+			}*/
 
-		}
-
-		boost::reference_wrapper<Material> __mye_get_material(RenderComponent &rc)
-		{
-			return boost::ref(*rc.GetMaterialPointer());
 		}
 
 	}

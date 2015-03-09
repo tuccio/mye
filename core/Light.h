@@ -32,10 +32,10 @@ namespace mye
 			}
 
 			mye::math::Vector3 color;
-			mye::math::Real intensity;
+			mye::math::Real    intensity;
 			mye::math::Vector3 position;
 
-			mye::math::Real range;
+			mye::math::Real    range;
 
 		};
 
@@ -85,7 +85,7 @@ namespace mye
 			LightType m_type;
 
 			mye::math::Vector3 m_color;
-			mye::math::Real m_intensity;
+			mye::math::Real    m_intensity;
 
 			mye::math::Vector3 m_position;
 			mye::math::Vector3 m_direction;

@@ -17,6 +17,48 @@ namespace mye
 
 		bool MakeTransparentBitmap(HBITMAP hBitmap, HDC hDC);
 
+		inline bool CreateConsole(void)
+		{
+
+			if (AllocConsole())
+			{
+				freopen("CONOUT$", "w", stdout);
+				freopen("CONIN$", "r", stdin);
+				return true;
+			}
+
+			return false;
+
+		}
+
+		inline void DestroyConsole(void)
+		{
+
+			FreeConsole();
+
+		}
+
+		inline void FocusConsole(void)
+		{
+
+			HWND hWnd = GetConsoleWindow();
+
+			if (hWnd)
+			{
+
+				SetFocus(hWnd);
+				ShowWindow(hWnd, TRUE);
+				SetWindowPos(hWnd, NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+
+			}
+
+		}
+
+		inline void PopupMessage(const char *title, const char *msg)
+		{
+			::MessageBox(NULL, msg, title, MB_OK);
+		}
+
 	}
 
 }
