@@ -21,10 +21,10 @@ OctreeSceneModule::~OctreeSceneModule(void)
 
 #ifdef __MYE_NO_OCTREE
 
-SceneModule::ObjectsList OctreeSceneModule::GetVisibleObjects(void)
+GameObjectsList OctreeSceneModule::GetVisibleObjects(const Matrix4 & viewProjection)
 {
-	
-	SceneModule::ObjectsList list;
+
+	GameObjectsList list;
 
 	for (GameObjectHandle hObj : m_objects)
 	{
@@ -53,10 +53,10 @@ void OctreeSceneModule::RemoveGameObject(const GameObjectHandle &hObj)
 
 }
 
-GameObjectRayIntersection OctreeSceneModule::Pick(mye::math::Ray ray)
+GameObjectRayIntersection OctreeSceneModule::Pick(const mye::math::Ray & ray)
 {
 
-	SceneModule::ObjectsList objects;
+	GameObjectsList objects;
 
 	mye::math::Real tMin = std::numeric_limits<mye::math::Real>::infinity();
 	GameObjectHandle rObj;
@@ -64,7 +64,7 @@ GameObjectRayIntersection OctreeSceneModule::Pick(mye::math::Ray ray)
 	for (GameObjectHandle hObj : m_objects)
 	{
 
-		GameObject *object = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
+		GameObject * object = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
 
 		if (object)
 		{
@@ -92,26 +92,25 @@ void OctreeSceneModule::ApplyUpdates(void)
 
 }
 
-void OctreeSceneModule::Reset(
-	const mye::math::Vector3 &center,
-	float size,
-	unsigned int maxdepth,
-	unsigned int looseness)
+void OctreeSceneModule::Reset(const mye::math::Vector3 & center,
+							  float size,
+							  unsigned int maxdepth,
+							  unsigned int looseness)
 {
 
 	m_objects.clear();
 
 }
 
-SceneModule::ObjectsList OctreeSceneModule::GetObjectsList(void)
+GameObjectsList OctreeSceneModule::GetObjectsList(void)
 {
 
-	SceneModule::ObjectsList objects;
+	GameObjectsList objects;
 
 	for (GameObjectHandle hObj : m_objects)
 	{
 
-		GameObject *object = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
+		GameObject * object = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
 
 		if (object)
 		{

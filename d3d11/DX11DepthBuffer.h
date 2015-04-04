@@ -1,6 +1,7 @@
 #pragma once
 
 #include "DX11Device.h"
+#include "DX11ShaderResource.h"
 
 namespace mye
 {
@@ -11,14 +12,17 @@ namespace mye
 		struct DX11DepthBufferConfiguration
 		{
 
-			DX11Device *device;
+			DX11Device * device;
 
 			int width;
 			int height;
 
+			bool shaderResource;
+
 		};
 
-		class DX11DepthBuffer
+		class DX11DepthBuffer :
+			public DX11ShaderResource
 		{
 
 		public:
@@ -35,20 +39,18 @@ namespace mye
 
 			void Clear(float depth = 1.0f);
 
-			inline ID3D11DepthStencilView* GetDepthStencilView(void);
+			inline ID3D11DepthStencilView * GetDepthStencilView(void)
+			{
+				return m_depthStencilView;
+			}
 
 		private:
 
-			ID3D11Texture2D              *m_depthStencilBuffer;
-			ID3D11DepthStencilView       *m_depthStencilView;
-			DX11DepthBufferConfiguration  m_depthBufferConfiguration;
+			ID3D11Texture2D              * m_depthStencilBuffer;
+			ID3D11DepthStencilView       * m_depthStencilView;
+			DX11DepthBufferConfiguration   m_depthBufferConfiguration;
 
 		};
-
-		ID3D11DepthStencilView* DX11DepthBuffer::GetDepthStencilView(void)
-		{
-			return m_depthStencilView;
-		}
 
 	}
 }

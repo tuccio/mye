@@ -2,23 +2,34 @@
 #include "Game.h"
 
 using namespace mye::core;
+using namespace mye::math;
 
 SceneModule::SceneModule(void)
 {
 	m_camera = nullptr;
 }
 
-SceneModule::ObjectsList SceneModule::GetVisibleObjects(void)
+GameObjectsList SceneModule::GetVisibleObjects(void)
 {
-	return ObjectsList();
+	return GetVisibleObjects(m_camera);
 }
 
-SceneModule::ObjectsList SceneModule::GetObjectsList(void)
+GameObjectsList SceneModule::GetVisibleObjects(CameraType * camera)
 {
-	return ObjectsList();
+	return GetVisibleObjects(camera->GetProjectionMatrix() * camera->GetViewMatrix());
 }
 
-const SceneModule::LightsList & SceneModule::GetLightsList(void) const
+GameObjectsList SceneModule::GetVisibleObjects(const Matrix4 & viewProjection)
+{
+	return GameObjectsList();
+}
+
+GameObjectsList SceneModule::GetObjectsList(void)
+{
+	return GameObjectsList();
+}
+
+const LightsList & SceneModule::GetLightsList(void) const
 {
 	return m_lights;
 }
@@ -84,7 +95,7 @@ void SceneModule::RemoveGameObject(const GameObjectHandle & hObj)
 
 }
 
-GameObjectRayIntersection SceneModule::Pick(mye::math::Ray ray)
+GameObjectRayIntersection SceneModule::Pick(const mye::math::Ray & ray)
 {
 	return { GameObjectHandle(), -1 };
 }

@@ -69,7 +69,7 @@ bool DX11VertexBuffer::Create(void *data, size_t n, const VertexDeclaration &vDe
 
 	bool success =
 		n == 0 ||
-		!HRTESTFAILED(m_device.GetDevice()->CreateBuffer(
+		!__MYE_DX11_HR_TEST_FAILED(m_device.GetDevice()->CreateBuffer(
 			&vertexBufferDesc,
 			&vertexBufferData,
 			&m_buffer));
@@ -114,7 +114,7 @@ bool DX11VertexBuffer::Create(Mesh *mesh)
 	m_vertices = mesh->GetTrianglesCount() * 3;
 
 	bool success =
-		!HRTESTFAILED(
+		!__MYE_DX11_HR_TEST_FAILED(
 			m_device.GetDevice()->CreateBuffer(
 				&vertexBufferDesc,
 				&vertexBufferData,
@@ -178,7 +178,7 @@ bool DX11VertexBuffer::Create(Model *model)
 	
 
 	bool success =
-		!HRTESTFAILED(m_device.GetDevice()->CreateBuffer(
+		!__MYE_DX11_HR_TEST_FAILED(m_device.GetDevice()->CreateBuffer(
 			&vertexBufferDesc,
 			pVertexBufferData,
 			&m_buffer));

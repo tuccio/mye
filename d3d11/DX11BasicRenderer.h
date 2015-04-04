@@ -18,14 +18,14 @@ namespace mye
 	namespace dx11
 	{
 
-		class DeferredLightingRenderer :
+		class DX11BasicRenderer :
 			public mye::core::IWindow::Listener
 		{
 
 		public:
 
-			DeferredLightingRenderer(DX11Device &device, mye::win::Window *window);
-			~DeferredLightingRenderer(void);
+			DX11BasicRenderer(DX11Device &device, mye::win::Window *window);
+			~DX11BasicRenderer(void);
 
 			bool Init(void);
 			void Shutdown(void);
@@ -35,7 +35,7 @@ namespace mye
 			void SetWindow(mye::win::Window *window);
 			void OnResize(mye::core::IWindow *window, const mye::math::Vector2i &size);
 
-		private:			
+		private:
 
 			bool                    m_initialized;
 
@@ -43,22 +43,11 @@ namespace mye
 
 			mye::win::Window       *m_window;
 
-			DX11VertexShaderPointer m_deferredGeometryVS;
-			DX11PixelShaderPointer  m_deferredGeometryPS;
+			DX11VertexShaderPointer m_basicVS;
+			DX11PixelShaderPointer  m_basicPS;
 
-			DX11VertexShaderPointer m_deferredLightsVS;
-			DX11PixelShaderPointer  m_deferredLightsPS;
-
-			DX11Texture             m_target0;
-			DX11Texture             m_target1;
-			DX11Texture             m_target2;
-			DX11Texture             m_target3;
-							       
 			DX11ConstantBuffer      m_transformBuffer;
-			DX11ConstantBuffer      m_lightBuffer;
-			DX11ConstantBuffer      m_cameraBuffer;
-			DX11ConstantBuffer      m_materialBuffer;
-							       
+
 			DX11DepthBuffer         m_depthBuffer;
 
 			mye::math::Vector4f     m_clearColor;

@@ -1,4 +1,4 @@
-#include "DeferredLightingRenderer.h"
+#include "DX11DeferredShadingRenderer.h"
 
 #include "DX11VertexBuffer.h"
 #include "DX11Utils.h"
@@ -16,7 +16,7 @@ using namespace mye::core;
 using namespace mye::win;
 using namespace mye::math;
 
-DeferredLightingRenderer::DeferredLightingRenderer(DX11Device &device, Window *window) :
+DX11DeferredShadingRenderer::DX11DeferredShadingRenderer(DX11Device & device, Window * window) :
 	m_device(device),
 	m_window(nullptr),
 	m_target0(nullptr, "", nullptr, device),
@@ -42,21 +42,22 @@ DeferredLightingRenderer::DeferredLightingRenderer(DX11Device &device, Window *w
 
 	DX11DepthBufferConfiguration depthBufferConf;
 
-	depthBufferConf.device = &device;
-	depthBufferConf.height = 0;
-	depthBufferConf.width = 0;
+	depthBufferConf.device         = &device;
+	depthBufferConf.height         = 0;
+	depthBufferConf.width          = 0;
+	depthBufferConf.shaderResource = false;
 
 	m_depthBuffer = DX11DepthBuffer(depthBufferConf);
 
 }
 
 
-DeferredLightingRenderer::~DeferredLightingRenderer(void)
+DX11DeferredShadingRenderer::~DX11DeferredShadingRenderer(void)
 {
 
 }
 
-bool DeferredLightingRenderer::Init(void)
+bool DX11DeferredShadingRenderer::Init(void)
 {
 
 	VertexDeclaration deferredGeometryVD({
@@ -75,7 +76,7 @@ bool DeferredLightingRenderer::Init(void)
 
 	m_deferredGeometryVS = ResourceTypeManager::GetSingleton().CreateResource<DX11VertexShader>(
 		"DX11Shader",
-		"./shaders/deferred_geometry_vs.cso",
+		"./shaders/deferred_shading_geometry_vs.cso",
 		nullptr,
 		Parameters({
 			{ "type", "vertex" },
@@ -86,7 +87,7 @@ bool DeferredLightingRenderer::Init(void)
 
 	m_deferredLightsVS = ResourceTypeManager::GetSingleton().CreateResource<DX11VertexShader>(
 		"DX11Shader",
-		"./shaders/deferred_lights_vs.cso",
+		"./shaders/deferred_shading_lights_vs.cso",
 		nullptr,
 		Parameters({
 			{ "type", "vertex" },
@@ -97,7 +98,7 @@ bool DeferredLightingRenderer::Init(void)
 
 	m_deferredGeometryPS = ResourceTypeManager::GetSingleton().CreateResource<DX11PixelShader>(
 		"DX11Shader",
-		"./shaders/deferred_geometry_ps.cso",
+		"./shaders/deferred_shading_geometry_ps.cso",
 		nullptr,
 		Parameters({
 			{ "type", "pixel" },
@@ -107,7 +108,7 @@ bool DeferredLightingRenderer::Init(void)
 	
 	m_deferredLightsPS = ResourceTypeManager::GetSingleton().CreateResource<DX11PixelShader>(
 		"DX11Shader",
-		"./shaders/deferred_lights_ps.cso",
+		"./shaders/deferred_shading_lights_ps.cso",
 		nullptr,
 		Parameters({
 			{ "type", "pixel" },
@@ -136,7 +137,7 @@ bool DeferredLightingRenderer::Init(void)
 
 }
 
-void DeferredLightingRenderer::Shutdown(void)
+void DX11DeferredShadingRenderer::Shutdown(void)
 {
 
 	if (m_initialized)
@@ -162,7 +163,7 @@ void DeferredLightingRenderer::Shutdown(void)
 
 }
 
-void DeferredLightingRenderer::Render(ID3D11RenderTargetView *target)
+void DX11DeferredShadingRenderer::Render(ID3D11RenderTargetView * target)
 {
 
 	ID3D11RenderTargetView *renderTargets[] = {
@@ -179,16 +180,16 @@ void DeferredLightingRenderer::Render(ID3D11RenderTargetView *target)
 
 	m_depthBuffer.Clear();
 
-	SceneModule *scene = Game::GetSingleton().GetSceneModule();
-	Camera *camera = scene->GetCamera();
+	SceneModule * scene = Game::GetSingleton().GetSceneModule();
+	Camera      * camera = scene->GetCamera();
 
 	if (camera)
 	{
 
-		SceneModule::ObjectsList visibleObjects = scene->GetVisibleObjects();
+		auto visibleObjects = scene->GetVisibleObjects();
 
-		Matrix4f view = camera->GetViewMatrix();
-		Matrix4f projection = camera->GetProjectionMatrix();
+		Matrix4 view       = camera->GetViewMatrix();
+		Matrix4 projection = camera->GetProjectionMatrix();
 
 		/* First step */
 
@@ -201,17 +202,17 @@ void DeferredLightingRenderer::Render(ID3D11RenderTargetView *target)
 			m_depthBuffer.GetDepthStencilView());
 
 		m_device.SetBlending(false);
-		m_device.SetDepthTest(true);
+		m_device.SetDepthTest(DX11DepthTest::ON);
 
-		for (GameObject *object : visibleObjects)
+		for (GameObject * object : visibleObjects)
 		{
 
-			RenderComponent *rc = object->GetRenderComponent();
+			RenderComponent * rc = object->GetRenderComponent();
 
 			if (rc)
 			{
 
-				TransformComponent *tc = object->GetTransformComponent();
+				TransformComponent * tc = object->GetTransformComponent();
 
 				MeshPointer mesh = rc->GetMesh();
 
@@ -220,23 +221,24 @@ void DeferredLightingRenderer::Render(ID3D11RenderTargetView *target)
 
 					detail::TransformBuffer transformBuffer;
 
-					transformBuffer.world = tc->GetWorldMatrix() * rc->GetModelMatrix();
-					transformBuffer.worldView = view * transformBuffer.world;
+					transformBuffer.world               = tc->GetWorldMatrix() * rc->GetModelMatrix();
+					transformBuffer.worldView           = view * transformBuffer.world;
 					transformBuffer.worldViewProjection = projection * transformBuffer.worldView;
 
-					m_transformBuffer.Bind(PIPELINE_VERTEX_SHADER, 0);
+					m_transformBuffer.Bind(DX11PipelineStage::VERTEX_SHADER, 0);
 					m_transformBuffer.SetData(&transformBuffer);
 
 					MaterialPointer material = rc->GetMaterial();
 
 					detail::MaterialBuffer materialBuffer;
 
-					materialBuffer.color     = material->GetDiffuseColor();
-					materialBuffer.specular  = material->GetSpecular();
-					materialBuffer.metallic  = material->GetMetallic();
-					materialBuffer.roughness = material->GetRoughness();
+					materialBuffer.diffuseColor  = material->GetDiffuseColor();
+					materialBuffer.specularColor = material->GetSpecularColor();
+					materialBuffer.specular      = material->GetSpecular();
+					materialBuffer.metallic      = material->GetMetallic();
+					materialBuffer.roughness     = material->GetRoughness();
 
-					m_materialBuffer.Bind(PIPELINE_PIXEL_SHADER, 0);
+					m_materialBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, 0);
 					m_materialBuffer.SetData(&materialBuffer);
 
 					DX11VertexBuffer vertexBuffer(nullptr, "", nullptr, m_device);
@@ -264,17 +266,17 @@ void DeferredLightingRenderer::Render(ID3D11RenderTargetView *target)
 		m_deferredLightsVS->Use();
 		m_deferredLightsPS->Use();
 
-		m_device.SetDepthTest(false);
+		m_device.SetDepthTest(DX11DepthTest::OFF);
 
 		m_device.GetImmediateContext()->OMSetRenderTargets(
 			1,
 			&target,
 			m_depthBuffer.GetDepthStencilView());
 
-		m_target0.Bind(0);
-		m_target1.Bind(1);
-		m_target2.Bind(2);
-		m_target3.Bind(3);
+		m_target0.Bind(DX11PipelineStage::PIXEL_SHADER, 0);
+		m_target1.Bind(DX11PipelineStage::PIXEL_SHADER, 1);
+		m_target2.Bind(DX11PipelineStage::PIXEL_SHADER, 2);
+		m_target3.Bind(DX11PipelineStage::PIXEL_SHADER, 3);
 
 		Vector4f quad[6] = {
 			Vector4f(-1.0f, 1.0f, 0.0f, 1.0f),
@@ -290,10 +292,10 @@ void DeferredLightingRenderer::Render(ID3D11RenderTargetView *target)
 
 		quadBuffer.Bind();
 
-		for (LightComponent *light : scene->GetLightsList())
+		for (Light * light : scene->GetLightsList())
 		{
 
-			const mye::math::Matrix4 &t = light->GetOwner()->GetTransformComponent()->GetWorldMatrix();
+			const mye::math::Matrix4 & t = light->GetWorldMatrix();
 
 			detail::LightBuffer lightBuffer =
 			{
@@ -309,14 +311,14 @@ void DeferredLightingRenderer::Render(ID3D11RenderTargetView *target)
 			};
 
 			m_lightBuffer.SetData(&lightBuffer);
-			m_lightBuffer.Bind(PIPELINE_PIXEL_SHADER, 0);
+			m_lightBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, 0);
 
 			detail::CameraBuffer cameraBuffer;
 
 			cameraBuffer.position = mye::math::Vector4f(camera->GetPosition(), 1);
 
 			m_cameraBuffer.SetData(&cameraBuffer);
-			m_cameraBuffer.Bind(PIPELINE_PIXEL_SHADER, 1);
+			m_cameraBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, 1);
 
 			m_device.GetImmediateContext()->
 				IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -339,7 +341,7 @@ void DeferredLightingRenderer::Render(ID3D11RenderTargetView *target)
 
 }
 
-void DeferredLightingRenderer::SetWindow(Window *window)
+void DX11DeferredShadingRenderer::SetWindow(Window * window)
 {
 
 	if (m_initialized)
@@ -373,7 +375,7 @@ void DeferredLightingRenderer::SetWindow(Window *window)
 
 }
 
-void DeferredLightingRenderer::OnResize(IWindow *window, const Vector2i &size)
+void DX11DeferredShadingRenderer::OnResize(IWindow * window, const Vector2i & size)
 {
 
 	m_target0.Destroy();
@@ -390,7 +392,7 @@ void DeferredLightingRenderer::OnResize(IWindow *window, const Vector2i &size)
 
 }
 
-bool DeferredLightingRenderer::CreateConstantBuffers(void)
+bool DX11DeferredShadingRenderer::CreateConstantBuffers(void)
 {
 
 	return

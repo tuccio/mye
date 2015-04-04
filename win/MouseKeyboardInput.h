@@ -31,7 +31,7 @@ namespace mye
 			WinMouse* GetMouse(void);
 			const mye::core::Mouse* GetMouse(void) const;
 
-			void Postupdate(void);
+			void Preupdate(void);
 
 		private:
 

@@ -132,6 +132,8 @@ namespace mye
 					Function("AddComponent", std::function<Component * (const GameObjectHandle &, const Component &)>([] (const GameObjectHandle &hObj, const Component & component) { return MYE_GOH_GET_POINTER(hObj)->AddComponent(component); })).
 					Function("RemoveComponent", std::function<void(const GameObjectHandle &, const String &)>([] (const GameObjectHandle &hObj, const String & name) { MYE_GOH_GET_POINTER(hObj)->RemoveComponent(name); })).
 
+					Function("Clear", std::function<void(GameObjectHandle &)>([](GameObjectHandle & hObj) { hObj = GameObjectHandle(); })).
+
 					//Function("__tostring", &__goh_tostring).
 					ToString(&__goh_tostring).
 
@@ -145,8 +147,9 @@ namespace mye
 					MYE_GOH_COMPONENT_PROPERTY("rigidbody", RigidBodyComponent).
 					MYE_GOH_COMPONENT_PROPERTY("text2d",    Text2DComponent).
 					MYE_GOH_COMPONENT_PROPERTY("light",     LightComponent).
-					MYE_GOH_COMPONENT_PROPERTY("camera",    CameraComponent)
-
+					MYE_GOH_COMPONENT_PROPERTY("camera",    CameraComponent).
+					MYE_GOH_COMPONENT_PROPERTY("text2d",    Text2DComponent)
+					
 					//MYE_GOH_COMPONENT_PROPERTY("behaviour", BehaviourComponent).
 
 

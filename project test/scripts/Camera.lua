@@ -4,6 +4,7 @@ function Camera:Init()
 	
 	self.camera.fovy = 60
 	self.camera.far  = 100
+	self.camera.near = 0.001
 	
 	Scene.camera = self.camera
 
@@ -34,20 +35,21 @@ end
 
 function Camera:OnKeyboardKeyHold(key)
 
-	local speed = 0.005
+	local speed = 1
+	local dx    = speed * Time.delta
 	
 	if key == KeyboardVK.W then
-		self.transform.position = self.transform.position + self.camera.forward * speed
+		self.transform.position = self.transform.position + self.camera.forward * dx
 	elseif key == KeyboardVK.S then
-		self.transform.position = self.transform.position - self.camera.forward * speed
+		self.transform.position = self.transform.position - self.camera.forward * dx
 	elseif key == KeyboardVK.D then
-		self.transform.position = self.transform.position + self.camera.right * speed
+		self.transform.position = self.transform.position + self.camera.right * dx
 	elseif key == KeyboardVK.A then
-		self.transform.position = self.transform.position - self.camera.right * speed
+		self.transform.position = self.transform.position - self.camera.right * dx
 	elseif key == KeyboardVK.E then
-		self.transform.position = self.transform.position + self.camera.up * speed
+		self.transform.position = self.transform.position + self.camera.up * dx
 	elseif key == KeyboardVK.Q then
-		self.transform.position = self.transform.position - self.camera.up * speed
+		self.transform.position = self.transform.position - self.camera.up * dx
 	end
 	
 end

@@ -1,4 +1,4 @@
-#include "BasicRenderer.h"
+#include "DX11BasicRenderer.h"
 
 #include <mye/core/Game.h>
 #include <mye/core/ResourceTypeManager.h>
@@ -13,7 +13,7 @@ using namespace mye::core;
 using namespace mye::win;
 using namespace mye::math;
 
-BasicRenderer::BasicRenderer(DX11Device &device, Window *window) :
+DX11BasicRenderer::DX11BasicRenderer(DX11Device &device, Window *window) :
 	m_device(device),
 	m_window(nullptr),
 	m_initialized(false),
@@ -25,20 +25,21 @@ BasicRenderer::BasicRenderer(DX11Device &device, Window *window) :
 
 	DX11DepthBufferConfiguration depthBufferConf;
 
-	depthBufferConf.device = &device;
-	depthBufferConf.height = 0;
-	depthBufferConf.width = 0;
+	depthBufferConf.device         = &device;
+	depthBufferConf.height         = 0;
+	depthBufferConf.width          = 0;
+	depthBufferConf.shaderResource = false;
 
 	m_depthBuffer = DX11DepthBuffer(depthBufferConf);
 
 }
 
 
-BasicRenderer::~BasicRenderer(void)
+DX11BasicRenderer::~DX11BasicRenderer(void)
 {
 }
 
-bool BasicRenderer::Init(void)
+bool DX11BasicRenderer::Init(void)
 {
 
 	VertexDeclaration basicVD({
@@ -88,7 +89,7 @@ bool BasicRenderer::Init(void)
 
 }
 
-void BasicRenderer::Shutdown(void)
+void DX11BasicRenderer::Shutdown(void)
 {
 
 	if (m_initialized)
@@ -107,7 +108,7 @@ void BasicRenderer::Shutdown(void)
 
 }
 
-void BasicRenderer::Render(ID3D11RenderTargetView *target)
+void DX11BasicRenderer::Render(ID3D11RenderTargetView *target)
 {
 
 	m_device.SetBlending(false);
@@ -128,27 +129,27 @@ void BasicRenderer::Render(ID3D11RenderTargetView *target)
 		m_basicVS->Use();
 		m_basicPS->Use();
 
-		SceneModule::ObjectsList visibleObjects = scene->GetVisibleObjects();
+		GameObjectsList visibleObjects = scene->GetVisibleObjects();
 
-		Matrix4f view = camera->GetViewMatrix();
-		Matrix4f projection = camera->GetProjectionMatrix();
+		Matrix4 view       = camera->GetViewMatrix();
+		Matrix4 projection = camera->GetProjectionMatrix();
 
-		for (GameObject *object : visibleObjects)
+		for (GameObject * object : visibleObjects)
 		{
 
-			RenderComponent *rc = object->GetRenderComponent();
+			RenderComponent * rc = object->GetRenderComponent();
 
 			if (rc)
 			{
 
-				TransformComponent *tc = object->GetTransformComponent();
+				TransformComponent * tc = object->GetTransformComponent();
 
 				MeshPointer mesh = rc->GetMesh();
 
 				if (mesh && mesh->Load())
 				{
 
-					m_transformBuffer.Bind(PIPELINE_VERTEX_SHADER, 0);
+					m_transformBuffer.Bind(DX11PipelineStage::VERTEX_SHADER, 0);
 
 					detail::TransformBuffer transformBuffer;
 
@@ -181,7 +182,7 @@ void BasicRenderer::Render(ID3D11RenderTargetView *target)
 
 }
 
-void BasicRenderer::SetWindow(Window *window)
+void DX11BasicRenderer::SetWindow(Window *window)
 {
 
 	if (m_initialized)
@@ -215,14 +216,14 @@ void BasicRenderer::SetWindow(Window *window)
 
 }
 
-void BasicRenderer::OnResize(IWindow *window, const Vector2i &size)
+void DX11BasicRenderer::OnResize(IWindow *window, const Vector2i &size)
 {
 
 	m_depthBuffer.Resize(size.x(), size.y());
 
 }
 
-bool BasicRenderer::CreateConstantBuffers(void)
+bool DX11BasicRenderer::CreateConstantBuffers(void)
 {
 
 	return m_transformBuffer.Create(sizeof(detail::TransformBuffer));

@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <cfloat>
+#include <limits>
 
 namespace mye
 {
@@ -15,7 +16,7 @@ namespace mye
 			return (x < 0 ? - x : x);
 		}
 
-		template <typename T>
+		template <typename T = Real>
 		inline T Epsilon(void)
 		{
 			return std::numeric_limits<T>::epsilon();
@@ -43,6 +44,12 @@ namespace mye
 		inline bool EpsilonLessEqual(T a, T b, T epsilon = Epsilon<T>())
 		{
 			return a <= b + epsilon;
+		}
+
+		template <typename T = Real>
+		inline T Infinity(void)
+		{
+			return std::numeric_limits<T>::infinity();
 		}
 
 		template <typename T>

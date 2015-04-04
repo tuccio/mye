@@ -22,7 +22,8 @@ namespace mye
 			struct MaterialBuffer
 			{
 
-				mye::math::Vector4f color;
+				mye::math::Vector4f diffuseColor;
+				mye::math::Vector4f specularColor;
 
 				float specular;
 				float roughness;
@@ -51,6 +52,21 @@ namespace mye
 				mye::math::Vector4f position;
 			};
 
+			struct RenderConfigurationBuffer
+			{
+
+				mye::math::Vector2i resolution;
+
+				float               gamma;
+
+				int                 shadowMapResolution;
+
+				float               vsmMinVariance;
+				float               vsmMinBleeding;
+
+				float               __fill[2];
+
+			};
 		}
 
 	}

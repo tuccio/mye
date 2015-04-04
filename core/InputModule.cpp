@@ -7,12 +7,12 @@ bool InputModule::HasKeyboard(void) const
 	return false;
 }
 
-Keyboard* InputModule::GetKeyboard(void)
+Keyboard * InputModule::GetKeyboard(void)
 {
 	return nullptr;
 }
 
-const Keyboard* InputModule::GetKeyboard(void) const
+const Keyboard * InputModule::GetKeyboard(void) const
 {
 	return nullptr;
 }
@@ -22,17 +22,17 @@ bool InputModule::HasMouse(void) const
 	return false;
 }
 
-Mouse* InputModule::GetMouse(void)
+Mouse * InputModule::GetMouse(void)
 {
 	return nullptr;
 }
 
-const Mouse* InputModule::GetMouse(void) const
+const Mouse * InputModule::GetMouse(void) const
 {
 	return nullptr;
 }
 
-void InputModule::Postupdate(void)
+void InputModule::Preupdate(void)
 {
 
 	Keyboard * keyboard = GetKeyboard();
@@ -46,9 +46,9 @@ void InputModule::Postupdate(void)
 
 	if (mouse)
 	{
-		mouse->ResetDelta();
+		//mouse->ResetDelta();
 		mouse->SetWheelDelta(0);
-		keyboard->NotifyHeldKeys();
+		mouse->NotifyHeldKeys();
 	}
 
 }

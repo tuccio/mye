@@ -1,14 +1,16 @@
 entity RotatingLight
 {
 	
-	real r(1);
+	real r = 1;
 	
-	real omega(0);
-	real theta(0);
+	real omega = 0;
+	real theta = 0;
 	
 	quaternion q(1, 0, 0, 0);
 	vec3       c(0, 0, 0);
 	
-	LightComponent(Light(PointLight(vec3(1, 1, 1), vec3(1, 1, 1), vec3(0, 0, 0), 30)));
+	//LightComponent(Light(PointLight(vec3(1, 1, 1), vec3(1, 1, 1), vec3(0, 0, 0), 30)));
+	
+	component light(PointLight(vec3(1, 1, 1), vec3(1, 1, 1), vec3(0, 0, 0), 30));
 
 }

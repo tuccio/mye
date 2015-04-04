@@ -21,7 +21,9 @@ namespace mye
 
 			~LightComponent(void);
 
-			LightComponent* Clone(void) const;
+			LightComponent * Clone(void) const;
+
+			mye::math::Matrix4 GetWorldMatrix(void) const;
 
 		};
 

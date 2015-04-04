@@ -1,4 +1,6 @@
-function Init()
+local LightSpawner = {}
+
+function LightSpawner:Init()
 
 	local hLight = GameObjects:CreateEntity("RotatingLight")
 	
@@ -10,3 +12,5 @@ function Init()
 	--self:Destroy()
 
 end
+
+return LightSpawner

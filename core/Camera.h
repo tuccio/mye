@@ -77,7 +77,7 @@ namespace mye
 		private:
 
 			mye::math::Quaternion m_orientation;
-			mye::math::Vector3 m_position;
+			mye::math::Vector3    m_position;
 
 			mye::math::Real m_fovY;
 			mye::math::Real m_aspectRatio;

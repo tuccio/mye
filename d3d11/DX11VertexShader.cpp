@@ -13,10 +13,10 @@
 using namespace mye::dx11;
 using namespace mye::core;
 
-DX11VertexShader::DX11VertexShader(mye::core::ResourceManager *owner,
-								   const mye::core::String &name,
-								   mye::core::ManualResourceLoader *manual,
-								   DX11Device &device,
+DX11VertexShader::DX11VertexShader(mye::core::ResourceManager * owner,
+								   const mye::core::String & name,
+								   mye::core::ManualResourceLoader * manual,
+								   DX11Device & device,
 								   bool precompiled) :
 DX11Shader(owner, name, manual, precompiled),
 	m_device(device)
@@ -36,7 +36,7 @@ DX11VertexShader::~DX11VertexShader(void)
 {
 }
 
-ID3D11VertexShader* DX11VertexShader::GetVertexShader(void)
+ID3D11VertexShader * DX11VertexShader::GetVertexShader(void)
 {
 	return m_shader;
 }
@@ -55,8 +55,8 @@ bool DX11VertexShader::LoadImpl(void)
 	if (DX11Shader::LoadImpl())
 	{
 		
-		ID3DBlob *code = nullptr;
-		ID3DBlob *error = nullptr;
+		ID3DBlob * code = nullptr;
+		ID3DBlob * error = nullptr;
 
 		UINT compileFlags = 0x0;
 
@@ -76,7 +76,7 @@ bool DX11VertexShader::LoadImpl(void)
 		else
 		{
 
-			if (HRTESTFAILED(D3DCompile(
+			if (__MYE_DX11_HR_TEST_FAILED(D3DCompile(
 				m_source.CString(),
 				m_source.Length(),
 				m_name.CString(),
@@ -95,7 +95,7 @@ bool DX11VertexShader::LoadImpl(void)
 		}
 
 		if (code &&
-			!HRTESTFAILED(m_device.GetDevice()->
+			!__MYE_DX11_HR_TEST_FAILED(m_device.GetDevice()->
 				CreateVertexShader(
 					code->GetBufferPointer(),
 					code->GetBufferSize(),
@@ -106,11 +106,11 @@ bool DX11VertexShader::LoadImpl(void)
 			if (m_params.Contains("inputLayoutVector"))
 			{
 
-				const void *ptr = m_params.GetPointer("inputLayoutVector");
+				const void * ptr = m_params.GetPointer("inputLayoutVector");
 
-				const std::vector<D3D11_INPUT_ELEMENT_DESC>* vDesc = static_cast<const std::vector<D3D11_INPUT_ELEMENT_DESC>*>(ptr);
+				const std::vector<D3D11_INPUT_ELEMENT_DESC> * vDesc = static_cast<const std::vector<D3D11_INPUT_ELEMENT_DESC>*>(ptr);
 
-				if (!HRTESTFAILED(m_device.GetDevice()->
+				if (!__MYE_DX11_HR_TEST_FAILED(m_device.GetDevice()->
 					CreateInputLayout(
 						&vDesc->front(),
 						vDesc->size(),
@@ -142,14 +142,7 @@ bool DX11VertexShader::LoadImpl(void)
 
 void DX11VertexShader::UnloadImpl(void)
 {
-
-	if (m_shader)
-	{
-		ReleaseCOM(m_shader);
-	}
-
-	m_compileError.Clear();
-
+	Destroy();
 }
 
 size_t DX11VertexShader::CalculateSizeImpl(void)
@@ -159,12 +152,6 @@ size_t DX11VertexShader::CalculateSizeImpl(void)
 
 void DX11VertexShader::Destroy(void)
 {
-
-	if (m_shader)
-	{
-		ReleaseCOM(m_shader);
-	}
-	
+	__MYE_DX11_RELEASE_COM_OPTIONAL(m_shader);
 	m_compileError.Clear();
-
 }

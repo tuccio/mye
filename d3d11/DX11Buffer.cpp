@@ -26,6 +26,6 @@ ID3D11Buffer* DX11Buffer::GetBuffer(void)
 void DX11Buffer::Destroy(void)
 {
 	
-	ReleaseCOMOptional(m_buffer);
+	__MYE_DX11_RELEASE_COM_OPTIONAL(m_buffer);
 
 }

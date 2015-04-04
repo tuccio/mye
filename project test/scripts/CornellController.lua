@@ -1,75 +1,58 @@
-function Update()
+local CornellController = { }
 
-	Graphics.window.caption = "Cornell box [FPS: " .. math.floor(Graphics.fps) .. "]"
+function CornellController:Init()
+	
+	local hCam = GameObjects:CreateEntity('camera', 'Camera')
+	
+	hCam.transform.position = vec3(0, 1, 3)
+	hCam.transform.orientation = quaternion(0, 0, 1, 0)
+	
+	if hCam and hCam:Exists() then
+		hCam.camera.far = 25
+		Scene.camera = hCam.camera
+		
+	else
+		System.PopupMessage('Cannot create camera')
+		Game:Quit()
+	end
+	
+end
+
+function CornellController:Update()
+
+	--Graphics.window.caption = "Cornell box [FPS: " .. math.floor(Graphics.fps) .. "]"
 
 	--print(self.transform.position)
-
-	local cam = Scene.camera
 	
-	local vdt = vec3(1) * Time.delta
-	local dx = vec3(0)
+	local hLight = GameObjects:Find('light1')
 	
-	if (Input.mouse:IsPressed(Mouse.Mouse1)) then
-		
-		local ray = cam:RayCast(Input.mouse.position)
-		
-		local intersection = Scene:Pick(ray)
-		
-		if (intersection.hObj ~= self.selected) then
-			self.selected = intersection.hObj
-			
-			if (intersection.hObj:Exists()) then
-				print("Selected object: " .. tostring(intersection.hObj))
-			else
-				print("No object selected")
-			end
-			
-		end
-		
-	end	
-
-	if (Input.keyboard:IsPressed(Keyboard.W)) then
-		dx = dx + vdt * cam.forward
-	end
-	
-	if (Input.keyboard:IsPressed(Keyboard.S)) then
-		dx = dx - vdt * cam.forward
-	end
-	
-	if (Input.keyboard:IsPressed(Keyboard.D)) then
-		dx = dx + vdt * cam.right
-	end
-	
-	if (Input.keyboard:IsPressed(Keyboard.A)) then
-		dx = dx - vdt * cam.right
-	end
-	
-	if (Input.keyboard:IsPressed(Keyboard.E)) then
-		dx = dx + vdt * cam.up
-	end
-	
-	if (Input.keyboard:IsPressed(Keyboard.Q)) then
-		dx = dx - vdt * cam.up
-	end
-	
-	if (Input.mouse:IsPressed(Mouse.Mouse2)) then
-		
-		local dr = vec2(0)
-		local sens = 150
-		
-		local delta = Input.mouse.delta
-		
-		Scene.camera:Yaw(math.atan(delta.x * sens))
-		Scene.camera:Pitch(math.atan(delta.y * sens))
-		
-	end
-	
-	Scene.camera.position = cam.position + dx	
+	self.text2d.text = 'Light direction: ' .. tostring(hLight.light.direction)
 
 end
 
-function OnMouseEvent(mouseEvent)
+function CornellController:OnKeyboardKeyHold(key, t)
 
-	--if (mouseEvent.type == MouseEvent.KeyDown) then ..
+	local angle = 25 * Time.delta
+	local v     = vec3(0, 0, -1)
+
+	if key == KeyboardVK.R then
+	
+		local hLight = GameObjects:Find('light1')
+		
+		local q = quaternion(v, angle)
+		hLight.light.direction = q:Rotate(hLight.light.direction):Normalize()
+		
+	end
+	
+	if key == KeyboardVK.T then
+	
+		local hLight = GameObjects:Find('light1')
+		
+		local q = quaternion(v, - angle)
+		hLight.light.direction = q:Rotate(hLight.light.direction):Normalize()
+		
+	end
 
 end
+
+return CornellController

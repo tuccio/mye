@@ -79,9 +79,9 @@ namespace mye
 
 			void OnDestruction(void);
 			
-			    ComponentsList   m_components;
+			ComponentsList       m_components;
 
-			  GameObjectHandle   m_handle;
+			GameObjectHandle     m_handle;
 			GameObjectsManager * m_owner;
 
 			TransformComponent   m_transform;
@@ -100,11 +100,11 @@ namespace mye
 
 		public:
 
-			virtual inline void OnGameObjectCreation(GameObject *gameObject) { };
-			virtual inline void OnGameObjectDestruction(GameObject *gameObject) { };
+			virtual void OnGameObjectCreation(GameObject * gameObject) { };
+			virtual void OnGameObjectDestruction(GameObject * gameObject) { };
 
-			virtual inline void OnComponentAddition(GameObject *gameObject, Component *component) { };
-			virtual inline void OnComponentRemoval(GameObject *gameObject, Component *component) { };
+			virtual void OnComponentAddition(GameObject * gameObject, Component * component) { };
+			virtual void OnComponentRemoval(GameObject  * gameObject, Component * component) { };
 
 		};
 

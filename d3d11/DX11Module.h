@@ -16,9 +16,10 @@
 #include "DX11PixelShader.h"
 #include "DX11VertexShader.h"
 
-#include "BasicRenderer.h"
-#include "DeferredLightingRenderer.h"
-#include "Text2DRenderer.h"
+#include "DX11BasicRenderer.h"
+#include "DX11DeferredShadingRenderer.h"
+#include "DX11DeferredLightingRenderer.h"
+#include "DX11Text2DRenderer.h"
 
 #define __MYE_FPS_COUNTER_BUFFER_SIZE 10
 
@@ -47,28 +48,32 @@ namespace mye
 
 			float GetFPS(void) const;
 
-			inline DX11Device* GetDevice(void);
+			inline DX11Device * GetDevice(void)
+			{
+				return &m_device;
+			}
 
 			// Window
 
-			void SetWindow(mye::win::Window *window);
+			void SetWindow(mye::win::Window * window);
 			void FreeWindow(void);
 
-			void OnResize(mye::core::IWindow *window, const mye::math::Vector2i &size);
+			void OnResize(mye::core::IWindow  *window, const mye::math::Vector2i & size);
 			
 
 		private:
 
-			DX11Device        m_device;
-			mye::win::Window *m_window;
+			DX11Device         m_device;
+			mye::win::Window * m_window;
 
-			DX11SwapChain     m_swapChain;
+			DX11SwapChain      m_swapChain;
 
 			// Renderers
 
-			Text2DRenderer           m_text2dRenderer;
-			BasicRenderer            m_basicRenderer;
-			DeferredLightingRenderer m_deferredLighthingRenderer;
+			DX11Text2DRenderer           m_text2dRenderer;
+			DX11BasicRenderer            m_basicRenderer;
+			DX11DeferredShadingRenderer  m_deferredShadingRenderer;
+			DX11DeferredLightingRenderer m_deferredLightingRenderer;
 
 			// FPS Counter
 
@@ -77,11 +82,6 @@ namespace mye
 			int                     m_stopWatchBufferHead;
 
 		};
-
-		DX11Device* DX11Module::GetDevice(void)
-		{
-			return &m_device;
-		}
 
 	}
 

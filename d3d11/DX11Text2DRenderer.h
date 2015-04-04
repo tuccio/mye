@@ -18,22 +18,18 @@ namespace mye
 	namespace dx11
 	{
 
-		class BasicRenderer :
-			public mye::core::IWindow::Listener
+		class DX11Text2DRenderer 
 		{
 
 		public:
 
-			BasicRenderer(DX11Device &device, mye::win::Window *window);
-			~BasicRenderer(void);
+			DX11Text2DRenderer(DX11Device &device);
+			~DX11Text2DRenderer(void);
 
 			bool Init(void);
 			void Shutdown(void);
 
 			void Render(ID3D11RenderTargetView *target);
-
-			void SetWindow(mye::win::Window *window);
-			void OnResize(mye::core::IWindow *window, const mye::math::Vector2i &size);
 
 		private:
 
@@ -41,16 +37,14 @@ namespace mye
 
 			DX11Device             &m_device;
 
-			mye::win::Window       *m_window;
+			DX11VertexShaderPointer m_text2dVS;
+			DX11PixelShaderPointer  m_text2dPS;
 
-			DX11VertexShaderPointer m_basicVS;
-			DX11PixelShaderPointer  m_basicPS;
+			ID3D11SamplerState     *m_fontTextureSampler;
 
-			DX11ConstantBuffer      m_transformBuffer;
+			DX11ConstantBuffer      m_textColorBuffer;
 
-			DX11DepthBuffer         m_depthBuffer;
-
-			mye::math::Vector4f     m_clearColor;
+			DX11SwapChain          *m_swapChain;
 
 			bool CreateConstantBuffers(void);
 

@@ -6,33 +6,20 @@
 	<gameobject name="devconsole" entity="DeveloperConsole">
 	</gameobject>
 	
-	<gameobject name="lightsspawner" entity="LightsSpawner">
-	</gameobject>
-	
 	<!--
-	<gameobject name="light1">
-		<light type="pointlight">
-			<position>0 1.98 0</position>
-			<color>1 1 1</color>
-			<intensity>1</color>
-			<range>2.2</range>			
-		</light>
+	<gameobject name="lightsspawner" entity="LightsSpawner">
 	</gameobject>
 	-->
 	
-	<gameobject name="camera">
-		<transform>
-			<position>0.000000 0.000000 0.000000</position>
-			<scale>1.000000 1.000000 1.000000</scale>
-			<orientation>1.000000 0.000000 0.000000 0.000000</orientation>
-		</transform>
-		<camera active="true">
-			<position>0.000000 1.00000 3.000000</position>
-			<orientation>0.000000 0.000000 1.000000 0.000000</orientation>
-			<fovy>60.000000</fovy>
-			<znear>0.001000</znear>
-			<zfar>100.000000</zfar>
-		</camera>
+	<gameobject name="light1">
+		<light type="directional">
+			<position>-1 1 0</position>
+			<!--<direction>-0.57735 -0.57735 -0.57735</direction>-->
+			<direction>0.57735 -0.57735 -0.57735</direction>
+			<color>0.95 0.95 0.85</color>
+			<intensity>1</intensity>
+			<range>1</range>			
+		</light>
 	</gameobject>
 	
 	<gameobject name="shortbox">
@@ -41,8 +28,8 @@
 				<min>-0.050000 -0.000000 0.000000</min>
 				<max>0.700000 0.600000 0.750000</max>
 			</aabb>
-			<mesh name="models/cornellbox/shortbox.obj"/>
-			<material color="0.725 0.71 0.68  1" specular="0" metallic="0" roughness="0.6"/>
+			<mesh name="models/cornellbox/shortbox2.obj"/>
+			<material diffuse_color="0.725 0.71 0.68  1" specular="0" metallic="0" roughness="0.6"/>
 		</render>
 	</gameobject>
 	
@@ -52,8 +39,8 @@
 				<min>-0.710000 0.000000 -0.670000</min>
 				<max>0.040000 1.200000 0.090000</max>
 			</aabb>
-			<mesh name="models/cornellbox/tallbox.obj"/>
-			<material color="0.725 0.71 0.68  1" specular="0" metallic="0" roughness="0.6"/>
+			<mesh name="models/cornellbox/tallbox2.obj"/>
+			<material diffuse_color="0.725 0.71 0.68  1" specular="0" metallic="0" roughness="0.6"/>
 		</render>
 	</gameobject>
 	
@@ -64,7 +51,7 @@
 				<max>1.000000 1.990000 0.990000</max>
 			</aabb>
 			<mesh name="models/cornellbox/ceiling.obj"/>
-			<material color="0.725 0.71 0.68  1" specular="0" metallic="0" roughness="0.6"/>
+			<material diffuse_color="0.725 0.71 0.68  1" specular="0" metallic="0" roughness="0.6"/>
 		</render>
 	</gameobject>
 	
@@ -75,7 +62,7 @@
 				<max>1.000000 0.000000 0.990000</max>
 			</aabb>
 			<mesh name="models/cornellbox/floor.obj"/>
-			<material color="0.725 0.71 0.68  1" specular="0" metallic="0" roughness="0.6"/>
+			<material diffuse_color="0.725 0.71 0.68  1" specular="0" metallic="0" roughness="0.6"/>
 		</render>
 	</gameobject>
 	
@@ -86,7 +73,7 @@
 				<max>-1.020000 1.990000 0.990000</max>
 			</aabb>
 			<mesh name="models/cornellbox/leftwall.obj"/>
-			<material color="0.953 0.357 0.212 1" specular="0" metallic="0" roughness="0.6"/>
+			<material diffuse_color="0.953 0.357 0.212 1" specular="0" metallic="0" roughness="0.6"/>
 		</render>
 	</gameobject>
 	
@@ -97,7 +84,7 @@
 				<max>1.000000 1.990000 0.990000</max>
 			</aabb>
 			<mesh name="models/cornellbox/rightwall.obj"/>
-			<material color="0.486 0.631 0.663  1" specular="0" metallic="0" roughness="0.6"/>
+			<material diffuse_color="0.486 0.631 0.663  1" specular="0" metallic="0" roughness="0.6"/>
 		</render>
 	</gameobject>
 	
@@ -108,7 +95,7 @@
 				<max>1.000000 1.990000 -1.040000</max>
 			</aabb>
 			<mesh name="models/cornellbox/backwall.obj"/>
-			<material color="0.725 0.71 0.68  1" specular="0" metallic="0" roughness="0.6"/>
+			<material diffuse_color="0.725 0.71 0.68  1" specular="0" metallic="0" roughness="0.6"/>
 		</render>
 	</gameobject>
 	

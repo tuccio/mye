@@ -5,6 +5,8 @@
 
 #include <list>
 
+#include <mye/math/Math.h>
+
 #define __MYE_NO_OCTREE
 
 namespace mye
@@ -19,36 +21,33 @@ namespace mye
 
 		public:
 
-			OctreeSceneModule(
-				const mye::math::Vector3 &center = mye::math::Vector3(0),
-				float size = 1024.0f,
-				unsigned int maxdepth = 32,
-				unsigned int looseness = 2);
+			OctreeSceneModule(const mye::math::Vector3 & center = mye::math::Vector3(0),
+							  float size = 1024.0f,
+							  unsigned int maxdepth = 32,
+							  unsigned int looseness = 2);
 
 			~OctreeSceneModule(void);
 
-			SceneModule::ObjectsList GetVisibleObjects(void);
-			SceneModule::ObjectsList GetObjectsList(void);
+			GameObjectsList GetVisibleObjects(const mye::math::Matrix4 & viewProjection);
 
-			void AddGameObject(const GameObjectHandle &hObj);
-			void RemoveGameObject(const GameObjectHandle &hObj);
+			GameObjectsList GetObjectsList(void);
 
-			GameObjectRayIntersection Pick(mye::math::Ray ray);
+			void AddGameObject(const GameObjectHandle & hObj);
+			void RemoveGameObject(const GameObjectHandle & hObj);
 
-			void Reset(
-				const mye::math::Vector3 &center = mye::math::Vector3(0),
-				float size = 1024.0f,
-				unsigned int maxdepth = 32,
-				unsigned int looseness = 2);
+			GameObjectRayIntersection Pick(const mye::math::Ray & ray);
+
+			void Reset(const mye::math::Vector3 &center = mye::math::Vector3(0),
+					   float size = 1024.0f,
+					   unsigned int maxdepth = 32,
+					   unsigned int looseness = 2);
 
 		private:
 
 			void ApplyUpdates(void);
 
 			std::list<GameObjectHandle>   m_objects;
-
 			std::vector<GameObjectHandle> m_nonRenderableObjects;
-
 
 		};
 

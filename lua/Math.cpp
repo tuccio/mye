@@ -551,6 +551,7 @@ namespace mye
 					Function("Conjugate", &Quaternion::Conjugate).
 
 					Function("Normalize", &Quaternion::Normalize).
+					Function("Rotate",    &Quaternion::Rotate).
 
 					ToString(&__quat_tostring<Real>).
 

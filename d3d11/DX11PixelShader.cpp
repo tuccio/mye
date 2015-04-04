@@ -9,10 +9,10 @@
 using namespace mye::dx11;
 using namespace mye::core;
 
-DX11PixelShader::DX11PixelShader(mye::core::ResourceManager *owner,
-								   const mye::core::String &name,
-								   mye::core::ManualResourceLoader *manual,
-								   DX11Device &device,
+DX11PixelShader::DX11PixelShader(mye::core::ResourceManager * owner,
+								   const mye::core::String & name,
+								   mye::core::ManualResourceLoader * manual,
+								   DX11Device & device,
 								   bool precompiled) :
 DX11Shader(owner, name, manual, precompiled),
 	m_device(device)
@@ -30,12 +30,12 @@ void DX11PixelShader::Use(void)
 	m_device.GetImmediateContext()->PSSetShader(m_shader, nullptr, 0);
 }
 
-ID3D11PixelShader* DX11PixelShader::GetPixelShader(void)
+ID3D11PixelShader * DX11PixelShader::GetPixelShader(void)
 {
 	return m_shader;
 }
 
-const mye::core::String& DX11PixelShader::GetCompileError(void)
+const mye::core::String & DX11PixelShader::GetCompileError(void)
 {
 	return m_compileError;
 }
@@ -70,7 +70,7 @@ bool DX11PixelShader::LoadImpl(void)
 		else
 		{
 
-			if (HRTESTFAILED(D3DCompile(
+			if (__MYE_DX11_HR_TEST_FAILED(D3DCompile(
 					m_source.CString(),
 					m_source.Length(),
 					m_name.CString(),
@@ -89,7 +89,7 @@ bool DX11PixelShader::LoadImpl(void)
 		}
 
 		if (code &&
-			!HRTESTFAILED(m_device.GetDevice()->
+			!__MYE_DX11_HR_TEST_FAILED(m_device.GetDevice()->
 				CreatePixelShader(
 					code->GetBufferPointer(),
 					code->GetBufferSize(),
@@ -128,7 +128,7 @@ void DX11PixelShader::Destroy(void)
 	
 	if (m_shader)
 	{
-		ReleaseCOM(m_shader);
+		__MYE_DX11_RELEASE_COM(m_shader);
 	}
 	
 	m_compileError.Clear();

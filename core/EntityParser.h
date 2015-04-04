@@ -138,27 +138,39 @@ namespace mye
 
 			enum class Constructible
 			{
+
 				IMPLICIT,
+
 				STRING,
 				BOOL,
 				INT,
 				REAL,
+				GAMEOBJECTHANDLE,
+
 				VEC2,
 				VEC2I,
 				VEC3,
 				VEC3I,
 				VEC4,
 				VEC4I,
+
 				MAT2,
 				MAT3,
 				MAT4,
+
 				QUATERNION,
-				GAMEOBJECTHANDLE,
+
 				PARAMETERS,
+
 				MESH,
 				MATERIAL,
+				FONT,
 				COLLISIONSHAPE,
-				NIL,
+
+				POINTLIGHT,
+
+				NIL
+
 			};
 
 			struct InitValue
@@ -198,7 +210,9 @@ namespace mye
 						("GameObject",     Constructible::GAMEOBJECTHANDLE)
 						("Mesh",           Constructible::MESH)
 						("Material",       Constructible::MATERIAL)
-						("CollisionShape", Constructible::COLLISIONSHAPE);
+						("Font",           Constructible::FONT)
+						("CollisionShape", Constructible::COLLISIONSHAPE)
+						("PointLight",     Constructible::POINTLIGHT);
 
 					primitive =
 

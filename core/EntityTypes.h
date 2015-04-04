@@ -1207,6 +1207,50 @@ namespace mye
 				static const char * type;
 			};
 
+			/* Font */
+
+			template <>
+			struct ObjectInstantiator<FontPointer>
+			{
+
+				static bool Match(const InitValue & init)
+				{
+
+					if (init.constructible == Constructible::NIL)
+					{
+						return true;
+					}
+
+					auto it  = init.initializers.cbegin();
+					auto end = init.initializers.cend();
+
+					return ResourceConstructor<Font>::Match(it, end);
+
+				}
+
+				static FontPointer Instantiate(const InitValue & init)
+				{
+
+					if (init.constructible == Constructible::NIL)
+					{
+						return FontPointer();
+					}
+
+					auto it  = init.initializers.cbegin();
+					auto end = init.initializers.cend();
+
+					return ResourceConstructor<Font>::Call(it, end);
+
+				}
+
+			};
+
+			template <>
+			struct ResourceTypeMap<Font>
+			{
+				static const char * type;
+			};
+
 			/* RenderComponent */
 
 			template <>
@@ -1371,6 +1415,47 @@ namespace mye
 
 			};
 
+			/* Text2DComponent */
+
+			template <>
+			struct ObjectInstantiator<Text2DComponent>
+			{
+
+				typedef ObjectFactory
+					<
+					Text2DComponent,
+					Constructor<Text2DComponent>,
+					Constructor<Text2DComponent, mye::math::Vector2i, FontPointer, String>
+					>
+					factory;
+
+				static bool Match(const InitValue & init)
+				{
+
+					auto it  = init.initializers.cbegin();
+					auto end = init.initializers.cend();
+
+					return factory::Match(it, end);
+
+				}
+
+				static Text2DComponent Instantiate(void)
+				{
+					return Constructor<Text2DComponent>::Call();
+				}
+
+				static Text2DComponent Instantiate(const InitValue & init)
+				{
+
+					auto it  = init.initializers.cbegin();
+					auto end = init.initializers.cend();
+
+					return factory::Construct(it, end);
+
+				}
+
+			};
+
 			/* KeyboardComponent */
 
 			template <>
@@ -1440,6 +1525,87 @@ namespace mye
 				}
 
 				static MouseComponent Instantiate(const InitValue & init)
+				{
+
+					auto it  = init.initializers.cbegin();
+					auto end = init.initializers.cend();
+
+					return factory::Construct(it, end);
+
+				}
+
+			};
+
+			/* LightComponent */
+
+			template <>
+			struct ObjectInstantiator<LightComponent>
+			{
+
+				typedef ObjectFactory
+					<
+					LightComponent,
+					Constructor<LightComponent>,
+					Constructor<LightComponent, PointLight>
+					>
+					factory;
+
+				static bool Match(const InitValue & init)
+				{
+
+					auto it  = init.initializers.cbegin();
+					auto end = init.initializers.cend();
+
+					return factory::Match(it, end);
+
+				}
+
+				static LightComponent Instantiate(void)
+				{
+					return Constructor<LightComponent>::Call();
+				}
+
+				static LightComponent Instantiate(const InitValue & init)
+				{
+
+					auto it  = init.initializers.cbegin();
+					auto end = init.initializers.cend();
+
+					return factory::Construct(it, end);
+
+				}
+
+			};
+
+			/* Lights */
+
+			template <>
+			struct ObjectInstantiator<PointLight>
+			{
+
+				typedef ObjectFactory
+					<
+					PointLight,
+					Constructor<PointLight, mye::math::Vector3, mye::math::Real, mye::math::Vector3, mye::math::Real>
+					>
+					factory;
+
+				static bool Match(const InitValue & init)
+				{
+
+					auto it  = init.initializers.cbegin();
+					auto end = init.initializers.cend();
+
+					return factory::Match(it, end);
+
+				}
+
+				static PointLight Instantiate(void)
+				{
+					return Constructor<PointLight>::Call();
+				}
+
+				static PointLight Instantiate(const InitValue & init)
 				{
 
 					auto it  = init.initializers.cbegin();

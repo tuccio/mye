@@ -9,6 +9,8 @@
 
 #include "./detail/ShadersBuffers.h"
 
+#define __MYE_DX11_RENDERER m_deferredLightingRenderer
+
 using namespace mye::dx11;
 using namespace mye::core;
 using namespace mye::math;
@@ -18,9 +20,10 @@ DX11Module::DX11Module(void) :
 
 	m_window(nullptr),
 
-	m_basicRenderer             (m_device, nullptr),
-	m_deferredLighthingRenderer (m_device, nullptr),
-	m_text2dRenderer            (m_device),
+	m_basicRenderer           (m_device, nullptr),
+	m_deferredShadingRenderer (m_device, nullptr),
+	m_deferredLightingRenderer(m_device, nullptr),
+	m_text2dRenderer          (m_device),
 
 	m_stopWatchBufferHead(0)
 
@@ -33,9 +36,10 @@ DX11Module::DX11Module(Window *window) :
 
 	m_window(nullptr),
 
-	m_basicRenderer             (m_device, nullptr),
-	m_deferredLighthingRenderer (m_device, nullptr),
-	m_text2dRenderer            (m_device),
+	m_basicRenderer           (m_device, nullptr),
+	m_deferredShadingRenderer (m_device, nullptr),
+	m_deferredLightingRenderer(m_device, nullptr),
+	m_text2dRenderer          (m_device),
 
 	m_stopWatchBufferHead(0)
 
@@ -69,8 +73,7 @@ bool DX11Module::Init(void)
 
 		rasterizeState.Use();
 
-		if (m_basicRenderer.Init() &&
-			m_deferredLighthingRenderer.Init() &&
+		if (__MYE_DX11_RENDERER.Init() &&
 			m_text2dRenderer.Init())
 		{
 			m_stopWatch.Start();
@@ -87,8 +90,7 @@ void DX11Module::Shutdown(void)
 {
 
 	m_stopWatch.Stop();
-	m_basicRenderer.Shutdown();
-	m_deferredLighthingRenderer.Shutdown();
+	__MYE_DX11_RENDERER.Shutdown();
 	m_text2dRenderer.Shutdown();
 	
 	FreeWindow();
@@ -105,8 +107,7 @@ void DX11Module::Render(void)
 
 	m_swapChain.ClearBackBuffer(m_clearColor);
 
-	m_basicRenderer.Render(backBuffer);
-	//m_deferredLighthingRenderer.Render(backBuffer);
+	__MYE_DX11_RENDERER.Render(backBuffer);
 
 	m_text2dRenderer.Render(backBuffer);
 
@@ -117,7 +118,7 @@ void DX11Module::Render(void)
 
 }
 
-void DX11Module::SetWindow(Window *window)
+void DX11Module::SetWindow(Window * window)
 {
 
 	FreeWindow();
@@ -146,7 +147,7 @@ void DX11Module::SetWindow(Window *window)
 		m_swapChain = DX11SwapChain(swapChainConf);
 
 		m_basicRenderer.SetWindow(window);
-		m_deferredLighthingRenderer.SetWindow(window);
+		__MYE_DX11_RENDERER.SetWindow(window);
 
 		if (m_device.Exists())
 		{
@@ -155,8 +156,6 @@ void DX11Module::SetWindow(Window *window)
 			OnResize(window, clientSize);
 
 		}
-
-		//ShowCursor(FALSE);
 
 	}
 
@@ -171,7 +170,7 @@ void DX11Module::FreeWindow(void)
 	{
 
 		m_basicRenderer.SetWindow(nullptr);
-		m_deferredLighthingRenderer.SetWindow(nullptr);
+		__MYE_DX11_RENDERER.SetWindow(nullptr);
 
 		m_window->RemoveListener(this);
 
@@ -184,7 +183,7 @@ void DX11Module::FreeWindow(void)
 
 }
 
-void DX11Module::OnResize(IWindow *window, const mye::math::Vector2i &size)
+void DX11Module::OnResize(IWindow * window, const mye::math::Vector2i & size)
 {
 
 	if (m_swapChain.Exists())

@@ -87,7 +87,8 @@ bool LuaModule::Init(void)
 	globals["Physics"]     = game->GetPhysicsModule();
 	globals["Scene"]       = game->GetSceneModule();
 
-	//globals["Time"]                = luabind::newtable(m_lua);
+	globals["Time"]        = luapp11::CreateTable(m_state);
+
 	globals["ResourceTypeManager"] = ResourceTypeManager::GetSingletonPointer();
 
 	m_state.RunCode("math.randomseed(os.time())");
@@ -106,7 +107,7 @@ void LuaModule::Preupdate(FloatSeconds dt)
 
 	//luabind::globals(m_lua)["Time"]["delta"] = luabind::object(m_lua, (float) dt);
 
-	//m_state.GetGlobalTable()["Time"]["delta"] = (float) dt;
+	m_state.GetGlobalTable()["Time"]["delta"] = (float) dt;
 
 	for (auto msg : m_messages)
 	{
@@ -213,6 +214,8 @@ void LuaModule::Preupdate(FloatSeconds dt)
 			catch (...) { }
 
 		}
+
+			break;
 
 		case SCRIPT_MESSAGE_MOUSE_MOVED:
 

@@ -34,12 +34,19 @@ namespace mye
 			bool GetVSync(void) const;
 			void SetVSync(bool vsync);
 
+			inline RendererConfiguration * GetRendererConfiguration(void)
+			{
+				return &m_rendererConfiguration;
+			}
+
 		protected:
 
-			IWindow            *m_mainWindowPointer;
-			mye::math::Vector4  m_clearColor;
+			IWindow               * m_mainWindowPointer;
+			mye::math::Vector4      m_clearColor;
+								     
+			bool                    m_vsync;
 
-			bool                m_vsync;
+			RendererConfiguration   m_rendererConfiguration;
 
 		};
 

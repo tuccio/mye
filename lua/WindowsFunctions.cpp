@@ -41,6 +41,10 @@ namespace mye
 
 			];
 
+			auto globals = state.GetGlobalTable();
+
+			globals["System"] = globals[MYE_LUA_WIN];
+
 			/*module(L, MYE_LUA_WIN)
 			[
 				

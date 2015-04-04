@@ -1,5 +1,7 @@
 #pragma once
 
+#include "RendererConfiguration.h"
+
 namespace mye
 {
 
@@ -19,9 +21,13 @@ namespace mye
 
 			bool IsInitialized(void) const;
 
+			
+
 		protected:
 
 			bool m_initialized;
+
+			
 
 		};
 

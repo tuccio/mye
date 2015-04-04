@@ -1,0 +1,9 @@
+entity Throw
+{
+
+	GameObject hSelected;
+	
+	component mouse;
+	component text2d(vec2i(8, 1024), Font('consolas_regular_14', { }), '');
+
+};

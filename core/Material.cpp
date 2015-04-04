@@ -5,7 +5,7 @@
 
 #include <fstream>
 
-#define __MYE_MATERIAL_SET_DEFAULT() { m_diffuseColor = Vector4(1.0f); m_specularColor = Vector4(1.0f); m_roughness = 0.5f; m_specular = 0.0f; m_metallic = 0.5f; }
+#define __MYE_MATERIAL_SET_DEFAULT() { m_diffuseColor = Vector4(1.0f); m_specularColor = Vector4(1.0f); m_roughness = 0.5f; m_specular = 0.0f; m_metallic = 0.0f; }
 
 using namespace mye::core;
 using namespace mye::math;
@@ -13,7 +13,10 @@ using namespace mye::math;
 Material::Material(ResourceManager * owner,
 				   const String & name,
 				   ManualResourceLoader * manual) :
-				   Resource(owner, name, manual) { }
+	Resource(owner, name, manual)
+{
+	__MYE_MATERIAL_SET_DEFAULT();
+}
 
 bool Material::LoadImpl(void)
 {
@@ -39,7 +42,7 @@ bool Material::LoadImpl(void)
 			auto roughness = pt.get_optional<float>("roughness");
 			auto metallic  = pt.get_optional<float>("metallic");
 
-			__MYE_MATERIAL_SET_DEFAULT()
+			__MYE_MATERIAL_SET_DEFAULT();
 
 
 			if (diffuse_color)
@@ -92,7 +95,7 @@ bool Material::LoadImpl(void)
 
 void Material::UnloadImpl(void)
 {
-	__MYE_MATERIAL_SET_DEFAULT()
+	__MYE_MATERIAL_SET_DEFAULT();
 }
 
 size_t Material::CalculateSizeImpl(void)

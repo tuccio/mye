@@ -115,6 +115,7 @@ namespace mye
 						__MYE_STATEMENT_COMPONENT(TransformComponent, ComponentTypes::TRANSFORM)
 						__MYE_STATEMENT_COMPONENT(CameraComponent,    ComponentTypes::CAMERA)
 						__MYE_STATEMENT_COMPONENT(RigidBodyComponent, ComponentTypes::RIGIDBODY)
+						__MYE_STATEMENT_COMPONENT(Text2DComponent,    ComponentTypes::TEXT2D)
 						__MYE_STATEMENT_COMPONENT(KeyboardComponent,  ComponentTypes::KEYBOARD)
 						__MYE_STATEMENT_COMPONENT(MouseComponent,     ComponentTypes::MOUSE)
 					

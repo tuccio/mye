@@ -26,14 +26,18 @@ Text2DComponent::Text2DComponent(void) :
 
 }
 
-Text2DComponent::Text2DComponent(const Vector2i &position, FontPointer font, const String &text) :
+Text2DComponent::Text2DComponent(const Vector2i & position,
+								 //const Vector4 & color,
+								 FontPointer font,
+								 const String &text) :
 	Component(ComponentTypes::TEXT2D, "text2d"),
 	m_position(position),
 	m_font(font),
 	m_text(text),
 	m_vbLoader(this),
 	m_pointSize(1.0f / 800.0f, 1.0f / 600.0f),
-	m_color(1, 1, 1, 1)
+	m_color(1)
+	//m_color(color)
 {
 
 	Parameters params;
@@ -49,7 +53,7 @@ Text2DComponent::~Text2DComponent(void)
 
 }
 
-const String& Text2DComponent::GetText(void) const
+const String & Text2DComponent::GetText(void) const
 {
 	return m_text;
 }
@@ -60,7 +64,7 @@ void Text2DComponent::SetText(const String &text)
 	m_vb->Unload();
 }
 
-const Vector2i& Text2DComponent::GetPosition(void) const
+const Vector2i & Text2DComponent::GetPosition(void) const
 {
 	return m_position;
 }
@@ -82,12 +86,12 @@ void Text2DComponent::SetFont(const FontPointer &font)
 	m_vb->Unload();
 }
 
-const mye::math::Vector2f& Text2DComponent::GetPointSize(void) const
+const mye::math::Vector2 & Text2DComponent::GetPointSize(void) const
 {
 	return m_pointSize;
 }
 
-void Text2DComponent::SetPointSize(const mye::math::Vector2f &pointSize)
+void Text2DComponent::SetPointSize(const mye::math::Vector2 & pointSize)
 {
 
 	if (pointSize.x() != m_pointSize.x() &&
@@ -99,7 +103,7 @@ void Text2DComponent::SetPointSize(const mye::math::Vector2f &pointSize)
 
 }
 
-const mye::math::Vector4f& Text2DComponent::GetColor(void) const
+const mye::math::Vector4& Text2DComponent::GetColor(void) const
 {
 	return m_color;
 }
@@ -114,7 +118,7 @@ VertexBufferPointer Text2DComponent::GetVertexBuffer(void)
 	return Resource::DynamicCast<VertexBuffer>(m_vb);
 }
 
-Text2DComponent* Text2DComponent::Clone(void) const
+Text2DComponent * Text2DComponent::Clone(void) const
 {
 
 	return new Text2DComponent(m_position, m_font, m_text);
@@ -153,21 +157,21 @@ void Text2DComponent::UpdateText(void)
 
 			float bottom = y - (info.height + info.yoffset + 1) * m_pointSize.y();
 
-			Vector2f offset(info.xoffset * m_pointSize.x(), info.yoffset * m_pointSize.y());
+			Vector2 offset(info.xoffset * m_pointSize.x(), info.yoffset * m_pointSize.y());
 			//Vector2f offset(0, 0);
 
-			Vector2f p1(x + offset.x(), y - offset.y());
-			Vector2f p2(p1.x(), bottom);
+			Vector2 p1(x + offset.x(), y - offset.y());
+			Vector2 p2(p1.x(), bottom);
 
 			x += (info.width + info.xoffset) * m_pointSize.x();
 
-			Vector2f p3(x, p1.y());
-			Vector2f p4(x, bottom);
+			Vector2 p3(x, p1.y());
+			Vector2 p4(x, bottom);
 
-			Vector2f t1(info.left,  info.top);
-			Vector2f t2(info.left,  info.bottom);
-			Vector2f t3(info.right, info.top);
-			Vector2f t4(info.right, info.bottom);
+			Vector2 t1(info.left,  info.top);
+			Vector2 t2(info.left,  info.bottom);
+			Vector2 t3(info.right, info.top);
+			Vector2 t4(info.right, info.bottom);
 
 			data.SetVertexAttribute(i,     VertexAttributeSemantic::POSITION,  DataFormat::FLOAT2, &p1);
 			data.SetVertexAttribute(i,     VertexAttributeSemantic::TEXCOORD0, DataFormat::FLOAT2, &t1);
@@ -192,12 +196,12 @@ void Text2DComponent::UpdateText(void)
 
 	}
 
-	VertexBuffer *vb = dynamic_cast<VertexBuffer*>(m_vb.get());
+	VertexBuffer * vb = dynamic_cast<VertexBuffer*>(m_vb.get());
 	vb->Create(data.GetData(), n, vDecl);
 
 }
 
-Text2DLoader::Text2DLoader(Text2DComponent *t2dc) :
+Text2DLoader::Text2DLoader(Text2DComponent * t2dc) :
 	m_t2dc(t2dc)
 {
 
@@ -207,7 +211,7 @@ Text2DLoader::~Text2DLoader(void)
 {
 }
 
-bool Text2DLoader::Load(Resource *resource)
+bool Text2DLoader::Load(Resource * resource)
 {
 
 	bool loaded = false;
@@ -224,7 +228,7 @@ bool Text2DLoader::Load(Resource *resource)
 
 }
 
-void Text2DLoader::Unload(Resource *resource)
+void Text2DLoader::Unload(Resource * resource)
 {
 
 	VertexBuffer *vb = dynamic_cast<VertexBuffer*>(m_t2dc->m_vb.get());

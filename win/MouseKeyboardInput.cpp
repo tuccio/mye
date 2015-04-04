@@ -60,9 +60,9 @@ const Mouse* MouseKeyboardInput::GetMouse(void) const
 	return &m_mouse;
 }
 
-void MouseKeyboardInput::Postupdate(void)
+void MouseKeyboardInput::Preupdate(void)
 {
 
-	InputModule::Postupdate();
+	InputModule::Preupdate();
 
 }

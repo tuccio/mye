@@ -1,6 +1,8 @@
-function Update()
+local RotatingLight = { }
 
-	Halt()
+function RotatingLight:Update()
+
+	--Halt()
 	
 	print(self.t)
 	local t = self.t + Time.delta * self.omega
@@ -17,3 +19,5 @@ function Update()
 	print(self.transform.position)
 
 end
+
+return RotatingLight

@@ -7,6 +7,8 @@
 using namespace mye::dx11;
 using namespace mye::core;
 
+#define MYE_DX11_DEBUG
+
 DX11Device::DX11Device(void) :
 	m_device(nullptr),
 	m_blendOn(nullptr),
@@ -20,12 +22,6 @@ DX11Device::DX11Device(void) :
 
 DX11Device::~DX11Device(void)
 {
-
-	ReleaseCOMOptional(m_blendOn);
-	ReleaseCOMOptional(m_blendOff);
-	ReleaseCOMOptional(m_dImmediateContext);
-	ReleaseCOMOptional(m_device);
-
 }
 
 bool DX11Device::Create(void)
@@ -34,11 +30,11 @@ bool DX11Device::Create(void)
 	UINT createDeviceFlags = 0x0;
 	D3D_FEATURE_LEVEL featureLevel;
 
-#ifdef _DEBUG
+#ifdef MYE_DX11_DEBUG
 	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
-	return !HRTESTFAILED(D3D11CreateDevice(
+	if (!__MYE_DX11_HR_TEST_FAILED(D3D11CreateDevice(
 		0x0,
 		D3D_DRIVER_TYPE_HARDWARE,
 		0x0,
@@ -48,44 +44,10 @@ bool DX11Device::Create(void)
 		D3D11_SDK_VERSION,
 		&m_device,
 		&featureLevel,
-		&m_dImmediateContext));
-
-}
-
-void DX11Device::Destroy(void)
-{
-
-	ReleaseCOMOptional(m_blendOn);
-	ReleaseCOMOptional(m_blendOff);
-	ReleaseCOMOptional(m_dImmediateContext);
-	ReleaseCOMOptional(m_device);
-
-}
-
-bool DX11Device::Exists(void) const
-{
-	return m_device != nullptr;
-}
-
-/*
-void DX11Device::Render(DX11VertexBuffer &vb)
-{
-
-	vb.Bind();
-
-	switch (vb.GetRasterizingPrimitive())
+		&m_dImmediateContext)))
 	{
-	case:
-	}
 
-	m_dImmediateContext->Draw(vb.GetVerticesCount(), 0);
-}*/
-
-void DX11Device::SetBlending(bool enable)
-{
-
-	if (!m_blendOn)
-	{
+		/* Create blend states */
 
 		D3D11_BLEND_DESC blendStateDescription;
 		ZeroMemory(&blendStateDescription, sizeof(D3D11_BLEND_DESC));
@@ -99,38 +61,13 @@ void DX11Device::SetBlending(bool enable)
 		blendStateDescription.RenderTarget[0].BlendOpAlpha          = D3D11_BLEND_OP_ADD;
 		blendStateDescription.RenderTarget[0].RenderTargetWriteMask = 0x0f;
 
-		HRDEBUG(m_device->CreateBlendState(&blendStateDescription, &m_blendOn));
-
-	}
-
-	if (!m_blendOff)
-	{
-
-		D3D11_BLEND_DESC blendStateDescription;
-		ZeroMemory(&blendStateDescription, sizeof(D3D11_BLEND_DESC));
+		__MYE_DX11_HR_DEBUG(m_device->CreateBlendState(&blendStateDescription, &m_blendOn));
 
 		blendStateDescription.RenderTarget[0].BlendEnable           = FALSE;
-		blendStateDescription.RenderTarget[0].SrcBlend              = D3D11_BLEND_SRC_ALPHA;
-		blendStateDescription.RenderTarget[0].DestBlend             = D3D11_BLEND_INV_SRC_ALPHA;
-		blendStateDescription.RenderTarget[0].BlendOp               = D3D11_BLEND_OP_ADD;
-		blendStateDescription.RenderTarget[0].SrcBlendAlpha         = D3D11_BLEND_ONE;
-		blendStateDescription.RenderTarget[0].DestBlendAlpha        = D3D11_BLEND_ZERO;
-		blendStateDescription.RenderTarget[0].BlendOpAlpha          = D3D11_BLEND_OP_ADD;
-		blendStateDescription.RenderTarget[0].RenderTargetWriteMask = 0x0f;
 
-		HRDEBUG(m_device->CreateBlendState(&blendStateDescription, &m_blendOff));
+		__MYE_DX11_HR_DEBUG(m_device->CreateBlendState(&blendStateDescription, &m_blendOff));
 
-	}
-
-	m_dImmediateContext->OMSetBlendState((enable ? m_blendOn : m_blendOff), nullptr, 0xFFFFFFFF);
-
-}
-
-void DX11Device::SetDepthTest(bool enable)
-{
-
-	if (!m_depthTestOn)
-	{
+		/* Create depth states */
 
 		D3D11_DEPTH_STENCIL_DESC depthStencilStateDescription;
 
@@ -154,69 +91,146 @@ void DX11Device::SetDepthTest(bool enable)
 		depthStencilStateDescription.FrontFace.StencilFailOp      = D3D11_STENCIL_OP_KEEP;
 		depthStencilStateDescription.BackFace.StencilFailOp       = D3D11_STENCIL_OP_KEEP;
 
-		HRDEBUG(m_device->CreateDepthStencilState(&depthStencilStateDescription, &m_depthTestOn));
-
-	}
-
-	if (!m_depthTestOff)
-	{
-
-		D3D11_DEPTH_STENCIL_DESC depthStencilStateDescription;
-
-		ZeroMemory(&depthStencilStateDescription, sizeof(D3D11_DEPTH_STENCIL_DESC));
+		__MYE_DX11_HR_DEBUG(m_device->CreateDepthStencilState(&depthStencilStateDescription, &m_depthTestOn));
 
 		depthStencilStateDescription.DepthEnable                  = FALSE;
-		depthStencilStateDescription.DepthWriteMask               = D3D11_DEPTH_WRITE_MASK_ALL;
-		depthStencilStateDescription.DepthFunc                    = D3D11_COMPARISON_LESS;
 
-		depthStencilStateDescription.StencilEnable                = FALSE;
-		depthStencilStateDescription.StencilReadMask              = D3D11_DEFAULT_STENCIL_READ_MASK;
-		depthStencilStateDescription.StencilWriteMask             = D3D11_DEFAULT_STENCIL_WRITE_MASK;
+		__MYE_DX11_HR_DEBUG(m_device->CreateDepthStencilState(&depthStencilStateDescription, &m_depthTestOff));
 
-		depthStencilStateDescription.FrontFace.StencilFunc        = D3D11_COMPARISON_ALWAYS;
-		depthStencilStateDescription.BackFace.StencilFunc         = D3D11_COMPARISON_ALWAYS;
+		depthStencilStateDescription.DepthEnable                  = TRUE;
+		depthStencilStateDescription.DepthWriteMask               = D3D11_DEPTH_WRITE_MASK_ZERO;
+		depthStencilStateDescription.DepthFunc                    = D3D11_COMPARISON_EQUAL;
 
-		depthStencilStateDescription.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
-		depthStencilStateDescription.BackFace.StencilDepthFailOp  = D3D11_STENCIL_OP_KEEP;
-		depthStencilStateDescription.FrontFace.StencilPassOp      = D3D11_STENCIL_OP_KEEP;
-		depthStencilStateDescription.BackFace.StencilPassOp       = D3D11_STENCIL_OP_KEEP;
-		depthStencilStateDescription.FrontFace.StencilFailOp      = D3D11_STENCIL_OP_KEEP;
-		depthStencilStateDescription.BackFace.StencilFailOp       = D3D11_STENCIL_OP_KEEP;
+		__MYE_DX11_HR_DEBUG(m_device->CreateDepthStencilState(&depthStencilStateDescription, &m_depthTestLookup));
 
-		HRDEBUG(m_device->CreateDepthStencilState(&depthStencilStateDescription, &m_depthTestOff));
+		return true;
 
-	}
-
-	m_dImmediateContext->OMSetDepthStencilState((enable ? m_depthTestOn : m_depthTestOff), 0);
-
-}
-
-void DX11Device::SetRenderTargets(ID3D11DepthStencilView *depthStencilView, int n, ...)
-{
-
-	if (n <= 0)
-	{
-		m_dImmediateContext->OMSetRenderTargets(0, nullptr, depthStencilView);
 	}
 	else
 	{
+		return false;
+	}
 
-		std::vector<ID3D11RenderTargetView*> renderTargets(n);
+}
 
-		va_list args;
-		va_start(args, n);
+void DX11Device::Destroy(void)
+{
 
-		for (int i = 0; i < n; i++)
-		{
-			
-			renderTargets[i] = va_arg(args, ID3D11RenderTargetView*);
+	__MYE_DX11_RELEASE_COM_OPTIONAL(m_blendOn);
+	__MYE_DX11_RELEASE_COM_OPTIONAL(m_blendOff);
 
-		}
+	__MYE_DX11_RELEASE_COM_OPTIONAL(m_depthTestOn);
+	__MYE_DX11_RELEASE_COM_OPTIONAL(m_depthTestOff);
+	__MYE_DX11_RELEASE_COM_OPTIONAL(m_depthTestLookup);
 
-		va_end(args);
+	__MYE_DX11_RELEASE_COM_OPTIONAL(m_dImmediateContext);
+	__MYE_DX11_RELEASE_COM_OPTIONAL(m_device);
 
-		m_dImmediateContext->OMSetRenderTargets(n, &renderTargets[0], depthStencilView);
+}
+
+bool DX11Device::Exists(void) const
+{
+	return m_device != nullptr;
+}
+
+void DX11Device::SetBlending(bool enable)
+{
+	m_dImmediateContext->OMSetBlendState((enable ? m_blendOn : m_blendOff), nullptr, 0xFFFFFFFF);
+}
+
+void DX11Device::SetDepthTest(DX11DepthTest test)
+{
+
+	switch (test)
+	{
+
+	case DX11DepthTest::ON:
+		m_dImmediateContext->OMSetDepthStencilState(m_depthTestOn, 0);
+		break;
+
+	case DX11DepthTest::OFF:
+		m_dImmediateContext->OMSetDepthStencilState(m_depthTestOff, 0);
+		break;
+
+	case DX11DepthTest::LOOKUP:
+		m_dImmediateContext->OMSetDepthStencilState(m_depthTestLookup, 0);
+		break;
 
 	}
+
+}
+
+DXGI_SAMPLE_DESC DX11Device::GetMSAASampleDesc(MSAA msaa, DXGI_FORMAT format)
+{
+
+	DXGI_SAMPLE_DESC sampleDesc;
+
+	switch (msaa)
+	{
+
+	case MSAA::MSAA_4X:
+
+	{
+
+		UINT msaa4xQuality;
+
+		m_device->CheckMultisampleQualityLevels(
+			format,
+			4,
+			&msaa4xQuality);
+
+		sampleDesc.Count   = 4;
+		sampleDesc.Quality = msaa4xQuality - 1;
+
+	}
+
+		break;
+
+	case MSAA::MSAA_8X:
+
+	{
+
+		UINT msaa8xQuality;
+
+		m_device->CheckMultisampleQualityLevels(
+			format,
+			8,
+			&msaa8xQuality);
+
+		sampleDesc.Count   = 8;
+		sampleDesc.Quality = msaa8xQuality - 1;
+
+	}
+
+		break;
+
+	case MSAA::MSAA_16X:
+
+	{
+
+		UINT msaa16xQuality;
+
+		m_device->CheckMultisampleQualityLevels(
+			format,
+			8,
+			&msaa16xQuality);
+
+		sampleDesc.Count   = 16;
+		sampleDesc.Quality = msaa16xQuality - 1;
+
+	}
+
+		break;
+
+	default:
+
+		sampleDesc.Count   = 1;
+		sampleDesc.Quality = 0;
+
+		break;
+
+	}
+
+	return sampleDesc;
 
 }

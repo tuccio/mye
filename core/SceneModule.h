@@ -12,9 +12,14 @@ namespace mye
 	namespace core
 	{
 
+		typedef Camera CameraType;
+
+		typedef std::list<GameObject*> GameObjectsList;
+		typedef std::list<Light*>      LightsList;
+
 		struct SceneCameraListener
 		{
-			virtual void OnCameraChange(Camera *oldCamera, Camera *newCamera) = 0;
+			virtual void OnCameraChange(Camera * oldCamera, Camera * newCamera) = 0;
 		};
 
 		struct GameObjectRayIntersection
@@ -30,47 +35,50 @@ namespace mye
 
 		public:
 
-			typedef std::list<GameObject*> ObjectsList;
-			typedef std::list<LightComponent*> LightsList;
 			typedef std::list<Text2DComponent*> Text2DList;
 
 			SceneModule(void);
 
-			virtual ObjectsList GetVisibleObjects(void);
-			virtual ObjectsList GetObjectsList(void);
+			GameObjectsList GetVisibleObjects(void);
+			GameObjectsList GetVisibleObjects(CameraType * camera);
 
-			const LightsList& GetLightsList(void) const;
-			const Text2DList& GetText2DList(void) const;
+			virtual GameObjectsList GetVisibleObjects(const mye::math::Matrix4 & viewProjection);
 
-			virtual void AddGameObject(const GameObjectHandle &hObj);
-			virtual void RemoveGameObject(const GameObjectHandle &hObj);
+			virtual GameObjectsList GetObjectsList(void);
 
-			virtual GameObjectRayIntersection Pick(mye::math::Ray ray);
+			const LightsList & GetLightsList(void) const;
+			const Text2DList & GetText2DList(void) const;
+
+			virtual void AddGameObject    (const GameObjectHandle & hObj);
+			virtual void RemoveGameObject (const GameObjectHandle & hObj);
+
+			virtual GameObjectRayIntersection Pick(const mye::math::Ray & ray);
 			
-			inline void MoveGameObject(const GameObjectHandle &hObj, const mye::math::AABB &oldAABB);
+			inline void MoveGameObject(const GameObjectHandle & hObj, const mye::math::AABB & oldAABB);
 
-			inline Camera& Camera(void);
+			inline CameraType & Camera(void);
 
-			inline       mye::core::Camera * GetCamera(void);
-			inline const mye::core::Camera * GetCamera(void) const;
-			inline                    void   SetCamera(mye::core::Camera * camera);
+			inline CameraType       * GetCamera(void);
+			inline const CameraType * GetCamera(void) const;
+			inline void               SetCamera(CameraType * camera);
 
-			void AddCameraListener(SceneCameraListener *listener);
-			void RemoveCameraListener(SceneCameraListener *listener);
+			void AddCameraListener    (SceneCameraListener * listener);
+			void RemoveCameraListener (SceneCameraListener * listener);
 
-			void OnComponentAddition(GameObject *go, Component *component);
-			void OnComponentRemoval(GameObject *go, Component *component);
+			void OnComponentAddition (GameObject * go, Component * component);
+			void OnComponentRemoval  (GameObject * go, Component * component);
 
 		protected:
 
 			struct GameObjectUpdate
 			{
 				GameObjectHandle hObj;
-				mye::math::AABB oldAABB;
-				mye::math::AABB newAABB;
+				mye::math::AABB  oldAABB;
+				mye::math::AABB  newAABB;
 			};
 
-			mye::core::Camera *m_camera;
+			CameraType * m_camera;
+
 			std::list<GameObjectUpdate> m_movedObjects;
 
 			std::vector<SceneCameraListener*> m_cameraListeners;

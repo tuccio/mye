@@ -6,14 +6,13 @@ Light::Light(void)
 {
 }
 
-Light::Light(
-	LightType type,
-	const mye::math::Vector3 &color,
-	mye::math::Real intensity,
-	const mye::math::Vector3 &position,
-	const mye::math::Vector3 &direction,
-	mye::math::Real spotAngle,
-	mye::math::Real range) :
+Light::Light(LightType type,
+             const mye::math::Vector3 & color,
+             mye::math::Real intensity,
+             const mye::math::Vector3 & position,
+             const mye::math::Vector3 & direction,
+             mye::math::Real spotAngle,
+             mye::math::Real range) :
 	m_type(type),
 	m_color(color),
 	m_intensity(intensity),
@@ -25,7 +24,7 @@ Light::Light(
 
 }
 
-Light::Light(const PointLight &pointlight) :
+Light::Light(const PointLight & pointlight) :
 	m_type(LightType::POINTLIGHT),
 	m_color(pointlight.color),
 	m_intensity(pointlight.intensity),
@@ -49,12 +48,12 @@ void Light::SetType(LightType type)
 	m_type = type;
 }
 
-const mye::math::Vector3& Light::GetColor(void) const
+const mye::math::Vector3 & Light::GetColor(void) const
 {
 	return m_color;
 }
 
-void Light::SetColor(const mye::math::Vector3 &color)
+void Light::SetColor(const mye::math::Vector3 & color)
 {
 	m_color = color;
 }
@@ -69,22 +68,22 @@ void Light::SetIntensity(mye::math::Real intensity)
 	m_intensity = intensity;
 }
 
-const mye::math::Vector3& Light::GetPosition(void) const
+const mye::math::Vector3 & Light::GetPosition(void) const
 {
 	return m_position;
 }
 
-void Light::SetPosition(const mye::math::Vector3 &position)
+void Light::SetPosition(const mye::math::Vector3 & position)
 {
 	m_position = position;
 }
 
-const mye::math::Vector3& Light::GetDirection(void) const
+const mye::math::Vector3 & Light::GetDirection(void) const
 {
 	return m_direction;
 }
 
-void Light::SetDirection(const mye::math::Vector3 &direction)
+void Light::SetDirection(const mye::math::Vector3 & direction)
 {
 	m_direction = direction;
 }

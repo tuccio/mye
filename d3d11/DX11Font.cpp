@@ -44,7 +44,7 @@ void DX11Font::UnloadImpl(void)
 }
 void DX11Font::Bind(void)
 {
-	m_texture->Bind(0);
+	m_texture->Bind(DX11PipelineStage::PIXEL_SHADER, 0);
 }
 
 void DX11Font::Unbind(void)

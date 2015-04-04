@@ -25,7 +25,7 @@ namespace mye
 			virtual          Mouse * GetMouse(void);
 			virtual    const Mouse * GetMouse(void) const;
 
-			virtual           void   Postupdate(void);
+			virtual           void   Preupdate(void);
 
 		};
 

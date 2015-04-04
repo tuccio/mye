@@ -26,7 +26,7 @@ namespace mye
 			bool Create(size_t size,
 				const void *initiationData = nullptr);
 
-			void Bind(PipelineStages stage, int index);
+			void Bind(DX11PipelineStage stage, int index);
 
 			void GetData(void *data) const;
 			void SetData(const void *data);

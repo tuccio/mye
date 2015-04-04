@@ -56,6 +56,7 @@ void WinGame::Run(void)
 		FloatSeconds dt(m_timer.Lap());
 
 		m_script->Preupdate(dt);
+		m_input->Preupdate();
 		//m_objects->Preupdate(dt);
 
 		/*m_gameobjects->Update()
@@ -69,8 +70,6 @@ void WinGame::Run(void)
 		m_physics->Update(dt);
 		//m_scene->Update();
 		m_graphics->Render();
-
-		m_input->Postupdate();
 
 		m_gameobjects->FinalizeUpdate();
 

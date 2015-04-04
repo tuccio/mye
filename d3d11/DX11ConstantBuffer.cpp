@@ -53,27 +53,35 @@ bool DX11ConstantBuffer::Create(size_t size,
 	vertexBufferData.pSysMem = initiationData;
 
 	bool success =
-		!HRTESTFAILED(m_device.GetDevice()->CreateBuffer(
+		!__MYE_DX11_HR_TEST_FAILED(m_device.GetDevice()->CreateBuffer(
 		&vertexBufferDesc,
-		(initiationData ? &vertexBufferData : 0x0),
+		(initiationData ? &vertexBufferData : nullptr),
 		&m_buffer));
 
 	return success;
 
 }
 
-void DX11ConstantBuffer::Bind(PipelineStages stage, int index)
+void DX11ConstantBuffer::Bind(DX11PipelineStage stage, int index)
 {
 
 	switch (stage)
 	{
 
-	case PIPELINE_VERTEX_SHADER:
+	case DX11PipelineStage::VERTEX_SHADER:
 		m_device.GetImmediateContext()->VSSetConstantBuffers(index, 1, &m_buffer);
 		break;
 
-	case PIPELINE_PIXEL_SHADER:
+	case DX11PipelineStage::PIXEL_SHADER:
 		m_device.GetImmediateContext()->PSSetConstantBuffers(index, 1, &m_buffer);
+		break;
+
+	case DX11PipelineStage::GEOMETRY_SHADER:
+		m_device.GetImmediateContext()->GSSetConstantBuffers(index, 1, &m_buffer);
+		break;
+
+	case DX11PipelineStage::COMPUTE_SHADER:
+		m_device.GetImmediateContext()->CSSetConstantBuffers(index, 1, &m_buffer);
 		break;
 
 	default:

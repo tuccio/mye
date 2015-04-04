@@ -42,26 +42,30 @@ namespace mye
 		public:
 
 			Text2DComponent(void);
-			Text2DComponent(const mye::math::Vector2i &position, FontPointer font, const String &text);
+
+			Text2DComponent(const mye::math::Vector2i & position,
+							//const mye::math::Vector4 color,
+							FontPointer font,
+							const String & text);
 
 			~Text2DComponent(void);
 
-			const String& GetText(void) const;
-			void SetText(const String &text);
+			const String & GetText(void) const;
+			void SetText(const String & text);
 
-			const mye::math::Vector2i& GetPosition(void) const;
-			void SetPosition(const mye::math::Vector2i &position);
+			const mye::math::Vector2i & GetPosition(void) const;
+			void SetPosition(const mye::math::Vector2i & position);
 
 			FontPointer GetFont(void) const;
-			void SetFont(const FontPointer &font);
+			void SetFont(const FontPointer & font);
 
-			const mye::math::Vector2f& GetPointSize(void) const;
-			void SetPointSize(const mye::math::Vector2f &pointSize);
+			const mye::math::Vector2 & GetPointSize(void) const;
+			void SetPointSize(const mye::math::Vector2 & pointSize);
 
-			const mye::math::Vector4f& GetColor(void) const;
-			void SetColor(const mye::math::Vector4f& color);
+			const mye::math::Vector4 & GetColor(void) const;
+			void SetColor(const mye::math::Vector4 & color);
 
-			Text2DComponent* Clone(void) const;
+			Text2DComponent * Clone(void) const;
 
 			VertexBufferPointer GetVertexBuffer(void);
 
@@ -74,8 +78,8 @@ namespace mye
 
 			String              m_text;
 			mye::math::Vector2i m_position;
-			mye::math::Vector2f m_pointSize;
-			mye::math::Vector4f m_color;
+			mye::math::Vector2  m_pointSize;
+			mye::math::Vector4  m_color;
 
 			FontPointer         m_font;
 

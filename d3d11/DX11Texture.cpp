@@ -10,21 +10,16 @@
 using namespace mye::dx11;
 using namespace mye::core;
 
-DX11Texture::DX11Texture(
-	mye::core::ResourceManager *owner,
-	const mye::core::String &name,
-	mye::core::ManualResourceLoader *manual,
-	DX11Device &device) :
+DX11Texture::DX11Texture(mye::core::ResourceManager *owner,
+						 const mye::core::String &name,
+						 mye::core::ManualResourceLoader *manual,
+						 DX11Device &device) :
 m_device(device),
 m_texture(nullptr),
-m_shaderResourceView(nullptr),
-m_renderTargetView(nullptr),
-//m_samplerState(nullptr),
 Texture(owner, name, manual)
 {
 
 }
-
 
 DX11Texture::~DX11Texture(void)
 {
@@ -40,10 +35,15 @@ bool DX11Texture::LoadImpl(void)
 	if (image && image->Load())
 	{
 
-		bool renderTarget = m_params.Contains("renderTarget") &&
-			m_params.GetBool("renderTarget");
-
 		m_format = DataFormat::FLOAT4;
+
+		DXGI_FORMAT dxgiFormat = GetDXGIFormat(m_format);
+
+		bool renderTarget = m_params.Contains("renderTarget") && m_params.GetBool("renderTarget");
+		bool generateMips = m_params.Contains("generateMips") && m_params.GetBool("generateMips");
+
+		int mipmaps = m_params.Contains("mipmaps") ? m_params.GetInteger("mipmaps") : 1;
+		int msaaSamples = m_params.Contains("msaa") ? m_params.GetInteger("msaa") : 0;
 
 		m_width  = image->GetWidth();
 		m_height = image->GetHeight();
@@ -53,16 +53,28 @@ bool DX11Texture::LoadImpl(void)
 		tex2dDesc.Width              = m_width;
 		tex2dDesc.Height             = m_height;
 
-		tex2dDesc.MipLevels          = 1;
+		tex2dDesc.MipLevels          = mipmaps;
 		tex2dDesc.ArraySize          = 1;
-		tex2dDesc.Format             = GetDXGIFormat(m_format);
-		tex2dDesc.SampleDesc.Count   = 1;
-		tex2dDesc.SampleDesc.Quality = 0;
-		tex2dDesc.BindFlags          = D3D11_BIND_SHADER_RESOURCE |
-			(renderTarget ? D3D11_BIND_RENDER_TARGET : 0x0);
+		tex2dDesc.Format             = dxgiFormat;
+		
+		tex2dDesc.BindFlags          = D3D11_BIND_SHADER_RESOURCE;
 		tex2dDesc.MiscFlags          = 0;
-		tex2dDesc.Usage              = D3D11_USAGE_DEFAULT;
+		tex2dDesc.Usage              = D3D11_USAGE_IMMUTABLE;
 		tex2dDesc.CPUAccessFlags     = 0;
+		tex2dDesc.SampleDesc         = m_device.GetMSAASampleDesc(m_msaa, dxgiFormat);
+
+		if (renderTarget)
+		{
+
+			if (generateMips)
+			{
+				tex2dDesc.MiscFlags |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
+			}
+
+			tex2dDesc.BindFlags |= D3D11_BIND_RENDER_TARGET;
+			tex2dDesc.Usage      = D3D11_USAGE_DEFAULT;
+
+		}
 
 		D3D11_SUBRESOURCE_DATA data;
 
@@ -70,12 +82,10 @@ bool DX11Texture::LoadImpl(void)
 		data.SysMemPitch      = m_width * 16;
 		data.SysMemSlicePitch = 0;
 
-		if (!HRTESTFAILED(m_device.GetDevice()->CreateTexture2D(&tex2dDesc, &data, &m_texture)) &&
+		if (!__MYE_DX11_HR_TEST_FAILED(m_device.GetDevice()->CreateTexture2D(&tex2dDesc, &data, &m_texture)) &&
 			CreateViews())
 		{
-
 			loaded = true;
-
 		}
 
 	}
@@ -84,24 +94,12 @@ bool DX11Texture::LoadImpl(void)
 
 }
 
-void DX11Texture::Bind(unsigned int slot)
-{
-	m_device.GetImmediateContext()->PSSetShaderResources(slot, 1, &m_shaderResourceView);
-	m_boundSlot = slot;
-}
-
-void DX11Texture::Unbind(void)
-{
-	ID3D11ShaderResourceView *unbound = nullptr;
-	m_device.GetImmediateContext()->PSSetShaderResources(m_boundSlot, 1, &unbound);
-}
-
 void DX11Texture::UnloadImpl(void)
 {
 
-	ReleaseCOM(m_shaderResourceView);
-	ReleaseCOM(m_renderTargetView);
-	ReleaseCOM(m_texture);
+	__MYE_DX11_RELEASE_COM(m_shaderResourceView);
+	__MYE_DX11_RELEASE_COM(m_renderTargetView);
+	__MYE_DX11_RELEASE_COM(m_texture);
 
 }
 
@@ -115,57 +113,73 @@ bool DX11Texture::Create(int width, int height, mye::core::DataFormat format)
 
 	m_format = format;
 
-	m_width  = width;
-	m_height = height;
+	m_width  = max(1, width);
+	m_height = max(1, height);
+
+	DXGI_FORMAT dxgiFormat = GetDXGIFormat(m_format);
+
+	bool renderTarget = m_params.Contains("renderTarget") && m_params.GetBool("renderTarget");
+	bool generateMips = m_params.Contains("generateMips") && m_params.GetBool("generateMips");
+
+	int mipmaps = m_params.Contains("mipmaps") ? m_params.GetInteger("mipmaps") : 1;
+	
+	SetMSAA();
 
 	D3D11_TEXTURE2D_DESC tex2dDesc;
 
-	tex2dDesc.Width              = max(1, m_width);
-	tex2dDesc.Height             = max(1, m_height);
+	tex2dDesc.Width              = m_width;
+	tex2dDesc.Height             = m_height;
 
-	tex2dDesc.MipLevels          = 1;
+	tex2dDesc.MipLevels          = mipmaps;
 	tex2dDesc.ArraySize          = 1;
-	tex2dDesc.Format             = GetDXGIFormat(m_format);
-	tex2dDesc.SampleDesc.Count   = 1;
-	tex2dDesc.SampleDesc.Quality = 0;
-	tex2dDesc.BindFlags          = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+	tex2dDesc.Format             = dxgiFormat;
+
+	tex2dDesc.BindFlags          = D3D11_BIND_SHADER_RESOURCE;
 	tex2dDesc.MiscFlags          = 0;
 	tex2dDesc.Usage              = D3D11_USAGE_DEFAULT;
 	tex2dDesc.CPUAccessFlags     = 0;
+	tex2dDesc.SampleDesc         = m_device.GetMSAASampleDesc(m_msaa, dxgiFormat);
+	
 
-	if (!HRTESTFAILED(m_device.GetDevice()->CreateTexture2D(&tex2dDesc, nullptr, &m_texture)) &&
-		CreateViews())
+	if (renderTarget)
 	{
-		return true;
+		
+		if (generateMips)
+		{
+			tex2dDesc.MiscFlags |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
+		}
+
+		tex2dDesc.BindFlags |= D3D11_BIND_RENDER_TARGET;
+
 	}
 
-	return false;
+	return
+		!__MYE_DX11_HR_TEST_FAILED(m_device.GetDevice()->CreateTexture2D(&tex2dDesc, nullptr, &m_texture)) &&
+		CreateViews();
 
 }
 
 bool DX11Texture::CreateViews(void)
 {
 
-	bool renderTarget = m_params.Contains("renderTarget") &&
-		m_params.GetBool("renderTarget");
+	bool renderTarget = m_params.Contains("renderTarget") && m_params.GetBool("renderTarget");
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
 
 	shaderResourceViewDesc.Format                    = GetDXGIFormat(m_format);
-	shaderResourceViewDesc.ViewDimension             = D3D11_SRV_DIMENSION_TEXTURE2D;
-	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
-	shaderResourceViewDesc.Texture2D.MipLevels       = 1;
-	shaderResourceViewDesc.Buffer.FirstElement       = 0;
-	shaderResourceViewDesc.Buffer.NumElements        = 1;
+	shaderResourceViewDesc.ViewDimension             = (m_msaa == MSAA::MSAA_OFF ? D3D11_SRV_DIMENSION_TEXTURE2D : D3D11_SRV_DIMENSION_TEXTURE2DMS);
+
+	shaderResourceViewDesc.Texture2D.MostDetailedMip =  0;
+	shaderResourceViewDesc.Texture2D.MipLevels       = -1;
 
 	return
-		!HRTESTFAILED(
+		!__MYE_DX11_HR_TEST_FAILED(
 			m_device.GetDevice()->CreateShaderResourceView(
 			m_texture,
 			&shaderResourceViewDesc,
 			&m_shaderResourceView)) &&
 		(!renderTarget ||
-		!HRTESTFAILED(
+		!__MYE_DX11_HR_TEST_FAILED(
 			m_device.GetDevice()->CreateRenderTargetView(
 			m_texture,
 			nullptr,
@@ -176,13 +190,38 @@ bool DX11Texture::CreateViews(void)
 void DX11Texture::Destroy(void)
 {
 
-	ReleaseCOMOptional(m_shaderResourceView);
-	ReleaseCOMOptional(m_renderTargetView);
-	ReleaseCOMOptional(m_texture);
+	__MYE_DX11_RELEASE_COM_OPTIONAL(m_shaderResourceView);
+	__MYE_DX11_RELEASE_COM_OPTIONAL(m_renderTargetView);
+	__MYE_DX11_RELEASE_COM_OPTIONAL(m_texture);
 
 }
 
-void DX11Texture::ClearRenderTarget(const mye::math::Vector4f &color)
+void DX11Texture::SetMSAA(void)
 {
-	m_device.GetImmediateContext()->ClearRenderTargetView(m_renderTargetView, color.Data());
+
+	int msaaSamples = m_params.Contains("msaa") ? m_params.GetInteger("msaa") : 0;
+
+	switch (msaaSamples)
+	{
+
+	case 4:
+		m_msaa = MSAA::MSAA_4X;
+		break;
+
+	case 8:
+		m_msaa = MSAA::MSAA_8X;
+		break;
+
+	case 16:
+		m_msaa = MSAA::MSAA_16X;
+		break;
+
+	default:
+		m_msaa = MSAA::MSAA_OFF;
+		break;
+
+	}
+
+	return;
+
 }

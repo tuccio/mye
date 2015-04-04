@@ -1,14 +1,10 @@
 <scene module="octree" size="1024" center="0 0 0" maxdepth="32">
-	<gameobject name="sphere" entity="Sphere">
-		<render>
-			<mesh name="./models/sphere.obj"/>
-		</render>
-	</gameobject>
+	<gameobject name="sphere" entity="Sphere"></gameobject>
 	<gameobject name="box1" entity="Box"></gameobject>
 	<gameobject name="camera" entity="Camera"></gameobject>
 	<gameobject name="box2" entity="Box"></gameobject>
 	<gameobject name="floor" entity="Floor"></gameobject>
-	<gameobject name="devconsole" entity="DeveloperConsole">
-	</gameobject>
+	<gameobject name="devconsole" entity="DeveloperConsole"></gameobject>
+	<gameobject name="throw" entity="Throw"></gameobject>
 </scene>
 
