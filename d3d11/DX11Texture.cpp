@@ -16,6 +16,7 @@ DX11Texture::DX11Texture(mye::core::ResourceManager *owner,
 						 DX11Device &device) :
 m_device(device),
 m_texture(nullptr),
+m_msaa(MSAA::MSAA_OFF),
 Texture(owner, name, manual)
 {
 
@@ -44,6 +45,8 @@ bool DX11Texture::LoadImpl(void)
 
 		int mipmaps = m_params.Contains("mipmaps") ? m_params.GetInteger("mipmaps") : 1;
 		int msaaSamples = m_params.Contains("msaa") ? m_params.GetInteger("msaa") : 0;
+
+		m_msaa = static_cast<MSAA>(msaaSamples);
 
 		m_width  = image->GetWidth();
 		m_height = image->GetHeight();

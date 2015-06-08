@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <array>
 
 namespace mye
 {
@@ -10,28 +10,28 @@ namespace mye
 
 		enum class FrustumPlane
 		{
-			NEAR_Planet,
-			FAR_Planet,
-			LEFT_Planet,
-			RIGHT_Planet,
-			TOP_Planet,
-			BOTTOM_Planet,
-			FIRST = NEAR_Planet,
-			LAST = BOTTOM_Planet
+			NEAR_PLANE,
+			FAR_PLANE,
+			LEFT_PLANE,
+			RIGHT_PLANE,
+			TOP_PLANE,
+			BOTTOM_PLANE,
+			FIRST = NEAR_PLANE,
+			LAST = BOTTOM_PLANE
 		};
 
 		enum class FrustumCorners
 		{
-			LEFT_BOTTOM_NEAR = 0,
+			LEFT_BOTTOM_NEAR  = 0,
 			RIGHT_BOTTOM_NEAR = 1,
-			RIGHT_TOP_NEAR = 2,
-			LEFT_TOP_NEAR = 3,
-			LEFT_TOP_FAR = 4,
-			RIGHT_TOP_FAR = 5,
-			RIGHT_BOTTOM_FAR = 6,
-			LEFT_BOTTOM_FAR = 7,
-			FIRST = LEFT_BOTTOM_NEAR,
-			LAST = LEFT_BOTTOM_FAR
+			RIGHT_TOP_NEAR    = 2,
+			LEFT_TOP_NEAR     = 3,
+			LEFT_TOP_FAR      = 4,
+			RIGHT_TOP_FAR     = 5,
+			RIGHT_BOTTOM_FAR  = 6,
+			LEFT_BOTTOM_FAR   = 7,
+			FIRST             = LEFT_BOTTOM_NEAR,
+			LAST              = LEFT_BOTTOM_FAR
 		};
 
 		template <typename T>
@@ -43,27 +43,27 @@ namespace mye
 
 			FrustumTempl(void);
 
-			FrustumTempl(const Matrix<T, 3, 1> &origin,
-				const Matrix<T, 3, 1>& direction,
-				const Matrix<T, 3, 1>& up,
-				const Matrix<T, 3, 1>& right,
-				T nearPlanetDistance,
-				T farPlanetDistance,
-				T fovX,
-				T fovY);
+			FrustumTempl(const Matrix<T, 3, 1> & origin,
+			             const Matrix<T, 3, 1> & direction,
+			             const Matrix<T, 3, 1> & up,
+			             const Matrix<T, 3, 1> & right,
+			             T nearPlanetDistance,
+			             T farPlanetDistance,
+			             T fovX,
+			             T fovY);
 
-			std::vector<Matrix<T, 3, 1>> GetCorners(void) const;
+			std::array<Matrix<T, 3, 1>, 8> GetCorners(void) const;
 
-			inline VolumeSide Side(const Matrix<T, 3, 1> &x) const;
+			inline VolumeSide Side(const Matrix<T, 3, 1> & x) const;
 
-			inline const PlaneTempl<T>& GetPlane(FrustumPlane Planet) const;
+			inline const PlaneTempl<T> & GetPlane(FrustumPlane plane) const;
 
-			FrustumTempl* Clone(void) const;
+			FrustumTempl * Clone(void) const;
 
-			VolumeSide Intersects(const AABBTempl<T> &aabb) const;
+			VolumeSide Intersects(const AABBTempl<T> & aabb) const;
 
-			void TransformAffine(Volume &volume,
-				const Matrix<T, 4, 4> &transform) const;
+			void TransformAffine(Volume & volume,
+			                     const Matrix<T, 4, 4> & transform) const;
 
 // 			inline typename const Planet<T>& Near(void) const;
 // 			inline typename const Planet<T>& Far(void) const;
@@ -74,7 +74,8 @@ namespace mye
 
 		private:
 
-			PlaneTempl<T> m_Planets[6];
+			PlaneTempl<T> m_planes[6];
+			
 
 		};
 

@@ -1,5 +1,18 @@
 #pragma once
 
+#include "SSE.h"
+
+#define __MYE_MATH_DEFINE_MATRIX3_GET_SET(N, I, TYPE) \
+	__MYE_MATH_INLINE TYPE BOOST_PP_CAT(Get, BOOST_PP_CAT(BOOST_PP_DIV(I, 3), BOOST_PP_MOD(I, 3))) (void) const { return *(m_data + I); }\
+	__MYE_MATH_INLINE void BOOST_PP_CAT(Set, BOOST_PP_CAT(BOOST_PP_DIV(I, 3), BOOST_PP_MOD(I, 3))) (const TYPE & x) { *(m_data + I) = x; }
+
+#define __MYE_MATH_DEFINE_MATRIX3_REFS(N, I, TYPE) \
+	__MYE_MATH_INLINE const TYPE & BOOST_PP_CAT(m, BOOST_PP_CAT(BOOST_PP_DIV(I, 3), BOOST_PP_MOD(I, 3))) (void) const { return *(m_data + I); }\
+	__MYE_MATH_INLINE TYPE & BOOST_PP_CAT(m, BOOST_PP_CAT(BOOST_PP_DIV(I, 3), BOOST_PP_MOD(I, 3))) (void) { return *(m_data + I); }
+
+#define __MYE_MATH_MATRIX3_DEFINE_MEMBER_ACCESS(TYPE) BOOST_PP_REPEAT(9, __MYE_MATH_DEFINE_MATRIX3_GET_SET, TYPE)\
+                                                      BOOST_PP_REPEAT(9, __MYE_MATH_DEFINE_MATRIX3_REFS, TYPE)
+
 namespace mye
 {
 
@@ -13,49 +26,41 @@ namespace mye
 		public:
 
 			Matrix(void);
-			Matrix(const Matrix<T, 4, 4> &m);
+			Matrix(const Matrix<T, 4, 4> & m);
 			Matrix(T d);
 
-			inline void Fill(T x);
+			__MYE_MATH_INLINE void Fill(T x);
 
-			inline Matrix<T, 3, 1> GetRow(int i) const;
-			inline void SetRow(int i, const Matrix<T, 3, 1> &v);
+			__MYE_MATH_INLINE Matrix<T, 3, 1> GetRow(int i) const;
+			__MYE_MATH_INLINE void SetRow(int i, const Matrix<T, 3, 1> & v);
 
-			inline Matrix<T, 3, 1> GetColumn(int j) const;
-			inline void SetColumn(int j, const Matrix<T, 3, 1> &v);
+			__MYE_MATH_INLINE Matrix<T, 3, 1> GetColumn(int j) const;
+			__MYE_MATH_INLINE void SetColumn(int j, const Matrix<T, 3, 1> & v);
 
-			inline T& operator() (int i, int j);
-			inline const T& operator() (int i, int j) const;
+			__MYE_MATH_INLINE T &       operator() (int i, int j);
+			__MYE_MATH_INLINE const T & operator() (int i, int j) const;
 
-			inline Matrix<T, 3, 3> operator+ (const Matrix<T, 3, 3> &a) const;
+			__MYE_MATH_INLINE Matrix<T, 3, 3> operator- (void) const;
 
-			inline Matrix<T, 3, 3> operator* (const Matrix<T, 3, 3> &a) const;
-			inline Matrix<T, 3, 3> operator* (T s) const;
+			__MYE_MATH_INLINE Matrix<T, 3, 3> & operator= (const Matrix<T, 3, 3> & a);
 
-			inline Matrix<T, 3, 3>& ScaleInPlace(T s);
+			__MYE_MATH_INLINE Matrix<T, 3, 3> operator+ (const Matrix<T, 3, 3> & a) const;
+			__MYE_MATH_INLINE Matrix<T, 3, 3> operator- (const Matrix<T, 3, 3> & a) const;
 
-			inline Matrix<T, 3, 3> Transpose(void) const;
-			inline T Determinant(void) const;
-			inline Matrix<T, 3, 3> Inverse(void) const;
+			__MYE_MATH_INLINE Matrix<T, 3, 3> operator* (const Matrix<T, 3, 3> & a) const;
 
-			inline T* Data(void);
-			inline const T* Data(void) const;
+			__MYE_MATH_INLINE Matrix<T, 3, 3> operator* (T s) const;
+			__MYE_MATH_INLINE Matrix<T, 3, 3> operator/ (T s) const;
 
-#define __MYE_MATH_DEFINE_MATRIX3_GET_SET(N, I, AUX) \
-	inline T BOOST_PP_CAT(Get, BOOST_PP_CAT(BOOST_PP_DIV(I, 3), BOOST_PP_MOD(I, 3))) (void) const { return *(m_data + I); }\
-	inline void BOOST_PP_CAT(Set, BOOST_PP_CAT(BOOST_PP_DIV(I, 3), BOOST_PP_MOD(I, 3))) (const T &x) { *(m_data + I) = x; }
+			__MYE_MATH_INLINE Matrix<T, 3, 3> Transpose(void) const;
+			__MYE_MATH_INLINE Matrix<T, 3, 3> Inverse(void) const;
 
-#define __MYE_MATH_DEFINE_MATRIX3_REFS(N, I, AUX) \
-	inline const T& BOOST_PP_CAT(m, BOOST_PP_CAT(BOOST_PP_DIV(I, 3), BOOST_PP_MOD(I, 3))) (void) const { return *(m_data + I); }\
-	inline T& BOOST_PP_CAT(m, BOOST_PP_CAT(BOOST_PP_DIV(I, 3), BOOST_PP_MOD(I, 3))) (void) { return *(m_data + I); }
+			__MYE_MATH_INLINE T Determinant(void) const;
+			
+			__MYE_MATH_INLINE T *       Data(void);
+			__MYE_MATH_INLINE const T * Data(void) const;
 
-			BOOST_PP_REPEAT(9,
-				__MYE_MATH_DEFINE_MATRIX3_GET_SET,
-				0)
-
-			BOOST_PP_REPEAT(9,
-				__MYE_MATH_DEFINE_MATRIX3_REFS,
-				0)
+			__MYE_MATH_MATRIX3_DEFINE_MEMBER_ACCESS(T)
 
 		private:
 
@@ -64,7 +69,7 @@ namespace mye
 		};
 
 		template <typename T>
-		inline Matrix<T, 3, 3> operator* (T s, const Matrix<T, 3, 3> &m);
+		__MYE_MATH_INLINE Matrix<T, 3, 3> operator* (T s, const Matrix<T, 3, 3> & m);
 
 	}
 

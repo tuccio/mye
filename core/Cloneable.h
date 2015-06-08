@@ -11,7 +11,7 @@ namespace mye
 
 		public:
 
-			virtual Cloneable* Clone(void) const = 0;
+			virtual Cloneable * Clone(void) const = 0;
 
 		};
 

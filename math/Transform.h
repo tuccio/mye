@@ -42,8 +42,8 @@ namespace mye
 		private:
 
 			QuaternionTempl<T> m_orientation;
-			Matrix<T, 3, 1> m_position;
-			Matrix<T, 3, 1> m_scale;
+			Matrix<T, 3, 1>    m_position;
+			Matrix<T, 3, 1>    m_scale;
 
 		};
 

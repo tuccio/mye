@@ -29,7 +29,7 @@ DX11DeferredLightingRenderer::DX11DeferredLightingRenderer(DX11Device & device, 
 	m_cameraBuffer(nullptr, "", nullptr, device),
 	m_configurationBuffer(nullptr, "", nullptr, device),
 	m_clearColor(0.0f),
-	m_rsm(device, true)
+	m_rsm(device, false)
 {
 
 	Parameters params({ { "renderTarget", "true" } });
@@ -346,11 +346,11 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 				lbuffer,
 				nullptr);
 
-
-			m_rsm.GetVSMShaderResource().Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_SHADOWMAP);
-
-			m_device.GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_SHADOWMAP, 1, &m_shadowMapSamplerState);
+			m_device.GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_SHADOWMAP,     1, &m_shadowMapSamplerState);
 			m_device.GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_SHADOWMAP_CMP, 1, &m_shadowMapSamplerCmpState);
+
+			m_rsm.GetDepthShaderResource().Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_SHADOWMAP);
+			//m_rsm.GetVSMShaderResource().Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_SHADOWMAP);
 
 			m_gbuffer0.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_GBUFFER0);
 			m_gbuffer1.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_GBUFFER1);
@@ -389,12 +389,12 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 			m_device.GetImmediateContext()->
 				IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-			m_device.GetImmediateContext()->
-				Draw(quadBuffer.GetVerticesCount(), 0);
+			m_device.GetImmediateContext()->Draw(quadBuffer.GetVerticesCount(), 0);
 
 			quadBuffer.Unbind();
 
-			m_rsm.GetVSMShaderResource().Unbind();
+			m_rsm.GetDepthShaderResource().Unbind();
+			//m_rsm.GetVSMShaderResource().Unbind();
 
 		}
 
@@ -556,13 +556,14 @@ bool DX11DeferredLightingRenderer::CreateSamplerStates(void)
 
 	D3D11_SAMPLER_DESC shadowMapSamplerDesc;
 
-	shadowMapSamplerDesc.Filter         = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	//shadowMapSamplerDesc.Filter         = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	//shadowMapSamplerDesc.Filter         = D3D11_FILTER_ANISOTROPIC;
+	shadowMapSamplerDesc.Filter         = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
 	shadowMapSamplerDesc.AddressU       = D3D11_TEXTURE_ADDRESS_WRAP;
 	shadowMapSamplerDesc.AddressV       = D3D11_TEXTURE_ADDRESS_WRAP;
 	shadowMapSamplerDesc.AddressW       = D3D11_TEXTURE_ADDRESS_WRAP;
 	shadowMapSamplerDesc.MipLODBias     = 0.0f;
-	shadowMapSamplerDesc.MaxAnisotropy  = 16;
+	shadowMapSamplerDesc.MaxAnisotropy  = 1;
 	shadowMapSamplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
 	shadowMapSamplerDesc.BorderColor[0] = 0;
 	shadowMapSamplerDesc.BorderColor[1] = 0;

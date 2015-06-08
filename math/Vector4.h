@@ -12,52 +12,61 @@ namespace mye
 
 		public:
 
-			Matrix(void);
-			Matrix(T v);
-			Matrix(const Matrix<T, 2, 1> &xy, T z, T w);
-			Matrix(const Matrix<T, 3, 1> &v, T w);
-			Matrix(T x, T y, T z, T w);
+			__MYE_MATH_INLINE Matrix(void);
+			__MYE_MATH_INLINE Matrix(T v);
+			__MYE_MATH_INLINE Matrix(const Matrix<T, 2, 1> & xy, T z, T w);
+			__MYE_MATH_INLINE Matrix(const Matrix<T, 3, 1> & v, T w);
+			__MYE_MATH_INLINE Matrix(T x, T y, T z, T w);
+			__MYE_MATH_INLINE Matrix(const Matrix<T, 4, 1> & v);
 
-			inline T& operator[] (int i);
-			inline const T& operator[] (int i) const;
+			__MYE_MATH_INLINE T &       operator[] (int i);
+			__MYE_MATH_INLINE const T & operator[] (int i) const;
 
-			inline T& operator() (int i, int j);
-			inline const T& operator() (int i, int j) const;
+			__MYE_MATH_INLINE T &       operator() (int i, int j);
+			__MYE_MATH_INLINE const T & operator() (int i, int j) const;
 
-			inline T Dot(const Matrix<T, 4, 1> &v) const;
+			__MYE_MATH_INLINE T Dot(const Matrix<T, 4, 1> & v) const;
 
-			inline bool operator == (const Matrix<T, 4, 1> &v) const;
+			__MYE_MATH_INLINE bool operator == (const Matrix<T, 4, 1> & v) const;
+			__MYE_MATH_INLINE bool operator != (const Matrix<T, 4, 1> & v) const;
 
-			inline Matrix<T, 4, 1> operator+ (const Matrix<T, 4, 1> &b) const;
-			inline Matrix<T, 4, 1> operator- (const Matrix<T, 4, 1> &b) const;
+			__MYE_MATH_INLINE Matrix<T, 4, 1> operator+ (const Matrix<T, 4, 1> & b) const;
+			__MYE_MATH_INLINE Matrix<T, 4, 1> operator- (const Matrix<T, 4, 1> & b) const;
 
-			inline Matrix<T, 4, 1> operator* (const Matrix<T, 4, 1> &v) const;
-			inline Matrix<T, 4, 1> operator/ (const Matrix<T, 4, 1> &v) const;
+			__MYE_MATH_INLINE Matrix<T, 4, 1> operator* (const Matrix<T, 4, 1> & v) const;
+			__MYE_MATH_INLINE Matrix<T, 4, 1> operator/ (const Matrix<T, 4, 1> & v) const;
 
-			inline Matrix<T, 4, 1> operator* (T x) const;
+			__MYE_MATH_INLINE Matrix<T, 4, 1> operator* (T x) const;
 
-			inline Matrix<T, 4, 1> operator- (void) const;
+			__MYE_MATH_INLINE Matrix<T, 4, 1> operator- (void) const;
 
-			inline Matrix<T, 4, 1> Normalize(void) const;
-			inline T Length(void) const;
+			__MYE_MATH_INLINE Matrix<T, 4, 1> & operator= (const Matrix<T, 4, 1> & v);
 
-			inline Matrix<T, 4, 1> CwiseAbs(void) const;
-			inline Matrix<T, 4, 1> CwiseMin(const Matrix<T, 4, 1> &v) const;
-			inline Matrix<T, 4, 1> CwiseMax(const Matrix<T, 4, 1> &v) const;
+			__MYE_MATH_INLINE Matrix<T, 4, 1> Normalize(void) const;
 
-			inline Matrix<T, 4, 1> Clamp(T minimum, T maximum);
-			inline Matrix<T, 4, 1> Clamp(const Matrix<T, 4, 1> &minimum, const Matrix<T, 4, 1> &maximum);
+			__MYE_MATH_INLINE T Length(void) const;
 
-			inline T* Data(void);
-			inline const T* Data(void) const;
+			__MYE_MATH_INLINE Matrix<T, 4, 1> CwiseAbs(void) const;
+			__MYE_MATH_INLINE Matrix<T, 4, 1> CwiseMin(const Matrix<T, 4, 1> & v) const;
+			__MYE_MATH_INLINE Matrix<T, 4, 1> CwiseMax(const Matrix<T, 4, 1> & v) const;
 
-#include "SwizzleVector4.h"
-			
+			__MYE_MATH_INLINE Matrix<T, 4, 1> Clamp(T minimum, T maximum) const;
+			__MYE_MATH_INLINE Matrix<T, 4, 1> Clamp(const Matrix<T, 4, 1> & minimum, const Matrix<T, 4, 1> & maximum) const;
+
+			__MYE_MATH_INLINE T *       Data(void);
+			__MYE_MATH_INLINE const T * Data(void) const;
+
+
+#include "SwizzleVector4T.h"
+
 		private:
 
 			T m_data[4];
 
-		};		
+			template <typename T, int N, int M>
+			friend class Matrix;
+
+		};
 
 	}
 

@@ -11,7 +11,10 @@ DX11Font::DX11Font(ResourceManager *owner,
 	Font(owner, name, manual)
 {
 
-	m_texture = ResourceTypeManager::GetSingleton().CreateResource<DX11Texture>("Texture", "./fonts/" + m_name + ".png");
+	m_texture = ResourceTypeManager::GetSingleton().CreateResource<DX11Texture>("Texture",
+																				"./fonts/" + m_name + ".png",
+																				nullptr,
+																				{ { "mipmaps", "0" }, { "generateMips", "true" } });
 
 }
 

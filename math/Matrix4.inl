@@ -48,7 +48,7 @@ namespace mye
 		}
 
 		template <typename T>
-		Matrix<T, 4, 4>::Matrix(const Matrix<T, 3, 3> &m)
+		Matrix<T, 4, 4>::Matrix(const Matrix<T, 3, 3> & m)
 		{
 			_00(m_data) = m(0, 0);
 			_01(m_data) = m(0, 1);
@@ -102,7 +102,7 @@ namespace mye
 		}
 
 		template <typename T>
-		void Matrix<T, 4, 4>::SetRow(int i, const Matrix<T, 4, 1> &v)
+		void Matrix<T, 4, 4>::SetRow(int i, const Matrix<T, 4, 1> & v)
 		{
 			assert(i >= 0 && i < 4);
 			__MYE_MATRIX_ACCESS(m_data, 4, i, 0) = v[0];
@@ -124,7 +124,7 @@ namespace mye
 		}
 
 		template <typename T>
-		void Matrix<T, 4, 4>::SetColumn(int i, const Matrix<T, 4, 1> &v)
+		void Matrix<T, 4, 4>::SetColumn(int i, const Matrix<T, 4, 1> & v)
 		{
 			assert(i >= 0 && i < 4);
 			__MYE_MATRIX_ACCESS(m_data, 4, 0, i) = v[0];
@@ -147,67 +147,50 @@ namespace mye
 			return __MYE_MATRIX_ACCESS(m_data, 4, i, j);
 		}
 
-
-
 		template <typename T>
-		Matrix<T, 4, 4>& Matrix<T, 4, 4>::ScaleInPlace(T s)
-		{
-			_00(m_data) *= s;
-			_01(m_data) *= s;
-			_02(m_data) *= s;
-			_03(m_data) *= s;
-			_10(m_data) *= s;
-			_11(m_data) *= s;
-			_12(m_data) *= s;
-			_13(m_data) *= s;
-			_20(m_data) *= s;
-			_21(m_data) *= s;
-			_22(m_data) *= s;
-			_23(m_data) *= s;
-			_30(m_data) *= s;
-			_31(m_data) *= s;
-			_32(m_data) *= s;
-			_33(m_data) *= s;
-			return *this;
-		}
-
-		template <typename T>
-		inline Matrix<T, 4, 4> Matrix<T, 4, 4>::operator* (
-			T s) const
+		Matrix<T, 4, 4> Matrix<T, 4, 4>::operator* (T s) const
 		{
 
 			Matrix<T, 4, 4> r;
 
-			_00(r.m_data) = s * _00(m_data);
-			_01(r.m_data) = s * _01(m_data);
-			_02(r.m_data) = s * _02(m_data);
-			_03(r.m_data) = s * _03(m_data);
-			_10(r.m_data) = s * _10(m_data);
-			_11(r.m_data) = s * _11(m_data);
-			_12(r.m_data) = s * _12(m_data);
-			_13(r.m_data) = s * _13(m_data);
-			_20(r.m_data) = s * _20(m_data);
-			_21(r.m_data) = s * _21(m_data);
-			_22(r.m_data) = s * _22(m_data);
-			_23(r.m_data) = s * _23(m_data);
-			_30(r.m_data) = s * _30(m_data);
-			_31(r.m_data) = s * _31(m_data);
-			_32(r.m_data) = s * _32(m_data);
-			_33(r.m_data) = s * _33(m_data);
+			_00(r.m_data) = _00(m_data) * s;
+			_01(r.m_data) = _01(m_data) * s;
+			_02(r.m_data) = _02(m_data) * s;
+			_03(r.m_data) = _03(m_data) * s;
+			_10(r.m_data) = _10(m_data) * s;
+			_11(r.m_data) = _11(m_data) * s;
+			_12(r.m_data) = _12(m_data) * s;
+			_13(r.m_data) = _13(m_data) * s;
+			_20(r.m_data) = _20(m_data) * s;
+			_21(r.m_data) = _21(m_data) * s;
+			_22(r.m_data) = _22(m_data) * s;
+			_23(r.m_data) = _23(m_data) * s;
+			_30(r.m_data) = _30(m_data) * s;
+			_31(r.m_data) = _31(m_data) * s;
+			_32(r.m_data) = _32(m_data) * s;
+			_33(r.m_data) = _33(m_data) * s;
 
 			return r;
 
 		}
 
 		template <typename T>
-		Matrix<T, 4, 4>& Matrix<T, 4, 4>::operator= (const Matrix<T, 4, 4> &m)
+		Matrix<T, 4, 4> Matrix<T, 4, 4>::operator/ (T s) const
+		{
+
+			return *this * (T(1) / s);
+
+		}
+
+		template <typename T>
+		Matrix<T, 4, 4>& Matrix<T, 4, 4>::operator= (const Matrix<T, 4, 4> & m)
 		{
 			memcpy(m_data, m.m_data, sizeof(T) * 16);
 			return *this;
 		}
 
 		template <typename T>
-		inline Matrix<T, 4, 4> Matrix<T, 4, 4>::operator* (
+		Matrix<T, 4, 4> Matrix<T, 4, 4>::operator* (
 			const Matrix<T, 4, 4> &b) const
 		{
 
@@ -322,8 +305,8 @@ namespace mye
 		}
 
 		template <typename T>
-		inline Matrix<T, 4, 4> Matrix<T, 4, 4>::operator+ (
-			const Matrix<T, 4, 4> &b) const
+		Matrix<T, 4, 4> Matrix<T, 4, 4>::operator+ (
+			const Matrix<T, 4, 4> & b) const
 		{
 
 			Matrix<T, 4, 4> r;
@@ -344,6 +327,34 @@ namespace mye
 			_31(r.m_data) = _31(m_data) + _31(b.m_data);
 			_32(r.m_data) = _32(m_data) + _32(b.m_data);
 			_33(r.m_data) = _33(m_data) + _33(b.m_data);
+
+			return r;
+
+		}
+
+		template <typename T>
+		Matrix<T, 4, 4> Matrix<T, 4, 4>::operator- (
+			const Matrix<T, 4, 4> & b) const
+		{
+
+			Matrix<T, 4, 4> r;
+
+			_00(r.m_data) = _00(m_data) - _00(b.m_data);
+			_01(r.m_data) = _01(m_data) - _01(b.m_data);
+			_02(r.m_data) = _02(m_data) - _02(b.m_data);
+			_03(r.m_data) = _03(m_data) - _03(b.m_data);
+			_10(r.m_data) = _10(m_data) - _10(b.m_data);
+			_11(r.m_data) = _11(m_data) - _11(b.m_data);
+			_12(r.m_data) = _12(m_data) - _12(b.m_data);
+			_13(r.m_data) = _13(m_data) - _13(b.m_data);
+			_20(r.m_data) = _20(m_data) - _20(b.m_data);
+			_21(r.m_data) = _21(m_data) - _21(b.m_data);
+			_22(r.m_data) = _22(m_data) - _22(b.m_data);
+			_23(r.m_data) = _23(m_data) - _23(b.m_data);
+			_30(r.m_data) = _30(m_data) - _30(b.m_data);
+			_31(r.m_data) = _31(m_data) - _31(b.m_data);
+			_32(r.m_data) = _32(m_data) - _32(b.m_data);
+			_33(r.m_data) = _33(m_data) - _33(b.m_data);
 
 			return r;
 
@@ -446,9 +457,9 @@ namespace mye
 			_33(r.m_data) =   _20(m_data) * s3 - _21(m_data) * s1 + _22(m_data) * s0;
 
 			T determinant = Determinant();
-			assert(determinant != T(0));
+			assert(determinant != T(0) && "Cannot invert a singular matrix");
 
-			return r.ScaleInPlace(T(1) / determinant);
+			return r / determinant;
 
 		}
 
@@ -484,19 +495,19 @@ namespace mye
 		}
 
 		template <typename T>
-		T* Matrix<T, 4, 4>::Data(void)
+		T * Matrix<T, 4, 4>::Data(void)
 		{
 			return m_data;
 		}
 
 		template <typename T>
-		const T* Matrix<T, 4, 4>::Data(void) const
+		const T * Matrix<T, 4, 4>::Data(void) const
 		{
 			return m_data;
 		}
 
 		template <typename T>
-		inline Matrix<T, 4, 4> operator* (T s, const Matrix<T, 4, 4> &m)
+		Matrix<T, 4, 4> operator* (T s, const Matrix<T, 4, 4> & m)
 		{
 			return m * s;
 		}

@@ -6,7 +6,7 @@ namespace mye
 	namespace math
 	{
 
-		enum class PlanetSide
+		enum class PlaneSide
 		{
 			FRONT,
 			INSIDE,
@@ -20,23 +20,21 @@ namespace mye
 		public:
 
 			PlaneTempl(void);
-			PlaneTempl(const Matrix<T, 3, 1> &p,
-				const Matrix<T, 3, 1> &n);
+			PlaneTempl(const Matrix<T, 3, 1> & p, const Matrix<T, 3, 1> & n);
 
 			PlaneTempl(T a, T b, T c, T d);
 
-			inline bool Contains(const Matrix<T, 3, 1> &x) const;
-			inline PlanetSide Side(const Matrix<T, 3, 1> &x) const;
+			__MYE_MATH_INLINE bool Contains(const Matrix<T, 3, 1> &x) const;
+			__MYE_MATH_INLINE PlaneSide Side(const Matrix<T, 3, 1> &x) const;
 
-			inline const Matrix<T, 3, 1>& Normal(void) const;
-			inline const T& Coefficient(void) const;
+			__MYE_MATH_INLINE Matrix<T, 3, 1> Normal(void) const;
+			__MYE_MATH_INLINE const T & Coefficient(void) const;
 
-			inline PlaneTempl Transformt(const Matrix<T, 4, 4> &transform) const;
+			__MYE_MATH_INLINE PlaneTempl Transform(const Matrix<T, 4, 4> & t) const;
 
 		private:
 
-			Matrix<T, 3, 1> m_normal;
-			T m_coefficient;
+			Matrix<T, 4, 1> m_plane;
 
 		};
 

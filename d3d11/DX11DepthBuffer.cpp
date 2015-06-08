@@ -104,12 +104,8 @@ void DX11DepthBuffer::Resize(int width, int height)
 
 	if (m_depthStencilBuffer)
 	{
-
-		__MYE_DX11_RELEASE_COM(m_depthStencilView);
-		__MYE_DX11_RELEASE_COM(m_depthStencilBuffer);
-
+		Destroy();
 		Create();
-
 	}
 
 }

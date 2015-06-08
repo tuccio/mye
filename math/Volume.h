@@ -30,12 +30,12 @@ namespace mye
 			{
 			}
 
-			virtual Volume* Clone(void) const = 0;
+			virtual Volume * Clone(void) const = 0;
 
-			virtual VolumeSide Intersect(const Volume &volume) const;
+			virtual VolumeSide Intersect(const Volume & volume) const;
 
-			virtual void TransformAffine(Volume &volume,
-				const Matrix<T, 4, 4> &Transformt) const = 0;
+			virtual void TransformAffine(Volume & volume,
+			                             const Matrix<T, 4, 4> & transform) const = 0;
 			
 			inline VolumeType GetVolumeType(void) const
 			{

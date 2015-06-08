@@ -35,7 +35,7 @@ bool DX11ReflectiveShadowMap::Create(void)
 {
 
 	Parameters rtParams({ { "renderTarget", "true" } });
-	Parameters vsmParams({ { "renderTarget", "true"}, { "mipmaps", "0" }, { "generateMips", "true" } });
+	Parameters vsmParams({ { "renderTarget", "true"} });
 	rtParams = vsmParams;
 
 	m_position.SetParametersList(rtParams);
@@ -217,14 +217,16 @@ void DX11ReflectiveShadowMap::RenderDirectional(Light * light)
 	auto minMaxZ = std::minmax_element(lightFrustumCorners.begin(),
 									   lightFrustumCorners.end(),
 									   [] (const Vector3 & a, const Vector3 & b) { return a.z() < b.z(); });
-	
-	Matrix4 lightProjection = OrthographicProjection(lightRange * -minMaxX.second->x(),
-													 lightRange * -minMaxY.first->y(),
-													 lightRange * -minMaxY.second->y(),
-													 lightRange * -minMaxX.first->x(),
-													 lightRange * minMaxZ.first->z(),
-													 lightRange * minMaxZ.second->z());
 
+	Real l = - lightRange * minMaxX.second->x();
+	Real r = - lightRange * minMaxX.first->x();
+	Real b = lightRange * minMaxY.first->y();
+	Real t = lightRange * minMaxY.second->y();
+	Real n = lightRange * minMaxZ.first->z();
+	Real f = lightRange * minMaxZ.second->z();
+	
+	Matrix4 lightProjection = OrthographicProjection(l, r, b, t, n, f);
+	
 	m_lightSpaceTransform = lightProjection * lightView;
 
 	auto objects = scene->GetVisibleObjects(m_lightSpaceTransform);

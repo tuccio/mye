@@ -1,8 +1,8 @@
 #include <cmath>
 #include <type_traits>
 
-#define __MYE_MATH_PI    3.14159265358979323846
-#define __MYE_MATH_TWOPI 6.28318530717958647693
+#include "Constants.h"
+#include "TrigonometryImpl.h"
 
 namespace mye
 {
@@ -11,78 +11,64 @@ namespace mye
 	{
 
 		template <typename T = mye::math::Real>
-		typename std::enable_if<std::is_floating_point<T>::value, T>::type Pi(void)
+		__MYE_MATH_INLINE T Pi(void)
 		{
 			return T(__MYE_MATH_PI);
 		}
 
 		template <typename T = mye::math::Real>
-		typename std::enable_if<std::is_floating_point<T>::value, T>::type TwoPi(void)
+		__MYE_MATH_INLINE T TwoPi(void)
 		{
 			return T(__MYE_MATH_TWOPI);
 		}
 
-		template <typename T>
-		inline T Radians(T degAngle)
+		template <typename T = mye::math::Real>
+		__MYE_MATH_INLINE detail::SFINAEStrippedFP<T> Radians(T degAngle)
 		{
-			return degAngle * T(__MYE_MATH_PI) / T(180);
+			return degAngle * T(__MYE_MATH_PI_DIV_180);
 		}
 
-		template <typename T>
-		inline T Degrees(T radAngle)
+		template <typename T = mye::math::Real>
+		__MYE_MATH_INLINE detail::SFINAEStrippedFP<T> Degrees(T radAngle)
 		{
-			return radAngle * T(180) / T(__MYE_MATH_PI);
+			return radAngle * T(__MYE_MATH_180_DIV_PI);
 		}
 
-		template <typename T>
-		inline Matrix<T, 3, 1> Degrees(const Matrix<T, 3, 1> &angles)
+		template <typename T = mye::math::Real>
+		__MYE_MATH_INLINE detail::SFINAEStrippedFP<T> Tangent(T && angle)
 		{
-			return Matrix<T, 3, 1>(Degrees(angles.x()), Degrees(angles.y()), Degrees(angles.z()));
+			return detail::TrigonometryFunctions<T>::Tangent(std::forward<T>(angle));
 		}
 
-		template <typename T>
-		inline Matrix<T, 3, 1> Radians(const Matrix<T, 3, 1> &angles)
+		template <typename T = mye::math::Real>
+		__MYE_MATH_INLINE detail::SFINAEStrippedFP<T> Arctangent(T && x)
 		{
-			return Matrix<T, 3, 1>(Radians(angles.x()), Radians(angles.y()), Radians(angles.z()));
+			return detail::TrigonometryFunctions<T>::Arctangent(std::forward<T>(x));
 		}
 
-		template <typename T>
-		inline T Tangent(T angle)
+		template <typename T = mye::math::Real>
+		__MYE_MATH_INLINE detail::SFINAEStrippedFP<T> Cosine(T && angle)
 		{
-			return ::tan((angle));
+			return detail::TrigonometryFunctions<T>::Cosine(std::forward<T>(angle));
 		}
 
-		template <typename T>
-		inline T Arctangent(T x)
+		template <typename T = mye::math::Real>
+		__MYE_MATH_INLINE detail::SFINAEStrippedFP<T> Arccosine(T && x)
 		{
-			return (::atan(x));
+			return detail::TrigonometryFunctions<T>::Arccosine(std::forward<T>(x));
 		}
 
-		template <typename T>
-		inline T Cosine(T angle)
+		template <typename T = mye::math::Real>
+		__MYE_MATH_INLINE detail::SFINAEStrippedFP<T> Sine(T && angle)
 		{
-			return ::cos((angle));
+			return detail::TrigonometryFunctions<T>::Sine(std::forward<T>(angle));
 		}
 
-		template <typename T>
-		inline T Arccosine(T x)
+		template <typename T = mye::math::Real>
+		__MYE_MATH_INLINE detail::SFINAEStrippedFP<T> Arcsine(T && x)
 		{
-			return (::acos(x));
+			return detail::TrigonometryFunctions<T>::Arcsine(std::forward<T>(x));
 		}
-
-		template <typename T>
-		inline T Sine(T angle)
-		{
-			return ::sin((angle));
-		}
-
-		template <typename T>
-		inline T Arcsine(T x)
-		{
-			return (::asin(x));
-		}
-
-
 
 	}
 

@@ -41,7 +41,7 @@ namespace mye
 
 		template <typename T, int ROWS, int COLS>
 		template <int N>
-		Matrix<T, ROWS, N> Matrix<T, ROWS, COLS>::operator* (const Matrix<T, COLS, N> &b) const
+		Matrix<T, ROWS, N> Matrix<T, ROWS, COLS>::operator* (const Matrix<T, COLS, N> & b) const
 		{
 
 			Matrix<T, ROWS, N> r;
@@ -100,7 +100,7 @@ namespace mye
 		}
 
 		template <typename T, int ROWS, int COLS>
-		Matrix<T, ROWS, COLS> Matrix<T, ROWS, COLS>::operator+ (const Matrix<T, ROWS, COLS> &b) const
+		Matrix<T, ROWS, COLS> Matrix<T, ROWS, COLS>::operator+ (const Matrix<T, ROWS, COLS> & b) const
 		{
 			Matrix<T, ROWS, COLS> r;
 			for (int i = 0; i < ROWS; i++)
@@ -116,7 +116,7 @@ namespace mye
 		}
 
 		template <typename T, int ROWS, int COLS>
-		Matrix<T, ROWS, COLS> Matrix<T, ROWS, COLS>::operator- (const Matrix<T, ROWS, COLS> &b) const
+		Matrix<T, ROWS, COLS> Matrix<T, ROWS, COLS>::operator- (const Matrix<T, ROWS, COLS> & b) const
 		{
 			Matrix<T, ROWS, COLS> r;
 			for (int i = 0; i < ROWS; i++)
@@ -124,11 +124,30 @@ namespace mye
 				for (int j = 0; j < COLS; j++)
 				{
 					__MYE_MATRIX_ACCESS(r.m_data, COLS, i, j) =
-						__MYE_MATRIX_ACCESS(m_data, COLS, i, j) -
-						__MYE_MATRIX_ACCESS(b.m_data, COLS, i, j);
+						__MYE_MATRIX_ACCESS(m_data, COLS, i, j) - __MYE_MATRIX_ACCESS(b.m_data, COLS, i, j);
 				}
 			}
 			return r;
+		}
+
+		template <typename T, int ROWS, int COLS>
+		bool Matrix<T, ROWS, COLS>::operator== (const Matrix<T, ROWS, COLS> & b) const
+		{
+
+			for (int i = 0; i < ROWS; i++)
+			{
+				for (int j = 0; j < COLS; j++)
+				{
+					if (__MYE_MATRIX_ACCESS(m_data, COLS, i, j) !=
+					    __MYE_MATRIX_ACCESS(b.m_data, COLS, i, j))
+					{
+						return false;
+					}
+				}
+			}
+
+			return true;
+
 		}
 
 		template <typename T, int ROWS, int COLS>

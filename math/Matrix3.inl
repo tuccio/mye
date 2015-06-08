@@ -15,12 +15,12 @@ namespace mye
 	{
 
 		template <typename T>
-		Matrix<T, 3, 3>::Matrix(void)
+		__MYE_MATH_INLINE Matrix<T, 3, 3>::Matrix(void)
 		{
 		}
 
 		template <typename T>
-		Matrix<T, 3, 3>::Matrix(const Matrix<T, 4, 4> &m)
+		__MYE_MATH_INLINE Matrix<T, 3, 3>::Matrix(const Matrix<T, 4, 4> & m)
 		{
 			_00(m_data) = m(0, 0);
 			_01(m_data) = m(0, 1);
@@ -34,7 +34,7 @@ namespace mye
 		}
 
 		template <typename T>
-		Matrix<T, 3, 3>::Matrix(T d)
+		__MYE_MATH_INLINE Matrix<T, 3, 3>::Matrix(T d)
 		{
 			_00(m_data) = d;
 			_01(m_data) = T(0);
@@ -48,7 +48,7 @@ namespace mye
 		}
 
 		template <typename T>
-		void Matrix<T, 3, 3>::Fill(T x)
+		__MYE_MATH_INLINE void Matrix<T, 3, 3>::Fill(T x)
 		{
 			_00(m_data) = x;
 			_01(m_data) = x;
@@ -62,7 +62,7 @@ namespace mye
 		}
 
 		template <typename T>
-		Matrix<T, 3, 1> Matrix<T, 3, 3>::GetRow(int i) const
+		__MYE_MATH_INLINE Matrix<T, 3, 1> Matrix<T, 3, 3>::GetRow(int i) const
 		{
 			assert(i >= 0 && i < 3);
 			return Matrix<T, 3, 1>(
@@ -73,7 +73,7 @@ namespace mye
 		}
 
 		template <typename T>
-		void Matrix<T, 3, 3>::SetRow(int i, const Matrix<T, 3, 1> &v)
+		__MYE_MATH_INLINE void Matrix<T, 3, 3>::SetRow(int i, const Matrix<T, 3, 1> &v)
 		{
 			assert(i >= 0 && i < 3);
 			__MYE_MATRIX_ACCESS(m_data, 3, i, 0) = v[0];
@@ -82,7 +82,7 @@ namespace mye
 		}
 
 		template <typename T>
-		Matrix<T, 3, 1> Matrix<T, 3, 3>::GetColumn(int j) const
+		__MYE_MATH_INLINE Matrix<T, 3, 1> Matrix<T, 3, 3>::GetColumn(int j) const
 		{
 			assert(j >= 0 && j < 3);
 			return Matrix<T, 3, 1>(
@@ -93,7 +93,7 @@ namespace mye
 		}
 
 		template <typename T>
-		void Matrix<T, 3, 3>::SetColumn(int j, const Matrix<T, 3, 1> &v)
+		__MYE_MATH_INLINE void Matrix<T, 3, 3>::SetColumn(int j, const Matrix<T, 3, 1> &v)
 		{
 			assert(j >= 0 && j < 3);
 			__MYE_MATRIX_ACCESS(m_data, 3, 0, j) = v[0];
@@ -102,21 +102,59 @@ namespace mye
 		}
 
 		template <typename T>
-		T& Matrix<T, 3, 3>::operator() (int i, int j)
+		__MYE_MATH_INLINE T & Matrix<T, 3, 3>::operator() (int i, int j)
 		{
 			assert(i >= 0 && i < 3 && j >= 0 && j < 3);
 			return __MYE_MATRIX_ACCESS(m_data, 3, i, j);
 		}
 
 		template <typename T>
-		const T& Matrix<T, 3, 3>::operator() (int i, int j) const
+		__MYE_MATH_INLINE const T& Matrix<T, 3, 3>::operator() (int i, int j) const
 		{
 			assert(i >= 0 && i < 3 && j >= 0 && j < 3);
 			return __MYE_MATRIX_ACCESS(m_data, 3, i, j);
 		}
 
 		template <typename T>
-		Matrix<T, 3, 3> Matrix<T, 3, 3>::operator+ (const Matrix<T, 3, 3> &a) const
+		__MYE_MATH_INLINE Matrix<T, 3, 3> Matrix<T, 3, 3>::operator- (void) const
+		{
+
+			Matrix<T, 3, 3> r;
+
+			_00(r.m_data) = - _00(m_data);
+			_01(r.m_data) = - _01(m_data);
+			_02(r.m_data) = - _02(m_data);
+			_10(r.m_data) = - _10(m_data);
+			_11(r.m_data) = - _11(m_data);
+			_12(r.m_data) = - _12(m_data);
+			_20(r.m_data) = - _20(m_data);
+			_21(r.m_data) = - _21(m_data);
+			_22(r.m_data) = - _22(m_data);
+
+			return r;
+
+		}
+
+		template <typename T>
+		__MYE_MATH_INLINE Matrix<T, 3, 3> & Matrix<T, 3, 3>::operator= (const Matrix<T, 3, 3> & a)
+		{
+
+			_00(m_data) = _00(a.m_data);
+			_01(m_data) = _01(a.m_data);
+			_02(m_data) = _02(a.m_data);
+			_10(m_data) = _10(a.m_data);
+			_11(m_data) = _11(a.m_data);
+			_12(m_data) = _12(a.m_data);
+			_20(m_data) = _20(a.m_data);
+			_21(m_data) = _21(a.m_data);
+			_22(m_data) = _22(a.m_data);
+
+			return *this;
+
+		}
+
+		template <typename T>
+		__MYE_MATH_INLINE Matrix<T, 3, 3> Matrix<T, 3, 3>::operator+ (const Matrix<T, 3, 3> & a) const
 		{
 
 			Matrix<T, 3, 3> r;
@@ -136,8 +174,27 @@ namespace mye
 		}
 
 		template <typename T>
-		Matrix<T, 3, 3> Matrix<T, 3, 3>::operator* (
-			const Matrix<T, 3, 3> &b) const
+		__MYE_MATH_INLINE Matrix<T, 3, 3> Matrix<T, 3, 3>::operator- (const Matrix<T, 3, 3> & a) const
+		{
+
+			Matrix<T, 3, 3> r;
+
+			_00(r.m_data) = _00(m_data) - _00(a.m_data);
+			_01(r.m_data) = _01(m_data) - _01(a.m_data);
+			_02(r.m_data) = _02(m_data) - _02(a.m_data);
+			_10(r.m_data) = _10(m_data) - _10(a.m_data);
+			_11(r.m_data) = _11(m_data) - _11(a.m_data);
+			_12(r.m_data) = _12(m_data) - _12(a.m_data);
+			_20(r.m_data) = _20(m_data) - _20(a.m_data);
+			_21(r.m_data) = _21(m_data) - _21(a.m_data);
+			_22(r.m_data) = _22(m_data) - _22(a.m_data);
+
+			return r;
+
+		}
+
+		template <typename T>
+		__MYE_MATH_INLINE Matrix<T, 3, 3> Matrix<T, 3, 3>::operator* (const Matrix<T, 3, 3> & b) const
 		{
 
 			Matrix<T, 3, 3> r;
@@ -198,7 +255,7 @@ namespace mye
 		}
 
 		template <typename T>
-		Matrix<T, 3, 3> Matrix<T, 3, 3>::operator* (T s) const
+		__MYE_MATH_INLINE Matrix<T, 3, 3> Matrix<T, 3, 3>::operator* (T s) const
 		{
 			
 			Matrix<T, 3, 3> r;
@@ -218,22 +275,13 @@ namespace mye
 		}
 
 		template <typename T>
-		Matrix<T, 3, 3>& Matrix<T, 3, 3>::ScaleInPlace(T s)
+		__MYE_MATH_INLINE Matrix<T, 3, 3> Matrix<T, 3, 3>::operator/ (T s) const
 		{
-			_00(m_data) *= s;
-			_01(m_data) *= s;
-			_02(m_data) *= s;
-			_10(m_data) *= s;
-			_11(m_data) *= s;
-			_12(m_data) *= s;
-			_20(m_data) *= s;
-			_21(m_data) *= s;
-			_22(m_data) *= s;
-			return *this;
+			return *this * (T(1) / s);
 		}
 
 		template <typename T>
-		Matrix<T, 3, 3> Matrix<T, 3, 3>::Transpose(void) const
+		__MYE_MATH_INLINE Matrix<T, 3, 3> Matrix<T, 3, 3>::Transpose(void) const
 		{
 			Matrix<T, 3, 3> r;
 
@@ -254,7 +302,7 @@ namespace mye
 		}
 
 		template <typename T>
-		T Matrix<T, 3, 3>::Determinant(void) const
+		__MYE_MATH_INLINE T Matrix<T, 3, 3>::Determinant(void) const
 		{
 
 			return _00(m_data) * _11(m_data) * _22(m_data)
@@ -267,179 +315,45 @@ namespace mye
 		}
 
 		template <typename T>
-		Matrix<T, 3, 3> Matrix<T, 3, 3>::Inverse(void) const
+		__MYE_MATH_INLINE Matrix<T, 3, 3> Matrix<T, 3, 3>::Inverse(void) const
 		{
 
 			Matrix<T, 3, 3> r;
 
-			_00(r.m_data) =
-				_11(m_data) * _22(m_data)
-				- _12(m_data) * _21(m_data);
+			_00(r.m_data) = _11(m_data) * _22(m_data) - _12(m_data) * _21(m_data);
+			_01(r.m_data) = _02(m_data) * _21(m_data) - _01(m_data) * _22(m_data);
+			_02(r.m_data) = _01(m_data) * _12(m_data) - _02(m_data) * _11(m_data);
+			_10(r.m_data) = _12(m_data) * _20(m_data) - _10(m_data) * _22(m_data);
+			_11(r.m_data) = _00(m_data) * _22(m_data) - _02(m_data) * _20(m_data);
+			_12(r.m_data) = _02(m_data) * _10(m_data) - _00(m_data) * _12(m_data);
+			_20(r.m_data) = _10(m_data) * _21(m_data) - _11(m_data) * _20(m_data);
+			_21(r.m_data) = _01(m_data) * _20(m_data) - _00(m_data) * _21(m_data);
+			_22(r.m_data) = _00(m_data) * _11(m_data) - _01(m_data) * _10(m_data);
 
-			_01(r.m_data) =
-				_02(m_data) * _21(m_data)
-				- _01(m_data) * _22(m_data);
+			float determinant = Determinant();
+			assert(determinant != T(0) && "Cannot invert a singular matrix");
 
-			_02(r.m_data) =
-				_01(m_data) * _12(m_data)
-				- _02(m_data) * _11(m_data);
-
-			_10(r.m_data) =
-				_12(m_data) * _20(m_data)
-				- _10(m_data) * _22(m_data);
-
-			_11(r.m_data) =
-				_00(m_data) * _22(m_data)
-				- _02(m_data) * _20(m_data);
-
-			_12(r.m_data) =
-				_02(m_data) * _10(m_data)
-				- _00(m_data) * _12(m_data);
-
-			_20(r.m_data) =
-				_10(m_data) * _21(m_data)
-				- _11(m_data) * _20(m_data);
-
-			_21(r.m_data) =
-				_01(m_data) * _20(m_data)
-				- _00(m_data) * _21(m_data);
-
-			_22(r.m_data) =
-				_00(m_data) * _11(m_data)
-				- _01(m_data) * _10(m_data);
-
-			T determinant = r.Determinant();
-			assert(determinant != T(0));
-
-			return r.ScaleInPlace(T(1) / determinant);
+			return r / determinant;
 
 		}
 
 		template <typename T>
-		T* Matrix<T, 3, 3>::Data(void)
+		__MYE_MATH_INLINE T * Matrix<T, 3, 3>::Data(void)
 		{
 			return m_data;
 		}
 
 		template <typename T>
-		const T* Matrix<T, 3, 3>::Data(void) const
+		__MYE_MATH_INLINE const T * Matrix<T, 3, 3>::Data(void) const
 		{
 			return m_data;
 		}
 
 		template <typename T>
-		Matrix<T, 3, 3> operator* (T s, const Matrix<T, 3, 3> &m)
+		__MYE_MATH_INLINE Matrix<T, 3, 3> operator* (T s, const Matrix<T, 3, 3> & m)
 		{
 			return m * s;
 		}
-
-		/*template <typename T>
-		T& Matrix<T, 3, 3>::m00(void)
-		{
-			return _00(m_data);
-		}
-
-		template <typename T>
-		const T& Matrix<T, 3, 3>::m00(void) const
-		{
-			return _00(m_data);
-		}
-
-		template <typename T>
-		T& Matrix<T, 3, 3>::m01(void)
-		{
-			return _01(m_data);
-		}
-
-		template <typename T>
-		const T& Matrix<T, 3, 3>::m01(void) const
-		{
-			return _01(m_data);
-		}
-
-		template <typename T>
-		T& Matrix<T, 3, 3>::m02(void)
-		{
-			return _02(m_data);
-		}
-
-		template <typename T>
-		const T& Matrix<T, 3, 3>::m02(void) const
-		{
-			return _02(m_data);
-		}
-
-		template <typename T>
-		T& Matrix<T, 3, 3>::m10(void)
-		{
-			return _10(m_data);
-		}
-
-		template <typename T>
-		const T& Matrix<T, 3, 3>::m10(void) const
-		{
-			return _10(m_data);
-		}
-
-		template <typename T>
-		T& Matrix<T, 3, 3>::m11(void)
-		{
-			return _11(m_data);
-		}
-
-		template <typename T>
-		const T& Matrix<T, 3, 3>::m11(void) const
-		{
-			return _11(m_data);
-		}
-
-		template <typename T>
-		T& Matrix<T, 3, 3>::m12(void)
-		{
-			return _12(m_data);
-		}
-
-		template <typename T>
-		const T& Matrix<T, 3, 3>::m12(void) const
-		{
-			return _12(m_data);
-		}
-
-		template <typename T>
-		T& Matrix<T, 3, 3>::m20(void)
-		{
-			return _20(m_data);
-		}
-
-		template <typename T>
-		const T& Matrix<T, 3, 3>::m20(void) const
-		{
-			return _20(m_data);
-		}
-
-		template <typename T>
-		T& Matrix<T, 3, 3>::m21(void)
-		{
-			return _21(m_data);
-		}
-
-		template <typename T>
-		const T& Matrix<T, 3, 3>::m21(void) const
-		{
-			return _21(m_data);
-		}
-
-		template <typename T>
-		T& Matrix<T, 3, 3>::m22(void)
-		{
-			return _22(m_data);
-		}
-
-		template <typename T>
-		const T& Matrix<T, 3, 3>::m22(void) const
-		{
-			return _22(m_data);
-		}*/
 
 	}
 

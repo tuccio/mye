@@ -1,5 +1,8 @@
+#pragma once
+
 #include <cassert>
-#define __MYE_MATRIX_ACCESS(__MATRIX, __COLS, __I, __J) (*(__MATRIX + ((__COLS) * (__I) + (__J))))
+
+#define __MYE_MATRIX_ACCESS(__MATRIX, __COLS, __I, __J) (__MATRIX[__I * __COLS + __J])
 
 namespace mye
 {
@@ -16,17 +19,19 @@ namespace mye
 
 			void Fill(T x);
 
-			inline T& operator() (int i, int j);
-			inline const T& operator() (int i, int j) const;
+			inline T &       operator() (int i, int j);
+			inline const T & operator() (int i, int j) const;
 
 			template <int N>
-			Matrix<T, ROWS, N> operator* (const Matrix<T, COLS, N> &b) const;
+			Matrix<T, ROWS, N> operator* (const Matrix<T, COLS, N> & b) const;
 
-			Matrix<T, ROWS, COLS> operator+ (const Matrix<T, ROWS, COLS> &b) const;
-			Matrix<T, ROWS, COLS> operator- (const Matrix<T, ROWS, COLS> &b) const;
+			Matrix<T, ROWS, COLS> operator+ (const Matrix<T, ROWS, COLS> & b) const;
+			Matrix<T, ROWS, COLS> operator- (const Matrix<T, ROWS, COLS> & b) const;
 
-			inline T* Data(void);
-			inline const T* Data(void) const;
+			bool operator== (const Matrix<T, ROWS, COLS> & b) const;
+
+			inline T *       Data(void);
+			inline const T * Data(void) const;
 
 		private:
 

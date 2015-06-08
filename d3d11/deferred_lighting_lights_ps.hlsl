@@ -6,7 +6,9 @@
 #include "material.hlsli"
 #include "register_slots.hlsli"
 #include "renderer_configuration.hlsli"
-#include "vsm.hlsli"
+//#include "vsm.hlsli"
+//#include "shadow_mapping.hlsli"
+#include "shadow_mapping_pcss.hlsli"
 
 /* Constant buffers */
 

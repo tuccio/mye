@@ -11,61 +11,61 @@ namespace mye
 	{
 
 		template <typename T>
-		inline T Abs(T x)
+		__MYE_MATH_INLINE T Abs(T x)
 		{
 			return (x < 0 ? - x : x);
 		}
 
 		template <typename T = Real>
-		inline T Epsilon(void)
+		__MYE_MATH_INLINE T Epsilon(void)
 		{
 			return std::numeric_limits<T>::epsilon();
 		}
 
 		template <>
-		inline float Epsilon<float>(void)
+		__MYE_MATH_INLINE float Epsilon<float>(void)
 		{
 			return FLT_EPSILON;
 		}
 
 		template <>
-		inline double Epsilon<double>(void)
+		__MYE_MATH_INLINE double Epsilon<double>(void)
 		{
 			return DBL_EPSILON;
 		}
 
 		template <typename T>
-		inline bool EpsilonEqual(T a, T b, T epsilon = Epsilon<T>())
+		__MYE_MATH_INLINE bool EpsilonEqual(T a, T b, T epsilon = Epsilon<T>())
 		{
 			return Abs(a - b) <= epsilon;
 		}
 
 		template <typename T>
-		inline bool EpsilonLessEqual(T a, T b, T epsilon = Epsilon<T>())
+		__MYE_MATH_INLINE bool EpsilonLessEqual(T a, T b, T epsilon = Epsilon<T>())
 		{
 			return a <= b + epsilon;
 		}
 
 		template <typename T = Real>
-		inline T Infinity(void)
+		__MYE_MATH_INLINE T Infinity(void)
 		{
 			return std::numeric_limits<T>::infinity();
 		}
 
 		template <typename T>
-		inline T Sqrt(T x)
+		__MYE_MATH_INLINE T Sqrt(T x)
 		{
 			return ::sqrt(x);
 		}
 
 		template <typename T>
-		inline T Min(T a, T b)
+		__MYE_MATH_INLINE T Min(T a, T b)
 		{
 			return (a < b ? a : b);
 		}
 
 		template <typename T>
-		inline T Min(T a, T b, T c)
+		__MYE_MATH_INLINE T Min(T a, T b, T c)
 		{
 			if (a < b)
 			{
@@ -92,14 +92,15 @@ namespace mye
 		}
 
 		template <typename T>
-		inline T Max(T a, T b)
+		__MYE_MATH_INLINE T Max(T a, T b)
 		{
 			return (a > b ? a : b);
 		}
 
 		template <typename T>
-		inline T Max(T a, T b, T c)
+		__MYE_MATH_INLINE T Max(T a, T b, T c)
 		{
+
 			if (a > b)
 			{
 				if (a > c)
@@ -122,6 +123,7 @@ namespace mye
 					return c;
 				}
 			}
+
 		}
 
 	}

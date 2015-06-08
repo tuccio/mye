@@ -4,32 +4,10 @@ namespace mye
 	namespace math
 	{
 
-		/* Equals */
-
-		template <typename T, int ROWS, int COLS>
-		bool operator== (const Matrix<T, ROWS, COLS> &a,
-			const Matrix<T, ROWS, COLS> &b)
-		{
-
-			for (int i = 0; i < ROWS; i++)
-			{
-				for (int j = 0; j < COLS; j++)
-				{
-					if (a(i, j) != b(i, j))
-					{
-						return false;
-					}
-				}
-			}
-
-			return true;
-
-		}
-
 		/* Matrix vector */
 
 		template <typename T>
-		Matrix<T, 3, 1> operator* (const Matrix<T, 3, 3> &A, const Matrix<T, 3, 1> &x)
+		Matrix<T, 3, 1> operator* (const Matrix<T, 3, 3> & A, const Matrix<T, 3, 1> & x)
 		{
 			return Matrix<T, 3, 1>(
 				x.x() * A(0, 0) + x.y() * A(0, 1) + x.z() * A(0, 2),
@@ -39,7 +17,7 @@ namespace mye
 		}
 
 		template <typename T>
-		Matrix<T, 3, 1> operator* (const Matrix<T, 4, 4> &A, const Matrix<T, 3, 1> &x)
+		Matrix<T, 3, 1> operator* (const Matrix<T, 4, 4> & A, const Matrix<T, 3, 1> & x)
 		{
 			return Matrix<T, 3, 1>(
 				x.x() * A(0, 0) + x.y() * A(0, 1) + x.z() * A(0, 2) + A(0, 3),
@@ -49,7 +27,7 @@ namespace mye
 		}
 
 		template <typename T>
-		Matrix<T, 4, 1> operator* (const Matrix<T, 4, 3> &A, const Matrix<T, 4, 1> &x)
+		Matrix<T, 4, 1> operator* (const Matrix<T, 4, 3> & A, const Matrix<T, 4, 1> & x)
 		{
 			return Matrix<T, 4, 1>(
 				x.x() * A(0, 0) + x.y() * A(0, 1) + x.z() * A(0, 2) + x.w() * A(0, 3),
@@ -60,45 +38,55 @@ namespace mye
 		}
 
 		template <typename T>
-		Matrix<T, 4, 4> ScaleMatrix4(const Matrix<T, 3, 1> &scale)
+		Matrix<T, 4, 4> ScaleMatrix4(const Matrix<T, 3, 1> & scale)
 		{
-			Matrix<T, 4, 4> smatrix(1.0f);
-			smatrix.m00() = scale.x();
-			smatrix.m11() = scale.y();
-			smatrix.m22() = scale.z();
-			return smatrix;
+
+			Matrix<T, 4, 4> m = {
+				scale.x(), 0.0f, 0.0f, 0.0f,
+				0.0f, scale.y(), 0.0f, 0.0f,
+				0.0f, 0.0f, scale.z(), 0.0f,
+				0.0f, 0.0f, 0.0f, 1.0f
+			};
+
+			return m;
+
 		}
 
 		template <typename T>
-		Matrix<T, 4, 4> TranslationMatrix4(const Matrix<T, 3, 1> &translation)
+		Matrix<T, 4, 4> TranslationMatrix4(const Matrix<T, 3, 1> & translation)
 		{
-			Matrix<T, 4, 4> tmatrix(1.0f);
-			tmatrix.m03() = translation.x();
-			tmatrix.m13() = translation.y();
-			tmatrix.m23() = translation.z();
-			return tmatrix;
+
+			Matrix<T, 4, 4> m = {
+				1.0f, 0.0f, 0.0f, translation.x(),
+				0.0f, 1.0f, 0.0f, translation.y(),
+				0.0f, 0.0f, 1.0f, translation.z(),
+				0.0f, 0.0f, 0.0f, 1.0f
+			};
+
+			return m;
+
 		}
 
 		/* Equations */
 
 		template <typename T>
-		Matrix<T, 3, 1> Cramer(const Matrix<T, 3, 3> &A, const Matrix<T, 3, 1> &b)
+		Matrix<T, 3, 1> Cramer(const Matrix<T, 3, 3> & A, const Matrix<T, 3, 1> & b)
 		{
+
+			Matrix<T, 3, 3> At = A.Transpose();
 
 			Matrix<T, 3, 1> c[3] =
 			{
-				A.GetColumn(0),
-				A.GetColumn(1),
-				A.GetColumn(2)
+				A.GetRow(0),
+				A.GetRow(1),
+				A.GetRow(2)
 			};
 
 			T invDet = T(1) / A.Determinant();
 
-			return Matrix<T, 3, 1>(
-				invDet * b.Dot(c[1].Cross(c[2])),
-				invDet * c[0].Dot(b.Cross(c[2])),
-				invDet * c[0].Dot(c[1].Cross(b))
-			);
+			return invDet * Matrix<T, 3, 1>(b.Dot(c[1].Cross(c[2])),
+			                                c[0].Dot(b.Cross(c[2])),
+			                                c[0].Dot(c[1].Cross(b)));
 
 		}
 

@@ -19,9 +19,9 @@ cbuffer cbLight : register(__MYE_DX11_BUFFER_SLOT_LIGHT)
 
 /* Shadow map and sampler */
 
-Texture2D    g_shadowMap        : register(__MYE_DX11_TEXTURE_SLOT_SHADOWMAP);
-SamplerState g_shadowMapSampler : register(__MYE_DX11_SAMPLER_SLOT_SHADOWMAP);
-
+Texture2D<float>       g_shadowMap           : register(__MYE_DX11_TEXTURE_SLOT_SHADOWMAP);
+										    
+SamplerState           g_shadowMapSampler    : register(__MYE_DX11_SAMPLER_SLOT_SHADOWMAP);
 SamplerComparisonState g_shadowMapSamplerCmp : register(__MYE_DX11_SAMPLER_SLOT_SHADOWMAP_CMP);
 
 /* Variance Shadow mapping */
