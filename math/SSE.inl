@@ -13,6 +13,16 @@ namespace mye
 			struct SSENewtonRaphson
 			{
 
+				static __MYE_MATH_INLINE __m128 SquareRootPS(__m128 x)
+				{
+					return _mm_mul_ps(x, ReciprocalSquareRootPS(x));
+				}
+
+				static __MYE_MATH_INLINE __m128 SquareRootSS(__m128 x)
+				{
+					return _mm_mul_ss(x, ReciprocalSquareRootSS(x));
+				}
+
 				static __MYE_MATH_INLINE __m128 ReciprocalPS(__m128 x)
 				{
 					return ReciprocalPSStep(x, _mm_rcp_ps(x));
@@ -52,7 +62,7 @@ namespace mye
 				static __MYE_MATH_INLINE __m128 ReciprocalSquareRootPSStep(__m128 x, __m128 yi)
 				{
 					__m128 t0 = _mm_mul_ps(_mm_mul_ps(x, yi), yi);
-					__m128 yn = _mm_mul_ps(_mm_sub_ps(_mm_set_ps(3.0f), t0), _mm_mul_ps(_mm_set_ps(0.5f), yi));
+					__m128 yn = _mm_mul_ps(_mm_sub_ps(_mm_set1_ps(3.0f), t0), _mm_mul_ps(_mm_set1_ps(0.5f), yi));
 					return SSENewtonRaphson<N - 1>::ReciprocalSquareRootSSStep(x, yn);
 				}
 

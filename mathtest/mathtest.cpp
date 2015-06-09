@@ -181,7 +181,10 @@ int main(int argc, char * argv[])
 	OctaveLikePrint("v2.yyw", v2.yyw());
 	OctaveLikePrint("v3.xyyx", v3.xyyx());
 
-	OctaveLikePrint("Arctg(1)", Degrees(Arctangent(1.f)));
+	OctaveLikePrint("Sqrt(2)",    Sqrt(2.0f));
+	OctaveLikePrint("InverseSqrt(2)",    InverseSqrt(2.0f));
+	OctaveLikePrint("Sqrt(2, 3, 4, 5)", Sqrt(Vector4(2, 3, 4, 5)));
+	OctaveLikePrint("Sqrt(6, 7, 8, 9)", InverseSqrt(Vector4(6, 7, 8, 9)));
 
 	system("pause");
 

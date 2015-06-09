@@ -79,6 +79,12 @@ namespace mye
 			template <typename T, int N, int M>
 			friend class Matrix;
 		
+			template <typename T, typename E>
+			friend struct detail::MathFunctions;
+
+			template <typename T, typename E>
+			friend struct detail::TrigonometryFunctions;
+
 		};
 
 	}

@@ -13,8 +13,8 @@ namespace mye
 		namespace detail
 		{
 
-			template <typename T, typename Enable = void>
-			struct TrigonometryFunctions;
+			/*template <typename T, typename Enable = void>
+			struct TrigonometryFunctions;*/
 
 			template <typename T>
 			struct TrigonometryFunctions<T, std::enable_if_t<std::is_floating_point<T>::value>>
@@ -376,23 +376,6 @@ namespace mye
 
 			template <typename T>
 			struct TrigonometryFunctions<T &> : TrigonometryFunctions<T> { };
-
-			template <typename T>
-			using StrippedType = typename std::remove_const<std::remove_reference_t<T>>::type;
-
-			template <typename T>
-			struct IsFPOrFPVector :
-				std::integral_constant<bool,
-				std::is_floating_point<T>::value ||
-				std::is_same<Matrix<float, 2, 1>, T>::value ||
-				std::is_same<Matrix<float, 3, 1>, T>::value ||
-				std::is_same<Matrix<float, 4, 1>, T>::value ||
-				std::is_same<Matrix<double, 2, 1>, T>::value ||
-				std::is_same<Matrix<double, 3, 1>, T>::value ||
-				std::is_same<Matrix<double, 4, 1>, T>::value> { };
-
-			template <typename T>
-			using SFINAEStrippedFP = std::enable_if_t<detail::IsFPOrFPVector<T>::value, detail::StrippedType<T>>;
 
 		}
 

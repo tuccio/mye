@@ -3,6 +3,7 @@
 
 #include "Constants.h"
 #include "TrigonometryImpl.h"
+#include "Utils.h"
 
 namespace mye
 {
@@ -23,13 +24,13 @@ namespace mye
 		}
 
 		template <typename T = mye::math::Real>
-		__MYE_MATH_INLINE detail::SFINAEStrippedFP<T> Radians(T degAngle)
+		__MYE_MATH_INLINE T Radians(T && degAngle)
 		{
 			return degAngle * T(__MYE_MATH_PI_DIV_180);
 		}
 
 		template <typename T = mye::math::Real>
-		__MYE_MATH_INLINE detail::SFINAEStrippedFP<T> Degrees(T radAngle)
+		__MYE_MATH_INLINE T Degrees(T && radAngle)
 		{
 			return radAngle * T(__MYE_MATH_180_DIV_PI);
 		}

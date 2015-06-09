@@ -33,7 +33,7 @@ namespace mye
 			FIRST             = LEFT_BOTTOM_NEAR,
 			LAST              = LEFT_BOTTOM_FAR
 		};
-
+		
 		template <typename T>
 		class FrustumTempl :
 			public Volume<T>
@@ -47,8 +47,8 @@ namespace mye
 			             const Matrix<T, 3, 1> & direction,
 			             const Matrix<T, 3, 1> & up,
 			             const Matrix<T, 3, 1> & right,
-			             T nearPlanetDistance,
-			             T farPlanetDistance,
+			             T nearPlaneDistance,
+			             T farPlaneDistance,
 			             T fovX,
 			             T fovY);
 
@@ -64,6 +64,8 @@ namespace mye
 
 			void TransformAffine(Volume & volume,
 			                     const Matrix<T, 4, 4> & transform) const;
+
+			void Split(T ratio, FrustumTempl<T> & f1, FrustumTempl<T> & f2) const;
 
 // 			inline typename const Planet<T>& Near(void) const;
 // 			inline typename const Planet<T>& Far(void) const;

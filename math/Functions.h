@@ -4,17 +4,15 @@
 #include <cfloat>
 #include <limits>
 
+#include "FunctionsImpl.h"
+#include "SSE.h"
+#include "Utils.h"
+
 namespace mye
 {
 
 	namespace math
 	{
-
-		template <typename T>
-		__MYE_MATH_INLINE T Abs(T x)
-		{
-			return (x < 0 ? - x : x);
-		}
 
 		template <typename T = Real>
 		__MYE_MATH_INLINE T Epsilon(void)
@@ -53,9 +51,21 @@ namespace mye
 		}
 
 		template <typename T>
-		__MYE_MATH_INLINE T Sqrt(T x)
+		__MYE_MATH_INLINE detail::SFINAEStrippedScalar<T> Abs(T && x)
 		{
-			return ::sqrt(x);
+			return detail::MathFunctions<T>::Abs(std::forward<T>(x));
+		}
+
+		template <typename T>
+		__MYE_MATH_INLINE detail::SFINAEStrippedFP<T> Sqrt(T && x)
+		{
+			return detail::MathFunctions<T>::Sqrt(std::forward<T>(x));
+		}
+
+		template <typename T>
+		__MYE_MATH_INLINE detail::SFINAEStrippedFP<T> InverseSqrt(T && x)
+		{
+			return detail::MathFunctions<T>::InverseSqrt(std::forward<T>(x));
 		}
 
 		template <typename T>

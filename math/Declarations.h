@@ -50,14 +50,16 @@ namespace mye
 		typedef Matrix<unsigned int, 4, 1> Vector4u;
 		typedef Matrix<Real,         4, 1> Vector4;
 
-//#ifdef MYE_USE_SSE
-//
-//		template <>
-//		class Matrix<float, 3, 1>;
-//		template <>
-//		class Matrix<float, 4, 1>;
-//
-//#endif
+		namespace detail
+		{
+
+			template <typename T, typename Enable = void>
+			struct MathFunctions;
+
+			template <typename T, typename Enable = void>
+			struct TrigonometryFunctions;
+
+		}
 
 	}
 
