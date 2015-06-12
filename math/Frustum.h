@@ -2,6 +2,8 @@
 
 #include <array>
 
+#include "SSE.h"
+
 namespace mye
 {
 
@@ -35,11 +37,13 @@ namespace mye
 		};
 		
 		template <typename T>
-		class FrustumTempl :
+		class __MYE_MATH_SSE_ALIGNED(16) FrustumTempl :
 			public Volume<T>
 		{
 
 		public:
+
+			__MYE_MATH_SSE_ALIGNED_ALLOCATOR(16)
 
 			FrustumTempl(void);
 

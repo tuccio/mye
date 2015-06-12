@@ -7,6 +7,9 @@ function CornellController:Init()
 	hCam.transform.position = vec3(0, 1, 3)
 	hCam.transform.orientation = quaternion(0, 0, 1, 0)
 	
+	print (hCam.transform.position)
+	print (hCam.transform.orientation)
+	
 	if hCam and hCam:Exists() then
 		hCam.camera.far = 25
 		Scene.camera = hCam.camera

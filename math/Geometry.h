@@ -5,6 +5,7 @@
 #include "GeometryDeclarations.h"
 
 #include "Quaternion.h"
+#include "QuaternionfSSE.h"
 #include "QuaternionOperations.h"
 
 #include "Transform.h"

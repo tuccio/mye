@@ -8,6 +8,7 @@
 #include "SSE.h"
 #include "Utils.h"
 
+
 namespace mye
 {
 
@@ -51,21 +52,39 @@ namespace mye
 		}
 
 		template <typename T>
-		__MYE_MATH_INLINE detail::SFINAEStrippedScalar<T> Abs(T && x)
+		__MYE_MATH_INLINE detail::SFINAEScalar<T> Abs(T x)
 		{
-			return detail::MathFunctions<T>::Abs(std::forward<T>(x));
+			return detail::MathFunctions<T>::Abs(x);
 		}
 
 		template <typename T>
-		__MYE_MATH_INLINE detail::SFINAEStrippedFP<T> Sqrt(T && x)
+		__MYE_MATH_INLINE detail::SFINAEVector<T> Abs(const T & x)
 		{
-			return detail::MathFunctions<T>::Sqrt(std::forward<T>(x));
+			return detail::MathFunctions<T>::Abs(x);
 		}
 
 		template <typename T>
-		__MYE_MATH_INLINE detail::SFINAEStrippedFP<T> InverseSqrt(T && x)
+		__MYE_MATH_INLINE detail::SFINAEScalar<T> Sqrt(T x)
 		{
-			return detail::MathFunctions<T>::InverseSqrt(std::forward<T>(x));
+			return detail::MathFunctions<T>::Sqrt(x);
+		}
+
+		template <typename T>
+		__MYE_MATH_INLINE detail::SFINAEVector<T> Sqrt(const T & x)
+		{
+			return detail::MathFunctions<T>::Sqrt(x);
+		}
+
+		template <typename T>
+		__MYE_MATH_INLINE detail::SFINAEScalar<T> InverseSqrt(T x)
+		{
+			return detail::MathFunctions<T>::InverseSqrt(x);
+		}
+
+		template <typename T>
+		__MYE_MATH_INLINE detail::SFINAEVector<T> InverseSqrt(const T & x)
+		{
+			return detail::MathFunctions<T>::InverseSqrt(x);
 		}
 
 		template <typename T>

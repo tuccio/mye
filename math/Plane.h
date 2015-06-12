@@ -1,5 +1,7 @@
 #pragma once
 
+#include "SSE.h"
+
 namespace mye
 {
 
@@ -14,10 +16,12 @@ namespace mye
 		};
 
 		template <typename T>
-		class PlaneTempl
+		class __MYE_MATH_SSE_ALIGNED(16) PlaneTempl
 		{
 
 		public:
+
+			__MYE_MATH_SSE_ALIGNED_ALLOCATOR(16)
 
 			PlaneTempl(void);
 			PlaneTempl(const Matrix<T, 3, 1> & p, const Matrix<T, 3, 1> & N);

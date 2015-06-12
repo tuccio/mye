@@ -1,5 +1,7 @@
 #pragma once
 
+#include "AlignedAllocator.h"
+
 #include <mye/math/Math.h>
 
 namespace mye
@@ -19,6 +21,8 @@ namespace mye
 
 		struct PointLight
 		{
+
+			__MYE_DECLARE_ALIGNED_16
 
 			PointLight(void) { }
 
@@ -45,6 +49,8 @@ namespace mye
 		{
 
 		public:
+
+			__MYE_DECLARE_ALIGNED_16
 
 			Light(void);
 

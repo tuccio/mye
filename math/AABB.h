@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#include "SSE.h"
+
 namespace mye
 {
 
@@ -21,11 +23,13 @@ namespace mye
 		};
 
 		template <typename T>
-		class AABBTempl :
+		class __MYE_MATH_SSE_ALIGNED(16) AABBTempl :
 			public Volume<T>
 		{
 
 		public:
+
+			__MYE_MATH_SSE_ALIGNED_ALLOCATOR(16)
 
 			AABBTempl(void) :
 				Volume(VolumeType::AABBt),

@@ -207,9 +207,9 @@ namespace mye
 		}
 
 		template <typename T>
-		__MYE_MATH_INLINE T Matrix<T, 4, 1>::Length(void) const
+		__MYE_MATH_INLINE Real Matrix<T, 4, 1>::Length(void) const
 		{
-			return Sqrt(this->Dot(*this));
+			return Sqrt((Real) this->Dot(*this));
 		}
 
 		template <typename T>
@@ -265,6 +265,8 @@ namespace mye
 			return v;
 
 		}
+
+#include "SwizzleVector4T.inl"
 
 	}
 

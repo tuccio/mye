@@ -97,6 +97,50 @@ namespace mye
 
 			};
 
+			__MYE_MATH_INLINE __m128 SumComponents(__m128 v)
+			{
+
+				// (v2, v3, v2, v3)
+				__m128 t0 = _mm_movehl_ps(v, v);
+
+				// (v0 + v2, v1 + v3, ...)
+				__m128 t1 = _mm_add_ps(t0, v);
+
+				// (v1 + v3, ...)
+				__m128 t2 = _mm_shuffle_ps(t1, t1, _MM_SHUFFLE(1, 1, 1, 1));
+
+				return _mm_add_ps(t1, t2);
+
+			}
+
+			__MYE_MATH_INLINE __m128 SumComponents(__m128 a, __m128 b)
+			{
+
+				// (a2, a3, a2, a3)
+				__m128 t0 = _mm_movehl_ps(a, a);
+
+				// (a0 + a2, a1 + a3, ...)
+				__m128 t1 = _mm_add_ps(t0, a);
+
+				// (b0, b1, b0, b1)
+				__m128 t2 = _mm_movelh_ps(b, b);
+
+				// (..., b0 + b2, b1 + b3)
+				__m128 t3 = _mm_add_ps(t2, b);
+
+				// (a0 + a2, a1 + a3, b0 + b2, b1 + b3)
+				__m128 t4 = _mm_shuffle_ps(t1, t3, _MM_SHUFFLE(3, 2, 1, 0));
+
+				// (a1 + a3, a0 + a2, b1 + b3, b0 + b2)
+				__m128 t5 = _mm_shuffle_ps(t4, t4, _MM_SHUFFLE(2, 3, 0, 1));
+
+				// (a0 + a1 + a2 + a3, a0 + a1 + a2 + a3, b0 + b1 + b2 + b3, b0 + b1 + b2 + b3)
+				__m128 t6 = _mm_add_ps(t4, t5);
+
+				return t6;
+
+			}
+
 			__MYE_MATH_INLINE __m128 SplatSS(__m128 v)
 			{
 				return _mm_shuffle_ps(v, v, _MM_SHUFFLE(0, 0, 0, 0));

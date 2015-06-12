@@ -14,7 +14,8 @@ GameObject::GameObject(void) :
 	m_owner(nullptr),
 	m_behaviour(nullptr)
 {
-	AddComponent(TransformComponent());
+	TransformComponent t;
+	AddComponent(dynamic_cast<const Component&>(t));
 }
 
 GameObject::GameObject(const String &name) :
@@ -22,7 +23,8 @@ GameObject::GameObject(const String &name) :
 	m_owner(nullptr),
 	m_behaviour(nullptr)
 {
-	AddComponent(TransformComponent());
+	TransformComponent t;
+	AddComponent(dynamic_cast<const Component&>(t));
 }
 
 
@@ -58,7 +60,7 @@ Component * GameObject::AddComponent(const Component & component)
 		else
 		{
 
-			Component *newComponent = static_cast<Component*>(component.Clone());
+			Component * newComponent = static_cast<Component*>(component.Clone());
 			m_components[component.GetName()] = newComponent;
 
 			newComponent->OnAttach(this);
@@ -101,7 +103,7 @@ Component * GameObject::AddComponent(Component * component)
 		{
 			m_transform = static_cast<const TransformComponent &>(*component);
 			m_transform.OnAttach(this);
-			result = &m_transform;
+			result = & m_transform;
 			delete component;
 		}
 		else

@@ -16,12 +16,13 @@
 
 #include <malloc.h>
 
-#define __MYE_MATH_SSE_ALIGNED(Alignment)  __declspec(align(Alignment))
+#define __MYE_MATH_SSE_ALIGNED(Alignment) __declspec(align(Alignment))
 
 #define __MYE_MATH_SSE_ALIGNED_ALLOCATOR(Alignment) \
-	inline void * operator new (std::size_t count) { void * p = _aligned_malloc(count, Alignment); if (!p) throw std::bad_alloc(); return p; } \
-	inline void * operator new[] (std::size_t count) { void * p = _aligned_malloc(count, Alignment); if (!p) throw std::bad_alloc(); return p; } \
-	inline void operator delete (void *p) { _aligned_free(p); }
+	__MYE_MATH_INLINE void * operator new (std::size_t count) { void * p = _aligned_malloc(count, Alignment); if (!p) throw std::bad_alloc(); return p; } \
+	__MYE_MATH_INLINE void * operator new[] (std::size_t count) { void * p = _aligned_malloc(count, Alignment); if (!p) throw std::bad_alloc(); return p; } \
+	__MYE_MATH_INLINE void * operator new (std::size_t size, void * ptr) { return ptr; }\
+	__MYE_MATH_INLINE void operator delete (void * p) { _aligned_free(p); }
 
 namespace mye
 {

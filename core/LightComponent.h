@@ -16,6 +16,8 @@ namespace mye
 
 		public:
 
+			__MYE_DECLARE_ALIGNED_16
+
 			LightComponent(void);
 			LightComponent(const Light &light);
 

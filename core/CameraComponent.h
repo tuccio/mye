@@ -2,6 +2,7 @@
 
 #include "Camera.h"
 #include "Component.h"
+#include "AlignedAllocator.h"
 
 namespace mye
 {
@@ -15,6 +16,8 @@ namespace mye
 		{
 
 		public:
+
+			__MYE_DECLARE_ALIGNED_16
 
 			CameraComponent(void);
 			~CameraComponent(void);

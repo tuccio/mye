@@ -1,5 +1,7 @@
 #pragma once
 
+#include "SSE.h"
+
 namespace mye
 {
 
@@ -7,10 +9,12 @@ namespace mye
 	{
 
 		template <typename T>
-		class Sphere
+		class __MYE_MATH_SSE_ALIGNED(16) Sphere
 		{
 
 		public:
+
+			__MYE_MATH_SSE_ALIGNED_ALLOCATOR(16)
 
 			inline const Matrix<T, 3, 1> GetCenter(void) const;
 			inline void SetCenter(const Matrix<T, 3, 1> &center);

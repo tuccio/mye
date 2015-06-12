@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "AlignedAllocator.h"
 #include "Component.h"
 #include "Components.h"
 #include "GameObjectsManager.h"
@@ -28,27 +29,28 @@ namespace mye
 
 		class GameObjectListener;
 
-		class GameObject :
+		class __MYE_ALIGNED(16) GameObject :
 			public INamedObject
 		{
 
 		public:
 
-			MYE_DECLARE_POOL_ALLOCATOR(GameObject)
+			__MYE_DECLARE_ALIGNED_16
+			//MYE_DECLARE_POOL_ALLOCATOR(GameObject)
 
 			GameObject(void);
 			GameObject(const String &name);
 
 			~GameObject(void);
 
-			void AddListener(GameObjectListener *listener);
-			void RemoveListener(GameObjectListener *listener);
+			void AddListener(GameObjectListener * listener);
+			void RemoveListener(GameObjectListener * listener);
 
-			Component * AddComponent(const Component &component);
+			Component * AddComponent(const Component & component);
 			Component * AddComponent(Component * component);
 
-			Component * GetComponent(const String &name);
-			     void   RemoveComponent(const String &name);
+			Component * GetComponent(const String & name);
+			     void   RemoveComponent(const String & name);
 
 			inline TransformComponent * GetTransformComponent(void);
 			inline    RenderComponent * GetRenderComponent(void);

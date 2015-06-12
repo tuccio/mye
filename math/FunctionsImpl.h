@@ -24,6 +24,9 @@ namespace mye
 			struct Q3InvSqrtMagicNumber<double> :
 				std::integral_constant<unsigned long long, 0x5fe6ec85e7de30da> { };
 
+			template <typename T>
+			struct Q3InvSqrtMagicNumber<const T> : Q3InvSqrtMagicNumber<T> { };
+
 
 			/*template <typename T, typename Enable = void>
 			struct MathFunctions;*/

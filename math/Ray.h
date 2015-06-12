@@ -1,5 +1,7 @@
 #pragma once
 
+#include "SSE.h"
+
 namespace mye
 {
 
@@ -7,10 +9,12 @@ namespace mye
 	{
 
 		template <typename T>
-		class RayTempl
+		class __MYE_MATH_SSE_ALIGNED(16) RayTempl
 		{
 
 		public:
+
+			__MYE_MATH_SSE_ALIGNED_ALLOCATOR(16)
 
 			RayTempl(void);
 			RayTempl(const Matrix<T, 3, 1> &origin, const Matrix<T, 3, 1> &direction);

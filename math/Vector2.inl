@@ -65,6 +65,12 @@ namespace mye
 		}
 
 		template <typename T>
+		__MYE_MATH_INLINE bool Matrix<T, 2, 1>::operator!= (const Matrix<T, 2, 1> & b) const
+		{
+			return !(*this == b);
+		}
+
+		template <typename T>
 		__MYE_MATH_INLINE Matrix<T, 2, 1> Matrix<T, 2, 1>::operator+ (const Matrix<T, 2, 1> & b) const
 		{
 			return Matrix<T, 2, 1>(
@@ -138,9 +144,9 @@ namespace mye
 		}
 
 		template <typename T>
-		__MYE_MATH_INLINE T Matrix<T, 2, 1>::Length(void) const
+		__MYE_MATH_INLINE Real Matrix<T, 2, 1>::Length(void) const
 		{
-			return Sqrt(this->Dot(*this));
+			return Sqrt((Real) this->Dot(*this));
 		}
 
 		template <typename T>
@@ -200,6 +206,9 @@ namespace mye
 			return v;
 
 		}
+
+
+#include "SwizzleVector2T.inl"
 
 	}
 

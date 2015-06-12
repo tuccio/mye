@@ -1,7 +1,8 @@
 #include <algorithm>
+#include <cmath>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
-#include <cmath>
 #include <string>
 #include <sstream>
 #include <typeindex>
@@ -11,10 +12,15 @@
 #include <mye/math/Math.h>
 #include <mye/math/Geometry.h>
 
+#include <boost/timer.hpp>
+
 using namespace mye::math;
 
 template <typename T, int N, int M>
 void OctaveLikePrint(const char * matrixName, const Matrix<T, N, M> & m);
+
+template <typename T>
+void OctaveLikePrint(const char * matrixName, const QuaternionTempl<T> & q);
 
 template <typename T>
 std::enable_if_t<std::is_arithmetic<T>::value, void> OctaveLikePrint(const char * label, T value);
@@ -27,34 +33,42 @@ void PrintFrustum(const char * label, const Frustum & f);
 int main(int argc, char * argv[])
 {
 
-	Vector3 t0 = Vector3(0);
-	Vector3 t1 = Vector3(3, 2, 6);
-	Vector3 N = t1.Normalize();
-	Plane p(t0, N);
-	Real k = -13.0f;
 
-	Plane p1 = p.Transform(TranslationMatrix4(k * N)).Normalize();
-	Plane p2 = p.TranslateAlongNormal(k).Normalize();
-	Plane p3 = Plane(t0 + k * N, N).Normalize();
 
-	OctaveLikePrint("p", p.Parameters());
-	OctaveLikePrint("p transformed", p1.Parameters());
-	OctaveLikePrint("p translated",  p2.Parameters());
-	OctaveLikePrint("p constructed", p3.Parameters());
+	Frustum f(Vector3(0),
+	          Vector3(0, 0, -1), Vector3(0, 1, 0), Vector3(1, 0, 0),
+	          0.1f, 100.0f,
+	          90.0f, 90.0f);
+	
+
+	for (auto corner : f.GetCorners())
+	{
+		OctaveLikePrint("corner", corner);
+	}
+
+	PrintFrustum("f", f);
 
 	system("pause");
 
-	Frustum f(Vector3(0.0), Vector3(0, 0, 1), Vector3(0, 1, 0), Vector3(1, 0, 0), 0.1, 5.1, 30, 30);
+	Quaternion q1(Vector3(0, 1, 0), 45.0f);
+	Quaternion q2(Vector3(0, 1, 0), 30.0f);
+
+	OctaveLikePrint("q1", q1);
+	OctaveLikePrint("q2", q2);
+
+	OctaveLikePrint("q1 * q2", q1 * q2);
+
+	system("pause");
+
+	Quaternion q3(Vector3(0, 1, 0), 90.0f);
+	Quaternion q4(Vector3(0, 1, 0), -90.0f);
 
 
-	PrintFrustum("Constructed frustum", f);
+	Vector3 r1 = q3.Rotate(Vector3(0, 0, 1));
+	Vector3 r2 = q4.Rotate(Vector3(0, 0, 1));
 
-	Frustum f1, f2;
-
-	f.Split(0.3, f1, f2);
-
-	PrintFrustum("Split frustum #1", f1);
-	PrintFrustum("Split frustum #2", f2);
+	OctaveLikePrint("r1", r1);
+	OctaveLikePrint("r2", r2);
 
 	system("pause");
 
@@ -67,11 +81,11 @@ void PrintFrustum(const char * label, const Frustum & f)
 
 	std::cout << "*** " << label << " ***" << std::endl << std::endl;
 
-	OctaveLikePrint("left", f.GetPlane(FrustumPlane::LEFT_PLANE).Parameters());
-	OctaveLikePrint("right", f.GetPlane(FrustumPlane::RIGHT_PLANE).Parameters());
-	OctaveLikePrint("near", f.GetPlane(FrustumPlane::NEAR_PLANE).Parameters());
-	OctaveLikePrint("far", f.GetPlane(FrustumPlane::FAR_PLANE).Parameters());
-	OctaveLikePrint("top", f.GetPlane(FrustumPlane::TOP_PLANE).Parameters());
+	OctaveLikePrint("left",   f.GetPlane(FrustumPlane::LEFT_PLANE).Parameters());
+	OctaveLikePrint("right",  f.GetPlane(FrustumPlane::RIGHT_PLANE).Parameters());
+	OctaveLikePrint("near",   f.GetPlane(FrustumPlane::NEAR_PLANE).Parameters());
+	OctaveLikePrint("far",    f.GetPlane(FrustumPlane::FAR_PLANE).Parameters());
+	OctaveLikePrint("top",    f.GetPlane(FrustumPlane::TOP_PLANE).Parameters());
 	OctaveLikePrint("bottom", f.GetPlane(FrustumPlane::BOTTOM_PLANE).Parameters());
 
 }
@@ -125,4 +139,10 @@ template <typename T>
 std::enable_if_t<std::is_arithmetic<T>::value, void> OctaveLikePrint(const char * label, T value)
 {
 	std::cout << label << " = " << std::endl << std::endl << " " << value << std::endl << std::endl;
+}
+
+template <typename T>
+void OctaveLikePrint(const char * matrixName, const QuaternionTempl<T> & q)
+{
+	OctaveLikePrint(matrixName, (const Vector4 &) q);
 }

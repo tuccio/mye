@@ -7,37 +7,39 @@ namespace mye
 	{
 
 		template <typename T>
-		class TransformTempl
+		class __MYE_MATH_SSE_ALIGNED(16) TransformTempl
 		{
 
 		public:
+
+			__MYE_MATH_SSE_ALIGNED_ALLOCATOR(16)
 
 			static TransformTempl<T> Identity(void);
 
 			TransformTempl(void);
 
-			TransformTempl(const Matrix<T, 3, 1> &position,
-				const QuaternionTempl<T> &orientation,
-				const Matrix<T, 3, 1> &scale);
+			TransformTempl(const Matrix<T, 3, 1>    & position,
+			               const QuaternionTempl<T> & orientation,
+			               const Matrix<T, 3, 1>    & scale);
 
 			~TransformTempl(void);
 
-			inline const QuaternionTempl<T>& GetOrientation(void) const;
-			inline void SetOrientation(const QuaternionTempl<T> &q);
+			__MYE_MATH_INLINE const QuaternionTempl<T> & GetOrientation(void) const;
+			__MYE_MATH_INLINE void SetOrientation(const QuaternionTempl<T> & q);
 
-			inline QuaternionTempl<T>& Orientation(void);
+			__MYE_MATH_INLINE QuaternionTempl<T> & Orientation(void);
 
-			inline const Matrix<T, 3, 1>& GetPosition(void) const;
-			inline void SetPosition(const Matrix<T, 3, 1> &position);
+			__MYE_MATH_INLINE const Matrix<T, 3, 1> & GetPosition(void) const;
+			__MYE_MATH_INLINE void SetPosition(const Matrix<T, 3, 1> & position);
 
-			inline Matrix<T, 3, 1>& Position(void);
+			__MYE_MATH_INLINE Matrix<T, 3, 1> & Position(void);
 
-			inline const Matrix<T, 3, 1>& GetScale(void) const;
-			inline void SetScale(const Matrix<T, 3, 1> &scale);
+			__MYE_MATH_INLINE const Matrix<T, 3, 1> & GetScale(void) const;
+			__MYE_MATH_INLINE void SetScale(const Matrix<T, 3, 1> & scale);
 
-			inline Matrix<T, 3, 1>& Scale(void);
+			__MYE_MATH_INLINE Matrix<T, 3, 1> & Scale(void);
 
-			inline Matrix<T, 4, 4> GetSRTMatrix(void) const;			
+			__MYE_MATH_INLINE Matrix<T, 4, 4> GetSRTMatrix(void) const;
 
 		private:
 

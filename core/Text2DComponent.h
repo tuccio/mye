@@ -1,5 +1,6 @@
 #pragma once
 
+#include "AlignedAllocator.h"
 #include "Component.h"
 #include "Font.h"
 #include "GPUBuffer.h"
@@ -31,7 +32,7 @@ namespace mye
 
 		private:
 
-			Text2DComponent *m_t2dc;
+			Text2DComponent * m_t2dc;
 
 		};
 
@@ -40,6 +41,8 @@ namespace mye
 		{
 
 		public:
+
+			__MYE_DECLARE_ALIGNED_16
 
 			Text2DComponent(void);
 

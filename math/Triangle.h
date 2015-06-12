@@ -1,3 +1,7 @@
+#pragma once
+
+#include "SSE.h"
+
 namespace mye
 {
 
@@ -5,10 +9,12 @@ namespace mye
 	{
 
 		template <typename T>
-		class Triangle
+		class __MYE_MATH_SSE_ALIGNED(16) Triangle
 		{
 
 		public:
+
+			__MYE_MATH_SSE_ALIGNED_ALLOCATOR(16)
 
 			inline Matrix<T, 3, 1>& v0(void);
 			inline const Matrix<T, 3, 1>& v0(void) const;

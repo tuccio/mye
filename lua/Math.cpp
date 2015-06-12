@@ -193,7 +193,7 @@ namespace mye
 		{
 
 			template <typename T, int N>
-			bool operator() (mye::math::Matrix<T, N, 1> v)
+			bool operator() (const mye::math::Matrix<T, N, 1> & v)
 			{
 
 				std::vector<int> swizzleResult;
@@ -237,7 +237,7 @@ namespace mye
 		}
 
 		template <typename T>
-		void BindVector4(State state, const char *classname)
+		void BindVector4(State state, const char * classname)
 		{
 
 			typedef Matrix<T, 4, 1> VectorType;
@@ -251,7 +251,7 @@ namespace mye
 					Constructor<T>().
 					Constructor<T, T, T, T>().
 					Constructor<const Matrix<T, 2, 1> &, T, T>().
-					Constructor<const Matrix<T, 3, 1>&, T>().
+					Constructor<const Matrix<T, 3, 1> &, T>().
 					Constructor<const VectorType &>().
 
 					Operator(Operand<const VectorType &>() + Operand<const VectorType &>()).
@@ -281,10 +281,10 @@ namespace mye
 					Property("z", &__vec_get<4, T, 2>, &__vec_set<4, T, 2>).
 					Property("w", &__vec_get<4, T, 3>, &__vec_set<4, T, 3>).
 
-					Function("Normalize", &VectorType::Normalize).
+					Function("Normalize", &VectorType::Normalize)/*.
 
 					Function("Clamp", (VectorType(VectorType::*) (T, T)) &VectorType::Clamp).
-					Function("Clamp", (VectorType(VectorType::*) (const VectorType&, const VectorType&)) &VectorType::Clamp)
+					Function("Clamp", (VectorType(VectorType::*) (const VectorType&, const VectorType&)) &VectorType::Clamp)*/
 
 			];
 

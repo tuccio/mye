@@ -1,5 +1,7 @@
 #pragma once
 
+#include "AlignedAllocator.h"
+
 #include <mye/math/Geometry.h>
 
 namespace mye
@@ -12,6 +14,8 @@ namespace mye
 		{
 
 		public:
+
+			__MYE_DECLARE_ALIGNED_16
 
 			Camera(void);
 			~Camera(void);

@@ -67,6 +67,8 @@ local function printSwizzle(f, swizzle, T, N, define)
 		
 		if T == "T" then
 		
+			function_def = "template <typename T> " .. function_def
+			
 			for i, x in pairs(swizzle) do
 			
 				if i > 1 then

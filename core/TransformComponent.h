@@ -1,6 +1,8 @@
 #pragma once
 
+#include "AlignedAllocator.h"
 #include "Component.h"
+
 #include <mye/math/Geometry.h>
 
 namespace mye
@@ -9,17 +11,19 @@ namespace mye
 	namespace core
 	{
 
-		class TransformComponent :
+		class __MYE_ALIGNED(16) TransformComponent :
 			public Component
 		{
 
 		public:
 
+			__MYE_DECLARE_ALIGNED_16
+
 			TransformComponent(void);
 
-			TransformComponent(const mye::math::Vector3 & position,
-							   const mye::math::Quaternion & orientation,
-							   const mye::math::Vector3 & scale);
+			TransformComponent(const mye::math::Vector3    & position,
+			                   const mye::math::Quaternion & orientation,
+			                   const mye::math::Vector3    & scale);
 
 			~TransformComponent(void);
 
@@ -50,7 +54,7 @@ namespace mye
 				m_transform.SetScale(scale);
 			}
 
-			mye::math::Vector3 & Scale(void)
+			inline mye::math::Vector3 & Scale(void)
 			{
 				return m_transform.Scale();
 			}
@@ -65,7 +69,7 @@ namespace mye
 				return m_transform.SetOrientation(orientation);
 			}
 
-			mye::math::Quaternion & Orientation(void)
+			inline mye::math::Quaternion & Orientation(void)
 			{
 				return m_transform.Orientation();
 			}

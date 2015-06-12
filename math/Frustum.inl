@@ -18,7 +18,7 @@ namespace mye
 		}
 
 		template <typename T>
-		FrustumTempl<T>::FrustumTempl(const Matrix<T, 3, 1> &origin,
+		FrustumTempl<T>::FrustumTempl(const Matrix<T, 3, 1> & origin,
 			const Matrix<T, 3, 1> & forward,
 			const Matrix<T, 3, 1> & up,
 			const Matrix<T, 3, 1> & right,
@@ -31,14 +31,14 @@ namespace mye
 
 			/* Construct planes */
 
-			Matrix<T, 2, 1> tgFov    = Abs(Tangent(Radians(Matrix<T, 2, 1>(fovX, fovY) * 0.5f)));
+			Matrix<T, 2, 1> tgFov    = Abs(Tangent(Radians(Matrix<T, 2, 1>(fovX, fovY) * T(0.5))));
 			Matrix<T, 2, 1> nearSize = tgFov * Matrix<T, 2, 1>(nearPlaneDistance);
 
-			Matrix<T, 3, 1> nearHeightVector = nearSize.y() * up;
-			Matrix<T, 3, 1> nearWidthVector  = nearSize.x() * right;
+			Matrix<T, 3, 1> nearHeightVector = nearSize.yyy() * up;
+			Matrix<T, 3, 1> nearWidthVector  = nearSize.xxx() * right;
 
 			Matrix<T, 3, 1> nearPlaneCenter = origin + nearPlaneDistance * forward;
-			Matrix<T, 3, 1> farPlaneCenter  = origin + farPlaneDistance * forward;
+			Matrix<T, 3, 1> farPlaneCenter  = origin + farPlaneDistance  * forward;
 
 			Matrix<T, 3, 1> tln = nearPlaneCenter - nearWidthVector + nearHeightVector;
 			Matrix<T, 3, 1> bln = nearPlaneCenter - nearWidthVector - nearHeightVector;
@@ -64,56 +64,208 @@ namespace mye
 
 			std::array<Matrix<T, 3, 1>, 8> corners;
 
-			Matrix<T, 3, 3> A;
+			/* Left, bottom, near */
+
+			{
+
+				Matrix<T, 3, 3> A;
+				Matrix<T, 3, 1> b;
+
+				A.SetRow(0, __MYE_MATH_FRUSTUM_LEFT.Normal());
+				A.SetRow(1, __MYE_MATH_FRUSTUM_BOTTOM.Normal());
+				A.SetRow(2, __MYE_MATH_FRUSTUM_NEAR.Normal());
+
+				b.x() = -__MYE_MATH_FRUSTUM_LEFT.Coefficient();
+				b.y() = -__MYE_MATH_FRUSTUM_BOTTOM.Coefficient();
+				b.z() = -__MYE_MATH_FRUSTUM_NEAR.Coefficient();
+
+				corners[static_cast<int>(FrustumCorners::LEFT_BOTTOM_NEAR)] = Cramer(A, b);
+
+			}
+
+			/* Right, bottom, near */
+
+			{
+
+				Matrix<T, 3, 3> A;
+				Matrix<T, 3, 1> b;
+
+				A.SetRow(0, __MYE_MATH_FRUSTUM_RIGHT.Normal());
+				A.SetRow(1, __MYE_MATH_FRUSTUM_BOTTOM.Normal());
+				A.SetRow(2, __MYE_MATH_FRUSTUM_NEAR.Normal());
+
+				b.x() = -__MYE_MATH_FRUSTUM_RIGHT.Coefficient();
+				b.y() = -__MYE_MATH_FRUSTUM_BOTTOM.Coefficient();
+				b.z() = -__MYE_MATH_FRUSTUM_NEAR.Coefficient();
+
+				corners[static_cast<int>(FrustumCorners::RIGHT_BOTTOM_NEAR)] = Cramer(A, b);
+
+			}
+
+			/* Right, top, near */
+
+			{
+
+				Matrix<T, 3, 3> A;
+				Matrix<T, 3, 1> b;
+
+				A.SetRow(0, __MYE_MATH_FRUSTUM_RIGHT.Normal());
+				A.SetRow(1, __MYE_MATH_FRUSTUM_TOP.Normal());
+				A.SetRow(2, __MYE_MATH_FRUSTUM_NEAR.Normal());
+
+				b.x() = -__MYE_MATH_FRUSTUM_RIGHT.Coefficient();
+				b.y() = -__MYE_MATH_FRUSTUM_TOP.Coefficient();
+				b.z() = -__MYE_MATH_FRUSTUM_NEAR.Coefficient();
+
+				corners[static_cast<int>(FrustumCorners::RIGHT_TOP_NEAR)] = Cramer(A, b);
+
+			}
+
+			/* Left, top, near */
+
+			{
+
+				Matrix<T, 3, 3> A;
+				Matrix<T, 3, 1> b;
+
+				A.SetRow(0, __MYE_MATH_FRUSTUM_LEFT.Normal());
+				A.SetRow(1, __MYE_MATH_FRUSTUM_TOP.Normal());
+				A.SetRow(2, __MYE_MATH_FRUSTUM_NEAR.Normal());
+
+				b.x() = -__MYE_MATH_FRUSTUM_LEFT.Coefficient();
+				b.y() = -__MYE_MATH_FRUSTUM_TOP.Coefficient();
+				b.z() = -__MYE_MATH_FRUSTUM_NEAR.Coefficient();
+
+				corners[static_cast<int>(FrustumCorners::LEFT_TOP_NEAR)] = Cramer(A, b);
+
+			}
+
+			/* Left, bottom, far */
+
+			{
+
+				Matrix<T, 3, 3> A;
+				Matrix<T, 3, 1> b;
+
+				A.SetRow(0, __MYE_MATH_FRUSTUM_LEFT.Normal());
+				A.SetRow(1, __MYE_MATH_FRUSTUM_BOTTOM.Normal());
+				A.SetRow(2, __MYE_MATH_FRUSTUM_FAR.Normal());
+
+				b.x() = -__MYE_MATH_FRUSTUM_LEFT.Coefficient();
+				b.y() = -__MYE_MATH_FRUSTUM_BOTTOM.Coefficient();
+				b.z() = -__MYE_MATH_FRUSTUM_FAR.Coefficient();
+
+				corners[static_cast<int>(FrustumCorners::LEFT_BOTTOM_FAR)] = Cramer(A, b);
+
+			}
+
+			/* Right, bottom, far */
+
+			{
+
+				Matrix<T, 3, 3> A;
+				Matrix<T, 3, 1> b;
+
+				A.SetRow(0, __MYE_MATH_FRUSTUM_RIGHT.Normal());
+				A.SetRow(1, __MYE_MATH_FRUSTUM_BOTTOM.Normal());
+				A.SetRow(2, __MYE_MATH_FRUSTUM_FAR.Normal());
+
+				b.x() = -__MYE_MATH_FRUSTUM_RIGHT.Coefficient();
+				b.y() = -__MYE_MATH_FRUSTUM_BOTTOM.Coefficient();
+				b.z() = -__MYE_MATH_FRUSTUM_FAR.Coefficient();
+
+				corners[static_cast<int>(FrustumCorners::RIGHT_BOTTOM_FAR)] = Cramer(A, b);
+
+			}
+
+			/* Right, top, far */
+
+			{
+
+				Matrix<T, 3, 3> A;
+				Matrix<T, 3, 1> b;
+
+				A.SetRow(0, __MYE_MATH_FRUSTUM_RIGHT.Normal());
+				A.SetRow(1, __MYE_MATH_FRUSTUM_TOP.Normal());
+				A.SetRow(2, __MYE_MATH_FRUSTUM_FAR.Normal());
+
+				b.x() = -__MYE_MATH_FRUSTUM_RIGHT.Coefficient();
+				b.y() = -__MYE_MATH_FRUSTUM_TOP.Coefficient();
+				b.z() = -__MYE_MATH_FRUSTUM_FAR.Coefficient();
+
+				corners[static_cast<int>(FrustumCorners::RIGHT_TOP_FAR)] = Cramer(A, b);
+
+			}
+
+			/* Left, top, far */
+
+			{
+
+				Matrix<T, 3, 3> A;
+				Matrix<T, 3, 1> b;
+
+				A.SetRow(0, __MYE_MATH_FRUSTUM_LEFT.Normal());
+				A.SetRow(1, __MYE_MATH_FRUSTUM_TOP.Normal());
+				A.SetRow(2, __MYE_MATH_FRUSTUM_FAR.Normal());
+
+				b.x() = -__MYE_MATH_FRUSTUM_LEFT.Coefficient();
+				b.y() = -__MYE_MATH_FRUSTUM_TOP.Coefficient();
+				b.z() = -__MYE_MATH_FRUSTUM_FAR.Coefficient();
+
+				corners[static_cast<int>(FrustumCorners::LEFT_TOP_FAR)] = Cramer(A, b);
+
+			}
+			
+			/*Matrix<T, 3, 3> A;
 			Matrix<T, 3, 1> b;
 
 			A.SetRow(0, __MYE_MATH_FRUSTUM_LEFT.Normal());
 			A.SetRow(1, __MYE_MATH_FRUSTUM_BOTTOM.Normal());
 			A.SetRow(2, __MYE_MATH_FRUSTUM_NEAR.Normal());
 
-			b.x() = __MYE_MATH_FRUSTUM_LEFT.Coefficient();
-			b.y() = __MYE_MATH_FRUSTUM_BOTTOM.Coefficient();
-			b.z() = __MYE_MATH_FRUSTUM_NEAR.Coefficient();
+			b.x() = -__MYE_MATH_FRUSTUM_LEFT.Coefficient();
+			b.y() = -__MYE_MATH_FRUSTUM_BOTTOM.Coefficient();
+			b.z() = -__MYE_MATH_FRUSTUM_NEAR.Coefficient();
 
 			corners[static_cast<int>(FrustumCorners::LEFT_BOTTOM_NEAR)] = Cramer(A, b);
 
 			A.SetRow(0, __MYE_MATH_FRUSTUM_RIGHT.Normal());
-			b.x() = __MYE_MATH_FRUSTUM_RIGHT.Coefficient();
+			b.x() = -__MYE_MATH_FRUSTUM_RIGHT.Coefficient();
 
 			corners[static_cast<int>(FrustumCorners::RIGHT_BOTTOM_NEAR)] = Cramer(A, b);
 
 			A.SetRow(1, __MYE_MATH_FRUSTUM_TOP.Normal());
-			b.y() = __MYE_MATH_FRUSTUM_TOP.Coefficient();
+			b.y() = -__MYE_MATH_FRUSTUM_TOP.Coefficient();
 
 			corners[static_cast<int>(FrustumCorners::RIGHT_TOP_NEAR)] = Cramer(A, b);
 
 			A.SetRow(0, __MYE_MATH_FRUSTUM_LEFT.Normal());
-			b.x() = __MYE_MATH_FRUSTUM_LEFT.Coefficient();
+			b.x() = -__MYE_MATH_FRUSTUM_LEFT.Coefficient();
 
 			corners[static_cast<int>(FrustumCorners::LEFT_TOP_NEAR)] = Cramer(A, b);
 
 			A.SetRow(1, __MYE_MATH_FRUSTUM_BOTTOM.Normal());
-			b.y() = __MYE_MATH_FRUSTUM_BOTTOM.Coefficient();
+			b.y() = -__MYE_MATH_FRUSTUM_BOTTOM.Coefficient();
 
 			A.SetRow(2, __MYE_MATH_FRUSTUM_FAR.Normal());
-			b.z() = __MYE_MATH_FRUSTUM_FAR.Coefficient();
+			b.z() = -__MYE_MATH_FRUSTUM_FAR.Coefficient();
 
 			corners[static_cast<int>(FrustumCorners::LEFT_BOTTOM_FAR)] = Cramer(A, b);
 
 			A.SetRow(0, __MYE_MATH_FRUSTUM_RIGHT.Normal());
-			b.x() = __MYE_MATH_FRUSTUM_RIGHT.Coefficient();
+			b.x() = -__MYE_MATH_FRUSTUM_RIGHT.Coefficient();
 
 			corners[static_cast<int>(FrustumCorners::RIGHT_BOTTOM_FAR)] = Cramer(A, b);
 
 			A.SetRow(1, __MYE_MATH_FRUSTUM_TOP.Normal());
-			b.y() = __MYE_MATH_FRUSTUM_TOP.Coefficient();
+			b.y() = -__MYE_MATH_FRUSTUM_TOP.Coefficient();
 
 			corners[static_cast<int>(FrustumCorners::RIGHT_TOP_FAR)] = Cramer(A, b);
 
 			A.SetRow(0, __MYE_MATH_FRUSTUM_LEFT.Normal());
-			b.x() = __MYE_MATH_FRUSTUM_LEFT.Coefficient();
+			b.x() = -__MYE_MATH_FRUSTUM_LEFT.Coefficient();
 
-			corners[static_cast<int>(FrustumCorners::LEFT_TOP_FAR)] = Cramer(A, b);
+			corners[static_cast<int>(FrustumCorners::LEFT_TOP_FAR)] = Cramer(A, b);*/
 
 			return corners;
 

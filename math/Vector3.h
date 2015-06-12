@@ -44,7 +44,7 @@ namespace mye
 
 			__MYE_MATH_INLINE Matrix<T, 3, 1> Normalize(void) const;
 
-			__MYE_MATH_INLINE T Length(void) const;
+			__MYE_MATH_INLINE Real Length(void) const;
 
 			__MYE_MATH_INLINE Matrix<T, 3, 1> Reflect(const Matrix<T, 3, 1> &normal) const;
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "AlignedAllocator.h"
+
 #include "Component.h"
 #include "Material.h"
 #include "Mesh.h"
@@ -17,6 +19,8 @@ namespace mye
 		{
 
 		public:
+
+			__MYE_DECLARE_ALIGNED_16
 
 			RenderComponent(void);
 			RenderComponent(MeshPointer mesh, MaterialPointer material, const mye::math::Matrix4 & modelMatrix);

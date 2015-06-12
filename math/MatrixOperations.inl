@@ -77,9 +77,9 @@ namespace mye
 
 			Matrix<T, 3, 1> c[3] =
 			{
-				A.GetRow(0),
-				A.GetRow(1),
-				A.GetRow(2)
+				At.GetRow(0),
+				At.GetRow(1),
+				At.GetRow(2)
 			};
 
 			T invDet = T(1) / A.Determinant();

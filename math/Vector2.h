@@ -43,7 +43,7 @@ namespace mye
 			__MYE_MATH_INLINE Matrix<T, 2, 1> & operator= (const Matrix<T, 2, 1> & b);
 
 			__MYE_MATH_INLINE Matrix<T, 2, 1> Normalize(void) const;
-			__MYE_MATH_INLINE T Length(void) const;
+			__MYE_MATH_INLINE Real Length(void) const;
 
 			__MYE_MATH_INLINE Matrix<T, 2, 1> CwiseAbs(void) const;
 			__MYE_MATH_INLINE Matrix<T, 2, 1> CwiseMin(const Matrix<T, 2, 1> &v) const;

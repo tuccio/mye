@@ -163,45 +163,45 @@ namespace mye
 				Class<RigidBodyComponent, Component>(MYE_LUA_RIGIDBODY_COMPONENT).
 
 					Constructor<>().
-Constructor<BulletCollisionShapePointer, mye::math::Real>().
-Constructor<BulletCollisionShapePointer, mye::math::Real, const mye::math::Vector3&, const mye::math::Quaternion&>().
-
-Function("ApplyForce", &RigidBodyComponent::ApplyForce).
-Function("ApplyImpulse", &RigidBodyComponent::ApplyImpulse).
-
-Property("velocity", &RigidBodyComponent::GetVelocity, &RigidBodyComponent::SetVelocity).
-Property("position", &RigidBodyComponent::GetPosition, &RigidBodyComponent::SetPosition).
-Property("mass", &RigidBodyComponent::GetMass, &RigidBodyComponent::SetMass).
-Property("shape", &RigidBodyComponent::GetCollisionShape, &RigidBodyComponent::SetCollisionShape),
-
-Class<Text2DComponent, Component>(MYE_LUA_TEXT2D_COMPONENT).
-
-Constructor<>().
-Constructor<const mye::math::Vector2i &, FontPointer, const mye::core::String &>().
-//Constructor<const mye::math::Vector2i &, const mye::math::Vector4 &, FontPointer, const mye::core::String &>().
-
-Property("text", &Text2DComponent::GetText, &Text2DComponent::SetText).
-Property("position", &Text2DComponent::GetPosition, &Text2DComponent::SetPosition).
-Property("font", &Text2DComponent::GetFont, &Text2DComponent::SetFont).
-Property("pointsize", &Text2DComponent::GetPointSize, &Text2DComponent::SetPointSize).
-Property("color", &Text2DComponent::GetColor, &Text2DComponent::SetColor),
-
-Class<RenderComponent, Component>(MYE_LUA_RENDER_COMPONENT).
-
-Constructor<>().
-
-Property("mesh", &RenderComponent::GetMesh, &RenderComponent::SetMesh).
-Property("matrix", &RenderComponent::GetModelMatrix, &RenderComponent::SetModelMatrix).
-Property("material", &RenderComponent::GetMaterial, &RenderComponent::SetMaterial),
-
-Class<LightComponent, Component, Light>(MYE_LUA_LIGHT_COMPONENT).
-
-Constructor<>().
-Constructor<const Light&>(),
-
-Class<CameraComponent, Component, Camera>(MYE_LUA_CAMERA_COMPONENT).
-
-Constructor<>()
+					Constructor<BulletCollisionShapePointer, mye::math::Real>().
+					Constructor<BulletCollisionShapePointer, mye::math::Real, const mye::math::Vector3&, const mye::math::Quaternion&>().
+					
+					Function("ApplyForce", &RigidBodyComponent::ApplyForce).
+					Function("ApplyImpulse", &RigidBodyComponent::ApplyImpulse).
+					
+					Property("velocity", &RigidBodyComponent::GetVelocity, &RigidBodyComponent::SetVelocity).
+					Property("position", &RigidBodyComponent::GetPosition, &RigidBodyComponent::SetPosition).
+					Property("mass", &RigidBodyComponent::GetMass, &RigidBodyComponent::SetMass).
+					Property("shape", &RigidBodyComponent::GetCollisionShape, &RigidBodyComponent::SetCollisionShape),
+					
+				Class<Text2DComponent, Component>(MYE_LUA_TEXT2D_COMPONENT).
+					
+					Constructor<>().
+					Constructor<const mye::math::Vector2i &, FontPointer, const mye::core::String &>().
+					//Constructor<const mye::math::Vector2i &, const mye::math::Vector4 &, FontPointer, const mye::core::String &>().
+					
+					Property("text", &Text2DComponent::GetText, &Text2DComponent::SetText).
+					Property("position", &Text2DComponent::GetPosition, &Text2DComponent::SetPosition).
+					Property("font", &Text2DComponent::GetFont, &Text2DComponent::SetFont).
+					Property("pointsize", &Text2DComponent::GetPointSize, &Text2DComponent::SetPointSize).
+					Property("color", &Text2DComponent::GetColor, &Text2DComponent::SetColor),
+					
+				Class<RenderComponent, Component>(MYE_LUA_RENDER_COMPONENT).
+					
+					Constructor<>().
+					
+					Property("mesh", &RenderComponent::GetMesh, &RenderComponent::SetMesh).
+					Property("matrix", &RenderComponent::GetModelMatrix, &RenderComponent::SetModelMatrix).
+					Property("material", &RenderComponent::GetMaterial, &RenderComponent::SetMaterial),
+					
+				Class<LightComponent, Component, Light>(MYE_LUA_LIGHT_COMPONENT).
+					
+					Constructor<>().
+					Constructor<const Light&>(),
+					
+				Class<CameraComponent, Component, Camera>(MYE_LUA_CAMERA_COMPONENT).
+					
+					Constructor<>()
 
 			];
 

@@ -169,15 +169,15 @@ namespace mye
 		}
 
 		template <typename T>
-		__MYE_MATH_INLINE T Matrix<T, 3, 1>::Length(void) const
+		__MYE_MATH_INLINE Real Matrix<T, 3, 1>::Length(void) const
 		{
-			return Sqrt(this->Dot(*this));
+			return Sqrt((Real) this->Dot(*this));
 		}
 
 		template <typename T>
 		__MYE_MATH_INLINE Matrix<T, 3, 1> Matrix<T, 3, 1>::Reflect(const Matrix<T, 3, 1> & normal) const
 		{
-			return *this - (2.0f * this->Dot(normal)) * normal;
+			return *this - (T(2) * this->Dot(normal)) * normal;
 		}
 
 		template <typename T>
@@ -242,35 +242,7 @@ namespace mye
 
 		}
 
-		/* Operators */
-
-		template <typename T>
-		__MYE_MATH_INLINE Matrix<T, 3, 1> operator+ (T a, const Matrix<T, 3, 1> & b)
-		{
-			return Matrix<T, 3, 1>(a) + b;
-		}
-
-		template <typename T>
-		__MYE_MATH_INLINE Matrix<T, 3, 1> operator- (T a, const Matrix<T, 3, 1> & b)
-		{
-			return Matrix<T, 3, 1>(a) - b;
-		}
-
-		template <typename T>
-		__MYE_MATH_INLINE Matrix<T, 3, 1> operator* (T a, const Matrix<T, 3, 1> & b)
-		{
-
-			return Matrix<T, 3, 1>(a) * b;
-
-		}
-
-		template <typename T>
-		__MYE_MATH_INLINE Matrix<T, 3, 1> operator/ (T a, const Matrix<T, 3, 1> & b)
-		{
-			
-			return Matrix<T, 3, 1>(a) / b;
-
-		}
+#include "SwizzleVector3T.inl"
 
 	}
 

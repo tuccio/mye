@@ -183,7 +183,7 @@ void DX11ReflectiveShadowMap::RenderDirectional(Light * light)
 
 	for (auto & corner : viewFrustumCorners)
 	{
-		centroid += corner;
+		centroid = centroid + corner;
 	}
 
 	centroid = centroid / 8;

@@ -3,6 +3,8 @@
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/arithmetic/mod.hpp>
 #include <boost/preprocessor/arithmetic/div.hpp>
+#include <boost/preprocessor/arithmetic/add.hpp>
+#include <boost/preprocessor/arithmetic/mul.hpp>
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/tuple/rem.hpp>
 

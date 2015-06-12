@@ -80,6 +80,9 @@ namespace mye
 			template <typename T, int N, int M>
 			friend class Matrix;
 
+			template <typename T>
+			friend class QuaternionTempl;
+
 			template <typename T, typename E>
 			friend struct detail::MathFunctions;
 

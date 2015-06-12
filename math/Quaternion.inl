@@ -5,12 +5,12 @@ namespace mye
 	{
 
 		template <typename T>
-		QuaternionTempl<T>::QuaternionTempl(void)
+		__MYE_MATH_INLINE QuaternionTempl<T>::QuaternionTempl(void)
 		{
 		}
 
 		template <typename T>
-		QuaternionTempl<T>::QuaternionTempl(T w, T x, T y, T z)
+		__MYE_MATH_INLINE QuaternionTempl<T>::QuaternionTempl(T w, T x, T y, T z)
 		{
 			m_data[0] = x;
 			m_data[1] = y;
@@ -19,28 +19,36 @@ namespace mye
 		}
 
 		template <typename T>
-		QuaternionTempl<T>::QuaternionTempl(const Matrix<T, 3, 1> &axis, T angle)
+		__MYE_MATH_INLINE QuaternionTempl<T>::QuaternionTempl(const Matrix<T, 3, 1> & axis, T angle)
 		{
+			
 			float angleRadians = Radians(angle);
-			float sinHalfAngle = Sine(angleRadians * 0.5f);
-			m_data[3] = Cosine(angleRadians * 0.5f);
+			float sinHalfAngle = Sine(angleRadians * T(0.5));
+
 			m_data[0] = axis.x() * sinHalfAngle;
 			m_data[1] = axis.y() * sinHalfAngle;
 			m_data[2] = axis.z() * sinHalfAngle;
+			
+			m_data[3] = Cosine(angleRadians * T(0.5));
+
 		}
 
 		template <typename T>
-		QuaternionTempl<T>::QuaternionTempl(const Matrix<T, 3, 3> &A)
+		__MYE_MATH_INLINE QuaternionTempl<T>::QuaternionTempl(const Matrix<T, 3, 3> & A)
 		{
-			m_data[3] = Sqrt(1 + A(0, 0) + A(1, 1) + A(2, 2)) * 0.5f;
-			float invFourW = 1.0f / (4.0f * m_data[3]);
-			m_data[0] = (A(2, 1) - A(1, 2)) * invFourW;
-			m_data[1] = (A(0, 2) - A(2, 0)) * invFourW;
-			m_data[2] = (A(1, 0) - A(0, 1)) * invFourW;
+
+			m_data[3] = Sqrt(1 + A.m00() + A.m11() + A.m22()) * T(0.5);
+
+			float invFourW = T(1) / (T(4) * m_data[3]);
+
+			m_data[0] = (A.m21() - A.m12()) * invFourW;
+			m_data[1] = (A.m02() - A.m20()) * invFourW;
+			m_data[2] = (A.m10() - A.m01()) * invFourW;
+
 		}
 
 		template <typename T>
-		QuaternionTempl<T> QuaternionTempl<T>::Inverse(void) const
+		__MYE_MATH_INLINE QuaternionTempl<T> QuaternionTempl<T>::Inverse(void) const
 		{
 			
 			float invSquaredNorm = 1.0f / (m_data[0] * m_data[0] + m_data[1] * m_data[1] +
@@ -56,7 +64,7 @@ namespace mye
 		}
 
 		template <typename T>
-		QuaternionTempl<T> QuaternionTempl<T>::Conjugate(void) const
+		__MYE_MATH_INLINE QuaternionTempl<T> QuaternionTempl<T>::Conjugate(void) const
 		{
 			return QuaternionTempl<T>(
 				m_data[3],
@@ -67,7 +75,7 @@ namespace mye
 		}
 
 		template <typename T>
-		Matrix<T, 3, 1> QuaternionTempl<T>::Rotate(const Matrix<T, 3, 1> &p) const
+		__MYE_MATH_INLINE Matrix<T, 3, 1> QuaternionTempl<T>::Rotate(const Matrix<T, 3, 1> & p) const
 		{
 			QuaternionTempl<T> pQuat(0, p.x(), p.y(), p.z());
 			QuaternionTempl<T> r = *this * pQuat * Conjugate();
@@ -79,19 +87,19 @@ namespace mye
 		}
 
 		template <typename T>
-		T QuaternionTempl<T>::Norm(void) const
+		__MYE_MATH_INLINE T QuaternionTempl<T>::Norm(void) const
 		{
 			return Sqrt(m_data[0] * m_data[0] + m_data[1] * m_data[1] +
 				m_data[2] * m_data[2] + m_data[3] * m_data[3]);
 		}
 
 		template <typename T>
-		QuaternionTempl<T> QuaternionTempl<T>::Normalize(void) const
+		__MYE_MATH_INLINE QuaternionTempl<T> QuaternionTempl<T>::Normalize(void) const
 		{
 
 			QuaternionTempl<T> q;
 
-			float invNorm = 1.0f / Norm();
+			float invNorm = T(1) / Norm();
 
 			q.m_data[3] = m_data[3] * invNorm;
 			q.m_data[0] = m_data[0] * invNorm;
@@ -103,7 +111,7 @@ namespace mye
 		}
 
 		template <typename T>
-		QuaternionTempl<T> QuaternionTempl<T>::operator+ (const QuaternionTempl &q) const
+		__MYE_MATH_INLINE QuaternionTempl<T> QuaternionTempl<T>::operator+ (const QuaternionTempl & q) const
 		{
 			return QuaternionTempl<T>(
 				m_data[3] + q.m_data[3],
@@ -114,7 +122,7 @@ namespace mye
 		}
 
 		template <typename T>
-		QuaternionTempl<T> QuaternionTempl<T>::operator- (const QuaternionTempl &q) const
+		__MYE_MATH_INLINE QuaternionTempl<T> QuaternionTempl<T>::operator- (const QuaternionTempl & q) const
 		{
 			return QuaternionTempl<T>(
 				m_data[3] - q.m_data[3],
@@ -125,7 +133,7 @@ namespace mye
 		}
 
 		template <typename T>
-		QuaternionTempl<T> QuaternionTempl<T>::operator* (const QuaternionTempl &q) const
+		__MYE_MATH_INLINE QuaternionTempl<T> QuaternionTempl<T>::operator* (const QuaternionTempl & q) const
 		{
 			return QuaternionTempl<T>(
 				m_data[3] * q.m_data[3] - m_data[0] * q.m_data[0] - m_data[1] * q.m_data[1] - m_data[2] * q.m_data[2],
@@ -136,61 +144,61 @@ namespace mye
 		}
 
 		template <typename T>
-		T& QuaternionTempl<T>::operator[] (int i)
+		__MYE_MATH_INLINE T & QuaternionTempl<T>::operator[] (int i)
 		{
 			return m_data[i];
 		}
 
 		template <typename T>
-		const T& QuaternionTempl<T>::operator[] (int i) const
+		__MYE_MATH_INLINE const T & QuaternionTempl<T>::operator[] (int i) const
 		{
 			return m_data[i];
 		}
 
 		template <typename T>
-		T& QuaternionTempl<T>::x(void)
+		__MYE_MATH_INLINE T & QuaternionTempl<T>::x(void)
 		{
 			return m_data[0];
 		}
 
 		template <typename T>
-		const T& QuaternionTempl<T>::x(void) const
+		__MYE_MATH_INLINE const T & QuaternionTempl<T>::x(void) const
 		{
 			return m_data[0];
 		}
 
 		template <typename T>
-		T& QuaternionTempl<T>::y(void)
+		__MYE_MATH_INLINE T & QuaternionTempl<T>::y(void)
 		{
 			return m_data[1];
 		}
 
 		template <typename T>
-		const T& QuaternionTempl<T>::y(void) const
+		__MYE_MATH_INLINE const T & QuaternionTempl<T>::y(void) const
 		{
 			return m_data[1];
 		}
 
 		template <typename T>
-		T& QuaternionTempl<T>::z(void)
+		__MYE_MATH_INLINE T & QuaternionTempl<T>::z(void)
 		{
 			return m_data[2];
 		}
 
 		template <typename T>
-		const T& QuaternionTempl<T>::z(void) const
+		__MYE_MATH_INLINE const T & QuaternionTempl<T>::z(void) const
 		{
 			return m_data[2];
 		}
 
 		template <typename T>
-		T& QuaternionTempl<T>::w(void)
+		__MYE_MATH_INLINE T & QuaternionTempl<T>::w(void)
 		{
 			return m_data[3];
 		}
 
 		template <typename T>
-		const T& QuaternionTempl<T>::w(void) const
+		__MYE_MATH_INLINE const T & QuaternionTempl<T>::w(void) const
 		{
 			return m_data[3];
 		}

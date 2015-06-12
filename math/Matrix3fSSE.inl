@@ -219,6 +219,27 @@ namespace mye
 		}
 
 		
+		__MYE_MATH_INLINE bool Matrix<float, 3, 3>::operator== (const Matrix<float, 3, 3> & b) const
+		{
+
+			__m128 t0 = _mm_cmpeq_ps(m_vector[0], b.m_vector[0]);
+			__m128 t1 = _mm_cmpeq_ps(m_vector[1], b.m_vector[1]);
+			__m128 t2 = _mm_cmpeq_ps(m_vector[2], b.m_vector[2]);
+			__m128 t3 = _mm_cmpeq_ps(m_vector[3], b.m_vector[3]);
+
+			__m128 t4 = _mm_and_ps(t0, t1);
+			__m128 t5 = _mm_and_ps(t2, t3);
+
+			__m128 t6 = _mm_and_ps(t4, t5);
+
+			__m128 mask = _mm_castsi128_ps(_mm_set_epi32(0x0, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF));
+			__m128 t7 = _mm_and_ps(mask, t6);
+
+			return _mm_movemask_ps(t7) == 0xE;
+
+		}
+
+
 		__MYE_MATH_INLINE Matrix<float, 3, 3> Matrix<float, 3, 3>::Transpose(void) const
 		{
 

@@ -2,6 +2,7 @@
 
 #include <mye/math/Math.h>
 
+#include "AlignedAllocator.h"
 #include "Resource.h"
 
 namespace mye
@@ -15,6 +16,8 @@ namespace mye
 		{
 
 		public:
+
+			__MYE_DECLARE_ALIGNED_16
 
 			Material(ResourceManager * owner,
 					 const String & name,

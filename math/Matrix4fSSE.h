@@ -50,6 +50,8 @@ namespace mye
 
 			__MYE_MATH_INLINE Matrix<float, 4, 4> operator- (void) const;
 
+			__MYE_MATH_INLINE bool operator== (const Matrix<float, 4, 4> & b) const;
+
 			__MYE_MATH_INLINE Matrix<float, 4, 4> Transpose(void) const;
 			__MYE_MATH_INLINE Matrix<float, 4, 4> Inverse(void) const;
 
