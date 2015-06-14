@@ -72,6 +72,22 @@ int main(int argc, char * argv[])
 
 	system("pause");
 
+	Matrix3 A;
+
+	A.m00() = 0;
+	A.m01() = 1;
+	A.m02() = 2;
+	A.m10() = 3;
+	A.m11() = 4;
+	A.m12() = 5;
+	A.m20() = 6;
+	A.m21() = 7;
+	A.m22() = 8;
+
+	OctaveLikePrint("A", A);
+	
+	system("pause");
+
 	return 0;
 
 }

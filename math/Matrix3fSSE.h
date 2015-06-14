@@ -7,18 +7,20 @@
 #include "Matrix4.h"
 #include "SSE.h"
 
-#define __MYE_MATH_DEFINE_MATRIX3_SSE_INDEX(I) BOOST_PP_ADD(BOOST_PP_MUL(4, BOOST_PP_DIV(I, 3)), BOOST_PP_MOD(I, 3))
+#define __MYE_MATH_DEFINE_MATRIX3_SSE_INDEX(I) BOOST_PP_ADD(BOOST_PP_MUL(4, BOOST_PP_DIV(I, 4)), BOOST_PP_MOD(I, 4))
 
 #define __MYE_MATH_DEFINE_MATRIX3_SSE_GET_SET(N, I, TYPE) \
-	__MYE_MATH_INLINE TYPE BOOST_PP_CAT(Get, BOOST_PP_CAT(BOOST_PP_DIV(I, 3), BOOST_PP_MOD(I, 3))) (void) const { return *(m_data + __MYE_MATH_DEFINE_MATRIX3_SSE_INDEX(I)); }\
-	__MYE_MATH_INLINE void BOOST_PP_CAT(Set, BOOST_PP_CAT(BOOST_PP_DIV(I, 3), BOOST_PP_MOD(I, 3))) (const TYPE & x) { *(m_data + __MYE_MATH_DEFINE_MATRIX3_SSE_INDEX(I)) = x; }
+	BOOST_PP_EXPR_IF(BOOST_PP_NOT_EQUAL(BOOST_PP_MOD(I, 4), 3),\
+		__MYE_MATH_INLINE TYPE BOOST_PP_CAT(Get, BOOST_PP_CAT(BOOST_PP_DIV(I, 4), BOOST_PP_MOD(I, 4))) (void) const { return *(m_data + __MYE_MATH_DEFINE_MATRIX3_SSE_INDEX(I)); }\
+		__MYE_MATH_INLINE void BOOST_PP_CAT(Set, BOOST_PP_CAT(BOOST_PP_DIV(I, 4), BOOST_PP_MOD(I, 4))) (const TYPE & x) { *(m_data + __MYE_MATH_DEFINE_MATRIX3_SSE_INDEX(I)) = x; })
 
 #define __MYE_MATH_DEFINE_MATRIX3_SSE_REFS(N, I, TYPE) \
-	__MYE_MATH_INLINE const TYPE & BOOST_PP_CAT(m, BOOST_PP_CAT(BOOST_PP_DIV(I, 3), BOOST_PP_MOD(I, 3))) (void) const { return *(m_data + I); }\
-	__MYE_MATH_INLINE TYPE & BOOST_PP_CAT(m, BOOST_PP_CAT(BOOST_PP_DIV(I, 3), BOOST_PP_MOD(I, 3))) (void) { return *(m_data + __MYE_MATH_DEFINE_MATRIX3_SSE_INDEX(I)); }
+	BOOST_PP_EXPR_IF(BOOST_PP_NOT_EQUAL(BOOST_PP_MOD(I, 4), 3),\
+		__MYE_MATH_INLINE const TYPE & BOOST_PP_CAT(m, BOOST_PP_CAT(BOOST_PP_DIV(I, 4), BOOST_PP_MOD(I, 4))) (void) const { return *(m_data + I); }\
+		__MYE_MATH_INLINE TYPE &       BOOST_PP_CAT(m, BOOST_PP_CAT(BOOST_PP_DIV(I, 4), BOOST_PP_MOD(I, 4))) (void) { return *(m_data + __MYE_MATH_DEFINE_MATRIX3_SSE_INDEX(I)); })
 
-#define __MYE_MATH_MATRIX3_DEFINE_MEMBER_ACCESS_SSE   BOOST_PP_REPEAT(9, __MYE_MATH_DEFINE_MATRIX3_SSE_GET_SET, float)\
-                                                      BOOST_PP_REPEAT(9, __MYE_MATH_DEFINE_MATRIX3_SSE_REFS, float)
+#define __MYE_MATH_MATRIX3_DEFINE_MEMBER_ACCESS_SSE   BOOST_PP_REPEAT(12, __MYE_MATH_DEFINE_MATRIX3_SSE_GET_SET, float)\
+                                                      BOOST_PP_REPEAT(12, __MYE_MATH_DEFINE_MATRIX3_SSE_REFS, float)
 
 namespace mye
 {
@@ -61,7 +63,7 @@ namespace mye
 			__MYE_MATH_INLINE Matrix<float, 3, 3> operator* (float s) const;
 			__MYE_MATH_INLINE Matrix<float, 3, 3> operator/ (float s) const;
 
-			__MYE_MATH_INLINE bool Matrix<float, 3, 3>::operator== (const Matrix<float, 3, 3> & b) const;
+			__MYE_MATH_INLINE bool operator== (const Matrix<float, 3, 3> & b) const;
 
 			__MYE_MATH_INLINE Matrix<float, 3, 3> Transpose(void) const;
 			__MYE_MATH_INLINE Matrix<float, 3, 3> Inverse(void) const;

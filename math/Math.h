@@ -1,10 +1,16 @@
 #pragma once
 
 #include <boost/preprocessor/cat.hpp>
-#include <boost/preprocessor/arithmetic/mod.hpp>
-#include <boost/preprocessor/arithmetic/div.hpp>
 #include <boost/preprocessor/arithmetic/add.hpp>
+#include <boost/preprocessor/arithmetic/div.hpp>
+#include <boost/preprocessor/arithmetic/mod.hpp>
 #include <boost/preprocessor/arithmetic/mul.hpp>
+#include <boost/preprocessor/arithmetic/sub.hpp>
+#include <boost/preprocessor/comparison/equal.hpp>
+#include <boost/preprocessor/comparison/not_equal.hpp>
+#include <boost/preprocessor/control/if.hpp>
+#include <boost/preprocessor/control/expr_if.hpp>
+#include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/tuple/rem.hpp>
 
