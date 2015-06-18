@@ -762,12 +762,7 @@ namespace mye
 			state
 			[
 
-				Class<Volume<Real>>(classname).
-
-					Function("TransformAffine", &Volume<Real>::TransformAffine).
-					Function("Intersect", &Volume<Real>::Intersect),
-
-				Class<AABB, Volume<Real>>(classname).
+				Class<AABB>(classname).
 
 					Function("FromCenterHalfExtents", &AABB::FromCenterHalfExtents).
 					Function("FromMinMax",            &AABB::FromMinMax).

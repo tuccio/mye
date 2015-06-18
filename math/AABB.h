@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <array>
 
 #include "SSE.h"
 
@@ -23,8 +23,7 @@ namespace mye
 		};
 
 		template <typename T>
-		class __MYE_MATH_SSE_ALIGNED(16) AABBTempl :
-			public Volume<T>
+		class __MYE_MATH_SSE_ALIGNED(16) AABBTempl
 		{
 
 		public:
@@ -32,7 +31,6 @@ namespace mye
 			__MYE_MATH_SSE_ALIGNED_ALLOCATOR(16)
 
 			AABBTempl(void) :
-				Volume(VolumeType::AABBt),
 				m_min(T(-0.5)),
 				m_max(T(0.5))
 			{
@@ -42,38 +40,33 @@ namespace mye
 			{
 			}
 
-			static inline AABBTempl FromMinMax(
-				const mye::math::Matrix<T, 3, 1> &min,
-				const mye::math::Matrix<T, 3, 1> &max);
+			static __MYE_MATH_INLINE AABBTempl FromMinMax(
+				const mye::math::Matrix<T, 3, 1> & min,
+				const mye::math::Matrix<T, 3, 1> & max);
 
-			static inline AABBTempl FromCenterHalfExtents(
-				const mye::math::Matrix<T, 3, 1> &center,
-				const mye::math::Matrix<T, 3, 1> &halfExtents);
+			static __MYE_MATH_INLINE AABBTempl FromCenterHalfExtents(
+				const mye::math::Matrix<T, 3, 1> & center,
+				const mye::math::Matrix<T, 3, 1> & halfExtents);
 
-			inline Matrix<T, 3, 1> GetCenter(void) const;
-			inline Matrix<T, 3, 1> GetHalfExtents(void) const;
+			__MYE_MATH_INLINE Matrix<T, 3, 1> GetCenter(void) const;
+			__MYE_MATH_INLINE Matrix<T, 3, 1> GetHalfExtents(void) const;
 
-			inline Matrix<T, 3, 1> GetMinimum(void) const;
-			inline Matrix<T, 3, 1> GetMaximum(void) const;
+			__MYE_MATH_INLINE Matrix<T, 3, 1> GetMinimum(void) const;
+			__MYE_MATH_INLINE Matrix<T, 3, 1> GetMaximum(void) const;
 
-			inline std::vector<Matrix<T, 3, 1>> GetCorners(void) const;
+			__MYE_MATH_INLINE std::array<mye::math::Matrix<T, 3, 1>, 8> GetCorners(void) const;
 
-			inline Vector3i GetAxesOrderBySize(void) const;
+			__MYE_MATH_INLINE Vector3i GetAxesOrderBySize(void) const;
 
-			inline AABBTempl<T> TransformAffine(const Matrix<T, 4, 4> &t) const;
+			__MYE_MATH_INLINE AABBTempl<T> TransformAffine(const Matrix<T, 4, 4> & t) const;
 
-			inline bool Contains(const Matrix<T, 3, 1> &x) const;
-			inline bool Contains(const AABBTempl<T> &aabb) const;
+			__MYE_MATH_INLINE bool Contains(const Matrix<T, 3, 1> &x) const;
+			__MYE_MATH_INLINE bool Contains(const AABBTempl<T> & aabb) const;
 
-			inline bool ContainsStrict(const Matrix<T, 3, 1> &x) const;
-			inline bool ContainsStrict(const AABBTempl<T> &aabb) const;
+			__MYE_MATH_INLINE bool ContainsStrict(const Matrix<T, 3, 1> & x) const;
+			__MYE_MATH_INLINE bool ContainsStrict(const AABBTempl<T> & aabb) const;
 
-			AABBTempl* Clone(void) const;
-
-			inline VolumeSide Intersects(const FrustumTempl<T> &frustum) const;
-
-			void TransformAffine(Volume &volume,
-				const Matrix<T, 4, 4> &transform) const;
+			__MYE_MATH_INLINE VolumeSide Intersects(const FrustumTempl<T> & frustum) const;
 
 		private:
 

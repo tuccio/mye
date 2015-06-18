@@ -74,8 +74,10 @@ add_subdirectory ( lua )
 add_subdirectory ( d3d11 )
 add_subdirectory ( mye )
 add_subdirectory ( math )
+add_subdirectory ( algorithms )
 
 # Temporary
 
 add_subdirectory ( messingwithentities )
 add_subdirectory ( mathtest )
+add_subdirectory ( octreetest )

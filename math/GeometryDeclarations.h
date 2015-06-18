@@ -6,6 +6,13 @@ namespace mye
 	namespace math
 	{
 
+		enum class VolumeSide
+		{
+			INSIDE,
+			INTERSECT,
+			OUTSIDE
+		};
+
 		template <typename T>
 		class QuaternionTempl;
 

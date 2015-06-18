@@ -5,38 +5,45 @@ namespace mye
 	{
 
 		template <typename T>
-		AABBTempl<T> AABBTempl<T>::FromMinMax(
-			const mye::math::Matrix<T, 3, 1> &min,
-			const mye::math::Matrix<T, 3, 1> &max)
+		__MYE_MATH_INLINE AABBTempl<T> AABBTempl<T>::FromMinMax(const mye::math::Matrix<T, 3, 1> & min,
+		                                                        const mye::math::Matrix<T, 3, 1> & max)
 		{
+
 			AABBTempl aabb;
+
 			aabb.m_min = min;
 			aabb.m_max = max;
+
 			return aabb;
+
 		}
 
 		template <typename T>
-		AABBTempl<T> AABBTempl<T>::FromCenterHalfExtents(
-			const mye::math::Matrix<T, 3, 1> &center,
-			const mye::math::Matrix<T, 3, 1> &halfExtents)
+		__MYE_MATH_INLINE AABBTempl<T> AABBTempl<T>::FromCenterHalfExtents(const mye::math::Matrix<T, 3, 1> & center,
+		                                                                   const mye::math::Matrix<T, 3, 1> & halfExtents)
 		{
+
 			mye::math::Matrix<T, 3, 1> absHalfExtents = halfExtents.CwiseAbs();
+
 			AABBTempl aabb;
+
 			aabb.m_min = center - absHalfExtents;
 			aabb.m_max = center + absHalfExtents;
+
 			return aabb;
+
 		}
 
 		template <typename T>
 		Matrix<T, 3, 1> AABBTempl<T>::GetCenter(void) const
 		{
-			return (m_max + m_min) * 0.5f;
+			return (m_max + m_min) * T(0.5);
 		}
 
 		template <typename T>
 		Matrix<T, 3, 1> AABBTempl<T>::GetHalfExtents(void) const
 		{
-			return (m_max - m_min) * 0.5f;
+			return (m_max - m_min) * T(0.5);
 		}
 
 		template <typename T>
@@ -52,10 +59,10 @@ namespace mye
 		}
 
 		template <typename T>
-		std::vector<Matrix<T, 3, 1>> AABBTempl<T>::GetCorners(void) const
+		std::array<Matrix<T, 3, 1>, 8> AABBTempl<T>::GetCorners(void) const
 		{
 
-			std::vector<Matrix<T, 3, 1>> corners(8);
+			std::array<Matrix<T, 3, 1>, 8> corners;
 
 			corners[static_cast<int>(AABBCorners::LEFT_BOTTOM_NEAR)] = m_min;
 
@@ -133,7 +140,7 @@ namespace mye
 		}
 
 		template <typename T>
-		AABBTempl<T> AABBTempl<T>::TransformAffine(const Matrix<T, 4, 4> &t) const
+		AABBTempl<T> AABBTempl<T>::TransformAffine(const Matrix<T, 4, 4> & t) const
 		{
 
 			Matrix<T, 3, 1> center = GetCenter();
@@ -151,7 +158,7 @@ namespace mye
 		}
 
 		template <typename T>
-		bool AABBTempl<T>::Contains(const Matrix<T, 3, 1> &x) const
+		bool AABBTempl<T>::Contains(const Matrix<T, 3, 1> & x) const
 		{
 
 			return x.x() <= m_max.x() &&
@@ -164,7 +171,7 @@ namespace mye
 		}
 
 		template <typename T>
-		bool AABBTempl<T>::ContainsStrict(const Matrix<T, 3, 1> &x) const
+		bool AABBTempl<T>::ContainsStrict(const Matrix<T, 3, 1> & x) const
 		{
 
 			return x.x() < m_max.x() &&
@@ -177,7 +184,7 @@ namespace mye
 		}
 
 		template <typename T>
-		bool AABBTempl<T>::Contains(const AABBTempl<T> &aabb) const
+		bool AABBTempl<T>::Contains(const AABBTempl<T> & aabb) const
 		{
 			return Contains(aabb.m_min) && Contains(aabb.m_max);
 		}
@@ -186,19 +193,6 @@ namespace mye
 		bool AABBTempl<T>::ContainsStrict(const AABBTempl<T> &aabb) const
 		{
 			return ContainsStrict(aabb.m_min) && ContainsStrict(aabb.m_max);
-		}
-
-		template <typename T>
-		AABBTempl<T>* AABBTempl<T>::Clone(void) const
-		{
-			return new AABBTempl<T>(*this);
-		}
-
-		template <typename T>
-		void AABBTempl<T>::TransformAffine(Volume &volume,
-			const Matrix<T, 4, 4> &t) const
-		{
-			static_cast<AABBTempl<T>&>(volume) = TransformAffine(t);
 		}
 
 	}

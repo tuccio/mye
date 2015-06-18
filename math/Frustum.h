@@ -37,8 +37,7 @@ namespace mye
 		};
 		
 		template <typename T>
-		class __MYE_MATH_SSE_ALIGNED(16) FrustumTempl :
-			public Volume<T>
+		class __MYE_MATH_SSE_ALIGNED(16) FrustumTempl
 		{
 
 		public:
@@ -62,12 +61,7 @@ namespace mye
 
 			inline const PlaneTempl<T> & GetPlane(FrustumPlane plane) const;
 
-			FrustumTempl * Clone(void) const;
-
 			VolumeSide Intersects(const AABBTempl<T> & aabb) const;
-
-			void TransformAffine(Volume & volume,
-			                     const Matrix<T, 4, 4> & transform) const;
 
 			void Split(T ratio, FrustumTempl<T> & f1, FrustumTempl<T> & f2) const;
 

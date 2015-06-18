@@ -12,8 +12,7 @@ namespace mye
 	{
 
 		template <typename T>
-		FrustumTempl<T>::FrustumTempl(void) :
-		Volume(VolumeType::FRUSTUM)
+		FrustumTempl<T>::FrustumTempl(void)
 		{
 		}
 
@@ -25,8 +24,7 @@ namespace mye
 			T nearPlaneDistance,
 			T farPlaneDistance,
 			T fovX,
-			T fovY) :
-		Volume(VolumeType::FRUSTUM)
+			T fovY)
 		{
 
 			/* Construct planes */
@@ -272,7 +270,7 @@ namespace mye
 		}
 
 		template <typename T>
-		VolumeSide FrustumTempl<T>::Side(const Matrix<T, 3, 1> &x) const
+		VolumeSide FrustumTempl<T>::Side(const Matrix<T, 3, 1> & x) const
 		{
 
 			PlaneSide nearSide = __MYE_MATH_FRUSTUM_NEAR.Side(x);
@@ -339,13 +337,7 @@ namespace mye
 			return m_planes[static_cast<int>(plane)];
 		}
 
-		template <typename T>
-		FrustumTempl<T> * FrustumTempl<T>::Clone(void) const
-		{
-			return new FrustumTempl<T>(*this);
-		}
-
-		template <typename T>
+		/*template <typename T>
 		void FrustumTempl<T>::TransformAffine(Volume & volume,
 											  const Matrix<T, 4, 4> & t) const
 		{
@@ -357,7 +349,7 @@ namespace mye
 				f.m_planes[fp] = m_planes[fp].Transform(t).Normalize();
 			}
 
-		}
+		}*/
 
 		template <typename T>
 		void FrustumTempl<T>::Split(T ratio, FrustumTempl<T> & f1, FrustumTempl<T> & f2) const

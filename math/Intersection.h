@@ -1,38 +1,38 @@
 #pragma once
 
+#include "IntersectionCalculator.h"
+
+#include "IntersectionAABBvsAABB.h"
+#include "IntersectionRayvsAABB.h"
+#include "IntersectionAABBvsFrustum.h"
+
+#include <type_traits>
+
 namespace mye
 {
 
 	namespace math
 	{
 
-		template <typename T>
-		inline bool Intersect(const RayTempl<T> &ray,
-			const Sphere<T> &sphere);
+		/*
+			Intersection between geometry types (volumes, rays).
+			The function is commutative, optional arguments may differ depending on the pair of volume types to intersect.
+		*/
 
-		template <typename T>
-		inline bool Intersect(const RayTempl<T> &ray,
-			const Sphere<T> &sphere,
-			Matrix<T, 3, 1> &intersectionPoint);
+		template <typename V1, typename V2, typename ... OptionalArguments>
+		__MYE_MATH_INLINE std::enable_if_t<detail::IntersectionCalculator<V1, V2>::implemented::value, bool>
+			Intersect(const V1 & v1, const V2 & v2, OptionalArguments && ... args)
+		{
+			return detail::IntersectionCalculator<V1, V2>::Intersect(v1, v2, std::forward<OptionalArguments>(args) ...);
+		}
 
-		template <typename T>
-		inline VolumeSide Intersect(const AABBTempl<T> &a,
-			const AABBTempl<T> &b);
-
-		template <typename T>
-		inline VolumeSide Intersect(const AABBTempl<T> &aabb,
-			const FrustumTempl<T> &frustum);
-
-		template <typename T>
-		inline VolumeSide Intersect(const FrustumTempl<T> &frustum,
-			const AABBTempl<T> &aabb);
-
-		template <typename T>
-		inline VolumeSide Intersect(const FrustumTempl<T> &a,
-			const FrustumTempl<T> &b);
+		template <typename V1, typename V2, typename ... OptionalArguments>
+		__MYE_MATH_INLINE std::enable_if_t<!std::is_same<V1, V2>::value && detail::IntersectionCalculator<V2, V1>::implemented::value, bool>
+			Intersect(const V1 & v1, const V2 & v2, OptionalArguments && ... args)
+		{
+			return detail::IntersectionCalculator<V2, V1>::Intersect(v2, v1, std::forward<OptionalArguments>(args) ...);
+		}
 
 	}
 
 }
-
-#include "Intersection.inl"
