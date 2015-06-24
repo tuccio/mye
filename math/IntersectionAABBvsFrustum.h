@@ -15,10 +15,21 @@ namespace mye
 			struct IntersectionCalculator<AABBTempl<T>, FrustumTempl<T>> :
 				IntersectionCalculatorBase<AABBTempl<T>, FrustumTempl<T>>
 			{
-				
+
 				__MYE_MATH_INLINE static bool Intersect(const AABBTempl<T> & aabb,
 				                                        const FrustumTempl<T> & frustum)
 				{
+					VolumeSide side;
+					return Intersect(aabb, frustum, side);
+				}
+				
+				__MYE_MATH_INLINE static bool Intersect(const AABBTempl<T> & aabb,
+				                                        const FrustumTempl<T> & frustum,
+				                                        VolumeSide & side)
+				{
+
+					side = VolumeSide::OUTSIDE;
+
 					for (int i = 0; i < 6; i++)
 					{
 
@@ -67,17 +78,18 @@ namespace mye
 
 						if (normal.Dot(n) + d > 0)
 						{
-							return false; // AABB is outside the frustum
+							side = VolumeSide::INSIDE;
 						}
 
 						if (normal.Dot(p) + d >= 0)
 						{
+							side = VolumeSide::INTERSECT;
 							return true; // Intersection
 						}
 
 					}
 
-					return false; // AABB is inside the frustum
+					return false;
 				}
 
 			};

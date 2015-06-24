@@ -40,6 +40,22 @@ namespace mye
 					return (x < 0 ? -x : x);
 				}
 
+				__MYE_MATH_INLINE static T Floor(T x)
+				{
+					return std::floor(x);
+				
+				}
+
+				__MYE_MATH_INLINE static T Ceil(T x)
+				{
+					return std::ceil(x);
+				}
+
+				__MYE_MATH_INLINE static T Round(T x)
+				{
+					return std::round(x);
+				}
+
 				__MYE_MATH_INLINE static T Sqrt(T x)
 				{	
 					return x * InverseSqrt(x);
@@ -51,6 +67,7 @@ namespace mye
 					using MagicNumberType = Q3InvSqrtMagicNumber<T>::value_type;
 
 					T halfx = T(0.5) * x;
+
 					MagicNumberType i = * ((MagicNumberType*) &x);
 
 					i = Q3InvSqrtMagicNumber<T>::value - (i >> 1);
@@ -87,12 +104,39 @@ namespace mye
 					return v.CwiseAbs();
 				}
 
+				__MYE_MATH_INLINE static VectorType Floor(const VectorType & v)
+				{
+#ifdef MYE_USE_SSE
+					return VectorType(detail::SSEFloor(v.m_vector));
+#else
+					return VectorType(Floor(v.x()), Floor(v.y()));
+#endif
+				}
+
+				__MYE_MATH_INLINE static VectorType Ceil(const VectorType & v)
+				{
+#ifdef MYE_USE_SSE
+					return VectorType(detail::SSECeil(v.m_vector));
+#else
+					return VectorType(Ceil(v.x()), Ceil(v.y()));
+#endif
+				}
+
+				__MYE_MATH_INLINE static VectorType Round(const VectorType & v)
+				{
+#ifdef MYE_USE_SSE
+					return VectorType(detail::SSERound(v.m_vector));
+#else
+					return VectorType(Round(v.x()), Round(v.y()));
+#endif
+				}
+
 				__MYE_MATH_INLINE static VectorType Sqrt(const VectorType & v)
 				{
 #ifdef MYE_USE_SSE
 					return VectorType(detail::SSENewtonRaphson<1>::SquareRootPS(v.m_vector));
 #else
-					return VectorType(Sqrt(v.x(), Sqrt(v.y())));
+					return VectorType(Sqrt(v.x()), Sqrt(v.y()));
 #endif
 				}
 
@@ -116,6 +160,33 @@ namespace mye
 				__MYE_MATH_INLINE static VectorType Abs(const VectorType & v)
 				{
 					return v.CwiseAbs();
+				}
+
+				__MYE_MATH_INLINE static VectorType Floor(const VectorType & v)
+				{
+#ifdef MYE_USE_SSE
+					return VectorType(detail::SSEFloor(v.m_vector));
+#else
+					return VectorType(Floor(v.x()), Floor(v.y()), Floor(v.z()));
+#endif
+				}
+
+				__MYE_MATH_INLINE static VectorType Ceil(const VectorType & v)
+				{
+#ifdef MYE_USE_SSE
+					return VectorType(detail::SSECeil(v.m_vector));
+#else
+					return VectorType(Ceil(v.x()), Ceil(v.y()), Ceil(v.z()));
+#endif
+				}
+
+				__MYE_MATH_INLINE static VectorType Round(const VectorType & v)
+				{
+#ifdef MYE_USE_SSE
+					return VectorType(detail::SSERound(v.m_vector));
+#else
+					return VectorType(Round(v.x()), Round(v.y()), Round(v.z()));
+#endif
 				}
 
 				__MYE_MATH_INLINE static VectorType Sqrt(const VectorType & v)
@@ -147,6 +218,33 @@ namespace mye
 				__MYE_MATH_INLINE static VectorType Abs(const VectorType & v)
 				{
 					return v.CwiseAbs();
+				}
+
+				__MYE_MATH_INLINE static VectorType Floor(const VectorType & v)
+				{
+#ifdef MYE_USE_SSE
+					return VectorType(detail::SSEFloor(v.m_vector));
+#else
+					return VectorType(Floor(v.x()), Floor(v.y()), Floor(v.z()), Floor(v.w()));
+#endif
+				}
+
+				__MYE_MATH_INLINE static VectorType Ceil(const VectorType & v)
+				{
+#ifdef MYE_USE_SSE
+					return VectorType(detail::SSECeil(v.m_vector));
+#else
+					return VectorType(Ceil(v.x()), Ceil(v.y()), Ceil(v.z()), Ceil(v.w()));
+#endif
+				}
+
+				__MYE_MATH_INLINE static VectorType Round(const VectorType & v)
+				{
+#ifdef MYE_USE_SSE
+					return VectorType(detail::SSERound(v.m_vector));
+#else
+					return VectorType(Round(v.x()), Round(v.y()), Round(v.z()), Round(v.w()));
+#endif
 				}
 
 				__MYE_MATH_INLINE static VectorType Sqrt(const VectorType & v)

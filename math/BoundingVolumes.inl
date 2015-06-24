@@ -8,13 +8,13 @@ namespace mye
 	{
 
 		template <typename T>
-		AABBTempl<T> BoundingAABB(const AABBTempl<T> &aabb)
+		__MYE_MATH_INLINE AABBTempl<T> BoundingAABB(const AABBTempl<T> & aabb)
 		{
 			return aabb;
 		}
 
 		template <typename T>
-		AABBTempl<T> BoundingAABB(const Triangle<T> &triangle)
+		__MYE_MATH_INLINE AABBTempl<T> BoundingAABB(const Triangle<T> & triangle)
 		{
 
 			return AABBTempl<T>::FromMinMax(
@@ -24,7 +24,7 @@ namespace mye
 		}
 
 		template <typename T>
-		AABBTempl<T> BoundingAABB(const FrustumTempl<T> &frustum)
+		__MYE_MATH_INLINE AABBTempl<T> BoundingAABB(const FrustumTempl<T> & frustum)
 		{
 
 			auto corners = frustum.GetCorners();

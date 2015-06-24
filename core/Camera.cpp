@@ -237,8 +237,8 @@ Ray Camera::RayCast(const mye::math::Vector2 & screenCoords) const
 	Vector4 nearH = invViewProjMatrix * Vector4(deviceCoords.xy(), 0, 1);
 	Vector4 farH  = invViewProjMatrix * Vector4(deviceCoords.xy(), 1, 1);
 
-	Vector3 near = nearH.xyz() / nearH.w();
-	Vector3 far  =  farH.xyz() /  farH.w();
+	Vector3 near = nearH.xyz() / nearH.www();
+	Vector3 far  =  farH.xyz() /  farH.www();
 
 	return Ray(m_position, (far - near).Normalize());
 

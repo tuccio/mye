@@ -64,7 +64,7 @@ namespace mye
 			inline pointer       address(reference x) const { return &x; }
 			inline const_pointer address(const_reference x) const { return &x; }
 
-			inline pointer allocate(size_type n, std::allocator<void>::const_pointer hint = 0) { return static_cast<pointer>(AlignedAllocator<Alignment>::Allocate();) }
+			inline pointer allocate(size_type n, std::allocator<void>::const_pointer hint = 0) { return static_cast<pointer>(AlignedAllocator<Alignment>::Allocate(n * sizeof(T));) }
 			inline void    deallocate(pointer p, size_type n) { AlignedAllocator<Alignment>::Free(p); }
 
 			inline size_type max_size(void) const { return std::numeric_limits<size_type>::max(); }

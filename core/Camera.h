@@ -10,7 +10,7 @@ namespace mye
 	namespace core
 	{
 
-		class Camera
+		__MYE_CLASS_ALIGNED_16(Camera)
 		{
 
 		public:
@@ -20,9 +20,7 @@ namespace mye
 			Camera(void);
 			~Camera(void);
 
-			void LookAt(const mye::math::Vector3 & position,
-				const mye::math::Vector3 & up,
-				const mye::math::Vector3 & target);
+			void LookAt(const mye::math::Vector3 & position, const mye::math::Vector3 & up, const mye::math::Vector3 & target);
 
 			mye::math::Quaternion GetOrientation(void) const;
 			void SetOrientation(const mye::math::Quaternion &orientation);

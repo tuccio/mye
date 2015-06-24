@@ -52,6 +52,42 @@ namespace mye
 		}
 
 		template <typename T>
+		__MYE_MATH_INLINE detail::SFINAEScalar<T> Floor(T x)
+		{
+			return detail::MathFunctions<T>::Floor(x);
+		}
+
+		template <typename T>
+		__MYE_MATH_INLINE detail::SFINAEVector<T> Floor(const T & x)
+		{
+			return detail::MathFunctions<T>::Floor(x);
+		}
+
+		template <typename T>
+		__MYE_MATH_INLINE detail::SFINAEScalar<T> Ceil(T x)
+		{
+			return detail::MathFunctions<T>::Ceil(x);
+		}
+
+		template <typename T>
+		__MYE_MATH_INLINE detail::SFINAEVector<T> Ceil(const T & x)
+		{
+			return detail::MathFunctions<T>::Ceil(x);
+		}
+
+		template <typename T>
+		__MYE_MATH_INLINE detail::SFINAEScalar<T> Round(T x)
+		{
+			return detail::MathFunctions<T>::Ceil(x);
+		}
+
+		template <typename T>
+		__MYE_MATH_INLINE detail::SFINAEVector<T> Round(const T & x)
+		{
+			return detail::MathFunctions<T>::Round(x);
+		}
+
+		template <typename T>
 		__MYE_MATH_INLINE detail::SFINAEScalar<T> Abs(T x)
 		{
 			return detail::MathFunctions<T>::Abs(x);

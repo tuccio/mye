@@ -146,6 +146,65 @@ namespace mye
 				return _mm_shuffle_ps(v, v, _MM_SHUFFLE(0, 0, 0, 0));
 			}
 
+			__MYE_MATH_INLINE __m128 SSEFloor(__m128 v)
+			{
+
+				__m128i v0 = _mm_setzero_si128();
+				__m128i v1 = _mm_cmpeq_epi32(v0, v0);
+
+				__m128i ji = _mm_srli_epi32(v1, 25);
+				__m128 j = * (__m128 *) & _mm_slli_epi32(ji, 23);
+
+				__m128i i = _mm_cvttps_epi32(v);
+				__m128 fi = _mm_cvtepi32_ps(i);
+				__m128 igx = _mm_cmpgt_ps(fi, v);
+
+				j = _mm_and_ps(igx, j);
+
+				return _mm_sub_ps(fi, j);
+
+			}
+
+			__MYE_MATH_INLINE __m128 SSECeil(__m128 v){
+
+				__m128i v0 = _mm_setzero_si128();
+				__m128i v1 = _mm_cmpeq_epi32(v0, v0);
+
+				__m128i ji = _mm_srli_epi32(v1, 25);
+				__m128 j = *(__m128*)&_mm_slli_epi32(ji, 23);
+
+				__m128i i = _mm_cvttps_epi32(v);
+				__m128 fi = _mm_cvtepi32_ps(i);
+				__m128 igx = _mm_cmplt_ps(fi, v);
+
+				j = _mm_and_ps(igx, j);
+
+				return _mm_add_ps(fi, j);
+
+			}
+
+			__MYE_MATH_INLINE __m128 SSERound(__m128 v){
+
+				__m128 v0 = _mm_setzero_ps();
+				__m128 v1 = _mm_cmpeq_ps(v0, v0);
+
+				__m128 vNearest2 = * (__m128 *) & _mm_srli_epi32(* (__m128i *) &v1, 2);
+
+				__m128i i = _mm_cvttps_epi32(v);
+
+				__m128 aTrunc = _mm_cvtepi32_ps(i);
+
+				__m128 rmd = _mm_sub_ps(v, aTrunc);
+				__m128 rmd2 = _mm_mul_ps(rmd, vNearest2);
+				__m128i rmd2i = _mm_cvttps_epi32(rmd2);
+				__m128 rmd2Trunc = _mm_cvtepi32_ps(rmd2i);
+
+				__m128 r =_mm_add_ps(aTrunc, rmd2Trunc);
+
+				return r;
+
+			}
+
 			__MYE_MATH_INLINE __m128 SSEDot2(__m128 a, __m128 b)
 			{
 				__m128 t0 = _mm_mul_ps(a, b);

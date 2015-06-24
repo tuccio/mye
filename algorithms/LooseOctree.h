@@ -14,13 +14,23 @@
 #define __MYE_ALGORITHMS_LOOSEOCTREE_DEFAULT_MAXDEPTH  8
 #define __MYE_ALGORITHMS_LOOSEOCTREE_DEFAULT_LOOSENESS 0.5f
 
-#define __MYE_ALGORITHMS_LOOSEOCTREE_ROOT_INDEX 0
-
 namespace mye
 {
 	
 	namespace algorithms
 	{
+
+		enum LooseOctreeChildren
+		{
+			__MYE_ALGORITHMS_LOOSEOCTREE_FRONT_BOTTOM_LEFT  = 0, // 000
+			__MYE_ALGORITHMS_LOOSEOCTREE_FRONT_BOTTOM_RIGHT = 1, // 001
+			__MYE_ALGORITHMS_LOOSEOCTREE_FRONT_TOP_LEFT     = 2, // 010
+			__MYE_ALGORITHMS_LOOSEOCTREE_FRONT_TOP_RIGHT    = 3, // 011
+			__MYE_ALGORITHMS_LOOSEOCTREE_BACK_BOTTOM_LEFT   = 4, // 100
+			__MYE_ALGORITHMS_LOOSEOCTREE_BACK_BOTTOM_RIGHT  = 5, // 101
+			__MYE_ALGORITHMS_LOOSEOCTREE_BACK_TOP_LEFT      = 6, // 110
+			__MYE_ALGORITHMS_LOOSEOCTREE_BACK_TOP_RIGHT     = 7, // 111
+		};
 
 		namespace detail
 		{
@@ -28,19 +38,31 @@ namespace mye
 			template <typename Object>
 			struct LooseOctreeNode
 			{
-				MortonCode        key;
+				
 				std::list<Object> objects;
 				uint8_t           childrenMask;
+
+				__MYE_ALGORITHMS_INLINE LooseOctreeNode(void) :
+					childrenMask(0) { }
+
 			};
 
 		}
 
-		/* Linear loose octree with 64 bit Morton code for octant location key (hence max depth is 21) */
+
+		/* 
+		 *
+		 * Loose octree with looseness factor k = 2, represented as a linear octree
+		 * with 64 bit Morton code for octant location key (hence max depth is 21)
+		 *
+		 * Insertion and removal are O(1)
+		 *
+		 */
 
 		template <typename Object,
-			typename BoundingVolume,
-			typename BoundingVolumeFunctor = Boundings<Object, BoundingVolume>,
-			typename Comparator = std::equal_to<Object>>
+		          typename BoundingVolume = mye::math::AABB,
+		          typename BoundingVolumeFunctor = Boundings<Object, BoundingVolume>,
+		          typename Comparator  = std::equal_to<Object>>
 		class __MYE_MATH_SSE_ALIGNED(16) LooseOctree
 		{
 
@@ -52,10 +74,9 @@ namespace mye
 
 			__MYE_ALGORITHMS_INLINE LooseOctree(const mye::math::Vector3 & center,
 			                                    float halfextent,
-			                                    int maxdepth              = __MYE_ALGORITHMS_LOOSEOCTREE_DEFAULT_MAXDEPTH,
-			                                    float looseness           = __MYE_ALGORITHMS_LOOSEOCTREE_DEFAULT_LOOSENESS,
-			                                    BoundingVolumeFunctor bvf = BoundingVolumeFunctor(),
-												Comparator comparator     = Comparator());
+			                                    unsigned int maxdepth         = __MYE_ALGORITHMS_LOOSEOCTREE_DEFAULT_MAXDEPTH,
+												BoundingVolumeFunctor functor = BoundingVolumeFunctor(),
+												Comparator comparator         = Comparator());
 
 			__MYE_ALGORITHMS_INLINE LooseOctree(const LooseOctree & octree);
 			__MYE_ALGORITHMS_INLINE LooseOctree(LooseOctree && octree);
@@ -64,43 +85,67 @@ namespace mye
 
 			__MYE_ALGORITHMS_INLINE bool Create(const mye::math::Vector3 & center,
 			                                    float halfextent,
-			                                    int maxdepth              = __MYE_ALGORITHMS_LOOSEOCTREE_DEFAULT_MAXDEPTH,
-			                                    float looseness           = __MYE_ALGORITHMS_LOOSEOCTREE_DEFAULT_LOOSENESS,
-			                                    BoundingVolumeFunctor bvf = BoundingVolumeFunctor(),
-												Comparator comparator     = Comparator());
+			                                    unsigned int maxdepth         = __MYE_ALGORITHMS_LOOSEOCTREE_DEFAULT_MAXDEPTH,
+												BoundingVolumeFunctor functor = BoundingVolumeFunctor(),
+												Comparator comparator         = Comparator());
 
 			__MYE_ALGORITHMS_INLINE void Destroy(void);
 
-			
 
-			void Insert(const Object & object);
-			void Remove(const Object & object);
+			__MYE_ALGORITHMS_INLINE bool Insert(const Object & object);
+			__MYE_ALGORITHMS_INLINE bool Remove(const Object & object);
+
+			template <typename QueryType, typename Visitor>
+			__MYE_ALGORITHMS_INLINE void Query(const QueryType & query, Visitor visitor);
+
+			template <typename Visitor>
+			__MYE_ALGORITHMS_INLINE void TraverseAABBs(Visitor visitor);
+
+
+			__MYE_ALGORITHMS_INLINE mye::math::AABB GetAABB(void) const;
+
 
 		private:
 
-			typedef detail::LooseOctreeNode<Object>        __Node;
-			typedef std::unordered_map<MortonCode, __Node> __HashMap;
-			
+			typedef detail::LooseOctreeNode<Object> __Node;
+
+			typedef std::unordered_map<MortonCode, __Node> __NodeHashMap;
+			typedef typename __NodeHashMap::iterator       __NodeHashMapIterator;
+
+			mye::math::Vector3    m_center;
+			float                 m_halfextent;
+
+			unsigned int          m_maxdepth;
+
+			BoundingVolumeFunctor m_functor;
+			Comparator            m_comparator;
+
+			__NodeHashMap         m_nodes;
+
+			/* Private methods */
+
 			__MYE_ALGORITHMS_INLINE void __Create(const mye::math::Vector3 & center,
-			                                      float halfextent,
-			                                      int maxdepth,
-			                                      float looseness,
-			                                      BoundingVolumeFunctor bvf,
-			                                      Comparator c);
+												  float halfextent,
+												  unsigned int maxdepth,
+												  BoundingVolumeFunctor functor,
+												  Comparator c);
 
-			__MYE_ALGORITHMS_INLINE void       __Insert(const Object & object, MortonCode location, const mye::math::AABB & parent);
-			__MYE_ALGORITHMS_INLINE MortonCode __FindOctant(const Object & object);
+			__MYE_ALGORITHMS_INLINE typename __NodeHashMapIterator __CreateOctant(MortonCode octantLocation);
 
-			mye::math::Vector3      m_center;
-			float                   m_halfextent;
-								   
-			float                   m_looseness;
-			int                     m_maxdepth;
-								   
-			__HashMap               m_nodes;
+			__MYE_ALGORITHMS_INLINE MortonCode   __FindFittingOctant(const mye::math::AABB & aabb) const;
 
-			BoundingVolumeFunctor   m_bvf;
-			Comparator              m_comparator;
+			__MYE_ALGORITHMS_INLINE unsigned int        __GetOctantDepth(MortonCode octant) const;
+			__MYE_ALGORITHMS_INLINE mye::math::AABB     __GetOctantAABB(MortonCode octant) const;
+			__MYE_ALGORITHMS_INLINE mye::math::Vector3u __GetOctantCoordinates(MortonCode octant) const;
+
+			template <typename QueryType, typename Visitor>
+			__MYE_ALGORITHMS_INLINE void __Traverse(MortonCode currentLocation, 
+													const mye::math::AABB & current,
+													const QueryType & query,
+													Visitor visitor);
+
+			template <typename Visitor>
+			__MYE_ALGORITHMS_INLINE void __DFS(MortonCode octant, Visitor visitor);
 
 
 		};
