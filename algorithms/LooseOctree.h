@@ -41,9 +41,11 @@ namespace mye
 				
 				std::list<Object> objects;
 				uint8_t           childrenMask;
+				uint32_t          occupancy;
 
 				__MYE_ALGORITHMS_INLINE LooseOctreeNode(void) :
-					childrenMask(0) { }
+					childrenMask(0),
+					occupancy(0) { }
 
 			};
 
@@ -93,17 +95,24 @@ namespace mye
 
 
 			__MYE_ALGORITHMS_INLINE bool Insert(const Object & object);
+			__MYE_ALGORITHMS_INLINE bool Insert(const Object & object, const BoundingVolume & volume);
+
 			__MYE_ALGORITHMS_INLINE bool Remove(const Object & object);
+			__MYE_ALGORITHMS_INLINE bool Remove(const Object & object, const BoundingVolume & volume);
 
 			template <typename QueryType, typename Visitor>
 			__MYE_ALGORITHMS_INLINE void Query(const QueryType & query, Visitor visitor);
 
+			__MYE_ALGORITHMS_INLINE bool Pick(const mye::math::Ray & ray, Object & result);
+
 			template <typename Visitor>
 			__MYE_ALGORITHMS_INLINE void TraverseAABBs(Visitor visitor);
 
-
 			__MYE_ALGORITHMS_INLINE mye::math::AABB GetAABB(void) const;
 
+			__MYE_ALGORITHMS_INLINE size_t GetSize(void) const;
+
+			__MYE_ALGORITHMS_INLINE void Shrink(void);
 
 		private:
 
@@ -144,8 +153,18 @@ namespace mye
 													const QueryType & query,
 													Visitor visitor);
 
+			__MYE_ALGORITHMS_INLINE void __Pick(MortonCode currentLocation,
+												const mye::math::AABB & current,
+												const mye::math::Ray  & ray,
+												mye::math::Real & minDistance,
+												Object * & object);
+
+
 			template <typename Visitor>
 			__MYE_ALGORITHMS_INLINE void __DFS(MortonCode octant, Visitor visitor);
+
+			__MYE_ALGORITHMS_INLINE void __IncreaseOccupancy(__NodeHashMapIterator octant);
+			__MYE_ALGORITHMS_INLINE void __DecreaseOccupancy(__NodeHashMapIterator octant);
 
 
 		};

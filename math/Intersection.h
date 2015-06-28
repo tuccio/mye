@@ -4,7 +4,9 @@
 
 #include "IntersectionAABBvsAABB.h"
 #include "IntersectionRayvsAABB.h"
+#include "IntersectionRayvsSphere.h"
 #include "IntersectionAABBvsFrustum.h"
+#include "IntersectionAABBvsSphere.h"
 
 #include <type_traits>
 

@@ -5,13 +5,16 @@ namespace mye
 	{
 
 		template <typename T>
-		inline AABBTempl<T> BoundingAABB(const AABBTempl<T> & aabb);
+		__MYE_MATH_INLINE AABBTempl<T> BoundingAABB(const AABBTempl<T> & aabb);
 
 		template <typename T>
-		inline AABBTempl<T> BoundingAABB(const Triangle<T> & triangle);
+		__MYE_MATH_INLINE AABBTempl<T> BoundingAABB(const Triangle<T> & triangle);
 
 		template <typename T>
-		inline AABBTempl<T> BoundingAABB(const FrustumTempl<T> & frustum);
+		__MYE_MATH_INLINE AABBTempl<T> BoundingAABB(const FrustumTempl<T> & frustum);
+
+		template <typename T>
+		__MYE_MATH_INLINE AABBTempl<T> BoundingAABB(const SphereTempl<T> & sphere);
 
 
 	}

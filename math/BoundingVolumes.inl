@@ -44,6 +44,12 @@ namespace mye
 
 		}
 
+		template <typename T>
+		__MYE_MATH_INLINE AABBTempl<T> BoundingAABB(const SphereTempl<T> & sphere)
+		{
+			return AABBTempl<T>::FromCenterHalfExtents(sphere.GetCenter(), Matrix<T, 3, 1>(sphere.GetRadius()));
+		}
+
 	}
 
 }

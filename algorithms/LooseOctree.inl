@@ -92,12 +92,18 @@ namespace mye
 		}
 
 		__MYE_ALGORITHMS_LOOSEOCTREE_TEMPLATE_DECLARATION
-		__MYE_ALGORITHMS_INLINE bool __MYE_ALGORITHMS_LOOSEOCTREE_TYPE::Insert(const Object & object)
+			__MYE_ALGORITHMS_INLINE bool __MYE_ALGORITHMS_LOOSEOCTREE_TYPE::Insert(const Object & object)
+		{
+			return Insert(object, m_functor(object));
+		}
+
+		__MYE_ALGORITHMS_LOOSEOCTREE_TEMPLATE_DECLARATION
+		__MYE_ALGORITHMS_INLINE bool __MYE_ALGORITHMS_LOOSEOCTREE_TYPE::Insert(const Object & object, const BoundingVolume & volume)
 		{
 
 			using namespace mye::math;
 
-			AABB aabb = BoundingAABB(m_functor(object));
+			AABB aabb = BoundingAABB(volume);
 
 			if (!GetAABB().Contains(aabb))
 			{
@@ -109,6 +115,8 @@ namespace mye
 			__NodeHashMapIterator it = __CreateOctant(octant);
 
 			it->second.objects.push_back(object);
+
+			__IncreaseOccupancy(it);
 			
 			return true;
 
@@ -117,10 +125,16 @@ namespace mye
 		__MYE_ALGORITHMS_LOOSEOCTREE_TEMPLATE_DECLARATION
 			__MYE_ALGORITHMS_INLINE bool __MYE_ALGORITHMS_LOOSEOCTREE_TYPE::Remove(const Object & object)
 		{
+			return Remove(object, m_functor(object));
+		}
+
+		__MYE_ALGORITHMS_LOOSEOCTREE_TEMPLATE_DECLARATION
+			__MYE_ALGORITHMS_INLINE bool __MYE_ALGORITHMS_LOOSEOCTREE_TYPE::Remove(const Object & object, const BoundingVolume & volume)
+		{
 
 			using namespace mye::math;
 
-			AABB aabb = BoundingAABB(m_functor(object));
+			AABB aabb = BoundingAABB(volume);
 
 			MortonCode octant = __FindFittingOctant(aabb);
 
@@ -139,6 +153,7 @@ namespace mye
 					if (m_comparator(*listIt, object))
 					{
 						node.objects.erase(listIt);
+						__DecreaseOccupancy(it);
 						return true;
 					}
 
@@ -162,11 +177,34 @@ namespace mye
 		}
 
 		__MYE_ALGORITHMS_LOOSEOCTREE_TEMPLATE_DECLARATION
-			__MYE_ALGORITHMS_INLINE void __MYE_ALGORITHMS_LOOSEOCTREE_TYPE::__Create(const mye::math::Vector3 & center,
-			                                                                         float halfextent,
-			                                                                         unsigned int maxdepth,
-			                                                                         BoundingVolumeFunctor functor,
-			                                                                         Comparator comparator)
+		__MYE_ALGORITHMS_INLINE bool __MYE_ALGORITHMS_LOOSEOCTREE_TYPE::Pick(const mye::math::Ray & ray, Object & result)
+		{
+
+			AABB rootAABB = AABB::FromCenterHalfExtents(m_center, m_halfextent * 2);
+
+			Object * object = nullptr;
+			mye::math::Real distance = mye::math::Infinity();
+
+			__Pick(__MYE_ALGORITHMS_LOOSEOCTREE_ROOT_INDEX, rootAABB, ray, distance, object);
+
+			if (object != nullptr)
+			{
+				result = *object;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+
+		}
+
+		__MYE_ALGORITHMS_LOOSEOCTREE_TEMPLATE_DECLARATION
+		__MYE_ALGORITHMS_INLINE void __MYE_ALGORITHMS_LOOSEOCTREE_TYPE::__Create(const mye::math::Vector3 & center,
+		                                                                         float halfextent,
+		                                                                         unsigned int maxdepth,
+		                                                                         BoundingVolumeFunctor functor,
+		                                                                         Comparator comparator)
 		{
 
 			m_center     = center;
@@ -230,6 +268,26 @@ namespace mye
 			}
 
 			return octant;
+
+		}
+
+		__MYE_ALGORITHMS_LOOSEOCTREE_TEMPLATE_DECLARATION
+		__MYE_ALGORITHMS_INLINE void __MYE_ALGORITHMS_LOOSEOCTREE_TYPE::Shrink(void)
+		{
+
+			__DFS(__MYE_ALGORITHMS_LOOSEOCTREE_ROOT_INDEX,
+			      [this] (__NodeHashMapIterator it)
+			{
+
+				if (it->second.occupancy == 0 && it->first != __MYE_ALGORITHMS_LOOSEOCTREE_ROOT_INDEX)
+				{
+					MortonCode parentCode = it->first >> 3;
+					auto parentIt = m_nodes.find(parentCode);
+					parentIt->second.childrenMask ^= __MYE_ALGORITHMS_LOOSEOCTREE_MAKE_CHILDREN_MASK((it->first & 7));
+					m_nodes.erase(it);
+				}
+
+			});
 
 		}
 
@@ -345,7 +403,12 @@ namespace mye
 
 				for (Object & o : it->second.objects)
 				{
-					visitor(o);
+
+					if (Intersect(query, m_functor(o)))
+					{
+						visitor(o);
+					}
+
 				}
 
 				auto currentCenter      = current.GetCenter();
@@ -406,7 +469,93 @@ namespace mye
 
 		}
 
-		
+		__MYE_ALGORITHMS_LOOSEOCTREE_TEMPLATE_DECLARATION
+		__MYE_ALGORITHMS_INLINE void __MYE_ALGORITHMS_LOOSEOCTREE_TYPE::__Pick(MortonCode currentLocation,
+		                                                                           const mye::math::AABB & current,
+		                                                                           const mye::math::Ray  & ray,
+		                                                                           mye::math::Real & minDistance,
+		                                                                           Object * & object)
+		{
+
+			using namespace mye::math;
+
+			if (Intersect(current, ray))
+			{
+
+				auto it = m_nodes.find(currentLocation);
+
+				for (Object & o : it->second.objects)
+				{
+
+					mye::math::Real t;
+					if (Intersect(ray, m_functor(o), t) && t < minDistance)
+					{
+						minDistance = t;
+						object = &o;
+					}
+
+				}
+
+				auto currentCenter      = current.GetCenter();
+				auto currentHalfExtents = current.GetHalfExtents().x();
+
+				auto nextHalfExtents = currentHalfExtents * 0.5f;
+
+				for (int child = 0; child < 8; child++)
+				{
+
+					MortonCode nextLevelLocation = currentLocation << 3;
+
+					if (it->second.childrenMask & __MYE_ALGORITHMS_LOOSEOCTREE_MAKE_CHILD_MASK(child))
+					{
+
+						MortonCode childCode = nextLevelLocation | child;
+
+						Vector3 centerShift;
+
+						float shiftSize = currentHalfExtents * 0.25f;
+
+						if (child & 1)
+						{
+							centerShift.x() = shiftSize;
+						}
+						else
+						{
+							centerShift.x() = -shiftSize;
+						}
+
+						if (child & 2)
+						{
+							centerShift.y() = shiftSize;
+						}
+						else
+						{
+							centerShift.y() = -shiftSize;
+						}
+
+						if (child & 4)
+						{
+							centerShift.z() = shiftSize;
+						}
+						else
+						{
+							centerShift.z() = -shiftSize;
+						}
+
+						AABB childAABB = AABB::FromCenterHalfExtents(currentCenter + centerShift, nextHalfExtents);
+
+						__Pick(childCode, childAABB, ray, minDistance, object);
+
+						
+
+					}
+
+				}
+
+			}
+
+		}
+
 		__MYE_ALGORITHMS_LOOSEOCTREE_TEMPLATE_DECLARATION
 		template <typename Visitor>
 		__MYE_ALGORITHMS_INLINE void __MYE_ALGORITHMS_LOOSEOCTREE_TYPE::__DFS(MortonCode code, Visitor visitor)
@@ -414,7 +563,6 @@ namespace mye
 
 			auto it = m_nodes.find(code);
 
-			visitor(it);
 
 			MortonCode nextLevelLocation = code << 3;
 
@@ -428,6 +576,53 @@ namespace mye
 
 			}
 
+			visitor(it);
+
+		}
+
+		__MYE_ALGORITHMS_LOOSEOCTREE_TEMPLATE_DECLARATION
+		__MYE_ALGORITHMS_INLINE void __MYE_ALGORITHMS_LOOSEOCTREE_TYPE::__IncreaseOccupancy(__NodeHashMapIterator octant)
+		{
+
+			octant->second.occupancy++;
+
+			if (octant->first != __MYE_ALGORITHMS_LOOSEOCTREE_ROOT_INDEX)
+			{
+				
+				auto parentIt = m_nodes.find(octant->first >> 3);
+
+				__IncreaseOccupancy(parentIt);
+
+			}
+
+		}
+
+		__MYE_ALGORITHMS_LOOSEOCTREE_TEMPLATE_DECLARATION
+		__MYE_ALGORITHMS_INLINE void __MYE_ALGORITHMS_LOOSEOCTREE_TYPE::__DecreaseOccupancy(__NodeHashMapIterator octant)
+		{
+
+
+			octant->second.occupancy--;
+
+			if (octant->first != __MYE_ALGORITHMS_LOOSEOCTREE_ROOT_INDEX)
+			{
+
+				auto parentIt = m_nodes.find(octant->first >> 3);
+
+				__DecreaseOccupancy(parentIt);
+
+			}
+
+		}
+
+		__MYE_ALGORITHMS_LOOSEOCTREE_TEMPLATE_DECLARATION
+		__MYE_ALGORITHMS_INLINE size_t __MYE_ALGORITHMS_LOOSEOCTREE_TYPE::GetSize(void) const
+		{
+			
+			auto it = m_nodes.find(__MYE_ALGORITHMS_LOOSEOCTREE_ROOT_INDEX);
+
+			return it->second.occupancy;
+			
 		}
 
 

@@ -9,23 +9,25 @@ namespace mye
 	{
 
 		template <typename T>
-		class __MYE_MATH_SSE_ALIGNED(16) Sphere
+		class __MYE_MATH_SSE_ALIGNED(16) SphereTempl
 		{
 
 		public:
 
 			__MYE_MATH_SSE_ALIGNED_ALLOCATOR(16)
 
-			inline const Matrix<T, 3, 1> GetCenter(void) const;
-			inline void SetCenter(const Matrix<T, 3, 1> &center);
+			__MYE_MATH_INLINE SphereTempl(void);
+			__MYE_MATH_INLINE SphereTempl(const Matrix<T, 3, 1> & center, T radius);
 
-			inline T GetRadius(void) const;
-			inline void SetRadius(T radius);
+			__MYE_MATH_INLINE const Matrix<T, 3, 1> GetCenter(void) const;
+			__MYE_MATH_INLINE void                  SetCenter(const Matrix<T, 3, 1> & center);
+
+			__MYE_MATH_INLINE T    GetRadius(void) const;
+			__MYE_MATH_INLINE void SetRadius(T radius);
 
 		private:
 
-			Matrix<T, 3, 1> m_center;
-			T m_radius;
+			Matrix<T, 4, 1> m_sphere;
 
 		};
 

@@ -24,8 +24,8 @@ namespace mye
 		template <typename T = Real>
 		class TransformTempl;
 
-		typedef TransformTempl<float>  Transformtf;
-		typedef TransformTempl<double> Transformtd;
+		typedef TransformTempl<float>  Transformf;
+		typedef TransformTempl<double> Transformd;
 
 		typedef TransformTempl<Real> __MYE_MATH_SSE_ALIGNED(16) Transform;
 
@@ -59,6 +59,14 @@ namespace mye
 		typedef RayTempl<double> __MYE_MATH_SSE_ALIGNED(16) Rayd;
 
 		typedef RayTempl<Real> __MYE_MATH_SSE_ALIGNED(16) Ray;
+
+		template <typename T = Real>
+		class SphereTempl;
+
+		typedef SphereTempl<float>  __MYE_MATH_SSE_ALIGNED(16) Spheref;
+		typedef SphereTempl<double> __MYE_MATH_SSE_ALIGNED(16) Sphered;
+
+		typedef SphereTempl<Real> __MYE_MATH_SSE_ALIGNED(16) Sphere;
 
 	}
 
