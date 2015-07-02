@@ -5,6 +5,7 @@
 
 #include <algorithm>
 
+
 using namespace mye::core;
 using namespace std;
 
@@ -74,10 +75,7 @@ Component * GameObject::AddComponent(const Component & component)
 
 			}
 
-			for (auto listener : m_listeners)
-			{
-				listener->OnComponentAddition(this, newComponent);
-			}
+			MYE_EVENT_MANAGER_TRIGGER(GameObjectEventAddComponent, this, newComponent);
 
 			result = newComponent;
 
@@ -101,9 +99,15 @@ Component * GameObject::AddComponent(Component * component)
 
 		if (component->GetComponentType() == ComponentTypes::TRANSFORM)
 		{
-			m_transform = static_cast<const TransformComponent &>(*component);
+
+			auto from = m_transform.GetWorldMatrix();
+
+			m_transform = * static_cast<const TransformComponent *>(component);
 			m_transform.OnAttach(this);
-			result = & m_transform;
+			result = &m_transform;
+
+			MYE_EVENT_MANAGER_ENQUEUE(GameObjectEventMove, this, from, m_transform.GetWorldMatrix());
+
 			delete component;
 		}
 		else
@@ -136,10 +140,7 @@ Component * GameObject::AddComponent(Component * component)
 
 		}
 
-		for (auto listener : m_listeners)
-		{
-			listener->OnComponentAddition(this, newComponent);
-		}
+		MYE_EVENT_MANAGER_TRIGGER(GameObjectEventAddComponent, this, newComponent);
 
 		result = newComponent;
 
@@ -186,14 +187,12 @@ void GameObject::RemoveComponent(const String & name)
 			break;
 		}
 
-		for (auto listener : m_listeners)
-		{
-			listener->OnComponentRemoval(this, it->second);
-		}
+		MYE_EVENT_MANAGER_TRIGGER(GameObjectEventRemoveComponent, this, it->second);
 
 		it->second->OnDetach();
 
 		delete it->second;
+
 		m_components.erase(it);
 
 	}
@@ -256,37 +255,16 @@ void GameObject::OnCreation(GameObjectsManager * owner,
 
 	m_deleteFlag = false;
 
-	Game::GetSingleton().GetScriptModule()->Init(m_handle);
+	Game::GetSingleton().GetScriptModule()->Init(this);
 
-	for (auto listener : m_listeners)
-	{
-		listener->OnGameObjectCreation(this);
-	}
-
+	MYE_EVENT_MANAGER_ENQUEUE(GameObjectEventCreate, this);
 }
 
 void GameObject::OnDestruction(void)
 {
 
-	Game::GetSingleton().GetScriptModule()->Finalize(m_handle);
-
-	for (auto listener : m_listeners)
-	{
-		listener->OnGameObjectDestruction(this);
-	}
+	Game::GetSingleton().GetScriptModule()->Finalize(this);
 
 	Clear();
-
-}
-
-void GameObject::AddListener(GameObjectListener * listener)
-{
-	m_listeners.push_back(listener);
-}
-
-void GameObject::RemoveListener(GameObjectListener * listener)
-{
-
-	std::remove(m_listeners.begin(), m_listeners.end(), listener);
 
 }

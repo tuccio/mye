@@ -177,15 +177,15 @@ namespace mye
 		}
 
 		__MYE_ALGORITHMS_LOOSEOCTREE_TEMPLATE_DECLARATION
-		__MYE_ALGORITHMS_INLINE bool __MYE_ALGORITHMS_LOOSEOCTREE_TYPE::Pick(const mye::math::Ray & ray, Object & result)
+		__MYE_ALGORITHMS_INLINE bool __MYE_ALGORITHMS_LOOSEOCTREE_TYPE::Pick(const mye::math::Ray & ray, Object & result, mye::math::Real & t)
 		{
 
 			AABB rootAABB = AABB::FromCenterHalfExtents(m_center, m_halfextent * 2);
 
 			Object * object = nullptr;
-			mye::math::Real distance = mye::math::Infinity();
+			t = mye::math::Infinity();
 
-			__Pick(__MYE_ALGORITHMS_LOOSEOCTREE_ROOT_INDEX, rootAABB, ray, distance, object);
+			__Pick(__MYE_ALGORITHMS_LOOSEOCTREE_ROOT_INDEX, rootAABB, ray, t, object);
 
 			if (object != nullptr)
 			{
@@ -316,7 +316,10 @@ namespace mye
 			MortonCode centerLocation = MortonEncode3(octreeCenterCoordinates.x(), octreeCenterCoordinates.y(), octreeCenterCoordinates.z());
 
 			// Build the octant location code with the sentinel value
-			MortonCode location = (centerLocation | (1 << (3 * m_maxdepth))) >> (3 * (m_maxdepth - depth));
+
+			MortonCode sentinel               = 1ULL << (3L * m_maxdepth);
+			MortonCode centerLocationSentinel = centerLocation | sentinel;
+			MortonCode location               = centerLocationSentinel >> (3 * (m_maxdepth - depth));
 
 			return location;
 
@@ -396,10 +399,10 @@ namespace mye
 
 			using namespace mye::math;
 
-			if (Intersect(current, query))
-			{
+			auto it = m_nodes.find(currentLocation);
 
-				auto it = m_nodes.find(currentLocation);
+			if (it->second.occupancy > 0 && Intersect(current, query))
+			{
 
 				for (Object & o : it->second.objects)
 				{

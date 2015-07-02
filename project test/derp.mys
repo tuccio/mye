@@ -1,4 +1,4 @@
-<scene module="octree" size="1024" center="0 0 0" maxdepth="32">
+<scene module="octree" size="1024" center="0 0 0" maxdepth="16">
 <!--
 	<gameobject name="sphere" entity="Sphere">
 		<render>

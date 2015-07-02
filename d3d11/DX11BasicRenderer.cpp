@@ -129,7 +129,7 @@ void DX11BasicRenderer::Render(ID3D11RenderTargetView *target)
 		m_basicVS->Use();
 		m_basicPS->Use();
 
-		GameObjectsList visibleObjects = scene->GetVisibleObjects();
+		GameObjectsList visibleObjects = scene->GetVisibleObjects(*camera);
 
 		Matrix4 view       = camera->GetViewMatrix();
 		Matrix4 projection = camera->GetProjectionMatrix();

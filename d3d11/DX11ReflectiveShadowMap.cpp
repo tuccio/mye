@@ -229,7 +229,8 @@ void DX11ReflectiveShadowMap::RenderDirectional(Light * light)
 	
 	m_lightSpaceTransform = lightProjection * lightView;
 
-	auto objects = scene->GetVisibleObjects(m_lightSpaceTransform);
+	// TODO: Get light frustum and process only visible objects
+	auto objects = scene->GetObjectsList();
 
 	ID3D11RenderTargetView * renderTargets[] =
 	{

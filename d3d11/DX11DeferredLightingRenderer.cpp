@@ -221,7 +221,7 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 	if (camera)
 	{
 
-		auto visibleObjects = scene->GetVisibleObjects();
+		auto visibleObjects = scene->GetVisibleObjects(*camera);
 
 		Matrix4 view       = camera->GetViewMatrix();
 		Matrix4 projection = camera->GetProjectionMatrix();
@@ -393,6 +393,9 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 			quadBuffer.Unbind();
 
+			m_gbuffer0.Unbind();
+			m_gbuffer1.Unbind();
+
 			m_rsm.GetDepthShaderResource().Unbind();
 			//m_rsm.GetVSMShaderResource().Unbind();
 
@@ -401,9 +404,6 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 		matrixBuffer.Destroy();
 
 		quadBuffer.Destroy();
-
-		m_gbuffer0.Unbind();
-		m_gbuffer1.Unbind();
 
 		/* Final pass */
 

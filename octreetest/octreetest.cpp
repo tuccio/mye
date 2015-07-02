@@ -570,8 +570,9 @@ void ColorPicked(int x, int y)
 	std::cout << std::endl;
 
 	Ball * b;
-	
-	if (g_octree.Pick(ray, b))
+	Real t;
+
+	if (g_octree.Pick(ray, b, t))
 	{
 		b->color = Vector4(1, 0, 0, 1);
 	}

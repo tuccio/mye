@@ -11,7 +11,7 @@
 #include "register_slots.hlsli"
 #include "renderer_configuration.hlsli"
 
-#define MYE_SHADOW_MAPPING_PCF
+//#define MYE_SHADOW_MAPPING_PCF
 
 cbuffer cbLightSpace : register(__MYE_DX11_BUFFER_SLOT_LIGHTSPACETRANSFORM)
 {

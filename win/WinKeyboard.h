@@ -1,7 +1,6 @@
 #pragma once
 
 #include <mye/core/Keyboard.h>
-#include <mye/core/Singleton.h>
 
 #include <Windows.h>
 
@@ -12,8 +11,7 @@ namespace mye
 	{
 
 		class WinKeyboard :
-			public mye::core::Keyboard,
-			public mye::core::Singleton<WinKeyboard>
+			public mye::core::Keyboard
 		{
 
 		public:

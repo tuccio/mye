@@ -11,12 +11,14 @@
 #include "GameObjectsManager.h"
 #include "INamedObject.h"
 #include "Time.h"
+#include "EventManager.h"
 
 #include "PoolAllocator.h"
 
 #include "String.h"
 
 #include <mye/math/Geometry.h>
+
 
 namespace mye
 {
@@ -42,9 +44,6 @@ namespace mye
 			GameObject(const String &name);
 
 			~GameObject(void);
-
-			void AddListener(GameObjectListener * listener);
-			void RemoveListener(GameObjectListener * listener);
 
 			Component * AddComponent(const Component & component);
 			Component * AddComponent(Component * component);
@@ -81,32 +80,105 @@ namespace mye
 
 			void OnDestruction(void);
 			
+			TransformComponent   m_transform;
+
 			ComponentsList       m_components;
 
 			GameObjectHandle     m_handle;
 			GameObjectsManager * m_owner;
 
-			TransformComponent   m_transform;
 			BehaviourComponent * m_behaviour;
 
 			String m_entity;
-			std::list<GameObjectListener*> m_listeners;
 
 			bool m_deleteFlag : 1;
 
 
 		};
 
-		class GameObjectListener
+		struct GameObjectEventCreate :
+			IEvent
 		{
 
-		public:
+			GameObjectEventCreate(GameObject * object) :
+				IEvent(EventType::GAME_OBJECT_CREATE),
+				object(object) { }
 
-			virtual void OnGameObjectCreation(GameObject * gameObject) { };
-			virtual void OnGameObjectDestruction(GameObject * gameObject) { };
+			GameObject * object;
 
-			virtual void OnComponentAddition(GameObject * gameObject, Component * component) { };
-			virtual void OnComponentRemoval(GameObject  * gameObject, Component * component) { };
+		};
+
+		struct GameObjectEventDestroy :
+			IEvent
+		{
+
+			GameObjectEventDestroy(GameObject * object) :
+				IEvent(EventType::GAME_OBJECT_DESTROY),
+				object(object) { }
+
+			GameObject * object;
+
+		};
+
+		struct __MYE_ALIGNED(16) GameObjectEventMove :
+			IEvent
+		{
+
+			__MYE_DECLARE_ALIGNED_16
+
+			GameObjectEventMove(GameObject * object,
+			                    const mye::math::Matrix4 & from,
+			                    const mye::math::Matrix4 & to) :
+				IEvent(EventType::GAME_OBJECT_MOVE),
+				object(object),
+				from(from),
+				to(to) { }
+
+			mye::math::Matrix4 from;
+			mye::math::Matrix4 to;
+
+			GameObject * object;
+
+
+		};
+
+		struct GameObjectEventFree :
+			IEvent
+		{
+
+			GameObjectEventFree(GameObject * object) :
+				IEvent(EventType::GAME_OBJECT_FREE),
+				object(object) { }
+
+			GameObject * object;
+
+		};
+
+		struct GameObjectEventAddComponent :
+			IEvent
+		{
+
+			GameObjectEventAddComponent(GameObject * object, Component * component) :
+				IEvent(EventType::GAME_OBJECT_ADD_COMPONENT),
+				object(object),
+				component(component) { }
+
+			GameObject * object;
+			Component  * component;
+
+		};
+
+		struct GameObjectEventRemoveComponent :
+			IEvent
+		{
+
+			GameObjectEventRemoveComponent(GameObject * object, Component * component) :
+				IEvent(EventType::GAME_OBJECT_REMOVE_COMPONENT),
+				object(object),
+				component(component) { }
+
+			GameObject * object;
+			Component  * component;
 
 		};
 

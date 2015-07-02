@@ -57,7 +57,7 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 	BulletCollisionShapeManager bulletCollisionShape;
 	ImageManager                imageManager;
 
-	MouseKeyboardInput input;
+	NativeWindowsInput input;
 	GameObjectsModule  gameobjects;
 	OctreeSceneModule  scene;
 	PhysicsModule      physics;

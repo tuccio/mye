@@ -3,8 +3,11 @@
 #include <mye/math/Math.h>
 #include <vector>
 
+#include "AlignedAllocator.h"
+#include "Singleton.h"
 #include "Time.h"
 #include "VirtualKeys.h"
+#include "EventManager.h"
 
 namespace mye
 {
@@ -12,15 +15,14 @@ namespace mye
 	namespace core
 	{
 
-		class MouseListener;
-
 		struct MousePressedKey
 		{
 			MouseVK key;
 			StopWatch  timer;
 		};
 
-		class Mouse
+		class Mouse :
+			public Singleton<Mouse>
 		{
 
 		public:
@@ -33,24 +35,20 @@ namespace mye
 
 			inline bool IsPressed(MouseVK key) const;
 
-			inline void Move(const mye::math::Vector2 &position);
+			inline void Move(const mye::math::Vector2 & position);
 			inline mye::math::Vector2 GetPosition(void) const;
 
 			inline mye::math::Vector2 GetDelta(void) const;
 			inline void ResetDelta(void);
 
-			inline int GetWheelDelta(void) const;
+			inline int  GetWheelDelta(void) const;
 			inline void SetWheelDelta(int wheelDelta);
-
-			void AddListener(MouseListener * listener);
-			void RemoveListener(MouseListener * listener);
 
 			void NotifyHeldKeys(void);
 
 		protected:
 
-			std::vector<MouseListener*> m_listeners;
-			std::vector<MousePressedKey>        m_pressedKeys;
+			std::vector<MousePressedKey> m_pressedKeys;
 
 		private:
 
@@ -65,17 +63,60 @@ namespace mye
 
 		};
 
-		class MouseListener
+		struct MouseEventKeyPress :
+			IEvent
 		{
 
-		public:
+			MouseEventKeyPress(MouseVK key) :
+				IEvent(EventType::MOUSE_KEY_PRESS),
+				key(key) { }
 
-			virtual void OnMouseKeyPress(MouseVK key) { }
-			virtual void OnMouseKeyRelease(MouseVK key, FloatSeconds time) { }
-			virtual void OnMouseKeyHold(MouseVK key, FloatSeconds time) { }
+			MouseVK key;
 
-			virtual void OnMouseMove(const mye::math::Vector2 & from,
-									 const mye::math::Vector2 & to) { }
+		};
+
+		struct MouseEventKeyRelease :
+			IEvent
+		{
+
+			MouseEventKeyRelease(MouseVK key, FloatSeconds duration) :
+				IEvent(EventType::MOUSE_KEY_RELEASE),
+				key(key),
+				duration(duration) { }
+
+			MouseVK      key;
+			FloatSeconds duration;
+
+		};
+
+		struct MouseEventKeyHold :
+			IEvent
+		{
+
+			MouseEventKeyHold(MouseVK key, FloatSeconds duration) :
+				IEvent(EventType::MOUSE_KEY_HOLD),
+				key(key),
+				duration(duration) { }
+
+			MouseVK      key;
+			FloatSeconds duration;
+
+		};
+
+		struct __MYE_ALIGNED(16) MouseEventMove :
+			IEvent
+		{
+
+			__MYE_DECLARE_ALIGNED_16
+
+			MouseEventMove(const mye::math::Vector2 & from,
+			               const mye::math::Vector2 & to) :
+			    IEvent(EventType::MOUSE_MOVE),
+			    from(from),
+			    to(to) { }
+
+			mye::math::Vector2 from;
+			mye::math::Vector2 to;
 
 		};
 

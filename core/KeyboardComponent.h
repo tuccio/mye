@@ -3,6 +3,7 @@
 #include "Component.h"
 
 #include "InputModule.h"
+#include "EventManager.h"
 
 namespace mye
 {
@@ -11,7 +12,7 @@ namespace mye
 	{
 		class KeyboardComponent :
 			public Component,
-			public KeyboardListener
+			public IEventListener
 		{
 
 		public:
@@ -24,9 +25,7 @@ namespace mye
 			void OnAttach(GameObject * gameObject);
 			void OnDetach(void);
 
-			void OnKeyboardKeyPress(KeyboardVK key);
-			void OnKeyboardKeyRelease(KeyboardVK key, FloatSeconds time);
-			void OnKeyboardKeyHold(KeyboardVK key, FloatSeconds time);
+			void OnEvent(const IEvent * e);
 
 		};
 

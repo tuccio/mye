@@ -143,17 +143,22 @@ namespace mye
 		AABBTempl<T> AABBTempl<T>::TransformAffine(const Matrix<T, 4, 4> & t) const
 		{
 
-			Matrix<T, 3, 1> center = GetCenter();
-			Matrix<T, 3, 1> halfExtents = GetHalfExtents();
+			auto corners = GetCorners();
 
-			Matrix<T, 3, 1> TransformtedCenter = 
-				t * center;
+			Matrix<T, 4, 1> aabbMin(Infinity());
+			Matrix<T, 4, 1> aabbMax(-Infinity());
 
-			Matrix<T, 3, 1> TransformtedHalfExtents = 
-				(Matrix<T, 3, 3>(t) * halfExtents).CwiseAbs();
+			for (auto & corner : corners)
+			{
 
-			return FromCenterHalfExtents(TransformtedCenter,
-				TransformtedHalfExtents);
+				Matrix<T, 4, 1> transformedCorner = t * Matrix<T, 4, 1>(corner, 1);
+
+				aabbMin = aabbMin.CwiseMin(transformedCorner);
+				aabbMax = aabbMax.CwiseMax(transformedCorner);
+
+			}
+
+			return AABB::FromMinMax(aabbMin.xyz(), aabbMax.xyz());
 
 		}
 
@@ -162,11 +167,11 @@ namespace mye
 		{
 
 			return x.x() <= m_max.x() &&
-				x.y() <= m_max.y() &&
-				x.z() <= m_max.z() &&
-				x.x() >= m_min.x() &&
-				x.y() >= m_min.y() &&
-				x.z() >= m_min.z();
+			       x.y() <= m_max.y() &&
+			       x.z() <= m_max.z() &&
+			       x.x() >= m_min.x() &&
+			       x.y() >= m_min.y() &&
+			       x.z() >= m_min.z();
 
 		}
 
@@ -175,11 +180,11 @@ namespace mye
 		{
 
 			return x.x() < m_max.x() &&
-				x.y() < m_max.y() &&
-				x.z() < m_max.z() &&
-				x.x() > m_min.x() &&
-				x.y() > m_min.y() &&
-				x.z() > m_min.z();
+			       x.y() < m_max.y() &&
+			       x.z() < m_max.z() &&
+			       x.x() > m_min.x() &&
+			       x.y() > m_min.y() &&
+			       x.z() > m_min.z();
 
 		}
 

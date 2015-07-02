@@ -24,7 +24,7 @@ namespace mye
 		inline T & Singleton<T>::GetSingleton(void)
 		{
 			assert(m_singleton && "Singleton does not exist");
-			return *m_singleton;
+			return * m_singleton;
 		}
 
 		template <typename T>

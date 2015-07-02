@@ -21,7 +21,6 @@
 
 #define MYE_LUA_SCRIPT_EXTENSION ".lua"
 
-
 namespace mye
 {
 
@@ -41,34 +40,37 @@ namespace mye
 			~LuaModule(void);
 
 			bool Init(void);
-			void ShutDown(void);
+			void Shutdown(void);
 
 			void Preupdate(mye::core::FloatSeconds dt);
 
-			void Init(mye::core::GameObjectHandle hObj);
-			void Finalize(mye::core::GameObjectHandle hObj);
+			void Init(mye::core::GameObject * object);
+			void Finalize(mye::core::GameObject * object);
 
-			void Update(mye::core::GameObjectsModule::Iterator it);
+			void Update(void);
+
+			void OnEvent(mye::core::GameObject * object, const mye::core::IEvent * e);
 
 			lua_State * GetLuaState(void);
 
 			const mye::core::String & GetScriptDirectory(void) const;
-			mye::core::String GetLastError(void) const;
+			mye::core::String         GetLastError(void) const;
 
-			BehaviourScriptPointer      LoadBehaviour(const mye::core::String &name);
-			ProcedureScriptPointer      LoadProcedure(const mye::core::String &name);
-			ScriptResourceLoaderPointer LoadScriptResourceLoader(const mye::core::String &name);
+			BehaviourScriptPointer      LoadBehaviour(const mye::core::String & name);
+			ProcedureScriptPointer      LoadProcedure(const mye::core::String & name);
+			ScriptResourceLoaderPointer LoadScriptResourceLoader(const mye::core::String & name);
 
-			bool RunFile(const mye::core::String &file);
-			bool RunString(const mye::core::String &code);
+			bool RunFile(const mye::core::String & file);
+			bool RunString(const mye::core::String & code);
+
 
 		protected:
 
-			mye::core::Script * CreateImpl(const mye::core::String &name,
-				mye::core::ManualResourceLoader *manual,
-				const mye::core::Parameters &params);
+			mye::core::Script * CreateImpl(const mye::core::String & name,
+			                               mye::core::ManualResourceLoader * manual,
+			                               const mye::core::Parameters & params);
 
-			void FreeImpl(mye::core::Resource* resource);
+			void FreeImpl(mye::core::Resource * resource);
 
 		private:
 

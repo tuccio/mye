@@ -16,8 +16,8 @@ namespace mye
 
 			~Singleton(void);
 
-			inline static T& GetSingleton(void);
-			inline static T* GetSingletonPointer(void);
+			inline static T & GetSingleton(void);
+			inline static T * GetSingletonPointer(void);
 
 		protected:
 
@@ -25,7 +25,7 @@ namespace mye
 
 		private:
 
-			static T *m_singleton;
+			static T * m_singleton;
 
 		};
 

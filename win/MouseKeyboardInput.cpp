@@ -4,63 +4,56 @@
 using namespace mye::win;
 using namespace mye::core;
 
-MouseKeyboardInput::MouseKeyboardInput(void)
+NativeWindowsInput::NativeWindowsInput(void)
 {
 }
 
 
-MouseKeyboardInput::~MouseKeyboardInput(void)
+NativeWindowsInput::~NativeWindowsInput(void)
 {
 }
 
-bool MouseKeyboardInput::Init(void)
+bool NativeWindowsInput::Init(void)
 {
-
-	// 	IWindow *window = Game::GetSingleton().GetGraphicsModule()->GetWindow();
-	// 	window->AttachKeyboard(&m_keyboard);
-	// 	window->AttachMouse(&m_mouse);
-
 	return m_keyboard.Hook() && m_mouse.Hook();
 }
 
-void MouseKeyboardInput::ShutDown(void)
+void NativeWindowsInput::ShutDown(void)
 {
-// 	IWindow *window = Game::GetSingleton().GetGraphicsModule()->GetWindow();
-// 	window->AttachKeyboard(nullptr);
-// 	window->AttachMouse(nullptr);
 	m_keyboard.Unhook();
+	m_mouse.Unhook();
 }
 
-bool MouseKeyboardInput::HasKeyboard(void) const
+bool NativeWindowsInput::HasKeyboard(void) const
 {
 	return true;
 }
 
-WinKeyboard* MouseKeyboardInput::GetKeyboard(void)
+WinKeyboard * NativeWindowsInput::GetKeyboard(void)
 {
 	return &m_keyboard;
 }
 
-const WinKeyboard* MouseKeyboardInput::GetKeyboard(void) const
+const WinKeyboard * NativeWindowsInput::GetKeyboard(void) const
 {
 	return &m_keyboard;
 }
 
-bool MouseKeyboardInput::HasMouse(void) const
+bool NativeWindowsInput::HasMouse(void) const
 {
 	return true;
 }
 
-WinMouse* MouseKeyboardInput::GetMouse(void)
+WinMouse * NativeWindowsInput::GetMouse(void)
 {
 	return &m_mouse;
 }
-const Mouse* MouseKeyboardInput::GetMouse(void) const
+const Mouse * NativeWindowsInput::GetMouse(void) const
 {
 	return &m_mouse;
 }
 
-void MouseKeyboardInput::Preupdate(void)
+void NativeWindowsInput::Preupdate(void)
 {
 
 	InputModule::Preupdate();

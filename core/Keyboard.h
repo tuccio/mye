@@ -1,7 +1,10 @@
 #pragma once
 
+#include "EventManager.h"
+#include "Singleton.h"
 #include "Time.h"
 #include "VirtualKeys.h"
+
 #include <vector>
 
 namespace mye
@@ -10,15 +13,14 @@ namespace mye
 	namespace core
 	{
 
-		class KeyboardListener;
-
 		struct KeyboardPressedKey
 		{
 			KeyboardVK key;
 			StopWatch  timer;
 		};
 
-		class Keyboard
+		class Keyboard :
+			public Singleton<Keyboard>
 		{
 
 		public:
@@ -33,15 +35,11 @@ namespace mye
 
 			bool Hook(void);
 
-			void AddListener(KeyboardListener * listener);
-			void RemoveListener(KeyboardListener * listener);
-
 			void NotifyHeldKeys(void);
 
 		protected:
 
-			std::vector<KeyboardListener*> m_listeners;
-			std::vector<KeyboardPressedKey>        m_pressedKeys;
+			std::vector<KeyboardPressedKey> m_pressedKeys;
 
 		private:
 
@@ -50,14 +48,42 @@ namespace mye
 
 		};
 
-		class KeyboardListener
+		struct KeyboardEventKeyPress :
+			IEvent
 		{
 
-		public:
+			KeyboardEventKeyPress(KeyboardVK key) :
+				IEvent(EventType::KEYBOARD_KEY_PRESS),
+				key(key) { }
 
-			virtual void OnKeyboardKeyPress(KeyboardVK key);
-			virtual void OnKeyboardKeyRelease(KeyboardVK key, FloatSeconds time);
-			virtual void OnKeyboardKeyHold(KeyboardVK key, FloatSeconds time);
+			KeyboardVK key;
+
+		};
+
+		struct KeyboardEventKeyRelease :
+			IEvent
+		{
+
+			KeyboardEventKeyRelease(KeyboardVK key, FloatSeconds duration) :
+				IEvent(EventType::KEYBOARD_KEY_RELEASE),
+				key(key) { }
+
+			KeyboardVK      key;
+			FloatSeconds duration;
+
+		};
+
+		struct KeyboardEventKeyHold :
+			IEvent
+		{
+
+			KeyboardEventKeyHold(KeyboardVK key, FloatSeconds duration) :
+				IEvent(EventType::KEYBOARD_KEY_HOLD),
+				key(key),
+				duration(duration){ }
+
+			KeyboardVK      key;
+			FloatSeconds duration;
 
 		};
 

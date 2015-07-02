@@ -11,32 +11,34 @@ namespace mye
 	namespace win
 	{
 
-		class MouseKeyboardInput :
+		class NativeWindowsInput :
 			public mye::core::InputModule
 		{
 
 		public:
 
-			MouseKeyboardInput(void);
-			~MouseKeyboardInput(void);
+			NativeWindowsInput(void);
+			~NativeWindowsInput(void);
 
 			bool Init(void);
 			void ShutDown(void);
 
 			bool HasKeyboard(void) const;
-			WinKeyboard* GetKeyboard(void);
-			const WinKeyboard* GetKeyboard(void) const;
+
+			WinKeyboard *       GetKeyboard(void);
+			const WinKeyboard * GetKeyboard(void) const;
 
 			bool HasMouse(void) const;
-			WinMouse* GetMouse(void);
-			const mye::core::Mouse* GetMouse(void) const;
+
+			WinMouse *               GetMouse(void);
+			const mye::core::Mouse * GetMouse(void) const;
 
 			void Preupdate(void);
 
 		private:
 
 			WinKeyboard m_keyboard;
-			WinMouse m_mouse;
+			WinMouse    m_mouse;
 
 		};
 

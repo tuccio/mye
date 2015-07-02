@@ -17,7 +17,7 @@ namespace mye
 			__MYE_MATH_INLINE Matrix(void);
 			__MYE_MATH_INLINE Matrix(T v);
 			__MYE_MATH_INLINE Matrix(T x, T y, T z);
-			__MYE_MATH_INLINE Matrix(const Matrix<T, 2, 1> &v, T z);
+			__MYE_MATH_INLINE Matrix(const Matrix<T, 2, 1> & v, T z);
 
 			__MYE_MATH_INLINE T &       operator[] (int i);
 			__MYE_MATH_INLINE const T & operator[] (int i) const;

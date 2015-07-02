@@ -28,7 +28,7 @@ namespace mye
 				                                        VolumeSide & side)
 				{
 
-					side = VolumeSide::OUTSIDE;
+					side = VolumeSide::INSIDE;
 
 					for (int i = 0; i < 6; i++)
 					{
@@ -78,18 +78,18 @@ namespace mye
 
 						if (normal.Dot(n) + d > 0)
 						{
-							side = VolumeSide::INSIDE;
+							side = VolumeSide::OUTSIDE;
+							return false;
 						}
 
 						if (normal.Dot(p) + d >= 0)
 						{
 							side = VolumeSide::INTERSECT;
-							return true; // Intersection
 						}
 
 					}
 
-					return false;
+					return true;
 				}
 
 			};

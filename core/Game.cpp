@@ -16,14 +16,15 @@
 using namespace mye::core;
 using namespace mye::math;
 
-Game::Game(
-	       InputModule       * input,
-		   GameObjectsModule * gameobjects,
-		   SceneModule       * scene,
-		   PhysicsModule     * physics,
-		   GraphicsModule    * graphics,
-		   AudioModule       * audio,
-		   ScriptModule      * script) :
+#define __MYE_GAME_TRY_INIT_MODULE(x) if (!(x)->IsInitialized() && !(x)->Init()) return false;
+
+Game::Game(InputModule       * input,
+           GameObjectsModule * gameobjects,
+           SceneModule       * scene,
+           PhysicsModule     * physics,
+           GraphicsModule    * graphics,
+           AudioModule       * audio,
+           ScriptModule      * script) :
 	m_input(input),
 	m_gameobjects(gameobjects),
 	m_scene(scene),
@@ -42,17 +43,15 @@ Game::~Game(void)
 bool Game::Init(void)
 {
 
-#define __MYE_TRY_INIT_MODULE(x) if (!(x)->IsInitialized() && !(x)->Init()) return false;
+	m_eventManager = new EventManager;
 
-	__MYE_TRY_INIT_MODULE(m_gameobjects)
-	__MYE_TRY_INIT_MODULE(m_scene)
-	__MYE_TRY_INIT_MODULE(m_graphics)
-	__MYE_TRY_INIT_MODULE(m_physics)
-	__MYE_TRY_INIT_MODULE(m_audio)
-	__MYE_TRY_INIT_MODULE(m_input)
-	__MYE_TRY_INIT_MODULE(m_script)
-
-#undef __MYE_TRY_INIT_MODULE
+	__MYE_GAME_TRY_INIT_MODULE(m_gameobjects)
+	__MYE_GAME_TRY_INIT_MODULE(m_scene)
+	__MYE_GAME_TRY_INIT_MODULE(m_graphics)
+	__MYE_GAME_TRY_INIT_MODULE(m_physics)
+	__MYE_GAME_TRY_INIT_MODULE(m_audio)
+	__MYE_GAME_TRY_INIT_MODULE(m_input)
+	__MYE_GAME_TRY_INIT_MODULE(m_script)
 
 	return true;
 
@@ -497,6 +496,20 @@ void Game::ImportScene(const String & file, std::list<GameObject*> * allocatedOb
 
 					gameObject->AddComponent(RenderComponent());
 
+					rapidxml::xml_node<> * meshNode = render->first_node("mesh");
+
+					if (meshNode)
+					{
+
+						rapidxml::xml_attribute<> * modelName = meshNode->first_attribute("name");
+
+						MeshPointer mesh = ResourceTypeManager::GetSingleton().
+							CreateResource<Mesh>("Mesh", modelName->value());
+
+						gameObject->GetRenderComponent()->SetMesh(mesh);
+
+					}
+
 					rapidxml::xml_node<> * AABBnode = render->first_node("aabb");
 
 					if (AABBnode)
@@ -510,19 +523,10 @@ void Game::ImportScene(const String & file, std::list<GameObject*> * allocatedOb
 							ParseVector3<mye::math::Real>(AABBmax->value())));
 
 					}
-
-					rapidxml::xml_node<> * meshNode = render->first_node("mesh");
-
-					if (meshNode)
+					else if (meshNode)
 					{
-
-						rapidxml::xml_attribute<> * modelName = meshNode->first_attribute("name");
-
-						MeshPointer mesh = ResourceTypeManager::GetSingleton().
-							CreateResource<Mesh>("Mesh", modelName->value());
-
-						gameObject->GetRenderComponent()->SetMesh(mesh);
-
+						auto minMax = gameObject->GetRenderComponent()->GetMesh()->GetMinMaxVertices();
+						gameObject->GetRenderComponent()->SetBounds(AABB::FromMinMax(minMax.first, minMax.second));
 					}
 
 					rapidxml::xml_node<> * materialNode = render->first_node("material");
@@ -615,7 +619,10 @@ void Game::ImportScene(const String & file, std::list<GameObject*> * allocatedOb
 
 				}
 
-				m_scene->AddGameObject(gameObject->GetHandle());
+				if (gameObject->GetRenderComponent())
+				{
+					m_scene->AddGameObject(gameObject->GetHandle());
+				}
 
 				if (allocatedObjects)
 				{

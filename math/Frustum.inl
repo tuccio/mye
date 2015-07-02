@@ -18,13 +18,13 @@ namespace mye
 
 		template <typename T>
 		FrustumTempl<T>::FrustumTempl(const Matrix<T, 3, 1> & origin,
-			const Matrix<T, 3, 1> & forward,
-			const Matrix<T, 3, 1> & up,
-			const Matrix<T, 3, 1> & right,
-			T nearPlaneDistance,
-			T farPlaneDistance,
-			T fovX,
-			T fovY)
+		                              const Matrix<T, 3, 1> & forward,
+		                              const Matrix<T, 3, 1> & up,
+		                              const Matrix<T, 3, 1> & right,
+		                              T nearPlaneDistance,
+		                              T farPlaneDistance,
+		                              T fovX,
+		                              T fovY)
 		{
 
 			/* Construct planes */

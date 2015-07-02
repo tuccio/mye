@@ -5,13 +5,13 @@ using namespace std;
 using namespace mye::core;
 using namespace mye::win;
 
-WinGame::WinGame(InputModule *input,
-	GameObjectsModule *gameobjects,
-	SceneModule *scene,
-	PhysicsModule *physics,
-	GraphicsModule *graphics,
-	AudioModule *audio,
-	ScriptModule *script) :
+WinGame::WinGame(InputModule       * input,
+                 GameObjectsModule * gameobjects,
+                 SceneModule       * scene,
+                 PhysicsModule     * physics,
+                 GraphicsModule    * graphics,
+                 AudioModule       * audio,
+                 ScriptModule      * script) :
 Game(input,
 	gameobjects,
 	scene,
@@ -53,6 +53,8 @@ void WinGame::Run(void)
 			DispatchMessage(&msg);
 		}
 
+		m_eventManager->Update();
+
 		FloatSeconds dt(m_timer.Lap());
 
 		m_script->Preupdate(dt);
@@ -62,10 +64,7 @@ void WinGame::Run(void)
 		/*m_gameobjects->Update()
 		m_gameobjects->FinalizeUpdate();*/
 
-		for (auto it = m_gameobjects->begin(); it != m_gameobjects->end(); it++)
-		{
-			m_script->Update(it);
-		}
+		m_script->Update();
 
 		m_physics->Update(dt);
 		//m_scene->Update();

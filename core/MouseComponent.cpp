@@ -22,67 +22,35 @@ MouseComponent * MouseComponent::Clone(void) const
 
 void MouseComponent::OnAttach(GameObject * gameObject)
 {
+	
 	Component::OnAttach(gameObject);
-	Game::GetSingleton().GetInputModule()->GetMouse()->AddListener(static_cast<MouseListener*>(this));
+	
+	MYE_EVENT_MANAGER_ADD_LISTENER(this,
+	                               EventType::MOUSE_KEY_PRESS,
+	                               EventType::MOUSE_KEY_RELEASE,
+	                               EventType::MOUSE_KEY_HOLD,
+	                               EventType::MOUSE_MOVE);
+
 }
 
 void MouseComponent::OnDetach(void)
 {
 	Component::OnDetach();
-	Game::GetSingleton().GetInputModule()->GetMouse()->RemoveListener(static_cast<MouseListener*>(this));
+
+	MYE_EVENT_MANAGER_REMOVE_LISTENER(this,
+	                                  EventType::MOUSE_KEY_PRESS,
+	                                  EventType::MOUSE_KEY_RELEASE,
+	                                  EventType::MOUSE_KEY_HOLD,
+	                                  EventType::MOUSE_MOVE);
+
 }
 
-void MouseComponent::OnMouseKeyPress(MouseVK key)
+void MouseComponent::OnEvent(const IEvent * e)
 {
 
 	if (m_owner)
 	{
-		ScriptMessage msg = { SCRIPT_MESSAGE_MOUSE_PRESSED, static_cast<unsigned int>(key), m_owner->GetHandle() };
-		Game::GetSingleton().GetScriptModule()->QueueMessage(msg);
-	}
-
-}
-
-void MouseComponent::OnMouseKeyRelease(MouseVK key, FloatSeconds time)
-{
-
-	if (m_owner)
-	{
-		ScriptMessage msg = { SCRIPT_MESSAGE_MOUSE_RELEASED, static_cast<unsigned int>(key), m_owner->GetHandle() };
-		msg.data.f = time;
-		Game::GetSingleton().GetScriptModule()->QueueMessage(msg);
-	}
-
-}
-
-void MouseComponent::OnMouseKeyHold(MouseVK key, FloatSeconds time)
-{
-
-	if (m_owner)
-	{
-		ScriptMessage msg = { SCRIPT_MESSAGE_MOUSE_HELD, static_cast<unsigned int>(key), m_owner->GetHandle() };
-		msg.data.f = time;
-		Game::GetSingleton().GetScriptModule()->QueueMessage(msg);
-	}
-
-}
-
-void MouseComponent::OnMouseMove(const mye::math::Vector2 & from, const mye::math::Vector2 & to)
-{
-
-	if (m_owner)
-	{
-
-		ScriptMessage msg = { SCRIPT_MESSAGE_MOUSE_MOVED, 0, m_owner->GetHandle() };
-
-		msg.data.f4[0] = from.x();
-		msg.data.f4[1] = from.y();
-
-		msg.data.f4[2] = to.x();
-		msg.data.f4[3] = to.y();
-
-		Game::GetSingleton().GetScriptModule()->QueueMessage(msg);
-
+		Game::GetSingleton().GetScriptModule()->OnEvent(m_owner, e);
 	}
 
 }

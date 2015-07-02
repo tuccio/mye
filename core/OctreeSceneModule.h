@@ -1,19 +1,73 @@
 #pragma once
 
+#include "Camera.h"
+#include "LightComponent.h"
 #include "SceneModule.h"
 #include "GameObject.h"
 
 #include <list>
 
 #include <mye/math/Math.h>
-
-#define __MYE_NO_OCTREE
+#include <mye/algorithms/LooseOctree.h>
 
 namespace mye
 {
 
 	namespace core
 	{
+
+		namespace detail
+		{
+
+			struct GameObjectAABBBounds
+			{
+
+				inline mye::math::AABB operator() (GameObject * object)
+				{
+					return object->GetAABB();
+				}
+
+			};
+
+			struct LightAABBBounds
+			{
+
+				inline mye::math::AABB operator() (GameObject * object)
+				{
+					
+					using namespace mye::math;
+
+					LightComponent * light = object->GetLightComponent();
+
+					AABB aabb;
+
+					switch (light->GetType())
+					{
+
+					case LightType::DIRECTIONAL:
+						aabb = AABB::FromCenterHalfExtents(Vector3(worldCenter[0], worldCenter[1], worldCenter[2]), Vector3(worldHalfSize));
+						break;
+
+					case LightType::POINTLIGHT:
+						aabb = AABB::FromCenterHalfExtents(light->GetPosition(), Vector3(light->GetRange()));
+						break;
+
+					case LightType::SPOTLIGHT:
+						assert(false && "Not implemented yet");
+						break;
+
+					}
+
+					return aabb;
+
+				}
+
+				float worldCenter[3];
+				float worldHalfSize;
+
+			};
+
+		}
 
 		class OctreeSceneModule :
 			public SceneModule
@@ -23,12 +77,16 @@ namespace mye
 
 			OctreeSceneModule(const mye::math::Vector3 & center = mye::math::Vector3(0),
 							  float size = 1024.0f,
-							  unsigned int maxdepth = 32,
-							  unsigned int looseness = 2);
+							  unsigned int maxdepth = 16);
 
 			~OctreeSceneModule(void);
 
-			GameObjectsList GetVisibleObjects(const mye::math::Matrix4 & viewProjection);
+			GameObjectsList GetVisibleObjects(const mye::math::Frustum & frustum);
+			GameObjectsList GetVisibleObjects(const mye::core::Camera & camera);
+			//GameObjectsList GetVisibleObjects(const mye::math::Matrix4 & viewProjection);
+
+			GameObjectsList GetVisibleLights(const mye::math::Frustum & frustum);
+			GameObjectsList GetVisibleLights(const mye::core::Camera & camera);
 
 			GameObjectsList GetObjectsList(void);
 
@@ -37,17 +95,19 @@ namespace mye
 
 			GameObjectRayIntersection Pick(const mye::math::Ray & ray);
 
-			void Reset(const mye::math::Vector3 &center = mye::math::Vector3(0),
+			void Reset(const mye::math::Vector3 & center = mye::math::Vector3(0),
 					   float size = 1024.0f,
-					   unsigned int maxdepth = 32,
-					   unsigned int looseness = 2);
+					   unsigned int maxdepth = 16);
 
 		private:
 
-			void ApplyUpdates(void);
+			typedef mye::algorithms::LooseOctree<GameObject*, mye::math::AABB, detail::GameObjectAABBBounds> DynamicObjectsOctree;
+			typedef mye::algorithms::LooseOctree<GameObject*, mye::math::AABB, detail::LightAABBBounds>      LightsOctree;
 
-			std::list<GameObjectHandle>   m_objects;
-			std::vector<GameObjectHandle> m_nonRenderableObjects;
+			GameObjectsList m_objects;
+
+			DynamicObjectsOctree m_dynamicObjects;
+			LightsOctree         m_lights;
 
 		};
 

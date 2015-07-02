@@ -14,10 +14,7 @@ namespace mye
 
 				m_keys[key] = true;
 
-				for (auto listener : m_listeners)
-				{
-					listener->OnKeyboardKeyPress(key);
-				}
+				MYE_EVENT_MANAGER_ENQUEUE(KeyboardEventKeyPress, key);
 
 				KeyboardPressedKey pk;
 				pk.key = key;
@@ -40,14 +37,12 @@ namespace mye
 
 			if (it != m_pressedKeys.end())
 			{
+
 				FloatSeconds time = it->timer.GetElapsedTime() / 1000.0f;
 
-				m_pressedKeys.erase(it);
+				MYE_EVENT_MANAGER_ENQUEUE(KeyboardEventKeyRelease, key, time);
 
-				for (auto listener : m_listeners)
-				{
-					listener->OnKeyboardKeyRelease(key, time);
-				}
+				m_pressedKeys.erase(it);
 			}
 			
 

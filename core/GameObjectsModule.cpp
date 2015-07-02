@@ -4,10 +4,25 @@
 using namespace mye::core;
 using namespace mye::math;
 
+bool GameObjectsModule::Init(void)
+{
+	MYE_EVENT_MANAGER_ADD_LISTENER(this, EventType::GAME_OBJECT_FREE);
+	return true;
+}
+
+void GameObjectsModule::Shutdown(void)
+{
+	MYE_EVENT_MANAGER_REMOVE_LISTENER(this, EventType::GAME_OBJECT_FREE);
+}
+
 void GameObjectsModule::PostDestroy(GameObjectHandle hObj)
 {
-	m_destructionQueue.push_back(hObj);
-	Get(hObj)->m_deleteFlag = true;
+
+	GameObject * object = Get(hObj);
+
+	MYE_EVENT_MANAGER_ENQUEUE(GameObjectEventDestroy, object);
+	MYE_EVENT_MANAGER_ENQUEUE_NEXT_FRAME(GameObjectEventFree, object);
+
 }
 
 void GameObjectsModule::Update(void)
@@ -44,11 +59,28 @@ void GameObjectsModule::Update(void)
 void GameObjectsModule::FinalizeUpdate(void)
 {
 
-	for (GameObjectHandle hObj : m_destructionQueue)
+	/*for (GameObjectHandle hObj : m_destructionQueue)
 	{
 		Destroy(hObj);
 	}
 
-	m_destructionQueue.clear();
+	m_destructionQueue.clear();*/
+
+}
+
+void GameObjectsModule::OnEvent(const IEvent * e)
+{
+
+	switch (e->event)
+	{
+
+	case EventType::GAME_OBJECT_FREE:
+	{
+		const GameObjectEventFree * goEvent = static_cast<const GameObjectEventFree *>(e);
+		Destroy(goEvent->object->GetHandle());
+		break;
+	}
+
+	}
 
 }

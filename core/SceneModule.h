@@ -3,6 +3,7 @@
 #include "Module.h"
 #include "Camera.h"
 #include "GameObject.h"
+#include "EventManager.h"
 
 #include <list>
 
@@ -30,7 +31,7 @@ namespace mye
 
 		class SceneModule :
 			public Module,
-			public GameObjectListener
+			public IEventListener
 		{
 
 		public:
@@ -39,10 +40,14 @@ namespace mye
 
 			SceneModule(void);
 
-			GameObjectsList GetVisibleObjects(void);
-			GameObjectsList GetVisibleObjects(CameraType * camera);
+			bool Init(void);
+			void Shutdown(void);
 
-			virtual GameObjectsList GetVisibleObjects(const mye::math::Matrix4 & viewProjection);
+			virtual GameObjectsList GetVisibleObjects(const mye::math::Frustum & frustum) = 0;
+			virtual GameObjectsList GetVisibleObjects(const mye::core::Camera & camera) = 0;
+
+			virtual GameObjectsList GetVisibleLights(const mye::math::Frustum & frustum) = 0;
+			virtual GameObjectsList GetVisibleLights(const mye::core::Camera & camera) = 0;
 
 			virtual GameObjectsList GetObjectsList(void);
 
@@ -67,6 +72,8 @@ namespace mye
 
 			void OnComponentAddition (GameObject * go, Component * component);
 			void OnComponentRemoval  (GameObject * go, Component * component);
+
+			void OnEvent(const IEvent * e);
 
 		protected:
 

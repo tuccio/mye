@@ -9,19 +9,30 @@ SceneModule::SceneModule(void)
 	m_camera = nullptr;
 }
 
-GameObjectsList SceneModule::GetVisibleObjects(void)
+bool SceneModule::Init(void)
 {
-	return GetVisibleObjects(m_camera);
+
+	MYE_EVENT_MANAGER_ADD_LISTENER(this,
+	                               EventType::GAME_OBJECT_CREATE,
+	                               EventType::GAME_OBJECT_DESTROY,
+	                               EventType::GAME_OBJECT_MOVE,
+	                               EventType::GAME_OBJECT_ADD_COMPONENT,
+	                               EventType::GAME_OBJECT_REMOVE_COMPONENT);
+
+	return true;
+
 }
 
-GameObjectsList SceneModule::GetVisibleObjects(CameraType * camera)
+void SceneModule::Shutdown(void)
 {
-	return GetVisibleObjects(camera->GetProjectionMatrix() * camera->GetViewMatrix());
-}
 
-GameObjectsList SceneModule::GetVisibleObjects(const Matrix4 & viewProjection)
-{
-	return GameObjectsList();
+	MYE_EVENT_MANAGER_REMOVE_LISTENER(this,
+	                                  EventType::GAME_OBJECT_CREATE,
+	                                  EventType::GAME_OBJECT_DESTROY,
+	                                  EventType::GAME_OBJECT_MOVE,
+	                                  EventType::GAME_OBJECT_ADD_COMPONENT,
+	                                  EventType::GAME_OBJECT_REMOVE_COMPONENT);
+
 }
 
 GameObjectsList SceneModule::GetObjectsList(void)
@@ -48,8 +59,6 @@ void SceneModule::AddGameObject(const GameObjectHandle & hObj)
 
 	if (go)
 	{
-		
-		go->AddListener(this);
 
 		auto lc = go->GetLightComponent();
 		auto t2dc = go->GetText2DComponent();
@@ -75,8 +84,6 @@ void SceneModule::RemoveGameObject(const GameObjectHandle & hObj)
 
 	if (go)
 	{
-
-		go->RemoveListener(this);
 
 		auto lc = go->GetLightComponent();
 		auto t2dc = go->GetText2DComponent();
@@ -154,6 +161,46 @@ void SceneModule::OnComponentRemoval(GameObject * go, Component * component)
 
 	default:
 		break;
+
+	}
+
+}
+
+void SceneModule::OnEvent(const IEvent * e)
+{
+
+	switch (e->event)
+	{
+
+	case EventType::GAME_OBJECT_ADD_COMPONENT:
+	{
+		const GameObjectEventAddComponent * goEvent = static_cast<const GameObjectEventAddComponent *>(e);
+		OnComponentAddition(goEvent->object, goEvent->component);
+	}
+		break;
+
+	case EventType::GAME_OBJECT_REMOVE_COMPONENT:
+	{
+		const GameObjectEventRemoveComponent * goEvent = static_cast<const GameObjectEventRemoveComponent *>(e);
+		OnComponentRemoval(goEvent->object, goEvent->component);
+	}
+		break;
+
+	case EventType::GAME_OBJECT_MOVE:
+	{
+
+		const GameObjectEventMove * goEvent = static_cast<const GameObjectEventMove *>(e);
+
+		GameObject      * object = goEvent->object;
+		RenderComponent * rc     = object->GetRenderComponent();
+
+		if (rc)
+		{
+			AABB aabb = rc->GetBounds();
+			MoveGameObject(object->GetHandle(), aabb.TransformAffine(goEvent->from));
+		}
+
+	}
 
 	}
 

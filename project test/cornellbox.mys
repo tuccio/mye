@@ -1,4 +1,4 @@
-<scene module="octree" size="1024" center="0 0 0" maxdepth="32">
+<scene module="octree" size="1024" center="0 0 0" maxdepth="16">
 
 	<gameobject name="controller" entity="CornellController">
 	</gameobject>
@@ -35,10 +35,10 @@
 	
 	<gameobject name="tallbox">
 		<render>
-			<aabb>
+			<!--<aabb>
 				<min>-0.710000 0.000000 -0.670000</min>
 				<max>0.040000 1.200000 0.090000</max>
-			</aabb>
+			</aabb>-->
 			<mesh name="models/cornellbox/tallbox2.obj"/>
 			<material diffuse_color="0.725 0.71 0.68  1" specular="0" metallic="0" roughness="0.6"/>
 		</render>
@@ -46,10 +46,10 @@
 	
 	<gameobject name="ceiling">
 		<render>
-			<aabb>
+			<!--<aabb>
 				<min>-1.020000 1.990000 -1.040000</min>
 				<max>1.000000 1.990000 0.990000</max>
-			</aabb>
+			</aabb>-->
 			<mesh name="models/cornellbox/ceiling.obj"/>
 			<material diffuse_color="0.725 0.71 0.68  1" specular="0" metallic="0" roughness="0.6"/>
 		</render>
@@ -57,10 +57,10 @@
 	
 	<gameobject name="floor">
 		<render>
-			<aabb>
+			<!--<aabb>
 				<min>-1.020000 0.000000 -1.040000</min>
 				<max>1.000000 0.000000 0.990000</max>
-			</aabb>
+			</aabb>-->
 			<mesh name="models/cornellbox/floor.obj"/>
 			<material diffuse_color="0.725 0.71 0.68  1" specular="0" metallic="0" roughness="0.6"/>
 		</render>
@@ -68,10 +68,10 @@
 	
 	<gameobject name="leftwall">
 		<render>
-			<aabb>
+			<!--<aabb>
 				<min>-1.020000 0.000000 -1.040000</min>
 				<max>-1.020000 1.990000 0.990000</max>
-			</aabb>
+			</aabb>-->
 			<mesh name="models/cornellbox/leftwall.obj"/>
 			<material diffuse_color="0.953 0.357 0.212 1" specular="0" metallic="0" roughness="0.6"/>
 		</render>
@@ -79,10 +79,10 @@
 	
 	<gameobject name="rightwall">
 		<render>
-			<aabb>
+			<!--<aabb>
 				<min>1.000000 0.000000 -1.040000</min>
 				<max>1.000000 1.990000 0.990000</max>
-			</aabb>
+			</aabb>-->
 			<mesh name="models/cornellbox/rightwall.obj"/>
 			<material diffuse_color="0.486 0.631 0.663  1" specular="0" metallic="0" roughness="0.6"/>
 		</render>
@@ -90,10 +90,10 @@
 	
 	<gameobject name="backwall">
 		<render>
-			<aabb>
+			<!--<aabb>
 				<min>-1.020000 0.000000 -1.040000</min>
 				<max>1.000000 1.990000 -1.040000</max>
-			</aabb>
+			</aabb>-->
 			<mesh name="models/cornellbox/backwall.obj"/>
 			<material diffuse_color="0.725 0.71 0.68  1" specular="0" metallic="0" roughness="0.6"/>
 		</render>

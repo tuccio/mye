@@ -2,6 +2,7 @@
 
 #include "GameObject.h"
 
+#include "EventManager.h"
 #include "InputModule.h"
 #include "GameObjectsModule.h"
 #include "SceneModule.h"
@@ -67,6 +68,8 @@ namespace mye
 			GraphicsModule    * m_graphics;
 			AudioModule       * m_audio;
 			ScriptModule      * m_script;
+
+			EventManager      * m_eventManager;
 
 			LapStopWatch m_timer;
 

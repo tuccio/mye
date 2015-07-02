@@ -186,7 +186,7 @@ void DX11DeferredShadingRenderer::Render(ID3D11RenderTargetView * target)
 	if (camera)
 	{
 
-		auto visibleObjects = scene->GetVisibleObjects();
+		auto visibleObjects = scene->GetVisibleObjects(*camera);
 
 		Matrix4 view       = camera->GetViewMatrix();
 		Matrix4 projection = camera->GetProjectionMatrix();

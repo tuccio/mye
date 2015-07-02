@@ -1,305 +1,117 @@
 #include "OctreeSceneModule.h"
 #include "Game.h"
 
-#include <deque>
-
 using namespace mye::core;
 using namespace mye::math;
+using namespace mye::algorithms;
 
-OctreeSceneModule::OctreeSceneModule(const mye::math::Vector3 &center,
+OctreeSceneModule::OctreeSceneModule(const Vector3 & center,
 									 float size,
-									 unsigned int maxdepth,
-									 unsigned int looseness)
-//	m_octree(center, size, maxdepth, looseness)
+									 unsigned int maxdepth) :
+									 m_dynamicObjects(center, size, maxdepth),
+									 m_lights(center, size, maxdepth, detail::LightAABBBounds { { center.x(), center.y(), center.z() }, size * 0.5f })
 {
 }
-
 
 OctreeSceneModule::~OctreeSceneModule(void)
 {
 }
 
-#ifdef __MYE_NO_OCTREE
-
-GameObjectsList OctreeSceneModule::GetVisibleObjects(const Matrix4 & viewProjection)
+GameObjectsList OctreeSceneModule::GetVisibleObjects(const mye::math::Frustum & frustum)
 {
 
 	GameObjectsList list;
 
-	for (GameObjectHandle hObj : m_objects)
-	{
-		list.push_back(Game::GetSingleton().GetGameObjectsModule()->Get(hObj));
-	}
+	m_dynamicObjects.Query(frustum, [&list] (GameObject * object) { list.push_back(object); });
 
 	return list;
 
 }
 
-void OctreeSceneModule::AddGameObject(const GameObjectHandle &hObj)
+GameObjectsList OctreeSceneModule::GetVisibleObjects(const mye::core::Camera & camera)
+{
+	return GetVisibleObjects(camera.GetFrustum());
+}
+
+GameObjectsList OctreeSceneModule::GetVisibleLights(const mye::math::Frustum & frustum)
 {
 
-	SceneModule::AddGameObject(hObj);
+	GameObjectsList list;
 
-	m_objects.push_back(hObj);
+	m_lights.Query(frustum, [&list] (GameObject * object) { list.push_back(object); });
+
+	return list;
 
 }
 
-void OctreeSceneModule::RemoveGameObject(const GameObjectHandle &hObj)
+GameObjectsList OctreeSceneModule::GetVisibleLights(const mye::core::Camera & camera)
+{
+	return GetVisibleLights(camera.GetFrustum());
+}
+
+GameObjectsList OctreeSceneModule::GetObjectsList(void)
+{
+	return m_objects;
+}
+
+void OctreeSceneModule::AddGameObject(const GameObjectHandle & hObj)
 {
 
-	SceneModule::RemoveGameObject(hObj);
+	GameObject * object = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
 
-	m_objects.erase(std::find(m_objects.begin(), m_objects.end(), hObj));
+	if (m_dynamicObjects.Insert(object))
+	{
+		m_objects.push_back(object);
+	}
+
+	if (object->GetLightComponent())
+	{
+		m_lights.Insert(object);
+	}
+
+}
+
+void OctreeSceneModule::RemoveGameObject(const GameObjectHandle & hObj)
+{
+
+	GameObject * object = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
+
+	m_dynamicObjects.Remove(object);
+
+	if (object->GetLightComponent())
+	{
+		m_lights.Remove(object);
+	}
 
 }
 
 GameObjectRayIntersection OctreeSceneModule::Pick(const mye::math::Ray & ray)
 {
 
-	GameObjectsList objects;
+	Real t;
+	GameObject * object;
 
-	mye::math::Real tMin = std::numeric_limits<mye::math::Real>::infinity();
-	GameObjectHandle rObj;
-
-	for (GameObjectHandle hObj : m_objects)
+	if (m_dynamicObjects.Pick(ray, object, t))
 	{
-
-		GameObject * object = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
-
-		if (object)
-		{
-			
-			RenderComponent *rc = object->GetRenderComponent();
-			mye::math::Real t;
-
-			if (rc && Intersect(ray, rc->GetBounds().
-				TransformAffine(object->GetTransformComponent()->GetWorldMatrix()), t) && t < tMin)
-			{
-				tMin = t;
-				rObj = object->GetHandle();
-			}
-
-		}
-
+		return { object->GetHandle(), t };
 	}
 
-	return { rObj, tMin };
-
-}
-
-void OctreeSceneModule::ApplyUpdates(void)
-{
+	else
+	{
+		return { GameObjectHandle(), -0.0f };
+	}
 
 }
 
 void OctreeSceneModule::Reset(const mye::math::Vector3 & center,
 							  float size,
-							  unsigned int maxdepth,
-							  unsigned int looseness)
+							  unsigned int maxdepth)
 {
 
-	m_objects.clear();
+	m_dynamicObjects.Destroy();
+	m_lights.Destroy();
+
+	m_dynamicObjects.Create(center, size, maxdepth);
+	m_lights.Create(center, size, maxdepth, detail::LightAABBBounds { { center.x(), center.y(), center.z() }, size * 0.5f });
 
 }
-
-GameObjectsList OctreeSceneModule::GetObjectsList(void)
-{
-
-	GameObjectsList objects;
-
-	for (GameObjectHandle hObj : m_objects)
-	{
-
-		GameObject * object = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
-
-		if (object)
-		{
-			objects.push_back(object);
-		}
-
-	}
-
-	return objects;
-
-}
-
-#else
-
-SceneModule::ObjectsList OctreeSceneModule::GetVisibleObjects(void)
-{
-
-	ApplyUpdates();	
-
-	SceneModule::ObjectsList visibleObjects;
-
-	Frustum frustum = m_camera->GetFrustum();
-	AABB frustumAABB = BoundingAABB(frustum);
-
-	std::deque<LooseOctreeNode<GameObjectHandle>*> q;
-
-	q.push_back(m_octree.FindFirst(frustumAABB));
-
-	do 
-	{
-
-		LooseOctreeNode<GameObjectHandle> *node = q.front();
-		q.pop_front();
-
-		if (node)
-		{
-			
-			for (GameObjectHandle hObj : *node)
-			{
-
-				GameObject *object = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
-				AABB aabb = object->GetAABB();
-
-				if (Intersect(aabb, frustum) != VolumeSide::OUTSIDE)
-				{
-					visibleObjects.push_back(object);
-				}
-
-			}
-
-			for (int i = 0; i < 8; i++)
-			{
-				q.push_back(node->GetChild(static_cast<OctreeChild>(i)));
-			}
-
-		}
-
-	} while (!q.empty());
-
-	return visibleObjects;
-
-}
-
-SceneModule::ObjectsList OctreeSceneModule::GetObjects(void)
-{
-
-	SceneModule::ObjectsList objects;
-
-	std::deque<LooseOctreeNode<GameObjectHandle>*> q;
-
-	q.push_back(m_octree.GetRoot());
-
-	do 
-	{
-
-		LooseOctreeNode<GameObjectHandle> *node = q.front();
-		q.pop_front();
-
-		if (node)
-		{
-
-			for (GameObjectHandle hObj : *node)
-			{
-
-				GameObject *object = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
-
-				if (object)
-				{
-					objects.push_back(object);
-				}
-
-			}
-
-			for (int i = 0; i < 8; i++)
-			{
-				q.push_back(node->GetChild(static_cast<OctreeChild>(i)));
-			}
-
-		}
-
-	} while (!q.empty());
-
-	for (auto it = m_nonRenderableObjects.begin(); it != m_nonRenderableObjects.end(); it++)
-	{
-
-		GameObject *object = Game::GetSingleton().GetGameObjectsModule()->Get(*it);
-
-		if (object)
-		{
-			objects.push_back(object);
-		}
-		else
-		{
-			it = m_nonRenderableObjects.erase(it);
-		}
-
-	}
-
-	return objects;
-
-}
-
-void OctreeSceneModule::AddGameObject(const GameObjectHandle &hObj)
-{
-
-	GameObject *object = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
-
-	if (object->GetRenderComponent())
-	{
-		m_octree.Insert(hObj, object->GetAABB());
-	}
-	else
-	{
-		m_nonRenderableObjects.push_back(hObj);
-	}
-	
-}
-
-void OctreeSceneModule::RemoveGameObject(const GameObjectHandle &hObj)
-{
-
-	GameObject *object = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
-
-	if (object->GetRenderComponent())
-	{
-		m_octree.Remove(hObj, object->GetAABB());
-	}
-	else
-	{
-		
-		auto it = std::find(m_nonRenderableObjects.begin(), m_nonRenderableObjects.end(), hObj);
-
-		if (it != m_nonRenderableObjects.end())
-		{
-			m_nonRenderableObjects.erase(it);
-		}
-
-	}
-	
-}
-
-void OctreeSceneModule::ApplyUpdates(void)
-{
-
-	for (GameObjectUpdate update : m_movedObjects)
-	{
-
-		GameObject *object = Game::GetSingleton().GetGameObjectsModule()->Get(update.hObj);
-
-		if (object)
-		{
-			m_octree.Relocate(update.hObj, update.oldAABB, object->GetAABB());
-		}
-
-	}
-
-	m_movedObjects.clear();
-
-}
-
-void OctreeSceneModule::Reset(
-	const mye::math::Vector3 &center,
-	float size,
-	unsigned int maxdepth,
-	unsigned int looseness)
-{
-
-	m_octree = LooseOctree<GameObjectHandle>(center, size, maxdepth, looseness);
-
-}
-
-#endif

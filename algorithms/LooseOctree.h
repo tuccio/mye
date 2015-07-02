@@ -103,7 +103,7 @@ namespace mye
 			template <typename QueryType, typename Visitor>
 			__MYE_ALGORITHMS_INLINE void Query(const QueryType & query, Visitor visitor);
 
-			__MYE_ALGORITHMS_INLINE bool Pick(const mye::math::Ray & ray, Object & result);
+			__MYE_ALGORITHMS_INLINE bool Pick(const mye::math::Ray & ray, Object & result, mye::math::Real & t);
 
 			template <typename Visitor>
 			__MYE_ALGORITHMS_INLINE void TraverseAABBs(Visitor visitor);

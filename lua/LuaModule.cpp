@@ -9,17 +9,19 @@
 
 #include "MetaMethodsOverload.h"
 
+#include <mye/core/EventManager.h>
 #include <mye/core/String.h>
 #include <mye/core/ResourceTypeManager.h>
 
 #include <iostream>
 
+
 using namespace mye::lua;
 using namespace mye::core;
 
 LuaModule::LuaModule(const mye::core::String &folder) :
-m_scriptDirectory(folder),
-mye::core::ResourceManager("Script")
+	m_scriptDirectory(folder),
+	mye::core::ResourceManager("Script")
 {
 }
 
@@ -72,9 +74,6 @@ bool LuaModule::Init(void)
 	m_state.Create();
 	OpenAllLibraries();
 
-	/*OverloadLuabindMetamethod(m_lua, "__index", &IndexOverload);
-	OverloadLuabindMetamethod(m_lua, "__newindex", &NewIndexOverload);*/
-
 	Game * game = Game::GetSingletonPointer();
 
 	auto globals = m_state.GetGlobalTable();;
@@ -91,13 +90,11 @@ bool LuaModule::Init(void)
 
 	globals["ResourceTypeManager"] = ResourceTypeManager::GetSingletonPointer();
 
-	m_state.RunCode("math.randomseed(os.time())");
-
 	return true;
 
 }
 
-void LuaModule::ShutDown(void)
+void LuaModule::Shutdown(void)
 {
 	m_state.Destroy();
 }
@@ -105,149 +102,14 @@ void LuaModule::ShutDown(void)
 void LuaModule::Preupdate(FloatSeconds dt)
 {
 
-	//luabind::globals(m_lua)["Time"]["delta"] = luabind::object(m_lua, (float) dt);
-
 	m_state.GetGlobalTable()["Time"]["delta"] = (float) dt;
-
-	for (auto msg : m_messages)
-	{
-		
-		switch (msg.message)
-		{
-
-		case SCRIPT_MESSAGE_KEYBOARD_PRESSED:
-
-			{
-
-				luapp11::Object o(m_state, msg.hObj);
-				KeyboardVK key = static_cast<KeyboardVK>(msg.code);
-
-				try
-				{
-					o.Call<void>("OnKeyboardKeyPress", std::forward<KeyboardVK>(key));
-				}
-				catch (...) { }
-
-			}
-
-			break;
-
-		case SCRIPT_MESSAGE_KEYBOARD_RELEASED:
-
-			{
-
-				luapp11::Object o(m_state, msg.hObj);
-				KeyboardVK key = static_cast<KeyboardVK>(msg.code);
-
-				try
-				{
-					o.Call<void>("OnKeyboardKeyRelease", std::forward<KeyboardVK>(key), std::forward<float>(msg.data.f));
-				}
-				catch (...) { }
-
-			}
-
-			break;
-
-		case SCRIPT_MESSAGE_KEYBOARD_HELD:
-
-		{
-
-			luapp11::Object o(m_state, msg.hObj);
-			KeyboardVK key = static_cast<KeyboardVK>(msg.code);
-
-			try
-			{
-				o.Call<void>("OnKeyboardKeyHold", std::forward<KeyboardVK>(key), std::forward<float>(msg.data.f));
-			}
-			catch (...) { }
-
-		}
-
-			break;
-
-		case SCRIPT_MESSAGE_MOUSE_PRESSED:
-
-		{
-
-			luapp11::Object o(m_state, msg.hObj);
-			MouseVK key = static_cast<MouseVK>(msg.code);
-
-			try
-			{
-				o.Call<void>("OnMouseKeyPress", std::forward<MouseVK>(key));
-			}
-			catch (...) { }
-
-		}
-
-			break;
-
-		case SCRIPT_MESSAGE_MOUSE_RELEASED:
-
-		{
-
-			luapp11::Object o(m_state, msg.hObj);
-			MouseVK key = static_cast<MouseVK>(msg.code);
-
-			try
-			{
-				o.Call<void>("OnMouseKeyRelease", std::forward<MouseVK>(key), std::forward<float>(msg.data.f));
-			}
-			catch (...) { }
-
-		}
-
-			break;
-
-		case SCRIPT_MESSAGE_MOUSE_HELD:
-
-		{
-
-			luapp11::Object o(m_state, msg.hObj);
-			MouseVK key = static_cast<MouseVK>(msg.code);
-
-			try
-			{
-				o.Call<void>("OnMouseKeyHold", std::forward<MouseVK>(key), std::forward<float>(msg.data.f));
-			}
-			catch (...) { }
-
-		}
-
-			break;
-
-		case SCRIPT_MESSAGE_MOUSE_MOVED:
-
-		{
-
-			luapp11::Object o(m_state, msg.hObj);
-			MouseVK key = static_cast<MouseVK>(msg.code);
-
-			const mye::math::Vector2 from(msg.data.f4[0], msg.data.f4[1]);
-			const mye::math::Vector2 to(msg.data.f4[2], msg.data.f4[3]);
-
-			try
-			{
-				o.Call<void>("OnMouseMove", from, to);
-			}
-			catch (...) { }
-
-		}
-
-			break;
-
-		}
-
-	}
-
-	m_messages.clear();
 
 }
 
-void LuaModule::Init(GameObjectHandle hObj)
+void LuaModule::Init(GameObject * object)
 {
-	luapp11::Object o(m_state, hObj);
+
+	luapp11::Object o(m_state, object->GetHandle());
 
 	try
 	{
@@ -257,10 +119,10 @@ void LuaModule::Init(GameObjectHandle hObj)
 	
 }
 
-void LuaModule::Finalize(GameObjectHandle hObj)
+void LuaModule::Finalize(GameObject * object)
 {
 
-	luapp11::Object o(m_state, hObj);
+	luapp11::Object o(m_state, object->GetHandle());
 
 	try
 	{
@@ -270,19 +132,28 @@ void LuaModule::Finalize(GameObjectHandle hObj)
 	
 }
 
-void LuaModule::Update(GameObjectsModule::Iterator it)
+void LuaModule::Update(void)
 {
-	GameObjectHandle hObj = *it;
-	luapp11::Object o(m_state, hObj);
 
-	try
+	GameObjectsModule * gom = Game::GetSingleton().GetGameObjectsModule();
+
+	for (auto hObj : *gom)
 	{
-		o.Call<void>("Update");
+
+		luapp11::Object o(m_state, hObj);
+
+		try
+		{
+			o.Call<void>("Update");
+		}
+		catch (...) {
+		}
+
 	}
-	catch (...) { }
+	
 }
 
-BehaviourScriptPointer LuaModule::LoadBehaviour(const String &name)
+BehaviourScriptPointer LuaModule::LoadBehaviour(const String & name)
 {
 
 	Parameters params;
@@ -300,7 +171,7 @@ BehaviourScriptPointer LuaModule::LoadBehaviour(const String &name)
 
 }
 
-ProcedureScriptPointer LuaModule::LoadProcedure(const mye::core::String &name)
+ProcedureScriptPointer LuaModule::LoadProcedure(const mye::core::String & name)
 {
 
 
@@ -319,7 +190,7 @@ ProcedureScriptPointer LuaModule::LoadProcedure(const mye::core::String &name)
 
 }
 
-ScriptResourceLoaderPointer LuaModule::LoadScriptResourceLoader(const String &name)
+ScriptResourceLoaderPointer LuaModule::LoadScriptResourceLoader(const String & name)
 {
 
 	Parameters params;
@@ -375,4 +246,145 @@ Script * LuaModule::CreateImpl(const String &name,
 void LuaModule::FreeImpl(Resource* resource)
 {
 	static_cast<Script*>(resource)->Free();
+}
+
+void LuaModule::OnEvent(mye::core::GameObject * object, const IEvent * e)
+{
+
+	switch (e->event)
+	{
+
+	case EventType::KEYBOARD_KEY_PRESS:
+
+	{
+
+		const KeyboardEventKeyPress * kEvent = static_cast<const KeyboardEventKeyPress *>(e);
+
+		luapp11::Object o(m_state, object->GetHandle());
+
+		try
+		{
+			o.Call<void>("OnKeyboardKeyPress", kEvent->key);
+		}
+		catch (...) { }
+
+	}
+
+		break;
+
+	case EventType::KEYBOARD_KEY_RELEASE:
+
+	{
+
+		const KeyboardEventKeyRelease * kEvent = static_cast<const KeyboardEventKeyRelease *>(e);
+
+		luapp11::Object o(m_state, object->GetHandle());
+
+		try
+		{
+			o.Call<void>("OnKeyboardKeyRelease", kEvent->key, (float) kEvent->duration);
+		}
+		catch (...) { }
+
+	}
+
+		break;
+
+	case EventType::KEYBOARD_KEY_HOLD:
+
+	{
+
+		const KeyboardEventKeyHold * kEvent = static_cast<const KeyboardEventKeyHold *>(e);
+
+		luapp11::Object o(m_state, object->GetHandle());
+
+		try
+		{
+			o.Call<void>("OnKeyboardKeyHold", kEvent->key, (float) kEvent->duration);
+		}
+		catch (...) {
+		}
+
+	}
+
+		break;
+
+	case EventType::MOUSE_KEY_PRESS:
+
+	{
+
+		const MouseEventKeyPress * kEvent = static_cast<const MouseEventKeyPress *>(e);
+
+		luapp11::Object o(m_state, object->GetHandle());
+
+		try
+		{
+			o.Call<void>("OnMouseKeyPress", kEvent->key);
+		}
+		catch (...) {
+		}
+
+	}
+
+		break;
+
+	case EventType::MOUSE_KEY_RELEASE:
+
+	{
+
+		const MouseEventKeyRelease * kEvent = static_cast<const MouseEventKeyRelease *>(e);
+
+		luapp11::Object o(m_state, object->GetHandle());
+
+		try
+		{
+			o.Call<void>("OnMouseKeyRelease", kEvent->key, (float) kEvent->duration);
+		}
+		catch (...) {
+		}
+
+	}
+
+		break;
+
+	case EventType::MOUSE_KEY_HOLD:
+
+	{
+
+		const MouseEventKeyHold * kEvent = static_cast<const MouseEventKeyHold *>(e);
+
+		luapp11::Object o(m_state, object->GetHandle());
+
+		try
+		{
+			o.Call<void>("OnMouseKeyHold", kEvent->key, (float) kEvent->duration);
+		}
+		catch (...) {
+		}
+
+	}
+
+		break;
+
+	case EventType::MOUSE_MOVE:
+
+	{
+
+		const MouseEventMove * kEvent = static_cast<const MouseEventMove *>(e);
+
+		luapp11::Object o(m_state, object->GetHandle());
+
+		try
+		{
+			o.Call<void>("OnMouseMove", kEvent->from, kEvent->to);
+		}
+		catch (...) {
+		}
+
+	}
+
+		break;
+
+	}
+
 }

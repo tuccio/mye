@@ -14,10 +14,7 @@ namespace mye
 
 				m_keys[key] = true;
 
-				for (auto listener : m_listeners)
-				{
-					listener->OnMouseKeyPress(key);
-				}
+				MYE_EVENT_MANAGER_ENQUEUE(MouseEventKeyPress, key);
 
 				MousePressedKey pk;
 				pk.key = key;
@@ -40,14 +37,13 @@ namespace mye
 
 			if (it != m_pressedKeys.end())
 			{
+
 				FloatSeconds time = it->timer.GetElapsedTime() / 1000.0f;
+
+				MYE_EVENT_MANAGER_ENQUEUE(MouseEventKeyRelease, key, time);
 
 				m_pressedKeys.erase(it);
 
-				for (auto listener : m_listeners)
-				{
-					listener->OnMouseKeyRelease(key, time);
-				}
 			}
 
 		}
@@ -67,10 +63,7 @@ namespace mye
 				m_delta = position - m_position;
 				m_position = position;
 
-				for (auto listener : m_listeners)
-				{
-					listener->OnMouseMove(oldPosition, position);
-				}
+				MYE_EVENT_MANAGER_ENQUEUE(MouseEventMove, oldPosition, m_position);
 				
 			}
 			else

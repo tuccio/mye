@@ -2,7 +2,6 @@
 
 #include <mye/math/Math.h>
 #include <mye/core/Mouse.h>
-#include <mye/core/Singleton.h>
 #include <mye/core/VirtualKeys.h>
 
 #include "Windows.h"
@@ -14,8 +13,7 @@ namespace mye
 	{
 
 		class WinMouse :
-			public mye::core::Mouse,
-			public mye::core::Singleton<WinMouse>
+			public mye::core::Mouse
 		{
 
 		public:

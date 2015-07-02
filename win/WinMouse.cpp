@@ -1,5 +1,5 @@
-#include "WinMouse.h"
 #include "VirtualKeyMap.h"
+#include "WinMouse.h"
 
 using namespace mye::math;
 using namespace mye::core;
@@ -56,15 +56,12 @@ LRESULT __stdcall __mye_winmouse_hook(int nCode,
 						LONG windowWidth = windowRect.right - windowRect.left;
 						LONG windowHeight = windowRect.bottom - windowRect.top;
 
-						Vector2f padding((windowWidth - clientRect.right) * 0.5f, (windowHeight - clientRect.bottom) * 0.5f);
+						Vector2 padding((windowWidth - clientRect.right) * 0.5f, (windowHeight - clientRect.bottom) * 0.5f);
 
-						WinMouse::GetSingleton().
-							Move(
-							Vector2f(
-							(float) (mhookStruct->pt.x - windowRect.left)   / (padding.x() + clientRect.right),
-							(float) 1.0f - (windowRect.bottom - mhookStruct->pt.y) / (padding.y() + clientRect.bottom)
-							)
-							);
+						Vector2 position((float) (mhookStruct->pt.x - windowRect.left) / (padding.x() + clientRect.right),
+						                 (float) 1.0f - (windowRect.bottom - mhookStruct->pt.y) / (padding.y() + clientRect.bottom));
+
+						WinMouse::GetSingleton().Move(position);
 
 					}
 
