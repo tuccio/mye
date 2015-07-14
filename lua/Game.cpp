@@ -80,6 +80,9 @@ namespace mye
 
 				Class<Camera>(MYE_LUA_CAMERA).
 
+					Constructor<>().
+					Constructor<const Camera &>().
+
 					Function("LookAt", &Camera::LookAt).
 
 					Function("Roll",  &Camera::Roll).
@@ -90,6 +93,8 @@ namespace mye
 
 					Function("GetViewMatrix",       (const mye::math::Matrix4& (Camera::*) ()) &Camera::GetViewMatrix).
 					Function("GetProjectionMatrix", (const mye::math::Matrix4& (Camera::*) ()) &Camera::GetProjectionMatrix).
+
+					Function("GetFrustum", (const mye::math::Frustum & (Camera::*) ()) &Camera::GetFrustum).
 
 					Property("position",    &Camera::GetPosition,         &Camera::SetPosition).
 					Property("orientation", &Camera::GetOrientation,      &Camera::SetOrientation).
@@ -130,6 +135,8 @@ namespace mye
 
 					Function("HasWindow",   &GraphicsModule::HasWindow).
 					Function("Reinterpret", &__graphics_module_reinterpret).
+
+					Function("RenderFrustum", &GraphicsModule::RenderFrustum).
 
 					Property("window", (IWindow* (GraphicsModule::*) (void)) &GraphicsModule::GetWindow).
 
@@ -201,7 +208,11 @@ namespace mye
 					
 				Class<CameraComponent, Component, Camera>(MYE_LUA_CAMERA_COMPONENT).
 					
-					Constructor<>()
+					Constructor<>().
+					Constructor<const Camera &>().
+
+					Function("GetCamera", &CameraComponent::GetCamera).
+					Function("SetCamera", &CameraComponent::SetCamera)
 
 			];
 
@@ -221,26 +232,26 @@ namespace mye
 		{
 
 			state
-				[
+			[
 
-					Class<IWindow>(MYE_LUA_WINDOW).
+				Class<IWindow>(MYE_LUA_WINDOW).
 
-					Function("Create", (bool (IWindow::*) (void)) &IWindow::Create).
-					Function("Destroy",  &IWindow::Destroy).
+				Function("Create", (bool (IWindow::*) (void)) &IWindow::Create).
+				Function("Destroy",  &IWindow::Destroy).
 
-					Function("Focus",    &IWindow::Focus).
-					Function("Show",     &IWindow::Show).
-					Function("Hide",     &IWindow::Hide).
+				Function("Focus",    &IWindow::Focus).
+				Function("Show",     &IWindow::Show).
+				Function("Hide",     &IWindow::Hide).
 
-					Property("caption",  &IWindow::GetCaption, &IWindow::SetCaption).
-					Property("size",     &IWindow::GetSize, &IWindow::SetSize).
-					Property("position", &IWindow::GetPosition, &IWindow::SetPosition)
+				Property("caption",  &IWindow::GetCaption,  &IWindow::SetCaption).
+				Property("size",     &IWindow::GetSize,     &IWindow::SetSize).
+				Property("position", &IWindow::GetPosition, &IWindow::SetPosition)
 
-				];
+			];
 
 		}
 
-		IWindow* __game_get_window(Game &game)
+		IWindow * __game_get_window(Game &game)
 		{
 			return game.GetGraphicsModule()->GetWindow();
 		}

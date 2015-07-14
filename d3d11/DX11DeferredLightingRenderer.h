@@ -41,6 +41,11 @@ namespace mye
 
 			void OnConfigurationChange(mye::core::RendererVariable variable, mye::core::RendererConfiguration * configuration);
 
+			inline DX11DepthBuffer & GetDepthBuffer(void)
+			{
+				return m_depthBuffer;
+			}
+
 		private:
 
 			bool                      m_initialized;
@@ -48,28 +53,28 @@ namespace mye
 			DX11Device              & m_device;
 			mye::win::Window        * m_window;							     
 								    
-			DX11VertexShaderPointer  m_deferredGeometryVS;
-			DX11PixelShaderPointer   m_deferredGeometryPS;
-								    
-			DX11VertexShaderPointer  m_deferredLightsVS;
-			DX11PixelShaderPointer   m_deferredLightsPS;
-								    
-			DX11VertexShaderPointer  m_deferredFinalVS;
-			DX11PixelShaderPointer   m_deferredFinalPS;
-								    
-			DX11Texture              m_gbuffer0;
-			DX11Texture              m_gbuffer1;
-			DX11Texture              m_lbuffer;
-								    
-			DX11ReflectiveShadowMap  m_rsm;
-								    
-			DX11ConstantBuffer       m_transformBuffer;
-			DX11ConstantBuffer       m_lightBuffer;
-			DX11ConstantBuffer       m_cameraBuffer;
-			DX11ConstantBuffer       m_materialBuffer;
-			DX11ConstantBuffer       m_configurationBuffer;
-								    
-			DX11DepthBuffer          m_depthBuffer;
+			DX11VertexShaderPointer   m_deferredGeometryVS;
+			DX11PixelShaderPointer    m_deferredGeometryPS;
+								      
+			DX11VertexShaderPointer   m_deferredLightsVS;
+			DX11PixelShaderPointer    m_deferredLightsPS;
+								      
+			DX11VertexShaderPointer   m_deferredFinalVS;
+			DX11PixelShaderPointer    m_deferredFinalPS;
+								      
+			DX11Texture               m_gbuffer0;
+			DX11Texture               m_gbuffer1;
+			DX11Texture               m_lbuffer;
+								      
+			DX11ReflectiveShadowMap   m_rsm;
+								      
+			DX11ConstantBuffer        m_transformBuffer;
+			DX11ConstantBuffer        m_lightBuffer;
+			DX11ConstantBuffer        m_cameraBuffer;
+			DX11ConstantBuffer        m_materialBuffer;
+			DX11ConstantBuffer        m_configurationBuffer;
+								      
+			DX11DepthBuffer           m_depthBuffer;
 								    
 			ID3D11SamplerState      * m_shadowMapSamplerState;
 			ID3D11SamplerState      * m_shadowMapSamplerCmpState;

@@ -33,10 +33,10 @@ namespace mye
 		
 		__MYE_MATH_INLINE Matrix<float, 4, 4>::Matrix(float d)
 		{
-			m_vector[0] = _mm_set_ps(0, 0, 0, 1);
-			m_vector[1] = _mm_set_ps(0, 0, 1, 0);
-			m_vector[2] = _mm_set_ps(0, 1, 0, 0);
-			m_vector[3] = _mm_set_ps(1, 0, 0, 0);
+			m_vector[0] = _mm_set_ps(0, 0, 0, d);
+			m_vector[1] = _mm_set_ps(0, 0, d, 0);
+			m_vector[2] = _mm_set_ps(0, d, 0, 0);
+			m_vector[3] = _mm_set_ps(d, 0, 0, 0);
 		}
 
 		
@@ -307,7 +307,7 @@ namespace mye
 		{
 
 			Matrix<float, 4, 4> r;
-			detail::SSEInverse4(m_vector, r.m_vector);
+			detail::SSEInverse4(m_data, r.m_data);
 			return r;
 
 		}

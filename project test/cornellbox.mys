@@ -24,10 +24,10 @@
 	
 	<gameobject name="shortbox">
 		<render>
-			<aabb>
+			<!--<aabb>
 				<min>-0.050000 -0.000000 0.000000</min>
 				<max>0.700000 0.600000 0.750000</max>
-			</aabb>
+			</aabb>-->
 			<mesh name="models/cornellbox/shortbox2.obj"/>
 			<material diffuse_color="0.725 0.71 0.68  1" specular="0" metallic="0" roughness="0.6"/>
 		</render>

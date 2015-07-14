@@ -50,6 +50,25 @@ namespace mye
 			return AABBTempl<T>::FromCenterHalfExtents(sphere.GetCenter(), Matrix<T, 3, 1>(sphere.GetRadius()));
 		}
 
+		template <typename Iterator>
+		__MYE_MATH_INLINE auto BoundingAABB(Iterator begin, Iterator end) -> AABBTempl<decltype(DeduceMatrixScalar(*begin))>
+		{
+
+			typedef decltype(DeduceMatrixScalar(*begin)) T;
+
+			mye::math::Matrix<T, 3, 1> max(std::numeric_limits<T>::min());
+			mye::math::Matrix<T, 3, 1> min(std::numeric_limits<T>::max());
+
+			for (Iterator it = begin; it != end; it++)
+			{
+				max = max.CwiseMax(*it);
+				min = min.CwiseMin(*it);
+			}
+
+			return AABBTempl<T>::FromMinMax(min, max);
+
+		}
+
 	}
 
 }

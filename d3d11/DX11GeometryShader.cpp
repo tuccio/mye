@@ -14,12 +14,12 @@ using namespace mye::dx11;
 using namespace mye::core;
 
 DX11GeometryShader::DX11GeometryShader(mye::core::ResourceManager * owner,
-								   const mye::core::String & name,
-								   mye::core::ManualResourceLoader * manual,
-								   DX11Device & device,
-								   bool precompiled) :
-								   DX11Shader(owner, name, manual, precompiled),
-								   m_device(device)
+                                       const mye::core::String & name,
+                                       mye::core::ManualResourceLoader * manual,
+                                       DX11Device & device,
+                                       bool precompiled) :
+	DX11Shader(owner, name, manual, precompiled),
+	m_device(device)
 {
 	m_shader = nullptr;
 }

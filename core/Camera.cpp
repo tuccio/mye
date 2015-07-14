@@ -13,7 +13,7 @@ Camera::Camera(void) :
 	m_projectionMatrix(0.0f)
 {
 
-	SetProjection(90.0f, 1.0f, 1.0f, 100.0f);
+	SetProjection(90.0f, 1.0f, 0.1f, 100.0f);
 
 	m_viewMatrixUptodate       = false;
 	m_projectionMatrixUptodate = false;
@@ -28,15 +28,17 @@ Camera::~Camera(void)
 
 /* View */
 
-void Camera::LookAt(const mye::math::Vector3 & position,
-					const mye::math::Vector3 & up,
-					const mye::math::Vector3 & target)
+void Camera::LookAt(const Vector3 & position,
+                    const Vector3 & up,
+                    const Vector3 & target)
 {
 
-	Vector3 z = (target - position).Normalize();
-	Vector3 x = up.Cross(z);
-	Vector3 y = z.Cross(x);
 
+
+	Vector3 z = (target - position).Normalize();
+	Vector3 x = up.Cross(z).Normalize();
+	Vector3 y = z.Cross(x);
+	
 	Matrix3 cam;
 
 	cam.SetColumn(0, x);
@@ -57,7 +59,7 @@ Quaternion Camera::GetOrientation(void) const
 	return m_orientation;
 }
 
-void Camera::SetOrientation(const mye::math::Quaternion & direction)
+void Camera::SetOrientation(const Quaternion & direction)
 {
 	m_orientation        = direction;
 	m_viewMatrixUptodate = false;
@@ -74,7 +76,7 @@ Vector3 Camera::GetPosition(void) const
 	return m_position;
 }
 
-void Camera::SetPosition(const mye::math::Vector3 & position)
+void Camera::SetPosition(const Vector3 & position)
 {
 	m_position           = position;
 	m_viewMatrixUptodate = false;
@@ -86,7 +88,7 @@ Vector3 & Camera::Position(void)
 	return m_position;
 }
 
-void Camera::Pitch(mye::math::Real angle)
+void Camera::Pitch(Real angle)
 {
 
 // 	float cosHalfAngle = Cosine(Radians(angle) * 0.5f);
@@ -105,7 +107,7 @@ void Camera::Pitch(mye::math::Real angle)
 
 }
 
-void Camera::Yaw(mye::math::Real angle)
+void Camera::Yaw(Real angle)
 {
 
 // 	float cosHalfAngle = Cosine(Radians(angle) * 0.5f);
@@ -125,7 +127,7 @@ void Camera::Yaw(mye::math::Real angle)
 
 }
 
-void Camera::Roll(mye::math::Real angle)
+void Camera::Roll(Real angle)
 {
 
 // 	float cosHalfAngle = Cosine(Radians(angle) * 0.5f);
@@ -147,7 +149,7 @@ void Camera::Roll(mye::math::Real angle)
 
 /* Projection */
 
-void Camera::SetProjection(mye::math::Real fovy, mye::math::Real aspect, mye::math::Real zNear, mye::math::Real zFar)
+void Camera::SetProjection(Real fovy, Real aspect, Real zNear, Real zFar)
 {
 	m_fovY             = Radians(fovy);
 	m_aspectRatio      = aspect;
@@ -160,7 +162,7 @@ float Camera::GetNearClipDistance(void) const
 	return m_nearClipDistance;
 }
 
-void Camera::SetNearClipDistance(mye::math::Real near)
+void Camera::SetNearClipDistance(Real near)
 {
 	m_nearClipDistance         = near;
 	m_projectionMatrixUptodate = false;
@@ -172,14 +174,14 @@ mye::math::Real Camera::GetFarClipDistance(void) const
 	return m_farClipDistance;
 }
 
-void Camera::SetFarClipDistance(mye::math::Real far)
+void Camera::SetFarClipDistance(Real far)
 {
 	m_farClipDistance          = far;
 	m_projectionMatrixUptodate = false;
 	m_frustumUptodate          = false;
 }
 
-void Camera::SetClipDistances(float near, float far)
+void Camera::SetClipDistances(Real near, Real far)
 {
 	m_nearClipDistance         = near;
 	m_farClipDistance          = far;
@@ -192,7 +194,7 @@ mye::math::Real Camera::GetClipAspectRatio(void) const
 	return m_aspectRatio;
 }
 
-void Camera::SetClipAspectRatio(mye::math::Real aspect)
+void Camera::SetClipAspectRatio(Real aspect)
 {
 	m_aspectRatio              = aspect;
 	m_projectionMatrixUptodate = false;
@@ -204,7 +206,7 @@ mye::math::Real Camera::GetFovY(void) const
 	return Degrees(m_fovY);
 }
 
-void Camera::SetFovY(mye::math::Real fovy)
+void Camera::SetFovY(Real fovy)
 {
 	m_fovY                     = Radians(fovy);
 	m_projectionMatrixUptodate = false;
@@ -226,7 +228,7 @@ mye::math::Real Camera::GetFovXRadians(void) const
 	return 2.0f * Arctangent(m_aspectRatio * Tangent(0.5f * m_fovY));
 }
 
-Ray Camera::RayCast(const mye::math::Vector2 & screenCoords) const
+Ray Camera::RayCast(const Vector2 & screenCoords) const
 {
 
 	Matrix4 invViewProjMatrix = (GetProjectionMatrix() * GetViewMatrix()).Inverse();
@@ -241,5 +243,54 @@ Ray Camera::RayCast(const mye::math::Vector2 & screenCoords) const
 	Vector3 far  =  farH.xyz() /  farH.www();
 
 	return Ray(m_position, (far - near).Normalize());
+
+}
+
+Matrix4 Camera::GetViewMatrix(void) const
+{
+
+	if (m_viewMatrixUptodate)
+	{
+		return m_viewMatrix;
+	}
+
+	Matrix3 R  = RotationMatrix3(m_orientation);
+	Matrix3 Rt = R.Transpose();
+	Vector3 t  = - (Rt * m_position);
+
+	Matrix4 viewMatrix(Rt);
+
+	viewMatrix.m03() = t.x();
+	viewMatrix.m13() = t.y();
+	viewMatrix.m23() = t.z();
+
+	return viewMatrix;
+
+}
+
+Matrix4 Camera::GetProjectionMatrix(void) const
+{
+
+	if (m_projectionMatrixUptodate)
+	{
+		return m_projectionMatrix;
+	}
+
+	Real tanFovY  = Tangent(m_fovY * 0.5f);
+	Real yScale   = 1.f / tanFovY;
+	Real xScale   = yScale / m_aspectRatio;
+	Real invDepth = 1.f / (m_farClipDistance - m_nearClipDistance);
+
+	Real Q = m_farClipDistance * invDepth;
+
+	Matrix4 projectionMatrix(0);
+
+	projectionMatrix.m00() = xScale;
+	projectionMatrix.m11() = yScale;
+	projectionMatrix.m22() = Q;
+	projectionMatrix.m23() = - Q * m_nearClipDistance;
+	projectionMatrix.m32() = 1;
+
+	return projectionMatrix;
 
 }

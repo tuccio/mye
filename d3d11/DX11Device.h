@@ -3,6 +3,7 @@
 #include <d3d11.h>
 
 #include <type_traits>
+#include <vector>
 
 namespace mye
 {
@@ -70,6 +71,10 @@ namespace mye
 			void SetDepthTest(DX11DepthTest test);
 
 			DXGI_SAMPLE_DESC GetMSAASampleDesc(MSAA msaa, DXGI_FORMAT format);
+
+			std::vector<D3D11_VIEWPORT>	GetViewports(void);
+
+			void SetViewports(const D3D11_VIEWPORT * viewports, unsigned int numViewports);
 
 		private:
 

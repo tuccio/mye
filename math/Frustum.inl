@@ -29,30 +29,35 @@ namespace mye
 
 			/* Construct planes */
 
-			Matrix<T, 2, 1> tgFov    = Abs(Tangent(Radians(Matrix<T, 2, 1>(fovX, fovY) * T(0.5))));
-			Matrix<T, 2, 1> nearSize = tgFov * Matrix<T, 2, 1>(nearPlaneDistance);
+			Matrix<T, 2, 1> tgHalfFov = Abs(Tangent(Radians(Matrix<T, 2, 1>(fovX, fovY) * T(0.5))));
 
-			Matrix<T, 3, 1> nearHeightVector = nearSize.yyy() * up;
-			Matrix<T, 3, 1> nearWidthVector  = nearSize.xxx() * right;
+			Matrix<T, 2, 1> halfFarSize = tgHalfFov * farPlaneDistance;
+
+			Matrix<T, 3, 1> farHalfHeightVector = halfFarSize.yyy() * up;
+			Matrix<T, 3, 1> farHalfWidthVector  = halfFarSize.xxx() * right;
 
 			Matrix<T, 3, 1> nearPlaneCenter = origin + nearPlaneDistance * forward;
 			Matrix<T, 3, 1> farPlaneCenter  = origin + farPlaneDistance  * forward;
 
-			Matrix<T, 3, 1> tln = nearPlaneCenter - nearWidthVector + nearHeightVector;
-			Matrix<T, 3, 1> bln = nearPlaneCenter - nearWidthVector - nearHeightVector;
-			Matrix<T, 3, 1> trn = nearPlaneCenter + nearWidthVector + nearHeightVector;
+			Matrix<T, 3, 1> topLeftFarCorner    = farPlaneCenter - farHalfWidthVector + farHalfHeightVector;
+			Matrix<T, 3, 1> bottomLeftFarCorner = farPlaneCenter - farHalfWidthVector - farHalfHeightVector;
+			Matrix<T, 3, 1> topRightFarCorner   = farPlaneCenter + farHalfWidthVector + farHalfHeightVector;
 
- 			Matrix<T, 3, 1> otl = tln - origin;
+			Matrix<T, 3, 1> originTopLeftVector = topLeftFarCorner - origin;
+			Matrix<T, 3, 1> topBottomVector     = topLeftFarCorner - bottomLeftFarCorner;
+			Matrix<T, 3, 1> rightLeftVector     = topRightFarCorner - topLeftFarCorner;
 
-			Matrix<T, 3, 1> ln = otl.Cross(tln - bln).Normalize();
-			Matrix<T, 3, 1> tn = otl.Cross(trn - tln).Normalize();
+			Matrix<T, 3, 1> leftNormal   = originTopLeftVector.Cross(topBottomVector).Normalize();
+			Matrix<T, 3, 1> rightNormal  = leftNormal.Reflect(right);
+			Matrix<T, 3, 1> topNormal    = originTopLeftVector.Cross(rightLeftVector).Normalize();
+			Matrix<T, 3, 1> bottomNormal = topNormal.Reflect(up);
 
 			__MYE_MATH_FRUSTUM_NEAR   = PlaneTempl<T>(nearPlaneCenter, forward.Reflect(forward));
 			__MYE_MATH_FRUSTUM_FAR    = PlaneTempl<T>(farPlaneCenter,  forward);
-			__MYE_MATH_FRUSTUM_LEFT   = PlaneTempl<T>(origin,          ln);
-			__MYE_MATH_FRUSTUM_RIGHT  = PlaneTempl<T>(origin,          ln.Reflect(right));
-			__MYE_MATH_FRUSTUM_TOP    = PlaneTempl<T>(origin,          tn);
-			__MYE_MATH_FRUSTUM_BOTTOM = PlaneTempl<T>(origin,          tn.Reflect(up));
+			__MYE_MATH_FRUSTUM_LEFT   = PlaneTempl<T>(origin,          leftNormal);
+			__MYE_MATH_FRUSTUM_RIGHT  = PlaneTempl<T>(origin,          rightNormal);
+			__MYE_MATH_FRUSTUM_TOP    = PlaneTempl<T>(origin,          topNormal);
+			__MYE_MATH_FRUSTUM_BOTTOM = PlaneTempl<T>(origin,          bottomNormal);
 
 		}
 
@@ -213,57 +218,6 @@ namespace mye
 				corners[static_cast<int>(FrustumCorners::LEFT_TOP_FAR)] = Cramer(A, b);
 
 			}
-			
-			/*Matrix<T, 3, 3> A;
-			Matrix<T, 3, 1> b;
-
-			A.SetRow(0, __MYE_MATH_FRUSTUM_LEFT.Normal());
-			A.SetRow(1, __MYE_MATH_FRUSTUM_BOTTOM.Normal());
-			A.SetRow(2, __MYE_MATH_FRUSTUM_NEAR.Normal());
-
-			b.x() = -__MYE_MATH_FRUSTUM_LEFT.Coefficient();
-			b.y() = -__MYE_MATH_FRUSTUM_BOTTOM.Coefficient();
-			b.z() = -__MYE_MATH_FRUSTUM_NEAR.Coefficient();
-
-			corners[static_cast<int>(FrustumCorners::LEFT_BOTTOM_NEAR)] = Cramer(A, b);
-
-			A.SetRow(0, __MYE_MATH_FRUSTUM_RIGHT.Normal());
-			b.x() = -__MYE_MATH_FRUSTUM_RIGHT.Coefficient();
-
-			corners[static_cast<int>(FrustumCorners::RIGHT_BOTTOM_NEAR)] = Cramer(A, b);
-
-			A.SetRow(1, __MYE_MATH_FRUSTUM_TOP.Normal());
-			b.y() = -__MYE_MATH_FRUSTUM_TOP.Coefficient();
-
-			corners[static_cast<int>(FrustumCorners::RIGHT_TOP_NEAR)] = Cramer(A, b);
-
-			A.SetRow(0, __MYE_MATH_FRUSTUM_LEFT.Normal());
-			b.x() = -__MYE_MATH_FRUSTUM_LEFT.Coefficient();
-
-			corners[static_cast<int>(FrustumCorners::LEFT_TOP_NEAR)] = Cramer(A, b);
-
-			A.SetRow(1, __MYE_MATH_FRUSTUM_BOTTOM.Normal());
-			b.y() = -__MYE_MATH_FRUSTUM_BOTTOM.Coefficient();
-
-			A.SetRow(2, __MYE_MATH_FRUSTUM_FAR.Normal());
-			b.z() = -__MYE_MATH_FRUSTUM_FAR.Coefficient();
-
-			corners[static_cast<int>(FrustumCorners::LEFT_BOTTOM_FAR)] = Cramer(A, b);
-
-			A.SetRow(0, __MYE_MATH_FRUSTUM_RIGHT.Normal());
-			b.x() = -__MYE_MATH_FRUSTUM_RIGHT.Coefficient();
-
-			corners[static_cast<int>(FrustumCorners::RIGHT_BOTTOM_FAR)] = Cramer(A, b);
-
-			A.SetRow(1, __MYE_MATH_FRUSTUM_TOP.Normal());
-			b.y() = -__MYE_MATH_FRUSTUM_TOP.Coefficient();
-
-			corners[static_cast<int>(FrustumCorners::RIGHT_TOP_FAR)] = Cramer(A, b);
-
-			A.SetRow(0, __MYE_MATH_FRUSTUM_LEFT.Normal());
-			b.x() = -__MYE_MATH_FRUSTUM_LEFT.Coefficient();
-
-			corners[static_cast<int>(FrustumCorners::LEFT_TOP_FAR)] = Cramer(A, b);*/
 
 			return corners;
 

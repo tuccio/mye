@@ -29,22 +29,20 @@ namespace mye
 			bool Init(void);
 			void Shutdown(void);
 
-			void Render(ID3D11RenderTargetView *target);
+			void Render(ID3D11RenderTargetView * target);
 
 		private:
 
-			bool                    m_initialized;
-
-			DX11Device             &m_device;
-
-			DX11VertexShaderPointer m_text2dVS;
-			DX11PixelShaderPointer  m_text2dPS;
-
-			ID3D11SamplerState     *m_fontTextureSampler;
-
-			DX11ConstantBuffer      m_textColorBuffer;
-
-			DX11SwapChain          *m_swapChain;
+			bool                      m_initialized;
+								      
+			DX11Device              & m_device;
+								      
+			DX11VertexShaderPointer   m_text2dVS;
+			DX11PixelShaderPointer    m_text2dPS;
+								      
+			ID3D11SamplerState      * m_fontTextureSampler;
+								      
+			DX11ConstantBuffer        m_textColorBuffer;
 
 			bool CreateConstantBuffers(void);
 

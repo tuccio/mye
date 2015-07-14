@@ -57,7 +57,7 @@ namespace mye
 		};
 
 		template <typename T, int SourceVectorSize>
-		static void __math_vec_push(lua_State * L, const Matrix<T, SourceVectorSize, 1> &sv, const std::vector<int> &swizzleResult)
+		static void __math_vec_push(lua_State * L, const Matrix<T, SourceVectorSize, 1> & sv, const std::vector<int> & swizzleResult)
 		{
 
 			Object rvalue;
@@ -335,7 +335,7 @@ namespace mye
 		}
 
 		template <typename T>
-		void BindVector3(State state, const char *classname)
+		void BindVector3(State state, const char * classname)
 		{
 
 			typedef Matrix<T, 3, 1> VectorType;
@@ -437,7 +437,7 @@ namespace mye
 		}
 
 		template <typename T>
-		void BindVector2(State state, const char *classname)
+		void BindVector2(State state, const char * classname)
 		{
 
 			typedef Matrix<T, 2, 1> VectorType;
@@ -530,7 +530,7 @@ namespace mye
 */
 		}
 
-		void BindQuaternion(State state, const char *classname)
+		void BindQuaternion(State state, const char * classname)
 		{
 
 			state
@@ -590,7 +590,7 @@ namespace mye
 		}
 
 		template <typename T>
-		void BindMatrix3(State state, const char *classname)
+		void BindMatrix3(State state, const char * classname)
 		{
 
 			typedef Matrix<T, 3, 3> MatrixType;
@@ -654,10 +654,12 @@ namespace mye
 		}
 
 		template <typename T>
-		void BindMatrix4(State state, const char *classname)
+		void BindMatrix4(State state, const char * classname)
 		{
 
 			typedef Matrix<T, 4, 4> MatrixType;
+
+			std::function<T(const MatrixType &, int, int)> f([] (const MatrixType & m, int i, int j) -> T { return m(i, j); });
 
 			state
 			[
@@ -674,6 +676,7 @@ namespace mye
 					Function("Inverse",     &MatrixType::Inverse).
 					Function("Transpose",   &MatrixType::Transpose).
 					Function("Determinant", &MatrixType::Determinant).
+					Function("Get",         f).
 
 					Operator(Operand<const MatrixType &>() == Operand<const MatrixType &>()).
 
@@ -719,7 +722,7 @@ namespace mye
 
 		}
 
-		void BindTransform(State state, const char *classname)
+		void BindTransform(State state, const char * classname)
 		{
 
 			state
@@ -756,7 +759,7 @@ namespace mye
 
 		}
 
-		void BindVolumes(State state, const char *classname)
+		void BindAABB(State state, const char * classname)
 		{
 
 			state
@@ -798,7 +801,31 @@ namespace mye
 
 		}
 
-		void BindRay(State state, const char *classname)
+		void BindPlane(State state, const char * classname)
+		{
+
+			// TODO
+
+			state
+			[
+				Class<Plane>(classname)
+			];
+
+		}
+
+		void BindFrustum(State state, const char * classname)
+		{
+
+			// TODO
+
+			state
+			[
+				Class<Frustum>(classname)
+			];
+
+		}
+
+		void BindRay(State state, const char * classname)
 		{
 
 			state
@@ -852,7 +879,9 @@ namespace mye
 							  
 			BindTransform     (state, MYE_LUA_TRANSFORM);
 							  
-			BindVolumes       (state, MYE_LUA_AABB);
+			BindPlane         (state, MYE_LUA_PLANE);
+			BindFrustum       (state, MYE_LUA_FRUSTUM);
+			BindAABB          (state, MYE_LUA_AABB);
 
 			BindRay           (state, MYE_LUA_RAY);
 

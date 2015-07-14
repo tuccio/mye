@@ -20,6 +20,9 @@
 #include "DX11DeferredShadingRenderer.h"
 #include "DX11DeferredLightingRenderer.h"
 #include "DX11Text2DRenderer.h"
+#include "DX11DebugRenderer.h"
+
+#include <mye/core/Singleton.h>
 
 #define __MYE_FPS_COUNTER_BUFFER_SIZE 10
 
@@ -31,7 +34,8 @@ namespace mye
 
 		class DX11Module :
 			public mye::core::GraphicsModule,
-			public mye::core::IWindow::Listener
+			public mye::core::IWindow::Listener,
+			public mye::core::Singleton<DX11Module>
 		{
 
 		public:
@@ -53,13 +57,20 @@ namespace mye
 				return &m_device;
 			}
 
+			void RenderShaderResource(DX11ShaderResource & resource, const mye::math::Vector2i & position, const mye::math::Vector2i & size);
+			void RenderFrustum(const mye::math::Frustum & frustum, const mye::math::Vector4 & color);
+
 			// Window
 
 			void SetWindow(mye::win::Window * window);
 			void FreeWindow(void);
 
 			void OnResize(mye::core::IWindow  *window, const mye::math::Vector2i & size);
-			
+
+			inline DX11DepthBuffer & GetDepthBuffer(void)
+			{
+				return m_deferredLightingRenderer.GetDepthBuffer();
+			}
 
 		private:
 
@@ -74,6 +85,7 @@ namespace mye
 			DX11BasicRenderer            m_basicRenderer;
 			DX11DeferredShadingRenderer  m_deferredShadingRenderer;
 			DX11DeferredLightingRenderer m_deferredLightingRenderer;
+			DX11DebugRenderer            m_debugRenderer;
 
 			// FPS Counter
 

@@ -45,8 +45,19 @@ namespace mye
 
 				}
 
-				__MYE_MATH_INLINE static T Arctangent(T x)
+				__MYE_MATH_INLINE static T Arctangent(T r)
 				{
+
+					if (r == 0)
+					{
+						return T(0);
+					}
+
+					// Abramowitch & Stegun 4.4.47
+					// Needs the input to be in the [-1, 1] range
+					// Computes atan(1/r)
+
+					T x = T(1) / r;
 
 					T x2 = x  * x;
 					T x3 = x2 * x;
@@ -60,7 +71,7 @@ namespace mye
 					      T(0.0851330) * x7 +
 					      T(0.0208351) * x9;
 
-					return y;
+					return (r > 0 ? __MYE_MATH_HALFPI : - __MYE_MATH_HALFPI) - y;
 
 				}
 
@@ -83,7 +94,7 @@ namespace mye
 
 				__MYE_MATH_INLINE static T Arccosine(T x)
 				{
-					return return __MYE_MATH_HALFPI - Arcsine(x);
+					return __MYE_MATH_HALFPI - Arcsine(x);
 				}
 
 				__MYE_MATH_INLINE static T Sine(T angle)

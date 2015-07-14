@@ -135,14 +135,11 @@ void DX11SwapChain::Resize(int width, int height)
 	m_swapChainConfiguration.width  = width;
 	m_swapChainConfiguration.height = height;
 
-	m_swapChain->ResizeBuffers(
-		1,
-		width,
-		height,
-		GetDXGIFormat(m_swapChainConfiguration.format),
-		0);
 
-	CreateBackBufferView();
+	if (!__MYE_DX11_HR_TEST_FAILED(m_swapChain->ResizeBuffers(1, width, height, GetDXGIFormat(m_swapChainConfiguration.format), 0)))
+	{
+		CreateBackBufferView();
+	}
 
 }
 

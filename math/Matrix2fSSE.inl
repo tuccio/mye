@@ -21,10 +21,7 @@ namespace mye
 		
 		__MYE_MATH_INLINE Matrix<float, 2, 2>::Matrix(float d)
 		{
-			_00(m_data) = d;
-			_01(m_data) = float(0);
-			_10(m_data) = float(0);
-			_11(m_data) = d;
+			m_vector = _mm_set_ps(d, 0, 0, d);
 		}
 
 		__MYE_MATH_INLINE Matrix<float, 2, 2>::Matrix(__m128 v)
@@ -34,10 +31,7 @@ namespace mye
 		
 		__MYE_MATH_INLINE void Matrix<float, 2, 2>::Fill(float x)
 		{
-			_00(m_data) = x;
-			_01(m_data) = x;
-			_10(m_data) = x;
-			_11(m_data) = x;
+			m_vector = _mm_set_ps(x, x, x, x);
 		}
 
 		

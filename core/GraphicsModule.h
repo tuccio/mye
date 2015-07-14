@@ -39,6 +39,8 @@ namespace mye
 				return &m_rendererConfiguration;
 			}
 
+			virtual void RenderFrustum(const mye::math::Frustum & frustum, const mye::math::Vector4 & color) = 0;
+
 		protected:
 
 			IWindow               * m_mainWindowPointer;

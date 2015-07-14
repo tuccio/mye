@@ -43,7 +43,8 @@ bool DX11Texture::LoadImpl(void)
 		bool renderTarget = m_params.Contains("renderTarget") && m_params.GetBool("renderTarget");
 		bool generateMips = m_params.Contains("generateMips") && m_params.GetBool("generateMips");
 
-		int mipmaps = m_params.Contains("mipmaps") ? m_params.GetInteger("mipmaps") : 1;
+		int mipmaps     = m_params.Contains("mipmaps") ? m_params.GetInteger("mipmaps") : 1;
+		int count       = m_params.Contains("slices") ? m_params.GetInteger("slices") : 1;
 		int msaaSamples = m_params.Contains("msaa") ? m_params.GetInteger("msaa") : 0;
 
 		m_msaa = static_cast<MSAA>(msaaSamples);
@@ -57,7 +58,7 @@ bool DX11Texture::LoadImpl(void)
 		tex2dDesc.Height             = m_height;
 
 		tex2dDesc.MipLevels          = mipmaps;
-		tex2dDesc.ArraySize          = 1;
+		tex2dDesc.ArraySize          = count;
 		tex2dDesc.Format             = dxgiFormat;
 		
 		tex2dDesc.BindFlags          = D3D11_BIND_SHADER_RESOURCE;
@@ -125,6 +126,7 @@ bool DX11Texture::Create(int width, int height, mye::core::DataFormat format)
 	bool generateMips = m_params.Contains("generateMips") && m_params.GetBool("generateMips");
 
 	int mipmaps = m_params.Contains("mipmaps") ? m_params.GetInteger("mipmaps") : 1;
+	int count   = m_params.Contains("slices") ? m_params.GetInteger("slices") : 1;
 	
 	SetMSAA();
 
@@ -134,7 +136,7 @@ bool DX11Texture::Create(int width, int height, mye::core::DataFormat format)
 	tex2dDesc.Height             = m_height;
 
 	tex2dDesc.MipLevels          = mipmaps;
-	tex2dDesc.ArraySize          = 1;
+	tex2dDesc.ArraySize          = count;
 	tex2dDesc.Format             = dxgiFormat;
 
 	tex2dDesc.BindFlags          = D3D11_BIND_SHADER_RESOURCE;

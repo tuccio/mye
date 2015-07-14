@@ -59,7 +59,7 @@ void OctreeSceneModule::AddGameObject(const GameObjectHandle & hObj)
 
 	GameObject * object = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
 
-	if (m_dynamicObjects.Insert(object))
+	if (object->GetRenderComponent() && m_dynamicObjects.Insert(object))
 	{
 		m_objects.push_back(object);
 	}
@@ -76,7 +76,10 @@ void OctreeSceneModule::RemoveGameObject(const GameObjectHandle & hObj)
 
 	GameObject * object = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
 
-	m_dynamicObjects.Remove(object);
+	if (object->GetRenderComponent())
+	{
+		m_dynamicObjects.Remove(object);
+	}
 
 	if (object->GetLightComponent())
 	{

@@ -48,7 +48,7 @@ namespace mye
 			RendererConfiguration(void) :
 				m_resolution(mye::math::Vector2i(1280, 720)),
 				m_gamma(1.8f),
-				m_shadowMapResolution(2048),
+				m_shadowMapResolution(1024),
 				m_vsmMinVariance(mye::math::Epsilon()),
 				m_vsmMinBleeding(0.2f)
 			{

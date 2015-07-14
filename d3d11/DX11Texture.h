@@ -44,7 +44,7 @@ namespace mye
 			~DX11Texture(void);
 
 			bool Create(int width, int height, mye::core::DataFormat format);
-			void Destroy(void);			
+			void Destroy(void);
 
 		protected:
 

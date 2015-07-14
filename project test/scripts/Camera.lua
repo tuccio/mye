@@ -2,7 +2,7 @@ local Camera = { }
 
 function Camera:Init()
 	
-	self.camera.fovy = 60
+	self.camera.fovy = 90
 	self.camera.far  = 100
 	self.camera.near = 0.001
 	
@@ -68,7 +68,9 @@ function Camera:OnMouseMove(from, to)
 		local r1 = quaternion(vec3(0, 1, 0), theta)
 		local r2 = quaternion(vec3(1, 0, 0), phi)
 		
-		self.transform.orientation = r1 * orientation * r2
+		local newOrientation = (r1 * orientation * r2):Normalize()
+		
+		self.transform.orientation = newOrientation
 		
 	end
 

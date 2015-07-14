@@ -14,17 +14,17 @@ cbuffer cbTransform
 struct VSInput
 {
 
-	float3 position  : POSITION;
-	float2 texcoord  : TEXCOORD0;
-	float3 normal    : NORMAL;
+	float3 position : POSITION;
+	float2 texcoord : TEXCOORD0;
+	float3 normal   : NORMAL;
 
 };
 
 struct VSOutput
 {
 
-	float4 positionCS  : SV_Position;
-	float2 texcoord    : TEXCOORD;
+	float4 positionCS : SV_Position;
+	float2 texcoord   : TEXCOORD;
 
 };
 

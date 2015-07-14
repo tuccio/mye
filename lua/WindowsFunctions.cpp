@@ -30,7 +30,7 @@ namespace mye
 
 					Class<mye::win::Window, IWindow>(MYE_LUA_WINDOW).
 						Constructor<>(),
-
+					
 					Function("CreateConsole",  &mye::win::CreateConsole),
 					Function("DestroyConsole", &mye::win::DestroyConsole),
 					Function("FocusConsole",   &mye::win::FocusConsole),

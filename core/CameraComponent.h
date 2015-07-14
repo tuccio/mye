@@ -20,9 +20,13 @@ namespace mye
 			__MYE_DECLARE_ALIGNED_16
 
 			CameraComponent(void);
+			CameraComponent(const Camera & camera);
 			~CameraComponent(void);
 
 			ComponentTypes GetComponentType(void) const;
+
+			Camera GetCamera(void) const;
+			void SetCamera(const Camera & camera);
 
 			CameraComponent * Clone(void) const;
 

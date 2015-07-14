@@ -221,10 +221,46 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 	if (camera)
 	{
 
-		auto visibleObjects = scene->GetVisibleObjects(*camera);
+		//auto visibleObjects = scene->GetVisibleObjects(*camera);
+		auto visibleObjects = scene->GetObjectsList();
 
 		Matrix4 view       = camera->GetViewMatrix();
 		Matrix4 projection = camera->GetProjectionMatrix();
+
+		Vector3 tmp1 = camera->GetPosition();
+		Vector4 tmp2 = view * Vector4(tmp1, 1);
+		Vector4 tmp3 = projection * view * Vector4(tmp1, 1);
+		Vector4 tmp4 = Vector4(tmp1 + camera->Forward() * camera->GetNearClipDistance(), 1);
+		Vector4 tmp5 = view * tmp4;
+		Vector4 tmp6 = projection * tmp5;
+		Vector4 tmp7 = Vector4(tmp1 + camera->Forward() * camera->GetFarClipDistance(), 1);
+		Vector4 tmp8 = view * tmp7;
+		Vector4 tmp9 = projection * tmp8;
+		Vector4 tmp10 = (projection * view) * tmp4;
+
+
+		Matrix4 ivp = (projection * view).Inverse();
+
+
+		Vector4 tmp11 = ivp * Vector4(0, 0, 0, 1);
+		Vector4 tmp12 = ivp * Vector4(-1, -1, 0, 1);
+		Vector4 tmp13 = ivp * Vector4(1, 1, 0, 1);
+		Vector4 tmp14 = ivp * Vector4(-1, -1, 1, 1);
+		Vector4 tmp15 = ivp * Vector4(1, 1, 1, 1);
+
+		Vector4 tmp16 = tmp11 / tmp11.w();		
+		Vector4 tmp17 = tmp12 / tmp12.w();
+		Vector4 tmp18 = tmp13 / tmp13.w();
+		Vector4 tmp19 = tmp14 / tmp14.w();
+		Vector4 tmp20 = tmp15 / tmp15.w();
+
+		auto corners = camera->GetFrustum().GetCorners();
+
+		std::array<Vector4, 8> vCorners;
+		std::array<Vector4, 8> pCorners;
+
+		std::transform(corners.begin(), corners.end(), vCorners.begin(), [&view, &projection] (const Vector3 & v) { return view * Vector4(v, 1); });
+		std::transform(corners.begin(), corners.end(), pCorners.begin(), [&view, &projection] (const Vector3 & v) { return projection * view * Vector4(v, 1); });
 
 		/* First step */
 
@@ -312,13 +348,13 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 		ID3D11RenderTargetView * lbuffer[] = { m_lbuffer.GetRenderTargetView() };
 
-		Vector4f quad[6] = {
-			Vector4f(-1.0f, 1.0f, 0.0f, 1.0f),
-			Vector4f(1.0f, -1.0f, 0.0f, 1.0f),
-			Vector4f(-1.0f, -1.0f, 0.0f, 1.0f),
-			Vector4f(1.0f, 1.0f, 0.0f, 1.0f),
-			Vector4f(1.0f, -1.0f, 0.0f, 1.0f),
-			Vector4f(-1.0f, 1.0f, 0.0f, 1.0f)
+		float quad[] = {
+			-1.0f,  1.0f, 0.0f, 1.0f,
+			 1.0f, -1.0f, 0.0f, 1.0f,
+			-1.0f, -1.0f, 0.0f, 1.0f,
+			 1.0f,  1.0f, 0.0f, 1.0f,
+			 1.0f, -1.0f, 0.0f, 1.0f,
+			-1.0f,  1.0f, 0.0f, 1.0f
 		};
 
 		DX11VertexBuffer quadBuffer(nullptr, "", nullptr, m_device);
@@ -330,9 +366,21 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 		for (Light * light : scene->GetLightsList())
 		{
 
+
 			/* Generate RSM */
 
 			m_rsm.Render(light);
+
+			int slices;
+
+			if (light->GetType() == LightType::DIRECTIONAL)
+			{
+				slices = m_rsm.GetCSMSlices();
+			}
+			else
+			{
+				slices = 1;
+			}
 
 			/* Render to light buffer */
 
@@ -348,9 +396,6 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 			m_device.GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_SHADOWMAP,     1, &m_shadowMapSamplerState);
 			m_device.GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_SHADOWMAP_CMP, 1, &m_shadowMapSamplerCmpState);
-
-			m_rsm.GetDepthShaderResource().Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_SHADOWMAP);
-			//m_rsm.GetVSMShaderResource().Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_SHADOWMAP);
 
 			m_gbuffer0.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_GBUFFER0);
 			m_gbuffer1.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_GBUFFER1);
@@ -377,32 +422,47 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 			m_cameraBuffer.SetData(&cameraBuffer);
 			m_cameraBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, 1);
 
-			matrixBuffer.SetData(&m_rsm.GetLightSpaceTransformMatrix());
-			matrixBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_LIGHTSPACETRANSFORM);
+			//m_device.SetBlending(true);
 
-			m_configurationBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_RENDERCONFIGURATION);
+			for (int sliceIndex = 0; sliceIndex < slices; sliceIndex++)
+			{
 
-			/* Render the quad */
+				const Matrix4      & shadowViewProjMatrix = m_rsm.GetLightSpaceTransformMatrix(sliceIndex);
+				DX11ShaderResource & rsmDepth             = m_rsm.GetDepthShaderResource(sliceIndex);
 
-			quadBuffer.Bind();
+				int size = 250;
+				DX11Module::GetSingleton().RenderShaderResource(m_rsm.GetFluxShaderResource(sliceIndex), Vector2i(size * sliceIndex, 0), Vector2i(size));
 
-			m_device.GetImmediateContext()->
-				IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+				rsmDepth.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_SHADOWMAP);
+				//m_rsm.GetVSMShaderResource(i).Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_SHADOWMAP);
 
-			m_device.GetImmediateContext()->Draw(quadBuffer.GetVerticesCount(), 0);
+				matrixBuffer.SetData(&shadowViewProjMatrix);
+				matrixBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_LIGHTSPACETRANSFORM);
 
-			quadBuffer.Unbind();
+				m_configurationBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_RENDERCONFIGURATION);
+
+				/* Render the quad */
+
+				quadBuffer.Bind();
+
+				m_device.GetImmediateContext()->
+					IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+				m_device.GetImmediateContext()->Draw(quadBuffer.GetVerticesCount(), 0);
+
+				quadBuffer.Unbind();
+
+				rsmDepth.Unbind();
+				//m_rsm.GetVSMShaderResource().Unbind();
+
+			}			
 
 			m_gbuffer0.Unbind();
 			m_gbuffer1.Unbind();
 
-			m_rsm.GetDepthShaderResource().Unbind();
-			//m_rsm.GetVSMShaderResource().Unbind();
-
 		}
 
 		matrixBuffer.Destroy();
-
 		quadBuffer.Destroy();
 
 		/* Final pass */

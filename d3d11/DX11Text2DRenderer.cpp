@@ -19,13 +19,6 @@ DX11Text2DRenderer::DX11Text2DRenderer(DX11Device &device) :
 	m_initialized(false),
 	m_textColorBuffer(nullptr, "", nullptr, device)
 {
-
-	DX11DepthBufferConfiguration depthBufferConf;
-
-	depthBufferConf.device = &device;
-	depthBufferConf.height = 0;
-	depthBufferConf.width = 0;
-
 }
 
 
@@ -126,7 +119,7 @@ void DX11Text2DRenderer::Render(ID3D11RenderTargetView *target)
 	m_device.SetBlending(true);
 	m_device.SetDepthTest(DX11DepthTest::OFF);
 
-	for (Text2DComponent *t2dc : Game::GetSingleton().GetSceneModule()->GetText2DList())
+	for (Text2DComponent * t2dc : Game::GetSingleton().GetSceneModule()->GetText2DList())
 	{
 
 		// Draw text

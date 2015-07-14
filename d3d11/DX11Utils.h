@@ -185,6 +185,16 @@ namespace mye
 					vDesc.SemanticIndex        = 0;
 					break;
 
+				case mye::core::VertexAttributeSemantic::DIFFUSE:
+					vDesc.SemanticName         = "DIFFUSE";
+					vDesc.SemanticIndex        = 0;
+					break;
+
+				case mye::core::VertexAttributeSemantic::SPECULAR:
+					vDesc.SemanticName         = "SPECULAR";
+					vDesc.SemanticIndex        = 0;
+					break;
+
 				default:
 					break;
 
@@ -204,6 +214,7 @@ namespace mye
 			}
 
 			return v;
+
 		}
 
 	}

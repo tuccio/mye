@@ -5,7 +5,7 @@
 cbuffer cbTransform : register(b0)
 {
 	float4x4 g_world;
-	float4x4 g_worldViewMatrix;
+	float4x4 g_worldView;
 	float4x4 g_worldViewProj;
 };
 

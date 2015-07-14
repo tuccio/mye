@@ -234,3 +234,19 @@ DXGI_SAMPLE_DESC DX11Device::GetMSAASampleDesc(MSAA msaa, DXGI_FORMAT format)
 	return sampleDesc;
 
 }
+
+std::vector<D3D11_VIEWPORT> DX11Device::GetViewports(void)
+{
+
+	D3D11_VIEWPORT oldViewports[D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
+	unsigned int numViewports = D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE;
+
+	GetImmediateContext()->RSGetViewports(&numViewports, oldViewports);
+	return std::vector<D3D11_VIEWPORT>(oldViewports, oldViewports + numViewports);
+
+}
+
+void DX11Device::SetViewports(const D3D11_VIEWPORT * viewports, unsigned int numViewports)
+{
+	GetImmediateContext()->RSSetViewports(numViewports, viewports);
+}

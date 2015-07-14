@@ -105,7 +105,7 @@ namespace mye
 
 			__m128 t0 = detail::SSEDot4(m_vector, m_vector);
 			__m128 t1 = detail::SSENewtonRaphson<1>::ReciprocalSquareRootSS(t0);
-			__m128 t2 = _mm_mul_ps(t1, detail::SplatSS(t1));
+			__m128 t2 = _mm_mul_ps(m_vector, detail::SplatSS(t1));
 
 			return QuaternionTempl<float>(t2);
 

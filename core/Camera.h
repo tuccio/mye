@@ -65,8 +65,8 @@ namespace mye
 			inline void UpdateProjection(void);
 			inline void UpdateFrustum(void);
 
-			inline mye::math::Matrix4 GetViewMatrix(void) const;
-			inline mye::math::Matrix4 GetProjectionMatrix(void) const;
+			mye::math::Matrix4 GetViewMatrix(void) const;
+			mye::math::Matrix4 GetProjectionMatrix(void) const;
 
 			inline const mye::math::Matrix4 & GetViewMatrix(void);
 			inline const mye::math::Matrix4 & GetProjectionMatrix(void);
@@ -74,7 +74,7 @@ namespace mye
 			inline mye::math::Frustum         GetFrustum(void) const;
 			inline const mye::math::Frustum & GetFrustum(void);
 
-			mye::math::Ray RayCast(const mye::math::Vector2 &screenCoords) const;
+			mye::math::Ray RayCast(const mye::math::Vector2 & screenCoords) const;
 
 		private:
 

@@ -108,6 +108,12 @@ glm::vec2           g_viewportSize;
 int main(int argc, char * argv[])
 {
 
+	Vector3 points[3] = {
+		Vector3(1, 2, 3),
+		Vector3(-1, 0, 0),
+		Vector3(-4, -1, 2)
+	};
+
 	g_octree.Create(Vector3(0), 5.0f, 2);
 
 	g_cameraPosition    = glm::vec3(0, 0, -25.0f);

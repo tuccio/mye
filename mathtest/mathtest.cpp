@@ -126,6 +126,19 @@ int main(int argc, char * argv[])
 	OctaveLikePrint("inverse(m2)", m2.Inverse());
 	OctaveLikePrint("m2 * inverse(m2)", m2 * m2.Inverse());
 
+	m1 = {
+		-0.97194f, 0.00000f, 0.00000f, 0.00000f,
+		0.00000f, 1.00000f, 0.00000f, -1.00000f,
+		0.00000f, 0.00000f, -1.00010f, 2.99930f,
+		0.00000f, 0.00000f, -1.00000f, 4.00000f
+	};
+
+	OctaveLikePrint("m1", m1);
+	OctaveLikePrint("inverse(m1)", m1.Inverse());
+	OctaveLikePrint("m1 * inverse(m1)", m1 * m1.Inverse());
+
+	system("pause");
+
 	Matrix3f m3;
 
 	MatrixFill(m3, MatrixIncrementalValue<float, 3, 3>);
@@ -184,7 +197,7 @@ int main(int argc, char * argv[])
 	OctaveLikePrint("Sqrt(2)",    Sqrt(2.0f));
 	OctaveLikePrint("InverseSqrt(2)",    InverseSqrt(2.0f));
 	OctaveLikePrint("Sqrt(2, 3, 4, 5)", Sqrt(Vector4(2, 3, 4, 5)));
-	OctaveLikePrint("Sqrt(6, 7, 8, 9)", InverseSqrt(Vector4(6, 7, 8, 9)));
+	OctaveLikePrint("InverseSqrt(6, 7, 8, 9)", InverseSqrt(Vector4(6, 7, 8, 9)));
 
 	system("pause");
 

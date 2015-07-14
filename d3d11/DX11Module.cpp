@@ -2,6 +2,7 @@
 #include "DX11VertexBuffer.h"
 #include "DX11Font.h"
 #include "DX11RasterizerState.h"
+#include "DX11ShaderManager.h"
 
 #include <mye/core/Game.h>
 #include <mye/core/ResourceTypeManager.h>
@@ -24,15 +25,15 @@ DX11Module::DX11Module(void) :
 	m_deferredShadingRenderer (m_device, nullptr),
 	m_deferredLightingRenderer(m_device, nullptr),
 	m_text2dRenderer          (m_device),
+	m_debugRenderer           (m_device),
 
 	m_stopWatchBufferHead(0)
 
 {
-
 	SetWindow(nullptr);
 }
 
-DX11Module::DX11Module(Window *window) :
+DX11Module::DX11Module(Window * window) :
 
 	m_window(nullptr),
 
@@ -40,6 +41,7 @@ DX11Module::DX11Module(Window *window) :
 	m_deferredShadingRenderer (m_device, nullptr),
 	m_deferredLightingRenderer(m_device, nullptr),
 	m_text2dRenderer          (m_device),
+	m_debugRenderer           (m_device),
 
 	m_stopWatchBufferHead(0)
 
@@ -60,7 +62,7 @@ bool DX11Module::Init(void)
 	if (m_window)
 	{
 		m_window->Show();
-	}	
+	}
 
 	if ((m_device.Exists() || m_device.Create()) &&
 		(m_swapChain.Exists() || m_swapChain.Create()))
@@ -74,7 +76,8 @@ bool DX11Module::Init(void)
 		rasterizeState.Use();
 
 		if (__MYE_DX11_RENDERER.Init() &&
-			m_text2dRenderer.Init())
+			m_text2dRenderer.Init() &&
+			m_debugRenderer.Init())
 		{
 			m_stopWatch.Start();
 			Module::Init();
@@ -92,6 +95,7 @@ void DX11Module::Shutdown(void)
 	m_stopWatch.Stop();
 	__MYE_DX11_RENDERER.Shutdown();
 	m_text2dRenderer.Shutdown();
+	m_debugRenderer.Shutdown();
 	
 	FreeWindow();
 
@@ -110,6 +114,7 @@ void DX11Module::Render(void)
 	__MYE_DX11_RENDERER.Render(backBuffer);
 
 	m_text2dRenderer.Render(backBuffer);
+	m_debugRenderer.Render(backBuffer);
 
 	m_swapChain->Present((m_vsync ? 1 : 0), 0);
 	
@@ -148,6 +153,7 @@ void DX11Module::SetWindow(Window * window)
 
 		m_basicRenderer.SetWindow(window);
 		__MYE_DX11_RENDERER.SetWindow(window);
+		
 
 		if (m_device.Exists())
 		{
@@ -196,10 +202,10 @@ void DX11Module::OnResize(IWindow * window, const mye::math::Vector2i & size)
 
 		D3D11_VIEWPORT viewPort;
 
-		viewPort.MinDepth = 0.0f;
-		viewPort.MaxDepth = 1.0f;
-		viewPort.TopLeftX = 0.0f;
-		viewPort.TopLeftY = 0.0f;
+		viewPort.MinDepth = 0.f;
+		viewPort.MaxDepth = 1.f;
+		viewPort.TopLeftX = 0.f;
+		viewPort.TopLeftY = 0.f;
 		viewPort.Width    = (float) size.x();
 		viewPort.Height   = (float) size.y();
 
@@ -224,4 +230,14 @@ float DX11Module::GetFPS(void) const
 
 	return (1000 * __MYE_FPS_COUNTER_BUFFER_SIZE) / (float) t;
 
+}
+
+void DX11Module::RenderShaderResource(DX11ShaderResource & resource, const Vector2i & position, const Vector2i & size)
+{
+	m_debugRenderer.EnqueueShaderResource(resource, position, size);
+}
+
+void DX11Module::RenderFrustum(const Frustum & frustum, const Vector4 & color)
+{
+	m_debugRenderer.EnqueueFrustum(frustum, color);
 }

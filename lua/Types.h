@@ -68,6 +68,8 @@
 
 #define MYE_LUA_RAY                   "Ray"
 #define MYE_LUA_AABB                  "AABB"
+#define MYE_LUA_PLANE                 "Plane"
+#define MYE_LUA_FRUSTUM               "Frustum"
 
 #define MYE_LUA_WIN                   "Windows"
 #define MYE_LUA_WINDOW                "Window"
