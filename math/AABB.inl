@@ -35,31 +35,31 @@ namespace mye
 		}
 
 		template <typename T>
-		Matrix<T, 3, 1> AABBTempl<T>::GetCenter(void) const
+		__MYE_MATH_INLINE Matrix<T, 3, 1> AABBTempl<T>::GetCenter(void) const
 		{
 			return (m_max + m_min) * T(0.5);
 		}
 
 		template <typename T>
-		Matrix<T, 3, 1> AABBTempl<T>::GetHalfExtents(void) const
+		__MYE_MATH_INLINE Matrix<T, 3, 1> AABBTempl<T>::GetHalfExtents(void) const
 		{
 			return (m_max - m_min) * T(0.5);
 		}
 
 		template <typename T>
-		Matrix<T, 3, 1> AABBTempl<T>::GetMinimum(void) const
+		__MYE_MATH_INLINE Matrix<T, 3, 1> AABBTempl<T>::GetMinimum(void) const
 		{
 			return m_min;
 		}
 
 		template <typename T>
-		Matrix<T, 3, 1> AABBTempl<T>::GetMaximum(void) const
+		__MYE_MATH_INLINE Matrix<T, 3, 1> AABBTempl<T>::GetMaximum(void) const
 		{
 			return m_max;
 		}
 
 		template <typename T>
-		std::array<Matrix<T, 3, 1>, 8> AABBTempl<T>::GetCorners(void) const
+		__MYE_MATH_INLINE std::array<Matrix<T, 3, 1>, 8> AABBTempl<T>::GetCorners(void) const
 		{
 
 			std::array<Matrix<T, 3, 1>, 8> corners;
@@ -97,7 +97,7 @@ namespace mye
 		}
 
 		template <typename T>
-		Vector3i AABBTempl<T>::GetAxesOrderBySize(void) const
+		__MYE_MATH_INLINE Vector3i AABBTempl<T>::GetAxesOrderBySize(void) const
 		{
 
 			Matrix<T, 3, 1> halfExtents = GetHalfExtents();
@@ -140,7 +140,7 @@ namespace mye
 		}
 
 		template <typename T>
-		AABBTempl<T> AABBTempl<T>::TransformAffine(const Matrix<T, 4, 4> & t) const
+		__MYE_MATH_INLINE AABBTempl<T> AABBTempl<T>::TransformAffine(const Matrix<T, 4, 4> & t) const
 		{
 
 			auto corners = GetCorners();
@@ -163,7 +163,7 @@ namespace mye
 		}
 
 		template <typename T>
-		bool AABBTempl<T>::Contains(const Matrix<T, 3, 1> & x) const
+		__MYE_MATH_INLINE bool AABBTempl<T>::Contains(const Matrix<T, 3, 1> & x) const
 		{
 
 			return x.x() <= m_max.x() &&
@@ -176,7 +176,7 @@ namespace mye
 		}
 
 		template <typename T>
-		bool AABBTempl<T>::ContainsStrict(const Matrix<T, 3, 1> & x) const
+		__MYE_MATH_INLINE bool AABBTempl<T>::ContainsStrict(const Matrix<T, 3, 1> & x) const
 		{
 
 			return x.x() < m_max.x() &&
@@ -189,15 +189,27 @@ namespace mye
 		}
 
 		template <typename T>
-		bool AABBTempl<T>::Contains(const AABBTempl<T> & aabb) const
+		__MYE_MATH_INLINE bool AABBTempl<T>::Contains(const AABBTempl<T> & aabb) const
 		{
 			return Contains(aabb.m_min) && Contains(aabb.m_max);
 		}
 
 		template <typename T>
-		bool AABBTempl<T>::ContainsStrict(const AABBTempl<T> &aabb) const
+		__MYE_MATH_INLINE bool AABBTempl<T>::ContainsStrict(const AABBTempl<T> &aabb) const
 		{
 			return ContainsStrict(aabb.m_min) && ContainsStrict(aabb.m_max);
+		}
+
+		template <typename T>
+		__MYE_MATH_INLINE AABBTempl<T> AABBTempl<T>::operator+ (const AABBTempl<T> & aabb) const
+		{
+			return FromMinMax(m_min.CwiseMin(aabb.m_min), m_max.CwiseMax(aabb.m_max));
+		}
+
+		template <typename T>
+		__MYE_MATH_INLINE AABBTempl<T> AABBTempl<T>::operator^ (const AABBTempl<T> & aabb) const
+		{
+			return FromMinMax(m_min.CwiseMax(aabb.m_min), m_max.CwiseMin(aabb.m_max));
 		}
 
 	}

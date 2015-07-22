@@ -30,6 +30,12 @@ void DX11PixelShader::Use(void)
 	m_device.GetImmediateContext()->PSSetShader(m_shader, nullptr, 0);
 }
 
+void DX11PixelShader::Dispose(void)
+{
+	m_device.GetImmediateContext()->PSSetShader(nullptr, nullptr, 0);
+}
+
+
 ID3D11PixelShader * DX11PixelShader::GetPixelShader(void)
 {
 	return m_shader;

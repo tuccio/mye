@@ -21,20 +21,20 @@ namespace mye
 
 		public:
 
-			DX11BufferManager(DX11Device &device);
+			DX11BufferManager(DX11Device & device);
 			~DX11BufferManager(void);
 
 		protected:
 
-			DX11Buffer* CreateImpl(const mye::core::String &name,
-				mye::core::ManualResourceLoader *manual,
-				const mye::core::Parameters &params);
+			mye::core::Resource * CreateImpl(const mye::core::String & name,
+			                                 mye::core::ManualResourceLoader * manual,
+			                                 const mye::core::Parameters & params);
 
-			void FreeImpl(mye::core::Resource* resource);
+			void FreeImpl(mye::core::Resource * resource);
 
 		private:
 
-			DX11Device &m_device;
+			DX11Device & m_device;
 
 		};
 

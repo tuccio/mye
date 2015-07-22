@@ -29,7 +29,7 @@ DX11DeferredLightingRenderer::DX11DeferredLightingRenderer(DX11Device & device, 
 	m_cameraBuffer(nullptr, "", nullptr, device),
 	m_configurationBuffer(nullptr, "", nullptr, device),
 	m_clearColor(0.0f),
-	m_rsm(device, false)
+	m_rsm(device)
 {
 
 	Parameters params({ { "renderTarget", "true" } });
@@ -46,6 +46,7 @@ DX11DeferredLightingRenderer::DX11DeferredLightingRenderer(DX11Device & device, 
 	depthBufferConf.height         = 0;
 	depthBufferConf.width          = 0;
 	depthBufferConf.shaderResource = false;
+	depthBufferConf.arraySize      = 1;
 
 	m_depthBuffer = DX11DepthBuffer(depthBufferConf);
 
@@ -160,7 +161,7 @@ bool DX11DeferredLightingRenderer::Init(void)
 		CreateSamplerStates())
 	{
 
-		configuration->AddListener(this);
+		MYE_EVENT_MANAGER_ADD_LISTENER(this, EventType::RENDERER_VARIABLE_CHANGE);
 
 		OnResize(m_window, m_window->GetSize());
 
@@ -201,7 +202,7 @@ void DX11DeferredLightingRenderer::Shutdown(void)
 
 		auto configuration = static_cast<GraphicsModule*>(Game::GetSingleton().GetGraphicsModule())->GetRendererConfiguration();
 
-		configuration->RemoveListener(this);
+		MYE_EVENT_MANAGER_REMOVE_LISTENER(this, EventType::RENDERER_VARIABLE_CHANGE);
 
 		DestroyConstantBuffers();
 		DestroySamplerStates();
@@ -221,48 +222,17 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 	if (camera)
 	{
 
-		//auto visibleObjects = scene->GetVisibleObjects(*camera);
-		auto visibleObjects = scene->GetObjectsList();
-
 		Matrix4 view       = camera->GetViewMatrix();
 		Matrix4 projection = camera->GetProjectionMatrix();
+		Matrix4 viewProjection = projection * view;
 
-		Vector3 tmp1 = camera->GetPosition();
-		Vector4 tmp2 = view * Vector4(tmp1, 1);
-		Vector4 tmp3 = projection * view * Vector4(tmp1, 1);
-		Vector4 tmp4 = Vector4(tmp1 + camera->Forward() * camera->GetNearClipDistance(), 1);
-		Vector4 tmp5 = view * tmp4;
-		Vector4 tmp6 = projection * tmp5;
-		Vector4 tmp7 = Vector4(tmp1 + camera->Forward() * camera->GetFarClipDistance(), 1);
-		Vector4 tmp8 = view * tmp7;
-		Vector4 tmp9 = projection * tmp8;
-		Vector4 tmp10 = (projection * view) * tmp4;
+		auto visibleObjects = scene->GetVisibleObjects(*camera);
+		//auto visibleObjects = scene->GetObjectsList();
 
-
-		Matrix4 ivp = (projection * view).Inverse();
-
-
-		Vector4 tmp11 = ivp * Vector4(0, 0, 0, 1);
-		Vector4 tmp12 = ivp * Vector4(-1, -1, 0, 1);
-		Vector4 tmp13 = ivp * Vector4(1, 1, 0, 1);
-		Vector4 tmp14 = ivp * Vector4(-1, -1, 1, 1);
-		Vector4 tmp15 = ivp * Vector4(1, 1, 1, 1);
-
-		Vector4 tmp16 = tmp11 / tmp11.w();		
-		Vector4 tmp17 = tmp12 / tmp12.w();
-		Vector4 tmp18 = tmp13 / tmp13.w();
-		Vector4 tmp19 = tmp14 / tmp14.w();
-		Vector4 tmp20 = tmp15 / tmp15.w();
 
 		auto corners = camera->GetFrustum().GetCorners();
 
-		std::array<Vector4, 8> vCorners;
-		std::array<Vector4, 8> pCorners;
-
-		std::transform(corners.begin(), corners.end(), vCorners.begin(), [&view, &projection] (const Vector3 & v) { return view * Vector4(v, 1); });
-		std::transform(corners.begin(), corners.end(), pCorners.begin(), [&view, &projection] (const Vector3 & v) { return projection * view * Vector4(v, 1); });
-
-		/* First step */
+		/* First step (geometry buffer) */
 
 		m_deferredGeometryVS->Use();
 		m_deferredGeometryPS->Use();
@@ -295,9 +265,11 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 				TransformComponent * tc = object->GetTransformComponent();
 
-				MeshPointer mesh = rc->GetMesh();
+				//MeshPointer mesh = rc->GetMesh();
+				GPUBufferPointer gpuBuffer = rc->GetGPUBuffer();
 
-				if (mesh && mesh->Load())
+				//if (mesh && mesh->Load())
+				if (gpuBuffer && gpuBuffer->Load())
 				{
 
 					detail::TransformBuffer transformBuffer;
@@ -322,19 +294,20 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 					m_materialBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, 0);
 					m_materialBuffer.SetData(&materialBuffer);
 
-					DX11VertexBuffer vertexBuffer(nullptr, "", nullptr, m_device);
+					//DX11VertexBuffer vertexBuffer(nullptr, "", nullptr, m_device);
 
-					vertexBuffer.Create(mesh.get());
-					vertexBuffer.Bind();
+					//vertexBuffer.Create(mesh.get());
+
+					DX11VertexBufferPointer vertexBuffer = Resource::StaticCast<DX11VertexBuffer>(gpuBuffer);
+					vertexBuffer->Bind();
 
 					m_device.GetImmediateContext()->
 						IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 					m_device.GetImmediateContext()->
-						Draw(vertexBuffer.GetVerticesCount(), 0);
+						Draw(vertexBuffer->GetVerticesCount(), 0);
 
-					vertexBuffer.Unbind();
-					vertexBuffer.Destroy();
+					vertexBuffer->Unbind();
 
 				}
 
@@ -342,7 +315,7 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 		}
 
-		/* Second step */
+		/* Second step (light buffer) */
 
 		m_lbuffer.ClearRenderTarget(Vector4f(0.0f));
 
@@ -363,6 +336,16 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 		DX11ConstantBuffer matrixBuffer(nullptr, "", nullptr, m_device);
 		matrixBuffer.Create(sizeof(Matrix4));
 
+		Matrix4 cameraBufferData[2] = { view, viewProjection };
+
+		DX11ConstantBuffer cameraBuffer(nullptr, "", nullptr, m_device);
+		cameraBuffer.Create(sizeof(Matrix4) * 2, cameraBufferData);
+
+		DX11ConstantBuffer pssmSliceBuffer(nullptr, "", nullptr, m_device);
+		pssmSliceBuffer.Create(sizeof(detail::PSSMSlice) * m_rsm.GetCSMSlices());
+
+		cameraBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_CAMERATRANSFORM);
+
 		for (Light * light : scene->GetLightsList())
 		{
 
@@ -375,7 +358,21 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 			if (light->GetType() == LightType::DIRECTIONAL)
 			{
+				
 				slices = m_rsm.GetCSMSlices();
+
+				std::vector<detail::PSSMSlice> pssmBufferData;
+
+				auto & sliceSplits = m_rsm.GetPSSMSlices();
+
+				for (int i = 0; i < slices; i++)
+				{
+					pssmBufferData.push_back({ m_rsm.GetPSSMCropMatrix(i), sliceSplits[i].near, sliceSplits[i].far });
+				}
+
+				pssmSliceBuffer.SetData(&pssmBufferData[0]);
+				pssmSliceBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_PSSMBUFFER);
+
 			}
 			else
 			{
@@ -402,7 +399,7 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 			/* Setup constant buffers */			
 
-			const mye::math::Matrix4 & t = light->GetWorldMatrix();
+			const Matrix4 & t = light->GetWorldMatrix();
 
 			detail::LightBuffer lightBuffer;
 			
@@ -422,40 +419,30 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 			m_cameraBuffer.SetData(&cameraBuffer);
 			m_cameraBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, 1);
 
-			//m_device.SetBlending(true);
+			m_device.SetBlending(true);
 
-			for (int sliceIndex = 0; sliceIndex < slices; sliceIndex++)
-			{
+			const Matrix4      & shadowViewProjMatrix = m_rsm.GetLightSpaceTransformMatrix();
+			DX11ShaderResource & rsmDepth             = m_rsm.GetDepthShaderResource();
 
-				const Matrix4      & shadowViewProjMatrix = m_rsm.GetLightSpaceTransformMatrix(sliceIndex);
-				DX11ShaderResource & rsmDepth             = m_rsm.GetDepthShaderResource(sliceIndex);
+			rsmDepth.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_SHADOWMAP);
 
-				int size = 250;
-				DX11Module::GetSingleton().RenderShaderResource(m_rsm.GetFluxShaderResource(sliceIndex), Vector2i(size * sliceIndex, 0), Vector2i(size));
+			matrixBuffer.SetData(&shadowViewProjMatrix);
+			matrixBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_LIGHTSPACETRANSFORM);
 
-				rsmDepth.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_SHADOWMAP);
-				//m_rsm.GetVSMShaderResource(i).Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_SHADOWMAP);
+			m_configurationBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_RENDERCONFIGURATION);
 
-				matrixBuffer.SetData(&shadowViewProjMatrix);
-				matrixBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_LIGHTSPACETRANSFORM);
+			/* Render the quad */
 
-				m_configurationBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_RENDERCONFIGURATION);
+			quadBuffer.Bind();
 
-				/* Render the quad */
+			m_device.GetImmediateContext()->
+				IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-				quadBuffer.Bind();
+			m_device.GetImmediateContext()->Draw(quadBuffer.GetVerticesCount(), 0);
 
-				m_device.GetImmediateContext()->
-					IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			quadBuffer.Unbind();
 
-				m_device.GetImmediateContext()->Draw(quadBuffer.GetVerticesCount(), 0);
-
-				quadBuffer.Unbind();
-
-				rsmDepth.Unbind();
-				//m_rsm.GetVSMShaderResource().Unbind();
-
-			}			
+			rsmDepth.Unbind();
 
 			m_gbuffer0.Unbind();
 			m_gbuffer1.Unbind();
@@ -465,7 +452,7 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 		matrixBuffer.Destroy();
 		quadBuffer.Destroy();
 
-		/* Final pass */
+		/* Final pass (shading) */
 
 		m_deferredFinalVS->Use();
 		m_deferredFinalPS->Use();
@@ -491,9 +478,12 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 				TransformComponent * tc = object->GetTransformComponent();
 
-				MeshPointer mesh = rc->GetMesh();
+				GPUBufferPointer gpuBuffer = rc->GetGPUBuffer();
+				//MeshPointer mesh = rc->GetMesh();
 
-				if (mesh && mesh->Load())
+				//if (mesh && mesh->Load())
+
+				if (gpuBuffer && gpuBuffer->Load())
 				{
 
 					detail::TransformBuffer transformBuffer;
@@ -518,25 +508,28 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 					m_materialBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_MATERIAL);
 					m_materialBuffer.SetData(&materialBuffer);
 
-					DX11VertexBuffer vertexBuffer(nullptr, "", nullptr, m_device);
+					//DX11VertexBuffer vertexBuffer(nullptr, "", nullptr, m_device);
 
-					vertexBuffer.Create(mesh.get());
-					vertexBuffer.Bind();
+					DX11VertexBufferPointer vertexBuffer = Resource::StaticCast<DX11VertexBuffer>(gpuBuffer);
+					//vertexBuffer.Create(mesh.get());
+					vertexBuffer->Bind();
 
 					m_device.GetImmediateContext()->
 						IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 					m_device.GetImmediateContext()->
-						Draw(vertexBuffer.GetVerticesCount(), 0);
+						Draw(vertexBuffer->GetVerticesCount(), 0);
 
-					vertexBuffer.Unbind();
-					vertexBuffer.Destroy();
+					vertexBuffer->Unbind();
 
 				}
 
 			}
 
 		}
+
+		pssmSliceBuffer.Destroy();
+		cameraBuffer.Destroy();
 
 	}
 
@@ -634,12 +627,13 @@ bool DX11DeferredLightingRenderer::CreateSamplerStates(void)
 
 	D3D11_SAMPLER_DESC shadowMapSamplerCmpDesc;
 
-	shadowMapSamplerCmpDesc.Filter         = D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;
+	//shadowMapSamplerCmpDesc.Filter         = D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;
+	shadowMapSamplerCmpDesc.Filter         = D3D11_FILTER_COMPARISON_ANISOTROPIC;
 	shadowMapSamplerCmpDesc.AddressU       = D3D11_TEXTURE_ADDRESS_CLAMP;
 	shadowMapSamplerCmpDesc.AddressV       = D3D11_TEXTURE_ADDRESS_CLAMP;
 	shadowMapSamplerCmpDesc.AddressW       = D3D11_TEXTURE_ADDRESS_CLAMP;
 	shadowMapSamplerCmpDesc.MipLODBias     = 0.0f;
-	shadowMapSamplerCmpDesc.MaxAnisotropy  = 1;
+	shadowMapSamplerCmpDesc.MaxAnisotropy  = 8;
 	shadowMapSamplerCmpDesc.ComparisonFunc = D3D11_COMPARISON_LESS;
 	shadowMapSamplerCmpDesc.BorderColor[0] = 0;
 	shadowMapSamplerCmpDesc.BorderColor[1] = 0;
@@ -659,14 +653,16 @@ void DX11DeferredLightingRenderer::DestroySamplerStates(void)
 	__MYE_DX11_RELEASE_COM_OPTIONAL(m_shadowMapSamplerState);
 }
 
-void DX11DeferredLightingRenderer::OnConfigurationChange(RendererVariable variable, RendererConfiguration * configuration)
+void DX11DeferredLightingRenderer::OnEvent(const IEvent * event)
 {
 
-	switch (variable)
+	const RenderVariableChange * rEvent = static_cast<const RenderVariableChange *>(event);
+
+	switch (rEvent->variable)
 	{
 
 	case RendererVariable::SHADOWMAPRESOLUTION:
-		m_rsm.SetResolution(configuration->GetShadowMapResolution());
+		m_rsm.SetResolution(rEvent->configuration->GetShadowMapResolution());
 		break;
 
 	case RendererVariable::RESOLUTION:
@@ -677,13 +673,13 @@ void DX11DeferredLightingRenderer::OnConfigurationChange(RendererVariable variab
 
 	detail::RenderConfigurationBuffer r;
 
-	r.resolution          = configuration->GetScreenResolution();
-	r.gamma               = configuration->GetGamma();
+	r.resolution          = rEvent->configuration->GetScreenResolution();
+	r.gamma               = rEvent->configuration->GetGamma();
 
-	r.shadowMapResolution = configuration->GetShadowMapResolution();
+	r.shadowMapResolution = rEvent->configuration->GetShadowMapResolution();
 
-	r.vsmMinVariance      = configuration->GetVSMMinVariance();
-	r.vsmMinBleeding      = configuration->GetVSMMinBleeding();
+	r.vsmMinVariance      = rEvent->configuration->GetVSMMinVariance();
+	r.vsmMinBleeding      = rEvent->configuration->GetVSMMinBleeding();
 
 	m_configurationBuffer.SetData(&r);
 

@@ -17,11 +17,12 @@ namespace mye
 			VertexBuffer(void);
 			~VertexBuffer(void);
 
-			virtual bool Create(void *data, size_t n, const VertexDeclaration &vDecl) = 0;
-			virtual bool Create(Mesh *mesh) = 0;
-			virtual bool Create(Model *model) = 0;
+			virtual bool Create(void * data, size_t n, const VertexDeclaration & vDecl) = 0;
+			virtual bool Create(Mesh * mesh) = 0;
+			virtual bool Create(Model * model) = 0;
 
 			virtual void Clear(void) = 0;
+
 
 		};
 

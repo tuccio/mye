@@ -23,6 +23,8 @@ namespace mye
 			~DX11PixelShader(void);
 
 			void Use(void);
+			void Dispose(void);
+
 			void Destroy(void);
 
 			ID3D11PixelShader       * GetPixelShader(void);

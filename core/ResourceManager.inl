@@ -4,17 +4,10 @@ namespace mye
 	namespace core
 	{
 
-		std::shared_ptr<Resource> ResourceManager::CreateResource(const String &name,
-			ManualResourceLoader *manual,
-			const Parameters &params)
-		{
-			return CreateResource<Resource>(name, manual, params);
-		}
-
 		template <typename ResourceType>
-		std::shared_ptr<ResourceType> ResourceManager::CreateResource(const String &name,
-			ManualResourceLoader *manual,
-			const Parameters &params)
+		std::shared_ptr<ResourceType> ResourceManager::CreateResource(const String & name,
+		                                                              ManualResourceLoader * manual,
+		                                                              const Parameters & params)
 		{
 
 			Lock();
@@ -23,13 +16,13 @@ namespace mye
 
 			if (it != m_resources.end())
 			{
-				return Resource::StaticCast<ResourceType>(it->second);
+				return Resource::DynamicCast<ResourceType>(it->second);
 			}
 
 			Resource * r = CreateImpl(name, manual, params);
 			r->SetParametersList(params);
 
-			auto it2 = m_resources.insert(std::pair<String, ResourcePointer>(name, ResourcePointer(r)));
+			auto it2 = m_resources.emplace(std::make_pair(name, ResourcePointer(r)));
 			
 			Unlock();
 
@@ -37,13 +30,8 @@ namespace mye
 
 		}
 
-		std::shared_ptr<Resource> ResourceManager::GetResource(const String &name)
-		{
-			return GetResource<Resource>(name);
-		}
-
 		template <typename ResourceType>
-		std::shared_ptr<ResourceType> ResourceManager::GetResource(const String &name)
+		std::shared_ptr<ResourceType> ResourceManager::GetResource(const String & name)
 		{
 
 			Lock();

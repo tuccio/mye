@@ -1,17 +1,19 @@
-local CornellController = { }
+local SponzaController = { }
 
-function CornellController:Init()
+function SponzaController:Init()
 	
 	local hCam = GameObjects:CreateEntity('Camera', 'camera')
 	
-	hCam.transform.position    = vec3(0, 1, 3)
-	hCam.transform.orientation = quaternion(0, 0, 1, 0)
-	
 	if hCam and hCam:Exists() then
 	
-		hCam.camera.fovy = 60
-		hCam.camera.near = 0.001
-		hCam.camera.far  = 8	
+		hCam.transform.position    = vec3(8, 3 , 0.38)
+		hCam.transform.orientation = quaternion(0.716371, -0.063844, -0.692049, -0.0616764)
+	
+		hCam.speed       = 3
+	
+		hCam.camera.fovy = 70
+		hCam.camera.near = 0.01
+		hCam.camera.far  = 100
 		
 		Scene.camera = hCam.camera
 		
@@ -22,26 +24,18 @@ function CornellController:Init()
 	
 end
 
-function CornellController:Update()
-
-	--Graphics.window.caption = "Cornell box [FPS: " .. math.floor(Graphics.fps) .. "]"
-
-	--print(self.transform.position)
-	
-	local hLight = GameObjects:Find('light1')
-	
-	self.text2d.text = 'Light direction: ' .. tostring(hLight.light.direction)
+function SponzaController:Update()
 
 end
 
-function CornellController:OnKeyboardKeyHold(key, t)
+function SponzaController:OnKeyboardKeyHold(key, t)
 
 	local angle = 25 * Time.delta
 	local v     = vec3(0, 0, -1)
 
 	if key == KeyboardVK.R then
 	
-		local hLight = GameObjects:Find('light1')
+		local hLight = GameObjects:Find('sun')
 		
 		local q = quaternion(v, angle)
 		hLight.light.direction = q:Rotate(hLight.light.direction):Normalize()
@@ -50,7 +44,7 @@ function CornellController:OnKeyboardKeyHold(key, t)
 	
 	if key == KeyboardVK.T then
 	
-		local hLight = GameObjects:Find('light1')
+		local hLight = GameObjects:Find('sun')
 		
 		local q = quaternion(v, - angle)
 		hLight.light.direction = q:Rotate(hLight.light.direction):Normalize()
@@ -59,7 +53,7 @@ function CornellController:OnKeyboardKeyHold(key, t)
 
 end
 
-function CornellController:OnKeyboardKeyPress(key)
+function SponzaController:OnKeyboardKeyPress(key)
 
 	if key == KeyboardVK.F then
 	
@@ -126,4 +120,4 @@ function CornellController:OnKeyboardKeyPress(key)
 
 end
 
-return CornellController
+return SponzaController

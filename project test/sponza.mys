@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scene>
+	<gameobject name="controller" entity="SponzaController">
+	</gameobject>
+	<gameobject name="console" entity="DeveloperConsole">
+	</gameobject>
+	<gameobject name="sun">
+		<light type="directional">
+			<position>-1 1 0</position>
+			<direction>0.099015 -0.990148 0.099015</direction>
+			<color>0.95 0.95 0.85</color>
+			<intensity>1</intensity>
+			<range>1</range>			
+		</light>
+	</gameobject>
+	<gameobject name="arcs_floor">
+		<render>
+			<mesh name="models\sponza_mesh0.obj"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="arcs_03">
+		<render>
+			<mesh name="models\sponza_mesh1.obj"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="object32">
+		<render>
+			<mesh name="models\sponza_mesh2.obj"/>
+			<material diffuse_color="0.713726 0.705882 0.6588241" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="object31">
+		<render>
+			<mesh name="models\sponza_mesh3.obj"/>
+			<material diffuse_color="0.784314 0.784314 0.7843141" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="pillar_cor">
+		<render>
+			<mesh name="models\sponza_mesh4.obj"/>
+			<material diffuse_color="0.737255 0.709804 0.6705881" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="pillar_flo">
+		<render>
+			<mesh name="models\sponza_mesh5.obj"/>
+			<material diffuse_color="0.737255 0.709804 0.6705881" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="object28">
+		<render>
+			<mesh name="models\sponza_mesh6.obj"/>
+			<material diffuse_color="0.8 0.784314 0.749021" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="object27">
+		<render>
+			<mesh name="models\sponza_mesh7.obj"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="pillar_qua">
+		<render>
+			<mesh name="models\sponza_mesh8.obj"/>
+			<material diffuse_color="0.737255 0.709804 0.6705881" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="pillar_rou">
+		<render>
+			<mesh name="models\sponza_mesh9.obj"/>
+			<material diffuse_color="0.827451 0.8 0.7686281" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="arcs_floo0">
+		<render>
+			<mesh name="models\sponza_mesh10.obj"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="object23">
+		<render>
+			<mesh name="models\sponza_mesh11.obj"/>
+			<material diffuse_color="0.713726 0.705882 0.6588241" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="object21">
+		<render>
+			<mesh name="models\sponza_mesh12.obj"/>
+			<material diffuse_color="0.941177 0.866667 0.7372551" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="puillar_fl">
+		<render>
+			<mesh name="models\sponza_mesh13.obj"/>
+			<material diffuse_color="0.737255 0.709804 0.6705881" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="object19">
+		<render>
+			<mesh name="models\sponza_mesh14.obj"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="relief">
+		<render>
+			<mesh name="models\sponza_mesh15.obj"/>
+			<material diffuse_color="0.529412 0.498039 0.4901961" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="arcs_small">
+		<render>
+			<mesh name="models\sponza_mesh16.obj"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="holes">
+		<render>
+			<mesh name="models\sponza_mesh17.obj"/>
+			<material diffuse_color="0.827451 0.8 0.7686281" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="outside01">
+		<render>
+			<mesh name="models\sponza_mesh18.obj"/>
+			<material diffuse_color="0.627451 0.572549 0.5607841" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="arcs_long">
+		<render>
+			<mesh name="models\sponza_mesh19.obj"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="parapet">
+		<render>
+			<mesh name="models\sponza_mesh20.obj"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="round_hole">
+		<render>
+			<mesh name="models\sponza_mesh21.obj"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="ceiling">
+		<render>
+			<mesh name="models\sponza_mesh22.obj"/>
+			<material diffuse_color="0.941177 0.866667 0.7372551" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="arcs_01">
+		<render>
+			<mesh name="models\sponza_mesh23.obj"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="object6">
+		<render>
+			<mesh name="models\sponza_mesh24.obj"/>
+			<material diffuse_color="0.713726 0.705882 0.6588241" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="object5">
+		<render>
+			<mesh name="models\sponza_mesh25.obj"/>
+			<material diffuse_color="0.713726 0.705882 0.6588241" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="object4">
+		<render>
+			<mesh name="models\sponza_mesh26.obj"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="object3">
+		<render>
+			<mesh name="models\sponza_mesh27.obj"/>
+			<material diffuse_color="0.8 0.784314 0.749021" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="arcs_02">
+		<render>
+			<mesh name="models\sponza_mesh28.obj"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="arcs_04">
+		<render>
+			<mesh name="models\sponza_mesh29.obj"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="walls">
+		<render>
+			<mesh name="models\sponza_mesh30.obj"/>
+			<material diffuse_color="0.627451 0.572549 0.5607841" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="defaultobject">
+		<render>
+			<mesh name="models\sponza_mesh31.obj"/>
+			<material diffuse_color="1 1 11" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="defaultobject">
+		<render>
+			<mesh name="models\sponza_mesh32.obj"/>
+			<material diffuse_color="0.784314 0.784314 0.7843141" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="defaultobject">
+		<render>
+			<mesh name="models\sponza_mesh33.obj"/>
+			<material diffuse_color="0.627451 0.572549 0.5607841" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="defaultobject">
+		<render>
+			<mesh name="models\sponza_mesh34.obj"/>
+			<material diffuse_color="0.627451 0.572549 0.5607841" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="windows">
+		<render>
+			<mesh name="models\sponza_mesh35.obj"/>
+			<material diffuse_color="1 1 11" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="doors">
+		<render>
+			<mesh name="models\sponza_mesh36.obj"/>
+			<material diffuse_color="0.784314 0.784314 0.7843141" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+	<gameobject name="defaultobject">
+		<render>
+			<mesh name="models\sponza_mesh37.obj"/>
+			<material diffuse_color="0.784314 0.784314 0.7843141" specular="0" roughness="0" metallic="0"/>
+		</render>
+	</gameobject>
+</scene>

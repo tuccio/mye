@@ -5,6 +5,7 @@
 #include "Component.h"
 #include "Material.h"
 #include "Mesh.h"
+#include "GPUBuffer.h"
 
 #include <mye/math/Geometry.h>
 
@@ -44,6 +45,8 @@ namespace mye
 			void SetModelMatrix(const mye::math::Matrix4 & matrix);
 
 			RenderComponent * Clone(void) const;
+
+			GPUBufferPointer GetGPUBuffer(void) const;
 			
 		private:
 
@@ -51,6 +54,7 @@ namespace mye
 			
 			//VertexDataPointer m_vertexData;
 			MeshPointer         m_mesh;
+			GPUBufferPointer    m_gpuBuffer;
 
 			MaterialPointer     m_material;
 			

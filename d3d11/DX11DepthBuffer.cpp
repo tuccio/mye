@@ -31,7 +31,7 @@ bool DX11DepthBuffer::Create(void)
 	depthStencilDesc.Width              = (m_depthBufferConfiguration.width ? m_depthBufferConfiguration.width : 1);
 	depthStencilDesc.Height             = (m_depthBufferConfiguration.height ? m_depthBufferConfiguration.height : 1);
 	depthStencilDesc.MipLevels          = 1;
-	depthStencilDesc.ArraySize          = 1;
+	depthStencilDesc.ArraySize          = m_depthBufferConfiguration.arraySize;
 	depthStencilDesc.Format             = DXGI_FORMAT_R24G8_TYPELESS;
 
 	depthStencilDesc.Usage              = D3D11_USAGE_DEFAULT;
@@ -49,17 +49,40 @@ bool DX11DepthBuffer::Create(void)
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
 
-	depthStencilViewDesc.Flags              = 0;
-	depthStencilViewDesc.Format             = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	depthStencilViewDesc.ViewDimension      = D3D11_DSV_DIMENSION_TEXTURE2D;
-	depthStencilViewDesc.Texture2D.MipSlice = 0;
+	depthStencilViewDesc.Flags  = 0;
+	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
 
-	shaderResourceViewDesc.Format                    = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
-	shaderResourceViewDesc.ViewDimension             = D3D11_SRV_DIMENSION_TEXTURE2D;
-	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
-	shaderResourceViewDesc.Texture2D.MipLevels       = 1;
+	shaderResourceViewDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+	
+	
+	if (m_depthBufferConfiguration.arraySize > 1)
+	{
+
+		depthStencilViewDesc.ViewDimension                  = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
+		depthStencilViewDesc.Texture2DArray.ArraySize       = m_depthBufferConfiguration.arraySize;
+		depthStencilViewDesc.Texture2DArray.FirstArraySlice = 0;
+		depthStencilViewDesc.Texture2DArray.MipSlice        = 0;
+
+		shaderResourceViewDesc.ViewDimension                  = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+		shaderResourceViewDesc.Texture2DArray.ArraySize       = m_depthBufferConfiguration.arraySize;
+		shaderResourceViewDesc.Texture2DArray.FirstArraySlice = 0;
+		shaderResourceViewDesc.Texture2DArray.MostDetailedMip = 0;
+		shaderResourceViewDesc.Texture2DArray.MipLevels       = 1;
+
+	}
+	else
+	{
+
+		depthStencilViewDesc.ViewDimension      = D3D11_DSV_DIMENSION_TEXTURE2D;
+		depthStencilViewDesc.Texture2D.MipSlice = 0;
+
+		shaderResourceViewDesc.ViewDimension             = D3D11_SRV_DIMENSION_TEXTURE2D;
+		shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+		shaderResourceViewDesc.Texture2D.MipLevels       = 1;
+
+	}	
 
 	bool success = (
 

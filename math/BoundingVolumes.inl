@@ -56,7 +56,7 @@ namespace mye
 
 			typedef decltype(DeduceMatrixScalar(*begin)) T;
 
-			mye::math::Matrix<T, 3, 1> max(std::numeric_limits<T>::min());
+			mye::math::Matrix<T, 3, 1> max(std::numeric_limits<T>::lowest());
 			mye::math::Matrix<T, 3, 1> min(std::numeric_limits<T>::max());
 
 			for (Iterator it = begin; it != end; it++)

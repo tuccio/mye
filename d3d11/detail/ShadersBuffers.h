@@ -1,6 +1,9 @@
 //#include <mye/core/AlignedAllocator.h>
 #include <mye/math/Math.h>
 
+#undef near
+#undef far
+
 namespace mye
 {
 
@@ -66,6 +69,14 @@ namespace mye
 
 				float               __fill[2];
 
+			};
+
+			struct PSSMSlice
+			{
+				mye::math::Matrix4 cropMatrix;
+				float              near;
+				float              far;
+				float              __fill[2];
 			};
 		}
 

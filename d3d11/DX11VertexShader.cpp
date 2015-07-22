@@ -31,6 +31,11 @@ void DX11VertexShader::Use(void)
 	m_device.GetImmediateContext()->VSSetShader(m_shader, nullptr, 0);
 }
 
+void DX11VertexShader::Dispose(void)
+{
+	m_device.GetImmediateContext()->GSSetShader(nullptr, nullptr, 0);
+}
+
 
 DX11VertexShader::~DX11VertexShader(void)
 {

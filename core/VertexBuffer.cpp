@@ -6,7 +6,6 @@ VertexBuffer::VertexBuffer(void)
 {
 }
 
-
 VertexBuffer::~VertexBuffer(void)
 {
 }

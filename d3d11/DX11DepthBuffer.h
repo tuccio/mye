@@ -18,6 +18,7 @@ namespace mye
 			int height;
 
 			bool shaderResource;
+			int  arraySize;
 
 		};
 

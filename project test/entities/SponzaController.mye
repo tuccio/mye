@@ -1,0 +1,9 @@
+entity SponzaController
+{
+	
+	GameObject hLight;
+	
+	component keyboard;
+	component text2d(vec2i(0, 0), Font('consolas_regular_10', { } ), '');
+	
+};

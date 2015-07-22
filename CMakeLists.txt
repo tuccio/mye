@@ -36,6 +36,8 @@ include_directories ( ${RAPIDXML_DIR} )
 include_directories ( ${CMAKE_SOURCE_DIR}/.. )
 include_directories ( ${CMAKE_SOURCE_DIR} )
 
+link_directories ( ${Boost_LIBRARY_DIRS} )
+
 # Compiler options
 
 if (MYE_USE_SSE)
@@ -75,6 +77,8 @@ add_subdirectory ( d3d11 )
 add_subdirectory ( mye )
 add_subdirectory ( math )
 add_subdirectory ( algorithms )
+
+add_subdirectory ( obj2mys )
 
 # Temporary
 

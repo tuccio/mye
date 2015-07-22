@@ -12,6 +12,7 @@
 #include "DX11PixelShader.h"
 #include "DX11VertexShader.h"
 
+#include <mye/core/EventManager.h>
 #include <mye/core/RendererConfiguration.h>
 #include <mye/win/Window.h>
 
@@ -23,7 +24,7 @@ namespace mye
 
 		class DX11DeferredLightingRenderer :
 			public mye::core::IWindow::Listener,
-			public mye::core::RendererConfigurationListener
+			public mye::core::IEventListener
 		{
 
 		public:
@@ -39,7 +40,7 @@ namespace mye
 			void SetWindow(mye::win::Window * window);
 			void OnResize(mye::core::IWindow * window, const mye::math::Vector2i & size);
 
-			void OnConfigurationChange(mye::core::RendererVariable variable, mye::core::RendererConfiguration * configuration);
+			void OnEvent(const mye::core::IEvent * event);
 
 			inline DX11DepthBuffer & GetDepthBuffer(void)
 			{

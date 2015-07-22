@@ -1,10 +1,19 @@
 #pragma pack_matrix(row_major)
 
+struct VSOutput
+{
+	float4 positionCS : SV_position;
+};
+
 /* Main */
 
-float4 main(float4 position : POSITION) : SV_Position
+VSOutput main(float4 position : POSITION)
 {
 
-	return position;
+	VSOutput output;
+
+	output.positionCS = position;
+
+	return output;
 
 }

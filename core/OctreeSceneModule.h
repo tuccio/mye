@@ -90,6 +90,8 @@ namespace mye
 
 			GameObjectsList GetObjectsList(void);
 
+			GameObjectsList FindObjects(const mye::math::AABB & aabb);
+
 			void AddGameObject(const GameObjectHandle & hObj);
 			void RemoveGameObject(const GameObjectHandle & hObj);
 
@@ -98,6 +100,8 @@ namespace mye
 			void Reset(const mye::math::Vector3 & center = mye::math::Vector3(0),
 					   float size = 1024.0f,
 					   unsigned int maxdepth = 16);
+
+			mye::math::AABB GetAABB(void);
 
 		private:
 

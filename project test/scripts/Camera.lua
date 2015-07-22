@@ -2,6 +2,8 @@ local Camera = { }
 
 function Camera:Init()
 	
+	self.speed       = 1
+	
 	self.camera.fovy = 90
 	self.camera.far  = 100
 	self.camera.near = 0.001
@@ -35,7 +37,7 @@ end
 
 function Camera:OnKeyboardKeyHold(key)
 
-	local speed = 1
+	local speed = self.speed
 	local dx    = speed * Time.delta
 	
 	if key == KeyboardVK.W then
@@ -67,6 +69,7 @@ function Camera:OnMouseMove(from, to)
 		
 		local r1 = quaternion(vec3(0, 1, 0), theta)
 		local r2 = quaternion(vec3(1, 0, 0), phi)
+		
 		
 		local newOrientation = (r1 * orientation * r2):Normalize()
 		

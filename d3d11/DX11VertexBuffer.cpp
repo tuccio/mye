@@ -7,11 +7,11 @@
 using namespace mye::dx11;
 using namespace mye::core;
 
-DX11VertexBuffer::DX11VertexBuffer(ResourceManager *owner,
-								   const mye::core::String &name,
-								   mye::core::ManualResourceLoader *manual,
-								   DX11Device &device) :
-DX11Buffer(owner, name, manual, device),
+DX11VertexBuffer::DX11VertexBuffer(ResourceManager * owner,
+								   const mye::core::String & name,
+								   mye::core::ManualResourceLoader * manual,
+								   DX11Device & device) :
+	DX11Buffer(owner, name, manual, device),
 	m_stride(0),
 	m_vertices(0)
 {
@@ -25,8 +25,7 @@ DX11VertexBuffer::~DX11VertexBuffer(void)
 bool DX11VertexBuffer::LoadImpl(void)
 {
 
-	MeshPointer hMesh = ResourceTypeManager::GetSingleton().
-		CreateResource<Mesh>("Mesh", m_name);
+	MeshPointer hMesh = ResourceTypeManager::GetSingleton().CreateResource<Mesh>("Mesh", m_name);
 
 	hMesh->Load();
 

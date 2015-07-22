@@ -118,3 +118,19 @@ void OctreeSceneModule::Reset(const mye::math::Vector3 & center,
 	m_lights.Create(center, size, maxdepth, detail::LightAABBBounds { { center.x(), center.y(), center.z() }, size * 0.5f });
 
 }
+
+AABB OctreeSceneModule::GetAABB(void)
+{
+	return m_dynamicObjects.GetAABB();
+}
+
+GameObjectsList OctreeSceneModule::FindObjects(const AABB & aabb)
+{
+
+	GameObjectsList list;
+
+	m_dynamicObjects.Query(aabb, [&list] (GameObject * object) { list.push_back(object); });
+
+	return list;
+
+}

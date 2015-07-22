@@ -42,15 +42,19 @@ void ReadGBuffer(in int2 screenPosition, out float3 position, out float3 normal,
 
 }
 
-
 float3 Gamma(float3 color)
 {
 	return pow(color, GAMMA);
 }
 
+struct PSInput
+{
+	float4 positionCS : SV_position;
+};
+
 /* Main */
 
-float4 main(float4 position : SV_Position) : SV_Target0
+float4 main(PSInput input) : SV_Target0
 {
 
 	float3 x;
@@ -62,7 +66,7 @@ float4 main(float4 position : SV_Position) : SV_Target0
 
 	float4 diffuse;
 
-	ReadGBuffer(position.xy, x, N, specularPower);
+	ReadGBuffer(input.positionCS.xy, x, N, specularPower);
 	ComputeLightParams(x, g_light, L, intensity);
 
 	float visibility = ShadowMapVisibility(x);

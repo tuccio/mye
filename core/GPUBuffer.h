@@ -14,9 +14,9 @@ namespace mye
 
 		public:
 
-			GPUBuffer(ResourceManager *owner,
-				const String &name,
-				ManualResourceLoader *manual);
+			GPUBuffer(ResourceManager * owner,
+			          const String & name,
+			          ManualResourceLoader * manual);
 
 			~GPUBuffer(void);
 

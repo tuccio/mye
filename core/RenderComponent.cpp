@@ -1,4 +1,5 @@
 #include "RenderComponent.h"
+#include "ResourceTypeManager.h"
 
 using namespace mye::core;
 using namespace mye::math;
@@ -54,8 +55,15 @@ void RenderComponent::SetMesh(MeshPointer mesh)
 
 	if (m_mesh && m_mesh->Load())
 	{
+
 		auto minmax = mesh->GetMinMaxVertices();
-		m_bounds = AABB::FromMinMax(minmax.first, minmax.second);
+
+		m_bounds    = AABB::FromMinMax(minmax.first, minmax.second);
+		m_gpuBuffer = ResourceTypeManager::GetSingleton().CreateResource<GPUBuffer>("GPUBuffer",
+		                                                                            m_mesh->GetName(),
+		                                                                            nullptr,
+																					{ { "type", "vertex" } });
+
 	}
 	else
 	{
@@ -64,7 +72,7 @@ void RenderComponent::SetMesh(MeshPointer mesh)
 
 }
 
-const mye::math::AABB& RenderComponent::GetBounds(void) const
+const mye::math::AABB & RenderComponent::GetBounds(void) const
 {
 	return m_bounds;
 }
@@ -84,7 +92,7 @@ void RenderComponent::SetMaterial(const MaterialPointer & material)
 	m_material = material;
 }
 
-RenderComponent* RenderComponent::Clone(void) const
+RenderComponent * RenderComponent::Clone(void) const
 {
 	return new RenderComponent(*this);
 }
@@ -97,4 +105,9 @@ const mye::math::Matrix4f& RenderComponent::GetModelMatrix(void) const
 void RenderComponent::SetModelMatrix(const mye::math::Matrix4f &matrix)
 {
 	m_modelMatrix = matrix;
+}
+
+GPUBufferPointer RenderComponent::GetGPUBuffer(void) const
+{
+	return m_gpuBuffer;
 }

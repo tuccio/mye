@@ -127,58 +127,36 @@ namespace mye
 		__MYE_MATH_INLINE QuaternionTempl<float> QuaternionTempl<float>::operator* (const QuaternionTempl & q) const
 		{
 
-			// (z0, y0, x0, w0)
-			__m128 t1 = _mm_shuffle_ps(m_vector, m_vector, _MM_SHUFFLE(3, 0, 1, 2));
+			__m128 t0 = _mm_shuffle_ps(m_vector,   m_vector,   _MM_SHUFFLE(3, 3, 3, 3));
+			__m128 t1 = _mm_shuffle_ps(q.m_vector, q.m_vector, _MM_SHUFFLE(2, 3, 0, 1));
 
-			// (y1, z1, w1, x1)
-			__m128 t2 = _mm_shuffle_ps(q.m_vector, q.m_vector, _MM_SHUFFLE(0, 3, 2, 1));
+			__m128 t3 = _mm_shuffle_ps(m_vector,   m_vector,   _MM_SHUFFLE(0, 0, 0, 0));
+			__m128 t4 = _mm_shuffle_ps(q.m_vector, q.m_vector, _MM_SHUFFLE(1, 0, 3, 2));
 
-			// (x0, z0, y0, w0)
-			__m128 t3 = _mm_shuffle_ps(m_vector, m_vector, _MM_SHUFFLE(3, 1, 2, 0));
+			__m128 t5 = _mm_shuffle_ps(m_vector,   m_vector,   _MM_SHUFFLE(1, 1, 1, 1));
+			__m128 t6 = _mm_shuffle_ps(q.m_vector, q.m_vector, _MM_SHUFFLE(2, 0, 3, 1));
 
-			// (z1, x1, w1, y1)
-			__m128 t4 = _mm_shuffle_ps(q.m_vector, q.m_vector, _MM_SHUFFLE(1, 3, 0, 2));
+			__m128 m0 = _mm_mul_ps(t0, t1);
+			__m128 m1 = _mm_mul_ps(t3, t4);
+			__m128 m2 = _mm_mul_ps(t5, t6);
 
-			// (y0, x0, z0, w0)
-			__m128 t5 = _mm_shuffle_ps(m_vector, m_vector, _MM_SHUFFLE(3, 2, 0, 1));
+			__m128 t7 = _mm_shuffle_ps(m_vector,   m_vector,   _MM_SHUFFLE(2, 2, 2, 2));
+			__m128 t8 = _mm_shuffle_ps(q.m_vector, q.m_vector, _MM_SHUFFLE(3, 2, 0, 1));
 
-			// (x1, y1, w1, z1)
-			__m128 t6 = _mm_shuffle_ps(q.m_vector, q.m_vector, _MM_SHUFFLE(2, 3, 1, 0));
+			__m128 m3 = _mm_mul_ps(t7, t8);
 
-			// (x0x1, y0y1, z0z1, w0w1)
-			__m128 q0 = _mm_mul_ps(m_vector, q.m_vector);
+			__m128 r = _mm_addsub_ps(m0, m1);
 
-			// (z0y1, y0z1, x0w1, w0x1)
-			__m128 q1 = _mm_mul_ps(t1, t2);
+			r = _mm_shuffle_ps(r, r, _MM_SHUFFLE(1, 3, 0, 2));
+			r = _mm_addsub_ps(r, m2);
 
-			// (x0z1, z0x1, y0w1, w0y1)
-			__m128 q2 = _mm_mul_ps(t3, t4);
+			r = _mm_shuffle_ps(r, r, _MM_SHUFFLE(2, 0, 1, 3));
+			r = _mm_addsub_ps(r, m3);
 
-			// (y0x1, x0y1, z0w1, w0z1)
-			__m128 q3 = _mm_mul_ps(t5, t6);
+			r = _mm_shuffle_ps(r, r, _MM_SHUFFLE(2, 3, 1, 0));
 
-			__m128 mask0 = _mm_set_ps(0.0f, -0.0f, -0.0f, -0.0f);
-			__m128 mask1 = _mm_set_ps(0.0f, 0.0f, 0.0f, -0.0f);
+			return r;
 
-			// (-x0x1, -y0y1, -z0z1, w0w1)
-			q0 = _mm_xor_ps(mask0, q0);
-			// (-z0y1, y0z1, x0w1, w0x1)
-			q1 = _mm_xor_ps(mask1, q1);
-			// (-x0z1, z0x1, y0w1, w0y1)
-			q2 = _mm_xor_ps(mask1, q2);
-			// (-y0x1, x0y1, z0w1, w0z1)
-			q3 = _mm_xor_ps(mask1, q3);
-
-			// (qx, qx, qy, qy)
-			__m128 t7 = detail::SumComponents(q1, q2);
-
-			// (qz, qz, qw, qw)
-			__m128 t8 = detail::SumComponents(q3, q0);
-
-			// (qx, qy, qz, qw)
-			__m128 t9 = _mm_shuffle_ps(t7, t8, _MM_SHUFFLE(2, 0, 2, 0));
-
-			return QuaternionTempl<float>(t9);
 		}
 
 		

@@ -25,7 +25,9 @@ namespace mye
 
 			~DX11Shader(void);
 
-			virtual void Use(void);
+			virtual void Use(void) = 0;
+			virtual void Dispose(void) = 0;
+
 			virtual void Destroy(void);
 
 		protected:

@@ -228,7 +228,7 @@ void DX11DebugRenderer::Render(ID3D11RenderTargetView * target)
 		};
 
 		Vector2i screenResolution = DX11Module::GetSingleton().GetRendererConfiguration()->GetScreenResolution();
-		Matrix4 orthoProj = OrthographicProjectionLH(0.f, (float) screenResolution.x(), 0.f, (float) screenResolution.y(), 0.f, 1.f);
+		Matrix4 orthoProj = OrthographicProjectionD3DLH(0.f, (float) screenResolution.x(), 0.f, (float) screenResolution.y());
 
 		DX11ConstantBuffer transformBuffer(nullptr, "", nullptr, m_device);
 		transformBuffer.Create(sizeof(Matrix4));

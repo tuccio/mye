@@ -7,6 +7,8 @@
 
 #include <list>
 
+#include <mye/math/Geometry.h>
+
 namespace mye
 {
 
@@ -31,7 +33,8 @@ namespace mye
 
 		class SceneModule :
 			public Module,
-			public IEventListener
+			public IEventListener,
+			public Singleton<SceneModule>
 		{
 
 		public:
@@ -50,6 +53,8 @@ namespace mye
 			virtual GameObjectsList GetVisibleLights(const mye::core::Camera & camera) = 0;
 
 			virtual GameObjectsList GetObjectsList(void);
+
+			virtual GameObjectsList FindObjects(const mye::math::AABB & aabb) = 0;
 
 			const LightsList & GetLightsList(void) const;
 			const Text2DList & GetText2DList(void) const;
@@ -74,6 +79,8 @@ namespace mye
 			void OnComponentRemoval  (GameObject * go, Component * component);
 
 			void OnEvent(const IEvent * e);
+
+			virtual mye::math::AABB GetAABB(void) = 0;
 
 		protected:
 

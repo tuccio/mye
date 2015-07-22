@@ -35,6 +35,7 @@ struct VSOutput
 
 VSOutput main( VSInput input )
 {
+
 	VSOutput output;
 
 	output.positionCS  = mul(g_worldViewProj, float4(input.position, 1));

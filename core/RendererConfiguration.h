@@ -5,8 +5,10 @@
 #include <algorithm>
 #include <vector>
 
+#include "EventManager.h"
+
 #define __MYE_RENDERERCONFIGURATION_PROPERTY(Variable, Property, Member) \
-	inline void Set ## Property (const decltype(Member) & value) { Member = value; NotifyVariableChange(Variable); }\
+	inline void Set ## Property (const decltype(Member) & value) { Member = value; MYE_EVENT_MANAGER_TRIGGER(RenderVariableChange, Variable, this); }\
 	inline auto Get ## Property (void) -> decltype(Member) const { return Member; }
 
 namespace mye
@@ -26,9 +28,18 @@ namespace mye
 
 		class RendererConfiguration;
 
-		struct RendererConfigurationListener
+		struct RenderVariableChange :
+			IEvent
 		{
-			virtual void OnConfigurationChange(RendererVariable variable, RendererConfiguration * configuration) { }
+
+			RenderVariableChange(RendererVariable variable, RendererConfiguration * configuration) :
+				IEvent(EventType::RENDERER_VARIABLE_CHANGE),
+				variable(variable),
+				configuration(configuration) { }
+
+			RendererVariable        variable;
+			RendererConfiguration * configuration;
+
 		};
 
 		class RendererConfiguration
@@ -38,6 +49,7 @@ namespace mye
 
 			mye::math::Vector2i m_resolution;
 			mye::math::Real     m_gamma;
+
 			int                 m_shadowMapResolution;
 
 			mye::math::Real     m_vsmMinVariance;
@@ -52,7 +64,6 @@ namespace mye
 				m_vsmMinVariance(mye::math::Epsilon()),
 				m_vsmMinBleeding(0.2f)
 			{
-
 			}
 
 			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::RESOLUTION,          ScreenResolution,    m_resolution)
@@ -61,29 +72,9 @@ namespace mye
 			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::VSMMINVARIANCE,      VSMMinVariance,      m_vsmMinVariance)
 			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::VSMMINBLEEDING,      VSMMinBleeding,      m_vsmMinBleeding)
 
-			void AddListener(RendererConfigurationListener * listener)
-			{
-				m_listeners.push_back(listener);
-			}
-
-			void RemoveListener(RendererConfigurationListener * listener)
-			{
-				std::remove(m_listeners.begin(), m_listeners.end(), listener);
-			}
-
-		private:
-
-			void NotifyVariableChange(RendererVariable variable)
-			{
-				for (auto listener : m_listeners)
-				{
-					listener->OnConfigurationChange(variable, this);
-				}
-			}
-
-			std::vector<RendererConfigurationListener*> m_listeners;
-
 		};
+
+		
 
 	}
 

@@ -2,9 +2,9 @@
 
 using namespace mye::core;
 
-GPUBuffer::GPUBuffer(ResourceManager *owner,
-					 const String &name,
-					 ManualResourceLoader *manual) :
+GPUBuffer::GPUBuffer(ResourceManager * owner,
+					 const String & name,
+					 ManualResourceLoader * manual) :
 Resource(owner, name, manual)
 {
 }

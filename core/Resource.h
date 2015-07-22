@@ -47,17 +47,11 @@ namespace mye
 				return std::dynamic_pointer_cast<T, R>(r);
 			}
 
-			template <typename T, typename R>
-			inline static std::shared_ptr<T> ReinterpretCast(std::shared_ptr<R> r)
-			{
-				return std::reinterpret_pointer_cast<T, R>(r);
-			}
-
 			Resource(ResourceManager * owner,
-					 const String & name,
-					 ManualResourceLoader * manual);
+			         const String & name,
+			         ManualResourceLoader * manual);
 
-			~Resource(void);
+			virtual ~Resource(void);
 
 			bool Load(bool background = false);
 			void Unload(bool background = false);

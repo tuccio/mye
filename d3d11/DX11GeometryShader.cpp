@@ -29,6 +29,10 @@ void DX11GeometryShader::Use(void)
 	m_device.GetImmediateContext()->GSSetShader(m_shader, nullptr, 0);
 }
 
+void DX11GeometryShader::Dispose(void)
+{
+	m_device.GetImmediateContext()->GSSetShader(nullptr, nullptr, 0);
+}
 
 DX11GeometryShader::~DX11GeometryShader(void)
 {

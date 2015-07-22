@@ -23,6 +23,8 @@ namespace mye
 			~DX11GeometryShader(void);
 
 			void Use(void);
+			void Dispose(void);
+
 			void Destroy(void);
 
 			ID3D11GeometryShader * GetGeometryShader(void);

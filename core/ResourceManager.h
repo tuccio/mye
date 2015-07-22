@@ -20,35 +20,29 @@ namespace mye
 			ResourceManager(const String &type);
 			~ResourceManager(void);
 			
-			template <typename ResourceType>
-			std::shared_ptr<ResourceType> CreateResource(const String &name,
-				ManualResourceLoader *manual = nullptr,
-				const Parameters &params = Parameters());
+			template <typename ResourceType = Resource>
+			std::shared_ptr<ResourceType> CreateResource(const String & name,
+			                                             ManualResourceLoader * manual = nullptr,
+			                                             const Parameters & params = Parameters());
 
-			inline std::shared_ptr<Resource> CreateResource(const String &name,
-				ManualResourceLoader *manual = nullptr,
-				const Parameters &params = Parameters());
-
-			template <typename ResourceType>
-			std::shared_ptr<ResourceType> GetResource(const String &name);
-
-			inline std::shared_ptr<Resource> GetResource(const String &name);
+			template <typename ResourceType = Resource>
+			std::shared_ptr<ResourceType> GetResource(const String & name);
 
 			void FreeResource(const String &name);
 
-			const String& GetType(void) const;
+			const String & GetType(void) const;
 
 		protected:
 
-			virtual Resource* CreateImpl(const String &name,
-				ManualResourceLoader *manual,
-				const Parameters &params);
+			virtual Resource * CreateImpl(const String & name,
+			                              ManualResourceLoader * manual,
+			                              const Parameters & params);
 
-			virtual void FreeImpl(Resource* resource);
+			virtual void FreeImpl(Resource * resource);
 
 			typedef std::map<String, ResourcePointer> ResourcesMap;
 
-			void _FreeResource(ResourcesMap::iterator &it);
+			void _FreeResource(ResourcesMap::iterator & it);
 
 			ResourcesMap m_resources;
 			String m_type;
