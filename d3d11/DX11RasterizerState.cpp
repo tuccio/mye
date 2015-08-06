@@ -3,13 +3,14 @@
 using namespace mye::dx11;
 using namespace mye::core;
 
-DX11RasterizerState::DX11RasterizerState(DX11Device &device, const RasterizerInfo &info) :
-	m_device(device)
+DX11RasterizerState::DX11RasterizerState(const RasterizerInfo & info)
 {
 
 	D3D11_RASTERIZER_DESC rasterizerDesc;
 
 	ZeroMemory(&rasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
+
+	rasterizerDesc.DepthClipEnable = TRUE;
 
 	switch (info.cull)
 	{
@@ -30,7 +31,7 @@ DX11RasterizerState::DX11RasterizerState(DX11Device &device, const RasterizerInf
 
 	rasterizerDesc.FillMode = (info.wireframe ? D3D11_FILL_WIREFRAME : D3D11_FILL_SOLID);
 
-	m_device.GetDevice()->CreateRasterizerState(&rasterizerDesc, &m_rasterizerState);
+	DX11Device::GetSingleton()->CreateRasterizerState(&rasterizerDesc, &m_rasterizerState);
 
 }
 
@@ -41,5 +42,5 @@ DX11RasterizerState::~DX11RasterizerState(void)
 
 void DX11RasterizerState::Use(void)
 {
-	m_device.GetImmediateContext()->RSSetState(m_rasterizerState);
+	DX11Device::GetSingleton().GetImmediateContext()->RSSetState(m_rasterizerState);
 }

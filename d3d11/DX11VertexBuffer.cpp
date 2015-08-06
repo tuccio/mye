@@ -7,20 +7,20 @@
 using namespace mye::dx11;
 using namespace mye::core;
 
-DX11VertexBuffer::DX11VertexBuffer(ResourceManager * owner,
-								   const mye::core::String & name,
-								   mye::core::ManualResourceLoader * manual,
-								   DX11Device & device) :
-	DX11Buffer(owner, name, manual, device),
+DX11VertexBuffer::DX11VertexBuffer(void) :
+	DX11Buffer(nullptr, "", nullptr),
 	m_stride(0),
-	m_vertices(0)
-{
-}
+	m_vertices(0) { }
+
+DX11VertexBuffer::DX11VertexBuffer(ResourceManager      * owner,
+                                   const String         & name,
+                                   ManualResourceLoader * manual) :
+	DX11Buffer(owner, name, manual),
+	m_stride(0),
+	m_vertices(0) { }
 
 
-DX11VertexBuffer::~DX11VertexBuffer(void)
-{
-}
+DX11VertexBuffer::~DX11VertexBuffer(void) { }
 
 bool DX11VertexBuffer::LoadImpl(void)
 {
@@ -68,12 +68,10 @@ bool DX11VertexBuffer::Create(void *data, size_t n, const VertexDeclaration &vDe
 
 	bool success =
 		n == 0 ||
-		!__MYE_DX11_HR_TEST_FAILED(m_device.GetDevice()->CreateBuffer(
-			&vertexBufferDesc,
-			&vertexBufferData,
-			&m_buffer));
-
-	assert(success);
+		!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton()->
+			CreateBuffer(&vertexBufferDesc,
+			             &vertexBufferData,
+			             &m_buffer));
 
 	return success;
 
@@ -114,10 +112,9 @@ bool DX11VertexBuffer::Create(Mesh *mesh)
 
 	bool success =
 		!__MYE_DX11_HR_TEST_FAILED(
-			m_device.GetDevice()->CreateBuffer(
-				&vertexBufferDesc,
-				&vertexBufferData,
-				&m_buffer));
+		DX11Device::GetSingleton()->CreateBuffer(&vertexBufferDesc,
+		                                         &vertexBufferData,
+		                                         &m_buffer));
 	
 	return success;
 
@@ -140,14 +137,12 @@ bool DX11VertexBuffer::Create(Model *model)
 	for (int i = 0; i < meshesCount; i++)
 	{
 
-		Mesh* mesh = model->GetMesh(i);
-		size_t size = mesh->GetSize();
+		Mesh   * mesh = model->GetMesh(i);
+		size_t   size = mesh->GetSize();
 
-		memcpy(&data[0] + offset,
-			mesh->GetData(),
-			size);
+		memcpy(&data[0] + offset, mesh->GetData(), size);
 
-		offset += size;
+		offset     += size;
 		m_vertices += mesh->GetTrianglesCount() * 3;
 
 	}
@@ -177,10 +172,10 @@ bool DX11VertexBuffer::Create(Model *model)
 	
 
 	bool success =
-		!__MYE_DX11_HR_TEST_FAILED(m_device.GetDevice()->CreateBuffer(
-			&vertexBufferDesc,
-			pVertexBufferData,
-			&m_buffer));
+		!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton()->
+		CreateBuffer(&vertexBufferDesc,
+		             pVertexBufferData,
+		             &m_buffer));
 
 	
 
@@ -200,12 +195,12 @@ bool DX11VertexBuffer::Create(Model *model)
 void DX11VertexBuffer::Bind(void)
 {
 	UINT offset = 0;
-	m_device.GetImmediateContext()->IASetVertexBuffers(0, 1, &m_buffer, &m_stride, &offset);
+	DX11Device::GetSingleton().GetImmediateContext()->IASetVertexBuffers(0, 1, &m_buffer, &m_stride, &offset);
 }
 
 void DX11VertexBuffer::Unbind(void)
 {
-	m_device.GetImmediateContext()->IASetVertexBuffers(0, 0, nullptr, &m_stride, nullptr);
+	DX11Device::GetSingleton().GetImmediateContext()->IASetVertexBuffers(0, 0, nullptr, &m_stride, nullptr);
 }
 
 size_t DX11VertexBuffer::GetVerticesCount(void) const

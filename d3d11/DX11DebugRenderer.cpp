@@ -16,8 +16,7 @@ using namespace mye::core;
 using namespace mye::win;
 using namespace mye::math;
 
-DX11DebugRenderer::DX11DebugRenderer(DX11Device &device) :
-	m_device(device),
+DX11DebugRenderer::DX11DebugRenderer(void) :
 	m_initialized(false),
 	m_linearSampler(nullptr)
 {
@@ -35,17 +34,17 @@ bool DX11DebugRenderer::Init(void)
 
 	ZeroMemory(&linearSamplerDesc, sizeof(D3D11_SAMPLER_DESC));
 
-	linearSamplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	linearSamplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
-	linearSamplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
-	linearSamplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
-	linearSamplerDesc.MipLODBias = 0.0f;
-	linearSamplerDesc.MaxAnisotropy = 1;
+	linearSamplerDesc.Filter         = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	linearSamplerDesc.AddressU       = D3D11_TEXTURE_ADDRESS_CLAMP;
+	linearSamplerDesc.AddressV       = D3D11_TEXTURE_ADDRESS_CLAMP;
+	linearSamplerDesc.AddressW       = D3D11_TEXTURE_ADDRESS_CLAMP;
+	linearSamplerDesc.MipLODBias     = 0.0f;
+	linearSamplerDesc.MaxAnisotropy  = 1;
 	linearSamplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-	linearSamplerDesc.MinLOD = 0.0f;
-	linearSamplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	linearSamplerDesc.MinLOD         = 0.0f;
+	linearSamplerDesc.MaxLOD         = D3D11_FLOAT32_MAX;
 
-	if (!__MYE_DX11_HR_TEST_FAILED(m_device.GetDevice()->CreateSamplerState(&linearSamplerDesc, &m_linearSampler)))
+	if (!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton()->CreateSamplerState(&linearSamplerDesc, &m_linearSampler)))
 	{
 
 		VertexDeclaration vd = {
@@ -69,6 +68,16 @@ bool DX11DebugRenderer::Init(void)
 		m_texturedSimplePS = ResourceTypeManager::GetSingleton().CreateResource<DX11PixelShader>(
 			"DX11Shader",
 			"./shaders/textured_simple_ps.cso",
+			nullptr,
+			Parameters({
+					{ "type", "pixel" },
+					{ "precompiled", "true" }
+			})
+		);
+
+		m_texturedArrayPS = ResourceTypeManager::GetSingleton().CreateResource<DX11PixelShader>(
+			"DX11Shader",
+			"./shaders/textured_arrayslice_ps.cso",
 			nullptr,
 			Parameters({
 					{ "type", "pixel" },
@@ -106,6 +115,7 @@ bool DX11DebugRenderer::Init(void)
 
 		if (m_texturedSimpleVS->Load() &&
 			m_texturedSimplePS->Load() &&
+			m_texturedArrayPS->Load() &&
 			m_primitiveVS->Load() &&
 			m_primitivePS->Load())
 		{
@@ -145,14 +155,14 @@ void DX11DebugRenderer::Render(ID3D11RenderTargetView * target)
 	if (!m_lines.empty())
 	{
 
-		m_device.SetBlending(true);
+		DX11Device::GetSingleton().SetBlending(true);
 
 		DX11Module * graphics = DX11Module::GetSingletonPointer();
 
 		DX11DepthBuffer & depth = graphics->GetDepthBuffer();
 		
-		m_device.SetDepthTest(DX11DepthTest::ON);
-		m_device.GetImmediateContext()->OMSetRenderTargets(1, &target, depth.GetDepthStencilView());
+		DX11Device::GetSingleton().SetDepthTest(DX11DepthTest::ON);
+		DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(1, &target, depth.GetDepthStencilView());
 
 		Camera * camera = Game::GetSingleton().GetSceneModule()->GetCamera();
 
@@ -185,10 +195,10 @@ void DX11DebugRenderer::Render(ID3D11RenderTargetView * target)
 		m_primitiveVS->Use();
 		m_primitivePS->Use();
 
-		DX11VertexBuffer vb(nullptr, "", nullptr, m_device);
+		DX11VertexBuffer vb;
 		vb.Create(vd.GetData(), vd.GetVerticesCount(), pVD);
 
-		DX11ConstantBuffer transformBuffer(nullptr, "", nullptr, m_device);
+		DX11ConstantBuffer transformBuffer;
 		transformBuffer.Create(sizeof(detail::TransformBuffer));
 
 		detail::TransformBuffer t;
@@ -201,8 +211,8 @@ void DX11DebugRenderer::Render(ID3D11RenderTargetView * target)
 		transformBuffer.Bind(DX11PipelineStage::VERTEX_SHADER, 0);
 
 		vb.Bind();
-		m_device.GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-		m_device.GetImmediateContext()->Draw(vd.GetVerticesCount(), 0);
+		DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+		DX11Device::GetSingleton().GetImmediateContext()->Draw(vd.GetVerticesCount(), 0);
 		vb.Unbind();
 
 		vb.Destroy();
@@ -218,9 +228,9 @@ void DX11DebugRenderer::Render(ID3D11RenderTargetView * target)
 	if (!m_shaderResources.empty())
 	{
 
-		m_device.SetBlending(false);
-		m_device.SetDepthTest(DX11DepthTest::OFF);
-		m_device.GetImmediateContext()->OMSetRenderTargets(1, &target, nullptr);
+		DX11Device::GetSingleton().SetBlending(false);
+		DX11Device::GetSingleton().SetDepthTest(DX11DepthTest::OFF);
+		DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(1, &target, nullptr);
 
 		VertexDeclaration srVD = {
 				{ VertexAttributeSemantic::POSITION, DataFormat::FLOAT2 },
@@ -228,65 +238,106 @@ void DX11DebugRenderer::Render(ID3D11RenderTargetView * target)
 		};
 
 		Vector2i screenResolution = DX11Module::GetSingleton().GetRendererConfiguration()->GetScreenResolution();
-		Matrix4 orthoProj = OrthographicProjectionD3DLH(0.f, (float) screenResolution.x(), 0.f, (float) screenResolution.y());
+		Matrix4 orthoProj = OrthographicProjectionD3DLH(0.f, (float) screenResolution.x(), 0.f, (float) screenResolution.y(), 0.f, 1.f);
 
-		DX11ConstantBuffer transformBuffer(nullptr, "", nullptr, m_device);
+		DX11ConstantBuffer transformBuffer;
 		transformBuffer.Create(sizeof(Matrix4));
 
 		m_texturedSimpleVS->Use();
-		m_texturedSimplePS->Use();
+		
+		//transformBuffer.SetData(&orthoProj);
 
-		transformBuffer.SetData(&orthoProj);
+		DX11ConstantBuffer srBuffer;
 
-		m_device.GetImmediateContext()->PSSetSamplers(__MYE_DX11_TEXTURE_SLOT_DIFFUSE, 1, &m_linearSampler);
+		struct __SRBuffer
+		{
+			int slice;
+			int __filler[3];
+		};
+
+		srBuffer.Create(sizeof(__SRBuffer));
+
+		float quad[] = {
+			0.f, 1.f, 0.f, 0.f,
+			1.f, 0.f, 1.f, 1.f,
+			0.f, 0.f, 0.f, 1.f,
+			1.f, 1.f, 1.f, 0.f,
+			1.f, 0.f, 1.f, 1.f,
+			0.f, 1.f, 0.f, 0.f
+		};
+
+		DX11VertexBuffer quadBuffer;
+		quadBuffer.Create(quad, 6, srVD);
 
 		for (__ShadowResource & sr : m_shaderResources)
 		{
 
+			ID3D11ShaderResourceView * srv = sr.shaderResource->GetShaderResourceView();
+
+			ID3D11Texture2D * texture;
+			srv->GetResource((ID3D11Resource **) &texture);
+
+			D3D11_TEXTURE2D_DESC textureDesc;
+
+			texture->GetDesc(&textureDesc);
+
+			if (textureDesc.ArraySize > 1)
+			{
+
+				__SRBuffer b = { sr.slice };
+
+				m_texturedArrayPS->Use();
+
+				srBuffer.SetData(&b);
+				srBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, 0);
+
+			}
+			else
+			{
+				m_texturedSimplePS->Use();
+			}
+
+
 			Vector2 position(sr.position[0], sr.position[1]);
 			Vector2 size(sr.size[0], sr.size[1]);
 
-			float quad[] = {
-				position.x(), position.y() + size.y(), 0.f, 0.f,
-				position.x() + size.x(), position.y(), 1.f, 1.f,
-				position.x(), position.y(), 0.f, 1.f,
-				position.x() + size.x(), position.y() + size.y(), 1.f, 0.f,
-				position.x() + size.x(), position.y(), 1.f, 1.f,
-				position.x(), position.y() + size.y(), 0.f, 0.f
-			};
+			Matrix4 qTransform = orthoProj * TranslationMatrix4(Vector3(position, 0.f)) * ScaleMatrix4(Vector3(size, 0.f));
 
-			DX11VertexBuffer quadBuffer(nullptr, "", nullptr, m_device);
-			quadBuffer.Create(quad, 6, srVD);
-
-			sr.shaderResource->Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_DIFFUSE);
-
+			transformBuffer.SetData(&qTransform);
 			transformBuffer.Bind(DX11PipelineStage::VERTEX_SHADER, 0);
 
+			sr.shaderResource->Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_DIFFUSE);
+			DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_TEXTURE_SLOT_DIFFUSE, 1, &m_linearSampler);
+
 			quadBuffer.Bind();
-			m_device.GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-			m_device.GetImmediateContext()->Draw(6, 0);
+			DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			DX11Device::GetSingleton().GetImmediateContext()->Draw(6, 0);
 			quadBuffer.Unbind();
 
 			sr.shaderResource->Unbind();
-			sr.shaderResource->GetShaderResourceView()->Release();
 
-			quadBuffer.Destroy();
+			__MYE_DX11_RELEASE_COM(srv);
+			__MYE_DX11_RELEASE_COM(texture);
 
 		}
 
+		quadBuffer.Destroy();
+
 		transformBuffer.Destroy();
+		srBuffer.Destroy();
+
 		m_shaderResources.clear();
 
 	}
 
-	m_device.GetImmediateContext()->OMSetRenderTargets(0, nullptr, nullptr);
+	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(0, nullptr, nullptr);
 
 }
 
-void DX11DebugRenderer::EnqueueShaderResource(DX11ShaderResource & shaderResource, const Vector2i & position, const Vector2i & size)
+void DX11DebugRenderer::EnqueueShaderResource(DX11ShaderResource & shaderResource, const Vector2i & position, const Vector2i & size, int slice)
 {
 	shaderResource.GetShaderResourceView()->AddRef();
-	m_shaderResources.emplace_back(__ShadowResource { &shaderResource, { position.x(), position.y() }, { size.x(), size.y() } });
+	m_shaderResources.emplace_back(__ShadowResource { &shaderResource, { position.x(), position.y() }, { size.x(), size.y() }, slice });
 }
 
 void DX11DebugRenderer::EnqueueLine(const Vector3 & from, const Vector3 & to, const Vector4 & color)
@@ -312,14 +363,14 @@ void DX11DebugRenderer::EnqueueFrustum(const Frustum & frustum, const Vector4 & 
 	EnqueueLine(corners[static_cast<int>(FrustumCorners::LEFT_BOTTOM_NEAR)],  corners[static_cast<int>(FrustumCorners::RIGHT_BOTTOM_NEAR)], color);
 	EnqueueLine(corners[static_cast<int>(FrustumCorners::LEFT_TOP_NEAR)],     corners[static_cast<int>(FrustumCorners::RIGHT_TOP_NEAR)],    color);
 
-	EnqueueLine(corners[static_cast<int>(FrustumCorners::LEFT_BOTTOM_FAR)],   corners[static_cast<int>(FrustumCorners::LEFT_TOP_FAR)], color);
-	EnqueueLine(corners[static_cast<int>(FrustumCorners::RIGHT_BOTTOM_FAR)],  corners[static_cast<int>(FrustumCorners::RIGHT_TOP_FAR)], color);
-	EnqueueLine(corners[static_cast<int>(FrustumCorners::LEFT_BOTTOM_FAR)],   corners[static_cast<int>(FrustumCorners::RIGHT_BOTTOM_FAR)], color);
-	EnqueueLine(corners[static_cast<int>(FrustumCorners::LEFT_TOP_FAR)],      corners[static_cast<int>(FrustumCorners::RIGHT_TOP_FAR)], color);
+	EnqueueLine(corners[static_cast<int>(FrustumCorners::LEFT_BOTTOM_FAR)],   corners[static_cast<int>(FrustumCorners::LEFT_TOP_FAR)],      color);
+	EnqueueLine(corners[static_cast<int>(FrustumCorners::RIGHT_BOTTOM_FAR)],  corners[static_cast<int>(FrustumCorners::RIGHT_TOP_FAR)],     color);
+	EnqueueLine(corners[static_cast<int>(FrustumCorners::LEFT_BOTTOM_FAR)],   corners[static_cast<int>(FrustumCorners::RIGHT_BOTTOM_FAR)],  color);
+	EnqueueLine(corners[static_cast<int>(FrustumCorners::LEFT_TOP_FAR)],      corners[static_cast<int>(FrustumCorners::RIGHT_TOP_FAR)],     color);
 
-	EnqueueLine(corners[static_cast<int>(FrustumCorners::LEFT_TOP_NEAR)],     corners[static_cast<int>(FrustumCorners::LEFT_TOP_FAR)], color);
-	EnqueueLine(corners[static_cast<int>(FrustumCorners::LEFT_BOTTOM_NEAR)],  corners[static_cast<int>(FrustumCorners::LEFT_BOTTOM_FAR)], color);
-	EnqueueLine(corners[static_cast<int>(FrustumCorners::RIGHT_TOP_NEAR)],    corners[static_cast<int>(FrustumCorners::RIGHT_TOP_FAR)], color);
-	EnqueueLine(corners[static_cast<int>(FrustumCorners::RIGHT_BOTTOM_NEAR)], corners[static_cast<int>(FrustumCorners::RIGHT_BOTTOM_FAR)], color);
+	EnqueueLine(corners[static_cast<int>(FrustumCorners::LEFT_TOP_NEAR)],     corners[static_cast<int>(FrustumCorners::LEFT_TOP_FAR)],      color);
+	EnqueueLine(corners[static_cast<int>(FrustumCorners::LEFT_BOTTOM_NEAR)],  corners[static_cast<int>(FrustumCorners::LEFT_BOTTOM_FAR)],   color);
+	EnqueueLine(corners[static_cast<int>(FrustumCorners::RIGHT_TOP_NEAR)],    corners[static_cast<int>(FrustumCorners::RIGHT_TOP_FAR)],     color);
+	EnqueueLine(corners[static_cast<int>(FrustumCorners::RIGHT_BOTTOM_NEAR)], corners[static_cast<int>(FrustumCorners::RIGHT_BOTTOM_FAR)],  color);
 
 }

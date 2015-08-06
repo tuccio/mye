@@ -2,6 +2,12 @@ local SponzaController = { }
 
 function SponzaController:Init()
 	
+	Graphics.window.caption = 'Sponza test'
+	
+	r.shadowMapBias = 0.001
+	r.pcfEnabled    = false
+	r.csmSplits     = 3
+	
 	local hCam = GameObjects:CreateEntity('Camera', 'camera')
 	
 	if hCam and hCam:Exists() then
@@ -10,10 +16,13 @@ function SponzaController:Init()
 		hCam.transform.orientation = quaternion(0.716371, -0.063844, -0.692049, -0.0616764)
 	
 		hCam.speed       = 3
+		
+		--hCam.speed       = 300
 	
 		hCam.camera.fovy = 70
 		hCam.camera.near = 0.01
-		hCam.camera.far  = 100
+		hCam.camera.far  = 50
+		--hCam.camera.far  = 5000
 		
 		Scene.camera = hCam.camera
 		
@@ -21,6 +30,8 @@ function SponzaController:Init()
 		System.PopupMessage('Cannot create camera')
 		Game:Quit()
 	end
+	
+	local hShadowDebug = GameObjects:CreateEntity('ShadowDebug', 'shadowDebug')
 	
 end
 
@@ -31,7 +42,7 @@ end
 function SponzaController:OnKeyboardKeyHold(key, t)
 
 	local angle = 25 * Time.delta
-	local v     = vec3(0, 0, -1)
+	local v     = vec3(1, 0, 0.1):Normalize()
 
 	if key == KeyboardVK.R then
 	

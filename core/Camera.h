@@ -61,18 +61,9 @@ namespace mye
 			inline mye::math::Vector3 Right(void) const;
 			inline mye::math::Vector3 Forward(void) const;
 
-			inline void UpdateView(void);
-			inline void UpdateProjection(void);
-			inline void UpdateFrustum(void);
-
-			mye::math::Matrix4 GetViewMatrix(void) const;
-			mye::math::Matrix4 GetProjectionMatrix(void) const;
-
-			inline const mye::math::Matrix4 & GetViewMatrix(void);
-			inline const mye::math::Matrix4 & GetProjectionMatrix(void);
-
-			inline mye::math::Frustum         GetFrustum(void) const;
-			inline const mye::math::Frustum & GetFrustum(void);
+			inline const mye::math::Matrix4 & GetViewMatrix(void) const;
+			inline const mye::math::Matrix4 & GetProjectionMatrix(void) const;
+			inline const mye::math::Frustum & GetFrustum(void) const;
 
 			mye::math::Ray RayCast(const mye::math::Vector2 & screenCoords) const;
 
@@ -86,14 +77,19 @@ namespace mye
 			mye::math::Real m_nearClipDistance;
 			mye::math::Real m_farClipDistance;
 
-			mye::math::Matrix4 m_viewMatrix;
-			mye::math::Matrix4 m_projectionMatrix;
+			mutable mye::math::Matrix4 m_viewMatrix;
+			mutable mye::math::Matrix4 m_projectionMatrix;
+			mutable mye::math::Frustum m_frustum;
 
-			bool m_viewMatrixUptodate;
-			bool m_projectionMatrixUptodate;
-			bool m_frustumUptodate;
+			mutable bool m_viewMatrixUptodate;
+			mutable bool m_projectionMatrixUptodate;
+			mutable bool m_frustumUptodate;
 
-			mye::math::Frustum m_frustum;
+		protected:
+
+			void UpdateView(void) const;
+			void UpdateProjection(void) const;
+			void UpdateFrustum(void) const;
 
 		};
 

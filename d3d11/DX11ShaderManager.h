@@ -20,7 +20,7 @@ namespace mye
 
 		public:
 
-			DX11ShaderManager(DX11Device &device);
+			DX11ShaderManager(void);
 			~DX11ShaderManager(void);
 
 			DX11ShaderPointer CreateVertexShader(const mye::core::String & name,
@@ -35,15 +35,11 @@ namespace mye
 
 		protected:
 
-			DX11Shader * CreateImpl(const mye::core::String & name,
+			DX11Shader * CreateImpl(const mye::core::String         & name,
 			                        mye::core::ManualResourceLoader * manual,
-			                        const mye::core::Parameters & params);
+			                        const mye::core::Parameters     & params);
 
 			void FreeImpl(mye::core::Resource * resource);
-
-		private:
-
-			DX11Device & m_device;
 
 		};
 

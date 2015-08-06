@@ -16,18 +16,14 @@ namespace mye
 
 		public:
 
-			DX11TextureManager(DX11Device &device);
+			DX11TextureManager(void);
 			~DX11TextureManager(void);
 
-			DX11Texture* CreateImpl(const mye::core::String &name,
-				mye::core::ManualResourceLoader *manual,
-				const mye::core::Parameters &params);
+			DX11Texture * CreateImpl(const mye::core::String         & name,
+			                         mye::core::ManualResourceLoader * manual,
+			                         const mye::core::Parameters     & params);
 
-			void FreeImpl(mye::core::Resource *resource);
-
-		private:
-
-			DX11Device &m_device;
+			void FreeImpl(mye::core::Resource * resource);
 
 		};
 

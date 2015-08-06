@@ -18,33 +18,15 @@ using namespace mye::math;
 using namespace mye::win;
 
 DX11Module::DX11Module(void) :
-
 	m_window(nullptr),
-
-	m_basicRenderer           (m_device, nullptr),
-	m_deferredShadingRenderer (m_device, nullptr),
-	m_deferredLightingRenderer(m_device, nullptr),
-	m_text2dRenderer          (m_device),
-	m_debugRenderer           (m_device),
-
 	m_stopWatchBufferHead(0)
-
 {
 	SetWindow(nullptr);
 }
 
 DX11Module::DX11Module(Window * window) :
-
 	m_window(nullptr),
-
-	m_basicRenderer           (m_device, nullptr),
-	m_deferredShadingRenderer (m_device, nullptr),
-	m_deferredLightingRenderer(m_device, nullptr),
-	m_text2dRenderer          (m_device),
-	m_debugRenderer           (m_device),
-
 	m_stopWatchBufferHead(0)
-
 {
 
 	SetWindow(window);
@@ -70,8 +52,7 @@ bool DX11Module::Init(void)
 
 		OnResize(m_window, m_window->GetSize());
 
-		RasterizerInfo rasterizeInfo = { false, CullMode::NONE };
-		DX11RasterizerState rasterizeState(m_device, rasterizeInfo);
+		DX11RasterizerState rasterizeState({ false, CullMode::NONE });
 
 		rasterizeState.Use();
 
@@ -140,7 +121,6 @@ void DX11Module::SetWindow(Window * window)
 
 		DX11SwapChainConfiguration swapChainConf;
 
-		swapChainConf.device     = &m_device;
 		swapChainConf.window     = m_window;
 		swapChainConf.format     = DataFormat::sRGBA32;
 		swapChainConf.fullscreen = window->IsFullScreen();
@@ -150,12 +130,8 @@ void DX11Module::SetWindow(Window * window)
 		swapChainConf.refresh    = mye::math::Rational<unsigned int>(1, 60);
 
 		m_swapChain = DX11SwapChain(swapChainConf);
-
-		m_basicRenderer.SetWindow(window);
-		__MYE_DX11_RENDERER.SetWindow(window);
 		
-
-		if (m_device.Exists())
+		if (DX11Device::GetSingleton().Exists())
 		{
 
 			m_swapChain.Create();
@@ -174,9 +150,6 @@ void DX11Module::FreeWindow(void)
 
 	if (m_window)
 	{
-
-		m_basicRenderer.SetWindow(nullptr);
-		__MYE_DX11_RENDERER.SetWindow(nullptr);
 
 		m_window->RemoveListener(this);
 
@@ -213,6 +186,8 @@ void DX11Module::OnResize(IWindow * window, const mye::math::Vector2i & size)
 
 	}
 
+	GetRendererConfiguration()->SetScreenResolution(size);
+
 	/*RECT rect = { 0, 0, size.x(), size.y() };
 	ClipCursor(&rect);*/
 
@@ -232,9 +207,9 @@ float DX11Module::GetFPS(void) const
 
 }
 
-void DX11Module::RenderShaderResource(DX11ShaderResource & resource, const Vector2i & position, const Vector2i & size)
+void DX11Module::RenderShaderResource(DX11ShaderResource & resource, const Vector2i & position, const Vector2i & size, int slice)
 {
-	m_debugRenderer.EnqueueShaderResource(resource, position, size);
+	m_debugRenderer.EnqueueShaderResource(resource, position, size, slice);
 }
 
 void DX11Module::RenderFrustum(const Frustum & frustum, const Vector4 & color)

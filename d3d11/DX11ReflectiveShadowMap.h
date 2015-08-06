@@ -1,3 +1,5 @@
+#pragma once
+
 #include "DX11DepthBuffer.h"
 #include "DX11Texture.h"
 #include "DX11VertexShader.h"
@@ -31,7 +33,7 @@ namespace mye
 				mye::math::Real far;
 			};
 
-			DX11ReflectiveShadowMap(DX11Device & device);
+			DX11ReflectiveShadowMap(void);
 
 			bool Create(void);
 			void Destroy(void);
@@ -48,15 +50,12 @@ namespace mye
 
 			void SetResolution(int resolution);
 
-			inline int GetCSMSlices(void) const
+			inline int GetCSMSplits(void) const
 			{
-				return m_csmSlices;
+				return m_csmSplits;
 			}
 
-			inline void SetCSMSlices(int slices)
-			{
-				m_csmSlices = slices;
-			}
+			void SetCSMSplits(int slisplitsces);
 
 			inline float GetCSMLogarithmicWeight(void) const
 			{
@@ -103,49 +102,59 @@ namespace mye
 				return m_pssmSlices;
 			}
 
+			inline mye::core::Light * GetLight(void) const
+			{
+				return m_light;
+			}
+
 		private:
 
-			DX11Device & m_device;
+			bool                        m_initialized;
 
-			bool m_initialized;
+			DX11Texture                 m_position;
+			DX11Texture                 m_normal;
+			DX11Texture                 m_flux;
 
-			DX11Texture m_position;
-			DX11Texture m_normal;
-			DX11Texture m_flux;
+			DX11Texture                 m_positionArray;
 
-			DX11Texture m_positionArray;
+			DX11DepthBuffer             m_depth;
 
-			DX11DepthBuffer m_depth;
+			int                         m_resolution;
+			bool                        m_varianceShadowMapping;
 
-			int  m_resolution;
-			bool m_varianceShadowMapping;
+			int                         m_csmSplits;
+			mye::math::Real             m_csmLogWeight;
 
-			int             m_csmSlices;
-			mye::math::Real m_csmLogWeight;
+			DX11VertexShaderPointer     m_rsmVS;
+			DX11PixelShaderPointer      m_singlePS;
 
-			DX11VertexShaderPointer m_rsmVS;
-			DX11PixelShaderPointer  m_singlePS;
+			DX11GeometryShaderPointer   m_pssmGS;
+			DX11VertexShaderPointer     m_pssmVS;
 
-			DX11GeometryShaderPointer m_pssmGS;
-			DX11VertexShaderPointer   m_pssmVS;
+			std::vector<PSSMSlice>      m_pssmSlices;
 
-			std::vector<PSSMSlice> m_pssmSlices;
+			mye::math::Matrix4          m_lightSpaceTransform;
+			mye::math::Matrix4          m_cropMatrix[__MYE_RSM_MAX_CSM_COUNT];
 
-			mye::math::Matrix4 m_lightSpaceTransform;
-			mye::math::Matrix4 m_cropMatrix[__MYE_RSM_MAX_CSM_COUNT];
+			mye::core::Light          * m_light;
 
-			bool __CreateRenderTargets(void);
-			void __DestroyRenderTargets(void);
+			/* Private functions */
 
-			bool __CreateDepthBuffers(void);
-			void __DestroyDepthBuffers(void);
+			bool                       __CreateRenderTargets(void);
+			void                       __DestroyRenderTargets(void);
 
-			void                    __RenderDirectionalLight(mye::core::Light * light);
-			std::vector<PSSMSlice> __CSMComputeSplitsDepths(mye::math::Real nearDistance, mye::math::Real farDistance);
-			mye::math::Matrix4      __CSMCropMatrix(const mye::math::Matrix4 & shadowViewMatrix,
-                                                    const mye::math::Matrix4 & shadowProjMatrix,
+			bool                       __CreateDepthBuffers(void);
+			void                       __DestroyDepthBuffers(void);
+
+			void                       __RenderDirectionalLight(mye::core::Light * light);
+
+			std::vector<PSSMSlice>     __CSMComputeSplitsDepths(mye::math::Real nearDistance, mye::math::Real farDistance);
+
+			mye::math::Matrix4         __CSMCropMatrix(const mye::math::Matrix4 & shadowViewProjMatrix,
                                                     const mye::math::Frustum & sliceFrustum,
-													const mye::math::Vector3 & lightDirection);
+			                                        const mye::math::AABB    & castersAABB,
+			                                        const mye::math::AABB    & receiversAABB,
+			                                        mye::math::Real            padding);
 
 			mye::core::GameObjectsList __CSMFindPotentialCasters(const mye::math::Vector3 & lightDirection, const mye::math::Frustum & cameraFrustum);
 			PSSMSlice                  __CSMFindTightPlanes(mye::core::Camera * camera, const mye::math::AABB & aabb);

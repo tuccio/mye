@@ -9,14 +9,26 @@ cbuffer cbRendererConfiguration : register(__MYE_DX11_BUFFER_SLOT_RENDERINFO)
 
     struct RendererConfiguration
     {
-        int2   resolution;
 
-        float  gamma;
+        int2  resolution;
+			  
+        float gamma;
+			  
+        int   shadowMapResolution;
+		float shadowMapInvResolution;
+		float shadowMapBias;
+		float shadowMapSlopeScaledBias;
+		float shadowMapNormalOffsetBias;
+			  
+		float vsmMinVariance;
+		float vsmMinBleeding;
+			  
+		uint  csmSplits;			  
+		bool  csmDebug;
 
-        int    shadowMapResolution;
-
-		float  vsmMinVariance;
-		float  vsmMinBleeding;
+		bool  pcfEnabled;
+		uint  pcfKernel;
+		float pcfKernelInvSquare;
 
     } r;
 

@@ -60,10 +60,10 @@ bool DX11DepthBuffer::Create(void)
 	if (m_depthBufferConfiguration.arraySize > 1)
 	{
 
-		depthStencilViewDesc.ViewDimension                  = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
-		depthStencilViewDesc.Texture2DArray.ArraySize       = m_depthBufferConfiguration.arraySize;
-		depthStencilViewDesc.Texture2DArray.FirstArraySlice = 0;
-		depthStencilViewDesc.Texture2DArray.MipSlice        = 0;
+		depthStencilViewDesc.ViewDimension                    = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
+		depthStencilViewDesc.Texture2DArray.ArraySize         = m_depthBufferConfiguration.arraySize;
+		depthStencilViewDesc.Texture2DArray.FirstArraySlice   = 0;
+		depthStencilViewDesc.Texture2DArray.MipSlice          = 0;
 
 		shaderResourceViewDesc.ViewDimension                  = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
 		shaderResourceViewDesc.Texture2DArray.ArraySize       = m_depthBufferConfiguration.arraySize;
@@ -75,8 +75,8 @@ bool DX11DepthBuffer::Create(void)
 	else
 	{
 
-		depthStencilViewDesc.ViewDimension      = D3D11_DSV_DIMENSION_TEXTURE2D;
-		depthStencilViewDesc.Texture2D.MipSlice = 0;
+		depthStencilViewDesc.ViewDimension               = D3D11_DSV_DIMENSION_TEXTURE2D;
+		depthStencilViewDesc.Texture2D.MipSlice          = 0;
 
 		shaderResourceViewDesc.ViewDimension             = D3D11_SRV_DIMENSION_TEXTURE2D;
 		shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
@@ -86,20 +86,20 @@ bool DX11DepthBuffer::Create(void)
 
 	bool success = (
 
-		!__MYE_DX11_HR_TEST_FAILED(m_depthBufferConfiguration.device->GetDevice()->
+		!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton()->
 		CreateTexture2D(
 			&depthStencilDesc,
 			0,
 			&m_depthStencilBuffer)) &&
 
-		!__MYE_DX11_HR_TEST_FAILED(m_depthBufferConfiguration.device->GetDevice()->
+			!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton()->
 		CreateDepthStencilView(
 			m_depthStencilBuffer,
 			&depthStencilViewDesc,
 			&m_depthStencilView)) &&
 
 		(!m_depthBufferConfiguration.shaderResource ||
-		!__MYE_DX11_HR_TEST_FAILED(m_depthBufferConfiguration.device->GetDevice()->
+		!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton()->
 		CreateShaderResourceView(
 			m_depthStencilBuffer,
 			&shaderResourceViewDesc,
@@ -119,7 +119,7 @@ void DX11DepthBuffer::Destroy(void)
 
 }
 
-void DX11DepthBuffer::Resize(int width, int height)
+bool DX11DepthBuffer::Resize(int width, int height)
 {
 
 	m_depthBufferConfiguration.width  = width;
@@ -128,15 +128,22 @@ void DX11DepthBuffer::Resize(int width, int height)
 	if (m_depthStencilBuffer)
 	{
 		Destroy();
-		Create();
+		return Create();
 	}
 
+}
+
+bool DX11DepthBuffer::ResizeArray(int size)
+{
+	m_depthBufferConfiguration.arraySize = size;
+	Destroy();
+	return Create();
 }
 
 void DX11DepthBuffer::Clear(float depth)
 {
 
-	m_depthBufferConfiguration.device->GetImmediateContext()->ClearDepthStencilView(
+	DX11Device::GetSingleton().GetImmediateContext()->ClearDepthStencilView(
 		m_depthStencilView,
 		D3D11_CLEAR_DEPTH,
 		depth,

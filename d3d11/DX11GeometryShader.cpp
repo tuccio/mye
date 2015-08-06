@@ -13,25 +13,23 @@
 using namespace mye::dx11;
 using namespace mye::core;
 
-DX11GeometryShader::DX11GeometryShader(mye::core::ResourceManager * owner,
-                                       const mye::core::String & name,
-                                       mye::core::ManualResourceLoader * manual,
-                                       DX11Device & device,
+DX11GeometryShader::DX11GeometryShader(ResourceManager      * owner,
+                                       const String         & name,
+                                       ManualResourceLoader * manual,
                                        bool precompiled) :
-	DX11Shader(owner, name, manual, precompiled),
-	m_device(device)
+	DX11Shader(owner, name, manual, precompiled)
 {
 	m_shader = nullptr;
 }
 
 void DX11GeometryShader::Use(void)
 {
-	m_device.GetImmediateContext()->GSSetShader(m_shader, nullptr, 0);
+	DX11Device::GetSingleton().GetImmediateContext()->GSSetShader(m_shader, nullptr, 0);
 }
 
 void DX11GeometryShader::Dispose(void)
 {
-	m_device.GetImmediateContext()->GSSetShader(nullptr, nullptr, 0);
+	DX11Device::GetSingleton().GetImmediateContext()->GSSetShader(nullptr, nullptr, 0);
 }
 
 DX11GeometryShader::~DX11GeometryShader(void)
@@ -97,7 +95,7 @@ bool DX11GeometryShader::LoadImpl(void)
 		}
 
 		if (code &&
-			!__MYE_DX11_HR_TEST_FAILED(m_device.GetDevice()->
+			!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton()->
 				CreateGeometryShader(
 					code->GetBufferPointer(),
 					code->GetBufferSize(),

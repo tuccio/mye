@@ -7,7 +7,7 @@
 using namespace mye::dx11;
 using namespace mye::core;
 
-//#define MYE_DX11_DEBUG
+#define MYE_DX11_DEBUG
 
 DX11Device::DX11Device(void) :
 	m_device(nullptr),

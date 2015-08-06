@@ -14,10 +14,8 @@ using namespace mye::core;
 using namespace mye::win;
 using namespace mye::math;
 
-DX11Text2DRenderer::DX11Text2DRenderer(DX11Device &device) :
-	m_device(device),
-	m_initialized(false),
-	m_textColorBuffer(nullptr, "", nullptr, device)
+DX11Text2DRenderer::DX11Text2DRenderer(void) :
+	m_initialized(false)
 {
 }
 
@@ -43,7 +41,7 @@ bool DX11Text2DRenderer::Init(void)
 	fontSamplerDesc.MinLOD = 0.0f;
 	fontSamplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	if (!__MYE_DX11_HR_TEST_FAILED(m_device.GetDevice()->CreateSamplerState(&fontSamplerDesc, &m_fontTextureSampler)))
+	if (!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton()->CreateSamplerState(&fontSamplerDesc, &m_fontTextureSampler)))
 	{
 
 
@@ -77,7 +75,7 @@ bool DX11Text2DRenderer::Init(void)
 
 		if (m_text2dVS->Load() &&
 			m_text2dPS->Load() &&
-			CreateConstantBuffers())
+			__CreateConstantBuffers())
 		{
 
 			m_initialized = true;
@@ -113,19 +111,19 @@ void DX11Text2DRenderer::Render(ID3D11RenderTargetView *target)
 	m_text2dVS->Use();
 	m_text2dPS->Use();
 
-	m_device.GetImmediateContext()->OMSetRenderTargets(1, &target, nullptr);
-	m_device.GetImmediateContext()->PSSetSamplers(0, 1, &m_fontTextureSampler);
+	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(1, &target, nullptr);
+	DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(0, 1, &m_fontTextureSampler);
 
-	m_device.SetBlending(true);
-	m_device.SetDepthTest(DX11DepthTest::OFF);
+	DX11Device::GetSingleton().SetBlending(true);
+	DX11Device::GetSingleton().SetDepthTest(DX11DepthTest::OFF);
 
 	for (Text2DComponent * t2dc : Game::GetSingleton().GetSceneModule()->GetText2DList())
 	{
 
 		// Draw text
-
-		DX11FontPointer font = Resource::DynamicCast<DX11Font>(t2dc->GetFont());
-		DX11VertexBufferPointer vb = Resource::DynamicCast<DX11VertexBuffer>(t2dc->GetVertexBuffer());
+		
+		DX11FontPointer         font = Resource::DynamicCast<DX11Font>(t2dc->GetFont());
+		DX11VertexBufferPointer vb   = Resource::DynamicCast<DX11VertexBuffer>(t2dc->GetVertexBuffer());
 
 		if (vb && font && font->Load() && vb->Load())
 		{
@@ -136,8 +134,8 @@ void DX11Text2DRenderer::Render(ID3D11RenderTargetView *target)
 			m_textColorBuffer.SetData(t2dc->GetColor().Data());
 			m_textColorBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, 0);
 
-			m_device.GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-			m_device.GetImmediateContext()->Draw(vb->GetVerticesCount(), 0);
+			DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			DX11Device::GetSingleton().GetImmediateContext()->Draw(vb->GetVerticesCount(), 0);
 
 			vb->Unbind();
 			font->Unbind();
@@ -148,7 +146,7 @@ void DX11Text2DRenderer::Render(ID3D11RenderTargetView *target)
 
 }
 
-bool DX11Text2DRenderer::CreateConstantBuffers(void)
+bool DX11Text2DRenderer::__CreateConstantBuffers(void)
 {
 
 	return m_textColorBuffer.Create(sizeof(mye::math::Vector4f));

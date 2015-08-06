@@ -23,7 +23,7 @@ namespace mye
 
 		public:
 
-			DX11Text2DRenderer(DX11Device &device);
+			DX11Text2DRenderer(void);
 			~DX11Text2DRenderer(void);
 
 			bool Init(void);
@@ -35,8 +35,6 @@ namespace mye
 
 			bool                      m_initialized;
 								      
-			DX11Device              & m_device;
-								      
 			DX11VertexShaderPointer   m_text2dVS;
 			DX11PixelShaderPointer    m_text2dPS;
 								      
@@ -44,7 +42,7 @@ namespace mye
 								      
 			DX11ConstantBuffer        m_textColorBuffer;
 
-			bool CreateConstantBuffers(void);
+			bool __CreateConstantBuffers(void);
 
 		};
 

@@ -16,10 +16,11 @@ namespace mye
 
 		public:
 
-			DX11ConstantBuffer(mye::core::ResourceManager *owner,
-				const mye::core::String &name,
-				mye::core::ManualResourceLoader *manual,
-				DX11Device &device);
+			DX11ConstantBuffer(void);
+
+			DX11ConstantBuffer(mye::core::ResourceManager     * owner,
+			                  const mye::core::String         & name,
+			                  mye::core::ManualResourceLoader * manual);
 
 			~DX11ConstantBuffer(void);
 

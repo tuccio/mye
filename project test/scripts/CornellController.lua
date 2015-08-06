@@ -7,11 +7,18 @@ function CornellController:Init()
 	hCam.transform.position    = vec3(0, 1, 3)
 	hCam.transform.orientation = quaternion(0, 0, 1, 0)
 	
+	Graphics.window.caption = 'Cornell box test'
+	
+	r.shadowMapBias             = 0
+	r.shadowMapNormalOffsetBias = 0.01
+	r.pcfEnabled                = true
+	r.csmSplits                 = 1
+	
 	if hCam and hCam:Exists() then
 	
 		hCam.camera.fovy = 60
 		hCam.camera.near = 0.001
-		hCam.camera.far  = 8	
+		hCam.camera.far  = 15	
 		
 		Scene.camera = hCam.camera
 		
@@ -19,6 +26,8 @@ function CornellController:Init()
 		System.PopupMessage('Cannot create camera')
 		Game:Quit()
 	end
+	
+	local hShadowDebug = GameObjects:CreateEntity('ShadowDebug', 'shadowDebug')
 	
 end
 
@@ -28,7 +37,7 @@ function CornellController:Update()
 
 	--print(self.transform.position)
 	
-	local hLight = GameObjects:Find('light1')
+	local hLight = GameObjects:Find('sun')
 	
 	self.text2d.text = 'Light direction: ' .. tostring(hLight.light.direction)
 
@@ -41,7 +50,7 @@ function CornellController:OnKeyboardKeyHold(key, t)
 
 	if key == KeyboardVK.R then
 	
-		local hLight = GameObjects:Find('light1')
+		local hLight = GameObjects:Find('sun')
 		
 		local q = quaternion(v, angle)
 		hLight.light.direction = q:Rotate(hLight.light.direction):Normalize()
@@ -50,7 +59,7 @@ function CornellController:OnKeyboardKeyHold(key, t)
 	
 	if key == KeyboardVK.T then
 	
-		local hLight = GameObjects:Find('light1')
+		local hLight = GameObjects:Find('sun')
 		
 		local q = quaternion(v, - angle)
 		hLight.light.direction = q:Rotate(hLight.light.direction):Normalize()

@@ -5,16 +5,16 @@
 using namespace mye::dx11;
 using namespace mye::core;
 
-DX11Font::DX11Font(ResourceManager *owner,
-				   const String &name,
-				   ManualResourceLoader *manual) :
+DX11Font::DX11Font(ResourceManager      * owner,
+				   const String         & name,
+				   ManualResourceLoader * manual) :
 	Font(owner, name, manual)
 {
 
 	m_texture = ResourceTypeManager::GetSingleton().CreateResource<DX11Texture>("Texture",
-																				"./fonts/" + m_name + ".png",
-																				nullptr,
-																				{ { "mipmaps", "0" }, { "generateMips", "true" } });
+	                                                                            "./fonts/" + m_name + ".png",
+	                                                                            nullptr,
+	                                                                            { { "mipmaps", "0" }, { "generateMips", "true" } });
 
 }
 

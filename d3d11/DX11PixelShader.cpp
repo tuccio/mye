@@ -9,13 +9,11 @@
 using namespace mye::dx11;
 using namespace mye::core;
 
-DX11PixelShader::DX11PixelShader(mye::core::ResourceManager * owner,
-								   const mye::core::String & name,
-								   mye::core::ManualResourceLoader * manual,
-								   DX11Device & device,
-								   bool precompiled) :
-DX11Shader(owner, name, manual, precompiled),
-	m_device(device)
+DX11PixelShader::DX11PixelShader(ResourceManager      * owner,
+								 const String         & name,
+								 ManualResourceLoader * manual,
+								 bool precompiled) :
+	DX11Shader(owner, name, manual, precompiled)
 {
 	m_shader = nullptr;
 }
@@ -27,12 +25,12 @@ DX11PixelShader::~DX11PixelShader(void)
 
 void DX11PixelShader::Use(void)
 {
-	m_device.GetImmediateContext()->PSSetShader(m_shader, nullptr, 0);
+	DX11Device::GetSingleton().GetImmediateContext()->PSSetShader(m_shader, nullptr, 0);
 }
 
 void DX11PixelShader::Dispose(void)
 {
-	m_device.GetImmediateContext()->PSSetShader(nullptr, nullptr, 0);
+	DX11Device::GetSingleton().GetImmediateContext()->PSSetShader(nullptr, nullptr, 0);
 }
 
 
@@ -55,8 +53,8 @@ bool DX11PixelShader::LoadImpl(void)
 	if (DX11Shader::LoadImpl())
 	{
 
-		ID3DBlob *code = nullptr;
-		ID3DBlob *error = nullptr;
+		ID3DBlob * code = nullptr;
+		ID3DBlob * error = nullptr;
 
 		UINT compileFlags = 0x0;
 
@@ -95,12 +93,11 @@ bool DX11PixelShader::LoadImpl(void)
 		}
 
 		if (code &&
-			!__MYE_DX11_HR_TEST_FAILED(m_device.GetDevice()->
-				CreatePixelShader(
-					code->GetBufferPointer(),
-					code->GetBufferSize(),
-					nullptr,
-					&m_shader)))
+			!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton()->
+				CreatePixelShader(code->GetBufferPointer(),
+				                  code->GetBufferSize(),
+				                  nullptr,
+				                  &m_shader)))
 		{
 			success = true;
 		}

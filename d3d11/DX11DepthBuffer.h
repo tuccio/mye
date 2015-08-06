@@ -12,10 +12,8 @@ namespace mye
 		struct DX11DepthBufferConfiguration
 		{
 
-			DX11Device * device;
-
-			int width;
-			int height;
+			int  width;
+			int  height;
 
 			bool shaderResource;
 			int  arraySize;
@@ -36,7 +34,8 @@ namespace mye
 			bool Create(void);
 			void Destroy(void);
 
-			void Resize(int width, int height);
+			bool Resize(int width, int height);
+			bool ResizeArray(int size);
 
 			void Clear(float depth = 1.0f);
 

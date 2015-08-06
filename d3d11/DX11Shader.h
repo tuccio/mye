@@ -18,10 +18,10 @@ namespace mye
 
 		public:
 
-			DX11Shader(mye::core::ResourceManager *owner,
-				const mye::core::String &name,
-				mye::core::ManualResourceLoader *manual = nullptr,
-				bool precompiled = false);
+			DX11Shader(mye::core::ResourceManager      * owner,
+			           const mye::core::String         & name,
+			           mye::core::ManualResourceLoader * manual      = nullptr,
+			           bool                              precompiled = false);
 
 			~DX11Shader(void);
 
@@ -38,7 +38,7 @@ namespace mye
 			virtual size_t CalculateSizeImpl(void);
 
 			mye::core::String m_source;
-			bool m_precompiled;
+			bool              m_precompiled;
 
 		};
 

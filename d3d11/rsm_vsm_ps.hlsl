@@ -40,22 +40,21 @@ struct PSOutput
 
 /* Main */
 
-PSOutput main(PSInput input) : SV_TARGET
+PSOutput main(PSInput input)
 {
 
 	float3 N = normalize(input.normalWS);
-	float3 L;
-	float3 intensity;
-
-	ComputeLightParams(input.positionWS, g_light, L, intensity);
+	float3 L = LightVector(input.positionWS, g_light);
 
 	float depth = LightSpaceLinearDepth(g_light, input.positionLS, input.positionWS);
+
+	float4 NdotL = saturate(dot(N, L));
 
 	PSOutput output;
 
 	output.position = float4(input.positionWS, 1);
 	output.normal   = float4(N, 1);
-	output.flux     = float4(g_material.diffuseColor * saturate(dot(N, L)) * intensity, 1);
+	output.flux     = g_light.intensity * g_light.color * g_material.diffuseColor * NdotL;
 	output.vsm      = ComputeMoments(depth);
 
 	return output;

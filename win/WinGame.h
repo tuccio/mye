@@ -27,6 +27,7 @@ namespace mye
 			~WinGame(void);
 
 			void Run(void);
+			void Quit(void);
 
 			void RuntimeError(const mye::core::String &error);
 

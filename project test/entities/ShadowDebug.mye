@@ -1,0 +1,4 @@
+entity ShadowDebug
+{	
+	component keyboard;
+};

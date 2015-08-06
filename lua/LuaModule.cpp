@@ -90,6 +90,8 @@ bool LuaModule::Init(void)
 
 	globals["ResourceTypeManager"] = ResourceTypeManager::GetSingletonPointer();
 
+	globals["r"] = game->GetGraphicsModule()->GetRendererConfiguration();
+
 	return true;
 
 }
@@ -111,11 +113,12 @@ void LuaModule::Init(GameObject * object)
 
 	luapp11::Object o(m_state, object->GetHandle());
 
-	try
+	auto f = o["Init"];
+
+	if (f.GetLuaType() != LUA_TNIL)
 	{
 		o.Call<void>("Init");
 	}
-	catch (...) { }
 	
 }
 
@@ -124,11 +127,12 @@ void LuaModule::Finalize(GameObject * object)
 
 	luapp11::Object o(m_state, object->GetHandle());
 
-	try
+	auto f = o["Finalize"];
+
+	if (f.GetLuaType() != LUA_TNIL)
 	{
 		o.Call<void>("Finalize");
-	}
-	catch (...) { }
+	}	
 	
 }
 
@@ -142,11 +146,11 @@ void LuaModule::Update(void)
 
 		luapp11::Object o(m_state, hObj);
 
-		try
+		auto f = o["Update"];
+
+		if (f.GetLuaType() != LUA_TNIL)
 		{
 			o.Call<void>("Update");
-		}
-		catch (...) {
 		}
 
 	}
@@ -262,11 +266,12 @@ void LuaModule::OnEvent(mye::core::GameObject * object, const IEvent * e)
 
 		luapp11::Object o(m_state, object->GetHandle());
 
-		try
+		auto f = o["OnKeyboardKeyPress"];
+
+		if (f.GetLuaType() != LUA_TNIL)
 		{
 			o.Call<void>("OnKeyboardKeyPress", kEvent->key);
 		}
-		catch (...) { }
 
 	}
 
@@ -280,11 +285,12 @@ void LuaModule::OnEvent(mye::core::GameObject * object, const IEvent * e)
 
 		luapp11::Object o(m_state, object->GetHandle());
 
-		try
+		auto f = o["OnKeyboardKeyRelease"];
+
+		if (f.GetLuaType() != LUA_TNIL)
 		{
 			o.Call<void>("OnKeyboardKeyRelease", kEvent->key, (float) kEvent->duration);
 		}
-		catch (...) { }
 
 	}
 
@@ -298,11 +304,11 @@ void LuaModule::OnEvent(mye::core::GameObject * object, const IEvent * e)
 
 		luapp11::Object o(m_state, object->GetHandle());
 
-		try
+		auto f = o["OnKeyboardKeyHold"];
+
+		if (f.GetLuaType() != LUA_TNIL)
 		{
 			o.Call<void>("OnKeyboardKeyHold", kEvent->key, (float) kEvent->duration);
-		}
-		catch (...) {
 		}
 
 	}
@@ -317,11 +323,11 @@ void LuaModule::OnEvent(mye::core::GameObject * object, const IEvent * e)
 
 		luapp11::Object o(m_state, object->GetHandle());
 
-		try
+		auto f = o["OnMouseKeyPress"];
+
+		if (f.GetLuaType() != LUA_TNIL)
 		{
 			o.Call<void>("OnMouseKeyPress", kEvent->key);
-		}
-		catch (...) {
 		}
 
 	}
@@ -336,11 +342,11 @@ void LuaModule::OnEvent(mye::core::GameObject * object, const IEvent * e)
 
 		luapp11::Object o(m_state, object->GetHandle());
 
-		try
+		auto f = o["OnMouseKeyRelease"];
+
+		if (f.GetLuaType() != LUA_TNIL)
 		{
 			o.Call<void>("OnMouseKeyRelease", kEvent->key, (float) kEvent->duration);
-		}
-		catch (...) {
 		}
 
 	}
@@ -355,11 +361,11 @@ void LuaModule::OnEvent(mye::core::GameObject * object, const IEvent * e)
 
 		luapp11::Object o(m_state, object->GetHandle());
 
-		try
+		auto f = o["OnMouseKeyRelease"];
+
+		if (f.GetLuaType() != LUA_TNIL)
 		{
-			o.Call<void>("OnMouseKeyHold", kEvent->key, (float) kEvent->duration);
-		}
-		catch (...) {
+			o.Call<void>("OnMouseKeyRelease", kEvent->key, (float) kEvent->duration);
 		}
 
 	}
@@ -374,11 +380,11 @@ void LuaModule::OnEvent(mye::core::GameObject * object, const IEvent * e)
 
 		luapp11::Object o(m_state, object->GetHandle());
 
-		try
+		auto f = o["OnMouseMove"];
+		
+		if (f.GetLuaType() != LUA_TNIL)
 		{
 			o.Call<void>("OnMouseMove", kEvent->from, kEvent->to);
-		}
-		catch (...) {
 		}
 
 	}

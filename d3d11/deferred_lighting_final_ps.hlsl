@@ -1,5 +1,6 @@
 #pragma pack_matrix(row_major)
 
+#include "constants.hlsli"
 #include "material.hlsli"
 #include "register_slots.hlsli"
 
@@ -38,12 +39,12 @@ PSOutput main(PSInput input) : SV_TARGET
 
 	float4 lighting = g_lightbuffer.Load(screenPosition);
 
-	float3 diffuse  = g_material.diffuseColor * lighting.xyz;
+	float3 diffuse  = g_material.diffuseColor  * lighting.xyz;
 	float3 specular = g_material.specularColor * lighting.w;
 
 	//output.color = float4(saturate(diffuse + specular), 1);
 
-	output.color = float4(g_material.diffuseColor * lighting.xyz, 1);
+	output.color = saturate(float4(g_material.diffuseColor * lighting.xyz * MYE_INV_PI, 1));
 
 	return output;
 

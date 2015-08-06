@@ -12,22 +12,23 @@ namespace mye
 	{
 
 		class DX11VertexBuffer :
-			public DX11Buffer/*,
-			public mye::core::VertexBuffer*/
+			public DX11Buffer
 		{
 
 		public:
 
-			DX11VertexBuffer(mye::core::ResourceManager * owner,
-			                 const mye::core::String & name,
-			                 mye::core::ManualResourceLoader * manual,
-			                 DX11Device & device);
+			DX11VertexBuffer(void);
+
+			DX11VertexBuffer(mye::core::ResourceManager      * owner,
+			                 const mye::core::String         & name,
+			                 mye::core::ManualResourceLoader * manual);
 
 			~DX11VertexBuffer(void);
 
 			bool Create(void * data, size_t n, const mye::core::VertexDeclaration & vDecl);
-			bool Create(mye::core::Mesh *mesh);
-			bool Create(mye::core::Model *model);
+
+			bool Create(mye::core::Mesh  * mesh);
+			bool Create(mye::core::Model * model);
 
 			void Clear(void);
 

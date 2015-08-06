@@ -15,10 +15,9 @@ namespace mye
 		public:
 
 			DX11GeometryShader(mye::core::ResourceManager * owner,
-							 const mye::core::String & name,
-							 mye::core::ManualResourceLoader * manual,
-							 mye::dx11::DX11Device & device,
-							 bool precompiled = false);
+			                   const mye::core::String & name,
+			                   mye::core::ManualResourceLoader * manual,
+			                   bool precompiled = false);
 
 			~DX11GeometryShader(void);
 
@@ -38,7 +37,6 @@ namespace mye
 
 			ID3D11GeometryShader * m_shader;
 			mye::core::String      m_compileError;
-			DX11Device           & m_device;
 
 
 		};

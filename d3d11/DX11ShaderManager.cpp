@@ -10,11 +10,8 @@ using namespace mye::dx11;
 using namespace mye::core;
 using namespace std;
 
-DX11ShaderManager::DX11ShaderManager(DX11Device & device) :
-	ResourceManager("DX11Shader"),
-	m_device(device)
-{
-}
+DX11ShaderManager::DX11ShaderManager(void) :
+	ResourceManager("DX11Shader") { }
 
 
 DX11ShaderManager::~DX11ShaderManager(void)
@@ -41,15 +38,15 @@ DX11Shader* DX11ShaderManager::CreateImpl(const String & name,
 
 		if (type == "vertex")
 		{
-			return (new DX11VertexShader(this, name, manual, m_device, precompiled));
+			return (new DX11VertexShader(this, name, manual, precompiled));
 		}
 		else if (type == "pixel")
 		{
-			return (new DX11PixelShader(this, name, manual, m_device, precompiled));
+			return (new DX11PixelShader(this, name, manual, precompiled));
 		}
 		else if (type == "geometry")
 		{
-			return (new DX11GeometryShader(this, name, manual, m_device, precompiled));
+			return (new DX11GeometryShader(this, name, manual, precompiled));
 		}
 
 	}
@@ -58,21 +55,21 @@ DX11Shader* DX11ShaderManager::CreateImpl(const String & name,
 
 }
 
-void DX11ShaderManager::FreeImpl(Resource* resource)
+void DX11ShaderManager::FreeImpl(Resource * resource)
 {
-	static_cast<DX11Shader*>(resource)->Destroy();
+	static_cast<DX11Shader *>(resource)->Destroy();
 }
 
-DX11ShaderPointer DX11ShaderManager::CreateVertexShader(const String & name,
-														bool precompiled,
+DX11ShaderPointer DX11ShaderManager::CreateVertexShader(const String                                & name,
+														bool                                          precompiled,
 														const std::vector<D3D11_INPUT_ELEMENT_DESC> & vdesc)
 {
 
 	Parameters params;
 
-	params["type"] = "vertex";
-	params["precompiled"] = ToString(precompiled);
-	params["inputLayoutVector"] = PointerToString(static_cast<const void*>(&vdesc));
+	params["type"]              = "vertex";
+	params["precompiled"]       = ToString(precompiled);
+	params["inputLayoutVector"] = PointerToString(static_cast<const void *>(&vdesc));
 
 	DX11VertexShaderPointer shader = CreateResource<DX11VertexShader>(name, nullptr, params);
 
@@ -90,7 +87,7 @@ DX11ShaderPointer DX11ShaderManager::CreatePixelShader(const String & name, bool
 
 	Parameters params;
 
-	params["type"] = "pixel";
+	params["type"]        = "pixel";
 	params["precompiled"] = ToString(precompiled);
 
 	DX11PixelShaderPointer shader = CreateResource<DX11PixelShader>(name, nullptr, params);
@@ -109,7 +106,7 @@ DX11ShaderPointer DX11ShaderManager::CreateGeometryShader(const String & name, b
 
 	Parameters params;
 
-	params["type"] = "pixel";
+	params["type"]        = "pixel";
 	params["precompiled"] = ToString(precompiled);
 
 	DX11GeometryShaderPointer shader = CreateResource<DX11GeometryShader>(name, nullptr, params);

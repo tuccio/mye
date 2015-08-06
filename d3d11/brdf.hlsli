@@ -11,7 +11,7 @@ void BRDFDiffuse(in float3 x,
 				 out float4 diffuse)
 {
 	float NdotL = saturate(dot(N, L));
-	diffuse = float4(material.diffuseColor * NdotL, 1);
+	diffuse = material.diffuseColor * NdotL;
 }
 
 void BRDFSpecular(in float3 eye,

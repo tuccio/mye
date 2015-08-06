@@ -70,11 +70,9 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 	 * Graphics setup
 	 */
 
-	DX11Device * device = static_cast<DX11Module&>(graphics).GetDevice();
-
-	DX11BufferManager  bufferManager(*device);
-	DX11ShaderManager  shaderManager(*device);
-	DX11TextureManager textureManager(*device);
+	DX11BufferManager  bufferManager;
+	DX11ShaderManager  shaderManager;
+	DX11TextureManager textureManager;
 	DX11FontManager    fontManager;
 
 	/*
@@ -105,9 +103,6 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 	/*
 	 * Create and run the game
 	 */
-
-	MaterialPointer mat = ResourceTypeManager::GetSingleton().CreateResource<Material>("Material", "./materials/white.mym");
-	mat->Load();
 
 	WinGame game(&input,
 				 &gameobjects,

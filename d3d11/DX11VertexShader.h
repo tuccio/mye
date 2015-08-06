@@ -17,7 +17,6 @@ namespace mye
 			DX11VertexShader(mye::core::ResourceManager * owner,
 							 const mye::core::String & name,
 							 mye::core::ManualResourceLoader * manual,
-							 mye::dx11::DX11Device & device,
 							 bool precompiled = false);
 
 			~DX11VertexShader(void);
@@ -39,7 +38,6 @@ namespace mye
 			ID3D11VertexShader * m_shader;
 			ID3D11InputLayout  * m_inputLayout;
 			mye::core::String    m_compileError;
-			DX11Device         & m_device;
 
 
 		};

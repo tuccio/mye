@@ -3,12 +3,15 @@
 
 struct Light
 {
+
 	float4 color;
 	float4 position;
 	float4 direction;
 
+	float  intensity;
 	float  spotAngle;
 	float  range;
+
 };
 
 #endif

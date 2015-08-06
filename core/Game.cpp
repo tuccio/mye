@@ -65,7 +65,6 @@ void Game::Run(void)
 void Game::Quit(void)
 {
 	m_timer.Stop();
-	exit(0);
 }
 
 InputModule * Game::GetInputModule(void)

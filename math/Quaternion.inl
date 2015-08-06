@@ -37,13 +37,59 @@ namespace mye
 		__MYE_MATH_INLINE QuaternionTempl<T>::QuaternionTempl(const Matrix<T, 3, 3> & A)
 		{
 
-			m_data[3] = Sqrt(1 + A.m00() + A.m11() + A.m22()) * T(0.5);
+			T trace = A.m00() + A.m11() + A.m22();
 
-			float invFourW = T(1) / (T(4) * m_data[3]);
+			if (trace > 0)
+			{
 
-			m_data[0] = (A.m21() - A.m12()) * invFourW;
-			m_data[1] = (A.m02() - A.m20()) * invFourW;
-			m_data[2] = (A.m10() - A.m01()) * invFourW;
+				m_data[3] = Sqrt<T>(1.0f + trace) * 0.5f;
+
+				T invFourW = 1.0f / (4.0f * m_data[3]);
+
+				m_data[0] = (A.m21() - A.m12()) * invFourW;
+				m_data[1] = (A.m02() - A.m20()) * invFourW;
+				m_data[2] = (A.m10() - A.m01()) * invFourW;
+
+			}
+			else if (A.m00() > A.m11() && A.m00() > A.m22())
+			{
+
+				T s    = 2.0f * Sqrt<T>(1.0f + A.m00() - A.m11() - A.m22());
+				T invS = 1.0f / s;
+
+				m_data[3] = (A.m21() - A.m12()) * invS;
+
+				m_data[0] = 0.25f * s;
+				m_data[1] = (A.m01() + A.m10()) * invS;
+				m_data[2] = (A.m02() + A.m20()) * invS;
+
+			}
+			else if (A.m11() > A.m22())
+			{
+
+				T s = 2.0f * Sqrt<T>(1.0f + A.m11() - A.m00() - A.m22());
+				T invS = 1.0f / s;
+
+				m_data[3] = (A.m02() - A.m20()) * invS;
+
+				m_data[0] = (A.m01() + A.m10()) * invS;
+				m_data[1] = 0.25f * s;
+				m_data[2] = (A.m12() + A.m21()) * invS;
+
+			}
+			else
+			{
+
+				T s = 2.0f * Sqrt<T>(1.0f + A.m22() - A.m00() - A.m11());
+				T invS = 1.0f / s;
+
+				m_data[3] = (A.m10() - A.m01()) * invS;
+
+				m_data[0] = (A.m02() + A.m20()) * invS;
+				m_data[1] = (A.m12() + A.m21()) * invS;
+				m_data[2] = 0.25f * s;
+
+			}
 
 		}
 
@@ -51,8 +97,8 @@ namespace mye
 		__MYE_MATH_INLINE QuaternionTempl<T> QuaternionTempl<T>::Inverse(void) const
 		{
 			
-			float invSquaredNorm = 1.0f / (m_data[0] * m_data[0] + m_data[1] * m_data[1] +
-				m_data[2] * m_data[2] + m_data[3] * m_data[3]);
+			T invSquaredNorm = 1.0f / (m_data[0] * m_data[0] + m_data[1] * m_data[1] +
+			                           m_data[2] * m_data[2] + m_data[3] * m_data[3]);
 
 			return QuaternionTempl<T>(
 				m_data[3] * invSquaredNorm,
@@ -77,20 +123,21 @@ namespace mye
 		template <typename T>
 		__MYE_MATH_INLINE Matrix<T, 3, 1> QuaternionTempl<T>::Rotate(const Matrix<T, 3, 1> & p) const
 		{
+
 			QuaternionTempl<T> pQuat(0, p.x(), p.y(), p.z());
 			QuaternionTempl<T> r = *this * pQuat * Conjugate();
-			return Matrix<T, 3, 1>(
-				r.m_data[0],
-				r.m_data[1],
-				r.m_data[2]
-				);
+
+			return Matrix<T, 3, 1>(r.m_data[0],
+			                       r.m_data[1],
+			                       r.m_data[2]);
+
 		}
 
 		template <typename T>
 		__MYE_MATH_INLINE T QuaternionTempl<T>::Norm(void) const
 		{
 			return Sqrt(m_data[0] * m_data[0] + m_data[1] * m_data[1] +
-				m_data[2] * m_data[2] + m_data[3] * m_data[3]);
+			            m_data[2] * m_data[2] + m_data[3] * m_data[3]);
 		}
 
 		template <typename T>
@@ -113,23 +160,19 @@ namespace mye
 		template <typename T>
 		__MYE_MATH_INLINE QuaternionTempl<T> QuaternionTempl<T>::operator+ (const QuaternionTempl & q) const
 		{
-			return QuaternionTempl<T>(
-				m_data[3] + q.m_data[3],
-				m_data[0] + q.m_data[0],
-				m_data[1] + q.m_data[1],
-				m_data[2] + q.m_data[2]
-			);
+			return QuaternionTempl<T>(m_data[3] + q.m_data[3],
+			                          m_data[0] + q.m_data[0],
+			                          m_data[1] + q.m_data[1],
+			                          m_data[2] + q.m_data[2]);
 		}
 
 		template <typename T>
 		__MYE_MATH_INLINE QuaternionTempl<T> QuaternionTempl<T>::operator- (const QuaternionTempl & q) const
 		{
-			return QuaternionTempl<T>(
-				m_data[3] - q.m_data[3],
-				m_data[0] - q.m_data[0],
-				m_data[1] - q.m_data[1],
-				m_data[2] - q.m_data[2]
-				);
+			return QuaternionTempl<T>(m_data[3] - q.m_data[3],
+			                          m_data[0] - q.m_data[0],
+			                          m_data[1] - q.m_data[1],
+			                          m_data[2] - q.m_data[2]);
 		}
 
 		template <typename T>

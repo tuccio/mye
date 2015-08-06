@@ -5,6 +5,8 @@
 #include <type_traits>
 #include <vector>
 
+#include <mye/core/Singleton.h>
+
 namespace mye
 {
 
@@ -49,7 +51,8 @@ namespace mye
 			MSAA_16X = 16
 		};
 
-		class DX11Device
+		class DX11Device :
+			public mye::core::Singleton<DX11Device>
 		{
 
 		public:

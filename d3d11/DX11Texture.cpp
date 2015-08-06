@@ -7,20 +7,22 @@
 
 #include <D3D11.h>
 
+#undef max
+
 using namespace mye::dx11;
 using namespace mye::core;
 
-DX11Texture::DX11Texture(mye::core::ResourceManager *owner,
-						 const mye::core::String &name,
-						 mye::core::ManualResourceLoader *manual,
-						 DX11Device &device) :
-m_device(device),
-m_texture(nullptr),
-m_msaa(MSAA::MSAA_OFF),
-Texture(owner, name, manual)
-{
+DX11Texture::DX11Texture(ResourceManager      * owner,
+                         const String         & name,
+                         ManualResourceLoader * manual) :
+	m_texture2d(nullptr),
+	m_msaa(MSAA::MSAA_OFF),
+	Texture(owner, name, manual) { }
 
-}
+DX11Texture::DX11Texture(void) :
+	m_texture2d(nullptr),
+	m_msaa(MSAA::MSAA_OFF),
+	Texture(nullptr, "", nullptr) { }
 
 DX11Texture::~DX11Texture(void)
 {
@@ -44,7 +46,7 @@ bool DX11Texture::LoadImpl(void)
 		bool generateMips = m_params.Contains("generateMips") && m_params.GetBool("generateMips");
 
 		int mipmaps     = m_params.Contains("mipmaps") ? m_params.GetInteger("mipmaps") : 1;
-		int count       = m_params.Contains("slices") ? m_params.GetInteger("slices") : 1;
+		int slices      = m_params.Contains("slices") ? m_params.GetInteger("slices") : 1;
 		int msaaSamples = m_params.Contains("msaa") ? m_params.GetInteger("msaa") : 0;
 
 		m_msaa = static_cast<MSAA>(msaaSamples);
@@ -58,14 +60,14 @@ bool DX11Texture::LoadImpl(void)
 		tex2dDesc.Height             = m_height;
 
 		tex2dDesc.MipLevels          = mipmaps;
-		tex2dDesc.ArraySize          = count;
+		tex2dDesc.ArraySize          = slices;
 		tex2dDesc.Format             = dxgiFormat;
 		
 		tex2dDesc.BindFlags          = D3D11_BIND_SHADER_RESOURCE;
 		tex2dDesc.MiscFlags          = 0;
 		tex2dDesc.Usage              = D3D11_USAGE_IMMUTABLE;
 		tex2dDesc.CPUAccessFlags     = 0;
-		tex2dDesc.SampleDesc         = m_device.GetMSAASampleDesc(m_msaa, dxgiFormat);
+		tex2dDesc.SampleDesc         = DX11Device::GetSingleton().GetMSAASampleDesc(m_msaa, dxgiFormat);
 
 		if (renderTarget)
 		{
@@ -80,13 +82,13 @@ bool DX11Texture::LoadImpl(void)
 
 		}
 
-		D3D11_SUBRESOURCE_DATA data;
+		D3D11_SUBRESOURCE_DATA dataDesc;
 
-		data.pSysMem          = image->GetData();
-		data.SysMemPitch      = m_width * 16;
-		data.SysMemSlicePitch = 0;
+		dataDesc.pSysMem          = image->GetData();
+		dataDesc.SysMemPitch      = m_width * GetDataTypeSize(m_format);
+		dataDesc.SysMemSlicePitch = 0;
 
-		if (!__MYE_DX11_HR_TEST_FAILED(m_device.GetDevice()->CreateTexture2D(&tex2dDesc, &data, &m_texture)) &&
+		if (!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton().GetDevice()->CreateTexture2D(&tex2dDesc, &dataDesc, &m_texture2d)) &&
 			CreateViews())
 		{
 			loaded = true;
@@ -101,24 +103,23 @@ bool DX11Texture::LoadImpl(void)
 void DX11Texture::UnloadImpl(void)
 {
 
-	__MYE_DX11_RELEASE_COM(m_shaderResourceView);
-	__MYE_DX11_RELEASE_COM(m_renderTargetView);
-	__MYE_DX11_RELEASE_COM(m_texture);
+	Destroy();
 
 }
 
 size_t DX11Texture::CalculateSizeImpl(void)
 {
-	return m_width * m_height * 16;
+	int count = m_params.Contains("slices") ? m_params.GetInteger("slices") : 1;
+	return m_width * m_height * count * GetDataTypeSize(m_format);
 }
 
-bool DX11Texture::Create(int width, int height, mye::core::DataFormat format)
+bool DX11Texture::Create(int width, int height, DataFormat format, void * data)
 {
 
 	m_format = format;
 
-	m_width  = max(1, width);
-	m_height = max(1, height);
+	m_width  = std::max(1, width);
+	m_height = std::max(1, height);
 
 	DXGI_FORMAT dxgiFormat = GetDXGIFormat(m_format);
 
@@ -126,41 +127,87 @@ bool DX11Texture::Create(int width, int height, mye::core::DataFormat format)
 	bool generateMips = m_params.Contains("generateMips") && m_params.GetBool("generateMips");
 
 	int mipmaps = m_params.Contains("mipmaps") ? m_params.GetInteger("mipmaps") : 1;
-	int count   = m_params.Contains("slices") ? m_params.GetInteger("slices") : 1;
-	
+	int slices  = m_params.Contains("slices")  ? m_params.GetInteger("slices")  : 1;
+	int depth   = m_params.Contains("depth")   ? m_params.GetInteger("depth")   : 1;
+	String type = m_params.Contains("type")    ? m_params.GetString("type")     : "2d";
+
 	SetMSAA();
 
-	D3D11_TEXTURE2D_DESC tex2dDesc;
+	bool textureCreated = false;
 
-	tex2dDesc.Width              = m_width;
-	tex2dDesc.Height             = m_height;
+	D3D11_SUBRESOURCE_DATA dataDesc;
 
-	tex2dDesc.MipLevels          = mipmaps;
-	tex2dDesc.ArraySize          = count;
-	tex2dDesc.Format             = dxgiFormat;
+	dataDesc.pSysMem          = data;
+	dataDesc.SysMemPitch      = m_width * GetDataTypeSize(m_format);
+	dataDesc.SysMemSlicePitch = 0;
 
-	tex2dDesc.BindFlags          = D3D11_BIND_SHADER_RESOURCE;
-	tex2dDesc.MiscFlags          = 0;
-	tex2dDesc.Usage              = D3D11_USAGE_DEFAULT;
-	tex2dDesc.CPUAccessFlags     = 0;
-	tex2dDesc.SampleDesc         = m_device.GetMSAASampleDesc(m_msaa, dxgiFormat);
-	
-
-	if (renderTarget)
+	if (type == "2d")
 	{
-		
-		if (generateMips)
+
+		D3D11_TEXTURE2D_DESC tex2dDesc;
+
+		tex2dDesc.Width          = m_width;
+		tex2dDesc.Height         = m_height;
+
+		tex2dDesc.MipLevels      = mipmaps;
+		tex2dDesc.ArraySize      = slices;
+		tex2dDesc.Format         = dxgiFormat;
+
+		tex2dDesc.BindFlags      = D3D11_BIND_SHADER_RESOURCE;
+		tex2dDesc.MiscFlags      = 0;
+		tex2dDesc.Usage          = D3D11_USAGE_DEFAULT;
+		tex2dDesc.CPUAccessFlags = 0;
+		tex2dDesc.SampleDesc     = DX11Device::GetSingleton().GetMSAASampleDesc(m_msaa, dxgiFormat);
+
+		if (renderTarget)
 		{
-			tex2dDesc.MiscFlags |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
+
+			if (generateMips)
+			{
+				tex2dDesc.MiscFlags |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
+			}
+
+			tex2dDesc.BindFlags |= D3D11_BIND_RENDER_TARGET;
+
 		}
 
-		tex2dDesc.BindFlags |= D3D11_BIND_RENDER_TARGET;
+		textureCreated = !__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton().GetDevice()->CreateTexture2D(&tex2dDesc, (data ? &dataDesc : nullptr), &m_texture2d));
+
+	}
+	else if (type == "3d")
+	{
+
+		D3D11_TEXTURE3D_DESC tex3dDesc;
+
+		tex3dDesc.Width          = m_width;
+		tex3dDesc.Height         = m_height;
+		tex3dDesc.Depth          = depth;
+
+		tex3dDesc.MipLevels      = mipmaps;
+		tex3dDesc.Format         = dxgiFormat;
+
+		tex3dDesc.BindFlags      = D3D11_BIND_SHADER_RESOURCE;
+		tex3dDesc.MiscFlags      = 0;
+		tex3dDesc.Usage          = D3D11_USAGE_DEFAULT;
+		tex3dDesc.CPUAccessFlags = 0;
+
+		if (renderTarget)
+		{
+
+			if (generateMips)
+			{
+				tex3dDesc.MiscFlags |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
+			}
+
+			tex3dDesc.BindFlags |= D3D11_BIND_RENDER_TARGET;
+
+		}
+
+		textureCreated = !__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton().GetDevice()->CreateTexture3D(&tex3dDesc, (data ? &dataDesc : nullptr), &m_texture3d));
 
 	}
 
-	return
-		!__MYE_DX11_HR_TEST_FAILED(m_device.GetDevice()->CreateTexture2D(&tex2dDesc, nullptr, &m_texture)) &&
-		CreateViews();
+	return textureCreated && CreateViews();
 
 }
 
@@ -169,26 +216,70 @@ bool DX11Texture::CreateViews(void)
 
 	bool renderTarget = m_params.Contains("renderTarget") && m_params.GetBool("renderTarget");
 
+	int  slices       = m_params.Contains("slices") ? m_params.GetInteger("slices") : 1;
+	String type       = m_params.Contains("type")   ? m_params.GetString("type")    : "2d";
+
 	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+	
+	shaderResourceViewDesc.Format = GetDXGIFormat(m_format);
 
-	shaderResourceViewDesc.Format                    = GetDXGIFormat(m_format);
-	shaderResourceViewDesc.ViewDimension             = (m_msaa == MSAA::MSAA_OFF ? D3D11_SRV_DIMENSION_TEXTURE2D : D3D11_SRV_DIMENSION_TEXTURE2DMS);
+	ID3D11Resource * resource = nullptr;
 
-	shaderResourceViewDesc.Texture2D.MostDetailedMip =  0;
-	shaderResourceViewDesc.Texture2D.MipLevels       = -1;
+	if (type == "2d")
+	{
+
+		if (slices == 1)
+		{
+
+			m_textureType = D3D11_SRV_DIMENSION_TEXTURE2D;
+
+			shaderResourceViewDesc.ViewDimension             = (m_msaa == MSAA::MSAA_OFF ? D3D11_SRV_DIMENSION_TEXTURE2D : D3D11_SRV_DIMENSION_TEXTURE2DMS);
+
+			shaderResourceViewDesc.Texture2D.MostDetailedMip =  0;
+			shaderResourceViewDesc.Texture2D.MipLevels       = -1;
+
+		}
+		else
+		{
+
+			m_textureType = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+
+			shaderResourceViewDesc.ViewDimension                  = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+
+			shaderResourceViewDesc.Texture2DArray.ArraySize       = slices;
+			shaderResourceViewDesc.Texture2DArray.FirstArraySlice = 0;
+			shaderResourceViewDesc.Texture2DArray.MostDetailedMip = 0;
+			shaderResourceViewDesc.Texture2DArray.MipLevels       = -1;
+
+		}
+
+		resource = (ID3D11Resource *) m_texture2d;
+
+	}
+	else if (type == "3d")
+	{
+
+		m_textureType = D3D11_SRV_DIMENSION_TEXTURE3D;
+
+		shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE3D;
+
+		shaderResourceViewDesc.Texture3D.MipLevels       = -1;
+		shaderResourceViewDesc.Texture3D.MostDetailedMip = 0;
+
+		resource = (ID3D11Resource *) m_texture3d;
+
+	}
 
 	return
 		!__MYE_DX11_HR_TEST_FAILED(
-			m_device.GetDevice()->CreateShaderResourceView(
-			m_texture,
-			&shaderResourceViewDesc,
-			&m_shaderResourceView)) &&
+		DX11Device::GetSingleton()->CreateShaderResourceView(resource,
+			                                                 &shaderResourceViewDesc,
+			                                                 &m_shaderResourceView)) &&
 		(!renderTarget ||
 		!__MYE_DX11_HR_TEST_FAILED(
-			m_device.GetDevice()->CreateRenderTargetView(
-			m_texture,
-			nullptr,
-			&m_renderTargetView)));
+		DX11Device::GetSingleton()->CreateRenderTargetView(resource,
+			                                               nullptr,
+			                                               &m_renderTargetView)));
 
 }
 
@@ -197,7 +288,20 @@ void DX11Texture::Destroy(void)
 
 	__MYE_DX11_RELEASE_COM_OPTIONAL(m_shaderResourceView);
 	__MYE_DX11_RELEASE_COM_OPTIONAL(m_renderTargetView);
-	__MYE_DX11_RELEASE_COM_OPTIONAL(m_texture);
+
+	switch (m_textureType)
+	{
+
+	case D3D11_SRV_DIMENSION_TEXTURE2D:
+	case D3D11_SRV_DIMENSION_TEXTURE2DARRAY:
+		__MYE_DX11_RELEASE_COM_OPTIONAL(m_texture2d);
+		break;
+
+	case D3D11_SRV_DIMENSION_TEXTURE3D:
+		__MYE_DX11_RELEASE_COM_OPTIONAL(m_texture3d);
+		break;
+
+	}
 
 }
 

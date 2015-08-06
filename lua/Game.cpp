@@ -148,12 +148,18 @@ namespace mye
 
 				Class<RendererConfiguration>("__RendererConfiguration").
 
-					Property("gamma",               &RendererConfiguration::GetGamma,               &RendererConfiguration::SetGamma).
-					Property("screenResolution",    &RendererConfiguration::GetScreenResolution,    &RendererConfiguration::SetScreenResolution).
-					Property("shadowMapResolution", &RendererConfiguration::GetShadowMapResolution, &RendererConfiguration::SetShadowMapResolution).
-					Property("vsmMinVariance",      &RendererConfiguration::GetVSMMinVariance,      &RendererConfiguration::SetVSMMinVariance).
-					Property("vsmMinBleeding",      &RendererConfiguration::GetVSMMinBleeding,      &RendererConfiguration::SetVSMMinBleeding),
-
+					Property("gamma",                     &RendererConfiguration::GetGamma,                     &RendererConfiguration::SetGamma).
+					Property("screenResolution",          &RendererConfiguration::GetScreenResolution,          &RendererConfiguration::SetScreenResolution).
+					Property("shadowMapResolution",       &RendererConfiguration::GetShadowMapResolution,       &RendererConfiguration::SetShadowMapResolution).
+					Property("shadowMapBias",             &RendererConfiguration::GetShadowMapBias,             &RendererConfiguration::SetShadowMapBias).
+					Property("shadowMapSlopeScaledBias",  &RendererConfiguration::GetShadowMapSlopeScaledBias,  &RendererConfiguration::SetShadowMapSlopeScaledBias).
+					Property("shadowMapNormalOffsetBias", &RendererConfiguration::GetShadowMapNormalOffsetBias, &RendererConfiguration::SetShadowMapNormalOffsetBias).
+					Property("vsmMinVariance",            &RendererConfiguration::GetVSMMinVariance,            &RendererConfiguration::SetVSMMinVariance).
+					Property("vsmMinBleeding",            &RendererConfiguration::GetVSMMinBleeding,            &RendererConfiguration::SetVSMMinBleeding).
+					Property("csmSplits",                 &RendererConfiguration::GetCSMSplits,                 &RendererConfiguration::SetCSMSplits).
+					Property("csmDebug",                  &RendererConfiguration::GetCSMDebug,                  &RendererConfiguration::SetCSMDebug).
+					Property("pcfEnabled",                &RendererConfiguration::GetPCFEnabled,                &RendererConfiguration::SetPCFEnabled).
+					Property("pcfKernel",                 &RendererConfiguration::GetPCFKernel,                 &RendererConfiguration::SetPCFKernel),
 
 				Class<Component>(MYE_LUA_COMPONENT),
 

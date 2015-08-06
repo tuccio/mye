@@ -15,14 +15,13 @@ namespace mye
 
 		public:
 
-			DX11RasterizerState(DX11Device &device, const mye::core::RasterizerInfo &info);
+			DX11RasterizerState(const mye::core::RasterizerInfo & info);
 			~DX11RasterizerState(void);
 
 			void Use(void);
 
 		private:
 
-			DX11Device &m_device;
 			ID3D11RasterizerState *m_rasterizerState;
 
 		};

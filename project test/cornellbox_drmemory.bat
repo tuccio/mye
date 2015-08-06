@@ -1,0 +1,1 @@
+"D:\Software\Dr. Memory\DrMemory-Windows-1.8.1-RC1\bin\drmemory.exe" -debug D:\Documents\mye\bin\Debug\mye.exe cornellbox.mys

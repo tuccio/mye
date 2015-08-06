@@ -16,16 +16,15 @@ namespace mye
 		struct DX11SwapChainConfiguration
 		{
 
-			DX11Device       *device;
-			mye::win::Window *window;
-
-			int width;
-			int height;
-			bool fullscreen;
-
-			mye::core::DataFormat format;
-			mye::math::Rational<unsigned int> refresh;
-			MSAA msaa;
+			mye::win::Window                  * window;
+							                 
+			int                                 width;
+			int                                 height;
+			bool                                fullscreen;
+								                
+			mye::core::DataFormat               format;
+			mye::math::Rational<unsigned int>   refresh;
+			MSAA                                msaa;
 
 		};
 

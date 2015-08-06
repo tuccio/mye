@@ -6,19 +6,14 @@
 using namespace mye::dx11;
 using namespace mye::core;
 
-DX11Shader::DX11Shader(ResourceManager *owner,
-					   const mye::core::String &name,
-					   ManualResourceLoader *manual,
+DX11Shader::DX11Shader(ResourceManager         * owner,
+					   const mye::core::String & name,
+					   ManualResourceLoader    * manual,
 					   bool precompiled) :
-Resource(owner, name, manual),
-	m_precompiled(precompiled)
-{
-}
+	Resource(owner, name, manual),
+	m_precompiled(precompiled) { }
 
-DX11Shader::~DX11Shader(void)
-{
-
-}
+DX11Shader::~DX11Shader(void) { }
 
 void DX11Shader::Destroy(void)
 {
@@ -34,6 +29,7 @@ bool DX11Shader::LoadImpl(void)
 {
 
 	bool success = false;
+
 	std::ifstream f(m_name.CString());
 	
 	if (f)

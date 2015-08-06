@@ -2,11 +2,11 @@
 #define __MYE_LIGHT_DIRECTIONAL__
 
 #include "light.hlsli"
+#include "constants.hlsli"
 
-void ComputeLightParams(in float3 x, in Light light, out float3 L, out float3 intensity)
+float3 LightVector(in float3 x, in Light light)
 {
-	L         = - light.direction;
-	intensity =   light.color.xyz;
+	return - light.direction.xyz;
 }
 
 float LightSpaceLinearDepth(in Light light, in float4 lightSpaceCoords, in float3 worldSpaceCoords)

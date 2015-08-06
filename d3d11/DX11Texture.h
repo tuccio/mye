@@ -38,12 +38,13 @@ namespace mye
 
 			DX11Texture(mye::core::ResourceManager * owner,
 						const mye::core::String & name,
-						mye::core::ManualResourceLoader * manual,
-						DX11Device &device);
+						mye::core::ManualResourceLoader * manual);
+
+			DX11Texture(void);
 
 			~DX11Texture(void);
 
-			bool Create(int width, int height, mye::core::DataFormat format);
+			bool Create(int width, int height, mye::core::DataFormat format, void * data = nullptr);
 			void Destroy(void);
 
 		protected:
@@ -55,11 +56,16 @@ namespace mye
 
 			bool CreateViews(void);
 
-			DX11Device               & m_device;
-			ID3D11Texture2D          * m_texture;
+			union
+			{
+				ID3D11Texture2D * m_texture2d;
+				ID3D11Texture3D * m_texture3d;
+			};
 
-			mye::core::DataFormat      m_format;
-			MSAA                       m_msaa;
+			D3D11_SRV_DIMENSION   m_textureType;
+
+			mye::core::DataFormat m_format;
+			MSAA                  m_msaa;
 
 		private:
 

@@ -18,19 +18,37 @@ using namespace mye::core;
 using namespace mye::math;
 
 #define __MYE_RSM_DEFAULT_RESOLUTION 1024
-#define __MYE_RSM_DEFAULT_CSM_SLICES 3
-#define __MYE_RSM_DEFAULT_CSM_LOG_WEIGHT 0.35f
+#define __MYE_RSM_DEFAULT_CSM_SLICES 4
+#define __MYE_RSM_DEFAULT_CSM_LOG_WEIGHT 0.65f
 
-DX11ReflectiveShadowMap::DX11ReflectiveShadowMap(DX11Device & device) :
-	m_position(nullptr, "", nullptr, device),
-	m_normal(nullptr, "", nullptr, device),
-	m_flux(nullptr, "", nullptr, device),
-	m_depth({ &device, 0, 0, true, __MYE_RSM_DEFAULT_CSM_SLICES }),
-	m_device(device),
+template <typename Iterator>
+static AABB MakeAABB(Iterator begin, Iterator end)
+{
+	
+	if (begin != end)
+	{
+
+		AABB aabb = (*begin)->GetAABB();
+
+		while (++begin != end)
+		{
+			aabb = aabb + (*begin)->GetAABB();
+		}
+
+		return aabb;
+
+	}
+
+	return AABB();
+
+}
+
+DX11ReflectiveShadowMap::DX11ReflectiveShadowMap(void) :
+	m_depth({ 0, 0, true, __MYE_RSM_DEFAULT_CSM_SLICES }),
 	m_initialized(false),
-	m_csmSlices(__MYE_RSM_DEFAULT_CSM_SLICES),
+	m_csmSplits(__MYE_RSM_DEFAULT_CSM_SLICES),
 	m_csmLogWeight(__MYE_RSM_DEFAULT_CSM_LOG_WEIGHT),
-	m_positionArray(nullptr, "", nullptr, device)
+	m_light(nullptr)
 {
 	SetResolution(__MYE_RSM_DEFAULT_RESOLUTION);
 }
@@ -127,6 +145,23 @@ void DX11ReflectiveShadowMap::SetResolution(int resolution)
 
 }
 
+void DX11ReflectiveShadowMap::SetCSMSplits(int splits)
+{
+
+	m_csmSplits = splits;
+
+	if (m_initialized)
+	{
+
+		__DestroyRenderTargets();
+		__CreateRenderTargets();
+
+		m_depth.ResizeArray(splits);
+
+	}
+
+}
+
 void DX11ReflectiveShadowMap::Render(Light * light)
 {
 
@@ -135,8 +170,10 @@ void DX11ReflectiveShadowMap::Render(Light * light)
 
 	unsigned int numViewports = D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE;
 
-	m_device.GetImmediateContext()->RSGetViewports(&numViewports, oldViewports);
-	m_device.GetImmediateContext()->RSSetViewports(1, &newViewport);
+	DX11Device::GetSingleton().GetImmediateContext()->RSGetViewports(&numViewports, oldViewports);
+	DX11Device::GetSingleton().GetImmediateContext()->RSSetViewports(1, &newViewport);
+
+	m_light = light;
 
 	auto type = light->GetType();
 
@@ -149,7 +186,7 @@ void DX11ReflectiveShadowMap::Render(Light * light)
 
 	}
 
-	m_device.GetImmediateContext()->RSSetViewports(numViewports, oldViewports);
+	DX11Device::GetSingleton().GetImmediateContext()->RSSetViewports(numViewports, oldViewports);
 
 }
 
@@ -187,49 +224,35 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 	SceneModule * scene  = Game::GetSingleton().GetSceneModule();
 	Camera      * camera = scene->GetCamera();
 
-	auto casters = __CSMFindPotentialCasters(light->GetDirection(), camera->GetFrustum());
+	auto casters   = __CSMFindPotentialCasters(light->GetDirection(), camera->GetFrustum());
+	auto receivers = scene->GetVisibleObjects(*camera);
 
-	if (casters.empty())
+	if (casters.empty() || receivers.empty())
 	{
 		return;
 	}
 
-	AABB tightCastersAABB = casters.front()->GetAABB();
-
-	for (GameObject * caster : casters)
-	{
-		tightCastersAABB = tightCastersAABB + caster->GetAABB();
-	}
-
-	PSSMSlice tightPlanes = __CSMFindTightPlanes(camera, tightCastersAABB);
-
-	/*Camera vCamera = *camera;
-	
-	if (tightPlanes.near < 0.f)
-	{
-
-		Vector3 camPosition  = vCamera.GetPosition();
-		Vector3 camDirection = vCamera.Forward();
-
-		vCamera.SetPosition(camPosition + tightPlanes.near * camDirection);
-		vCamera.SetNearClipDistance(0.f);
-
-	}
-
-	vCamera.SetFarClipDistance(tightPlanes.far - tightPlanes.near);*/
-
-	m_pssmSlices = __CSMComputeSplitsDepths(tightPlanes.near, tightPlanes.far);
-
 	Camera lightCamera;
-
 	lightCamera.LookAt(Vector3(0), Vector3(0, 1, 0), light->GetDirection());
 
 	Matrix4 shadowViewMatrix = lightCamera.GetViewMatrix();
-	Matrix4 shadowProjMatrix = OrthographicProjectionD3DLH(1.f, 1.f, 0.f, 1.f);
+	Matrix4 shadowProjMatrix = OrthographicProjectionD3DLH(2.f, 2.f, 0.f, 1.f);
 
 	m_lightSpaceTransform = shadowProjMatrix * shadowViewMatrix;
 
-	for (int sliceIndex = 0; sliceIndex < m_csmSlices; sliceIndex++)
+	AABB castersAABB   = MakeAABB(casters.begin(), casters.end());
+	AABB receiversAABB = MakeAABB(receivers.begin(), receivers.end());
+
+	AABB hCastersAABB   = castersAABB.TransformAffine(m_lightSpaceTransform);
+	AABB hReceiversAABB = receiversAABB.TransformAffine(m_lightSpaceTransform);
+
+	m_pssmSlices = __CSMComputeSplitsDepths(camera->GetNearClipDistance(), camera->GetFarClipDistance());
+
+	// Texel padding for the crop matrix to allow the calculation of derivatives on the
+	// slice border (necessary for slope scaled bias calculation)
+	Real cropPadding = 0.f;
+
+	for (int sliceIndex = 0; sliceIndex < m_csmSplits; sliceIndex++)
 	{
 
 		Camera sliceCamera = *camera;
@@ -239,7 +262,7 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 
 		Frustum sliceFrustum = sliceCamera.GetFrustum();
 
-		m_cropMatrix[sliceIndex] = __CSMCropMatrix(shadowViewMatrix, shadowProjMatrix, sliceFrustum, light->GetDirection());
+		m_cropMatrix[sliceIndex] = __CSMCropMatrix(m_lightSpaceTransform, sliceFrustum, hCastersAABB, hReceiversAABB, cropPadding);
 
 	}
 
@@ -250,24 +273,25 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 		m_flux.GetRenderTargetView()
 	};
 
-	m_device.SetDepthTest(DX11DepthTest::ON);
-	m_device.GetImmediateContext()->OMSetRenderTargets(3,
+	DX11Device::GetSingleton().SetDepthTest(DX11DepthTest::ON);
+	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(3,
 	                                                   renderTargets,
 	                                                   m_depth.GetDepthStencilView());
 
-	DX11ConstantBuffer transformCBuffer(nullptr, "", nullptr, m_device);
-	DX11ConstantBuffer cropMatrixCBuffer(nullptr, "", nullptr, m_device);
-	DX11ConstantBuffer materialCBuffer(nullptr, "", nullptr, m_device);
-	DX11ConstantBuffer lightCBuffer(nullptr, "", nullptr, m_device);
+	DX11ConstantBuffer transformCBuffer;
+	DX11ConstantBuffer cropMatrixCBuffer;
+	DX11ConstantBuffer materialCBuffer;
+	DX11ConstantBuffer lightCBuffer;
 
 	transformCBuffer.Create(sizeof(detail::TransformBuffer));
-	cropMatrixCBuffer.Create(sizeof(Matrix4) * m_csmSlices, &m_cropMatrix[0]);
+	cropMatrixCBuffer.Create(sizeof(Matrix4) * m_csmSplits, &m_cropMatrix[0]);
 	materialCBuffer.Create(sizeof(detail::MaterialBuffer));
 
 	detail::LightBuffer lightBuffer;
 
-	lightBuffer.color     = Vector4f(light->GetColor() * light->GetIntensity(), 1);
+	lightBuffer.color     = Vector4f(light->GetColor(), 1);
 	lightBuffer.direction = Vector4f(light->GetDirection(), 1);
+	lightBuffer.intensity = light->GetIntensity();
 
 	lightCBuffer.Create(sizeof(detail::LightBuffer), &lightBuffer);
 	lightCBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_LIGHT);
@@ -278,9 +302,9 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 	m_pssmGS->Use();
 	m_singlePS->Use();
 	
-	DX11RasterizerState backCull(m_device, { false, CullMode::BACK });
+	DX11RasterizerState cullState({ false, CullMode::NONE });
 
-	backCull.Use();
+	cullState.Use();
 
 	for (GameObject * object : casters)
 	{
@@ -328,11 +352,11 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 				//vertexBuffer.Create(mesh.get());
 				vertexBuffer->Bind();
 
-				m_device.GetImmediateContext()->
+				DX11Device::GetSingleton().GetImmediateContext()->
 					IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-				m_device.GetImmediateContext()->
-					DrawInstanced(vertexBuffer->GetVerticesCount(), m_csmSlices, 0, 0);
+				DX11Device::GetSingleton().GetImmediateContext()->
+					DrawInstanced(vertexBuffer->GetVerticesCount(), m_csmSplits, 0, 0);
 
 				vertexBuffer->Unbind();
 
@@ -346,7 +370,7 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 	m_pssmGS->Dispose();
 	m_singlePS->Dispose();
 
-	m_device.GetImmediateContext()->OMSetRenderTargets(0, nullptr, nullptr);
+	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(0, nullptr, nullptr);
 
 	transformCBuffer.Destroy();
 	cropMatrixCBuffer.Destroy();
@@ -358,80 +382,60 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 std::vector<DX11ReflectiveShadowMap::PSSMSlice> DX11ReflectiveShadowMap::__CSMComputeSplitsDepths(Real near, Real far)
 {
 
-	std::vector<PSSMSlice> slices(m_csmSlices);
+	std::vector<PSSMSlice> slices(m_csmSplits);
 
-	//Real ratio         = far / near;
-	Real inverseSlices = 1.0f / m_csmSlices;
+	Real ratio         = far / near;
+	Real inverseSlices = 1.0f / m_csmSplits;
 
 	slices[0].near = near;
 
-	for (int i = 1; i < m_csmSlices; i++)
+	for (int i = 1; i < m_csmSplits; i++)
 	{
 
 		Real splitRatio   = i * inverseSlices;
 
-		//Real logComponent = near * std::pow(ratio, splitRatio);
+		Real logComponent = near * std::pow(ratio, splitRatio);
 		Real linComponent = near + (far - near) * splitRatio;
 
-		//slices[i].near    = m_csmLogWeight * logComponent + (1 - m_csmLogWeight) * linComponent;
-		slices[i].near    = linComponent;
+		slices[i].near    = m_csmLogWeight * logComponent + (1 - m_csmLogWeight) * linComponent;
+		//slices[i].near    = linComponent;
 		slices[i - 1].far = slices[i].near;
 
 	}
 
-	slices[m_csmSlices - 1].far = far;
+	slices[m_csmSplits - 1].far = far;
 
 	return slices;
 
 }
 
-Matrix4 DX11ReflectiveShadowMap::__CSMCropMatrix(const Matrix4 & shadowViewMatrix,
-                                                 const Matrix4 & shadowProjMatrix,
+Matrix4 DX11ReflectiveShadowMap::__CSMCropMatrix(const Matrix4 & shadowViewProjMatrix,
                                                  const Frustum & sliceFrustum,
-												 const Vector3 & lightDirection)
+												 const AABB    & hCastersAABB,
+                                                 const AABB    & hReceiversAABB,
+												 Real            padding)
 {
 
-	SceneModule * scene = SceneModule::GetSingletonPointer();
+	auto frustumCorners = sliceFrustum.GetCorners();
 
-	scene->GetAABB();
+	Vector3 hFrustumCorners[8];
 
-	Matrix4 shadowViewProjMatrix = shadowProjMatrix * shadowViewMatrix;
-
-	auto casters = __CSMFindPotentialCasters(lightDirection, sliceFrustum);
-
-	AABB tightCastersAABB = casters.front()->GetAABB();
-
-	for (GameObject * caster : casters)
-	{
-		tightCastersAABB = tightCastersAABB + caster->GetAABB();
-	}
-
-	AABB splitAABB = tightCastersAABB ^ BoundingAABB(sliceFrustum);
-
-	auto corners = splitAABB.GetCorners();
-
-	Vector3 hCorners[8];
-
-	std::transform(corners.begin(), corners.end(),
-	               hCorners,
+	std::transform(frustumCorners.begin(), frustumCorners.end(),
+				   hFrustumCorners,
 	               [&shadowViewProjMatrix] (const Vector3 & v) { return (shadowViewProjMatrix * Vector4(v, 1)).xyz(); });
 
-	AABB cropBB = BoundingAABB(hCorners, hCorners + 8);
+	AABB hFrustumAABB = BoundingAABB(hFrustumCorners, hFrustumCorners + 8);
 
-	Vector3 cropBBMax = cropBB.GetMaximum();
-	Vector3 cropBBMin = cropBB.GetMinimum();
+	AABB cropAABB = (hCastersAABB ^ hReceiversAABB) ^ hFrustumAABB;
 
-	Real maxX = cropBBMax.x();
-	Real maxY = cropBBMax.y();
-	Real maxZ = cropBBMax.z();
+	Vector3 cropAABBMax = cropAABB.GetMaximum();
+	Vector3 cropAABBMin = cropAABB.GetMinimum();
 
-	Real minX = cropBBMin.x();
-	Real minY = cropBBMin.y();
-	//Real minZ = 0.0f;
-	Real minZ = cropBBMin.z();
+	Vector2 maxXY = cropAABBMax.xy() + padding;
+	Vector2 minXY = cropAABBMin.xy() - padding;
 
-	Vector2 maxXY = cropBBMax.xy();
-	Vector2 minXY = cropBBMin.xy();
+	Real minZ = Min(hCastersAABB.GetMinimum().z(),   hFrustumAABB.GetMinimum().z()) - padding;
+	Real maxZ = Min(hReceiversAABB.GetMaximum().z(), hFrustumAABB.GetMaximum().z()) + padding;
 
 	Vector2 S = 2.f / (maxXY - minXY);
 	Vector2 O = -.5f * S * (maxXY + minXY);
@@ -470,7 +474,7 @@ GameObjectsList DX11ReflectiveShadowMap::__CSMFindPotentialCasters(const Vector3
 
 	Vector3 castersAABBmin, castersAABBmax;
 
-	if (-lightDirection.x() > 0.f)
+	if (lightDirection.x() < 0.f)
 	{
 		castersAABBmax.x() = sceneAABBmax.x();
 		castersAABBmin.x() = cameraAABBmin.x();
@@ -481,7 +485,7 @@ GameObjectsList DX11ReflectiveShadowMap::__CSMFindPotentialCasters(const Vector3
 		castersAABBmin.x() = sceneAABBmin.x();
 	}
 
-	if (-lightDirection.y() > 0.f)
+	if (lightDirection.y() < 0.f)
 	{
 		castersAABBmax.y() = sceneAABBmax.y();
 		castersAABBmin.y() = cameraAABBmin.y();
@@ -492,7 +496,7 @@ GameObjectsList DX11ReflectiveShadowMap::__CSMFindPotentialCasters(const Vector3
 		castersAABBmin.y() = sceneAABBmin.y();
 	}
 
-	if (-lightDirection.z() > 0.f)
+	if (lightDirection.z() < 0.f)
 	{
 		castersAABBmax.z() = sceneAABBmax.z();
 		castersAABBmin.z() = cameraAABBmin.z();
@@ -537,22 +541,22 @@ bool DX11ReflectiveShadowMap::__CreateRenderTargets(void)
 
 	Parameters rtParams({ { "renderTarget", "true" } });
 
-	Parameters arrayParams = { { "renderTarget", "true" }, { "slices", ToString(m_csmSlices) } };
+	Parameters arrayParams = { { "renderTarget", "true" }, { "slices", ToString(m_csmSplits) } };
 
 	m_position.SetParametersList(arrayParams);
 	m_flux.SetParametersList(arrayParams);
 	m_normal.SetParametersList(arrayParams);
 
 	return (m_position.Create(m_resolution, m_resolution, DataFormat::FLOAT4) &&
-	        m_normal.Create(m_resolution, m_resolution, DataFormat::FLOAT4) &&
-	        m_flux.Create(m_resolution, m_resolution, DataFormat::FLOAT4));
+	        m_normal.Create(m_resolution,   m_resolution, DataFormat::FLOAT4) &&
+	        m_flux.Create(m_resolution,     m_resolution, DataFormat::FLOAT4));
 
 }
 
 void DX11ReflectiveShadowMap::__DestroyRenderTargets(void)
 {
 
-	for (int i = 0; i < m_csmSlices; i++)
+	for (int i = 0; i < m_csmSplits; i++)
 	{
 		m_position.Destroy();
 		m_flux.Destroy();
@@ -564,7 +568,7 @@ void DX11ReflectiveShadowMap::__DestroyRenderTargets(void)
 bool DX11ReflectiveShadowMap::__CreateDepthBuffers(void)
 {
 
-	m_depth = DX11DepthBufferConfiguration { &m_device, m_resolution, m_resolution, true, m_csmSlices };
+	m_depth = DX11DepthBufferConfiguration { m_resolution, m_resolution, true, m_csmSplits };
 
 	return m_depth.Create();
 

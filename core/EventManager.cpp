@@ -67,6 +67,4 @@ void EventManager::Update(void)
 
 	m_events[currentQueue].clear();
 
-	
-
 }

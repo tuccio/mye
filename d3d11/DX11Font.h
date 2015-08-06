@@ -16,9 +16,9 @@ namespace mye
 
 		public:
 
-			DX11Font(mye::core::ResourceManager *owner,
-				const mye::core::String &name,
-				mye::core::ManualResourceLoader *manual);
+			DX11Font(mye::core::ResourceManager      * owner,
+			         const mye::core::String         & name,
+			         mye::core::ManualResourceLoader * manual);
 
 			~DX11Font(void);
 

@@ -1,0 +1,1 @@
+D:\Documents\mye\bin\Debug\mye.exe sponza.mys

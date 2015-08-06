@@ -35,15 +35,61 @@ namespace mye
 
 		
 		__MYE_MATH_INLINE QuaternionTempl<float>::QuaternionTempl(const Matrix<float, 3, 3> & A)
-		{	
+		{
 
-			m_data[3] = Sqrt(1 + A.m00() + A.m11() + A.m22()) * 0.5f;
+			float trace = A.m00() + A.m11() + A.m22();
 
-			float invFourW = 1.0f / (4.0f * m_data[3]);
+			if (trace > 0)
+			{
 
-			m_data[0] = (A.m21() - A.m12()) * invFourW;
-			m_data[1] = (A.m02() - A.m20()) * invFourW;
-			m_data[2] = (A.m10() - A.m01()) * invFourW;
+				m_data[3] = Sqrt(1.0f + trace) * 0.5f;
+
+				float invFourW = 1.0f / (4.0f * m_data[3]);
+
+				m_data[0] = (A.m21() - A.m12()) * invFourW;
+				m_data[1] = (A.m02() - A.m20()) * invFourW;
+				m_data[2] = (A.m10() - A.m01()) * invFourW;
+
+			}
+			else if (A.m00() > A.m11() && A.m00() > A.m22())
+			{
+
+				float s    = 2.0f * Sqrt(1.0f + A.m00() - A.m11() - A.m22());
+				float invS = 1.0f / s;
+
+				m_data[3] = (A.m21() - A.m12()) * invS;
+
+				m_data[0] = 0.25f * s;
+				m_data[1] = (A.m01() + A.m10()) * invS;
+				m_data[2] = (A.m02() + A.m20()) * invS;
+
+			}
+			else if (A.m11() > A.m22())
+			{
+
+				float s = 2.0f * Sqrt(1.0f + A.m11() - A.m00() - A.m22());
+				float invS = 1.0f / s;
+
+				m_data[3] = (A.m02() - A.m20()) * invS;
+
+				m_data[0] = (A.m01() + A.m10()) * invS;
+				m_data[1] = 0.25f * s;
+				m_data[2] = (A.m12() + A.m21()) * invS;
+
+			}
+			else
+			{
+
+				float s = 2.0f * Sqrt(1.0f + A.m22() - A.m00() - A.m11());
+				float invS = 1.0f / s;
+
+				m_data[3] = (A.m10() - A.m01()) * invS;
+
+				m_data[0] = (A.m02() + A.m20()) * invS;
+				m_data[1] = (A.m12() + A.m21()) * invS;
+				m_data[2] = 0.25f * s;
+
+			}
 
 		}
 

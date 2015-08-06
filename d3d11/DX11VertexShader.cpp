@@ -13,13 +13,11 @@
 using namespace mye::dx11;
 using namespace mye::core;
 
-DX11VertexShader::DX11VertexShader(mye::core::ResourceManager * owner,
-								   const mye::core::String & name,
-								   mye::core::ManualResourceLoader * manual,
-								   DX11Device & device,
-								   bool precompiled) :
-DX11Shader(owner, name, manual, precompiled),
-	m_device(device)
+DX11VertexShader::DX11VertexShader(ResourceManager      * owner,
+                                   const String         & name,
+                                   ManualResourceLoader * manual,
+                                   bool                   precompiled) :
+	DX11Shader(owner, name, manual, precompiled)
 {
 	m_shader      = nullptr;
 	m_inputLayout = nullptr;
@@ -27,13 +25,13 @@ DX11Shader(owner, name, manual, precompiled),
 
 void DX11VertexShader::Use(void)
 {
-	m_device.GetImmediateContext()->IASetInputLayout(m_inputLayout);
-	m_device.GetImmediateContext()->VSSetShader(m_shader, nullptr, 0);
+	DX11Device::GetSingleton().GetImmediateContext()->IASetInputLayout(m_inputLayout);
+	DX11Device::GetSingleton().GetImmediateContext()->VSSetShader(m_shader, nullptr, 0);
 }
 
 void DX11VertexShader::Dispose(void)
 {
-	m_device.GetImmediateContext()->GSSetShader(nullptr, nullptr, 0);
+	DX11Device::GetSingleton().GetImmediateContext()->VSSetShader(nullptr, nullptr, 0);
 }
 
 
@@ -100,12 +98,11 @@ bool DX11VertexShader::LoadImpl(void)
 		}
 
 		if (code &&
-			!__MYE_DX11_HR_TEST_FAILED(m_device.GetDevice()->
-				CreateVertexShader(
-					code->GetBufferPointer(),
-					code->GetBufferSize(),
-					nullptr,
-					&m_shader)))
+			!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton()->
+				CreateVertexShader(code->GetBufferPointer(),
+				                   code->GetBufferSize(),
+				                   nullptr,
+				                   &m_shader)))
 		{
 
 			if (m_params.Contains("inputLayoutVector"))
@@ -115,13 +112,12 @@ bool DX11VertexShader::LoadImpl(void)
 
 				const std::vector<D3D11_INPUT_ELEMENT_DESC> * vDesc = static_cast<const std::vector<D3D11_INPUT_ELEMENT_DESC>*>(ptr);
 
-				if (!__MYE_DX11_HR_TEST_FAILED(m_device.GetDevice()->
-					CreateInputLayout(
-						&vDesc->front(),
-						vDesc->size(),
-						code->GetBufferPointer(),
-						code->GetBufferSize(),
-						&m_inputLayout)))
+				if (!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton()->
+					CreateInputLayout(&vDesc->front(),
+						              vDesc->size(),
+						              code->GetBufferPointer(),
+						              code->GetBufferSize(),
+						              &m_inputLayout)))
 				{
 					success = true;
 				}

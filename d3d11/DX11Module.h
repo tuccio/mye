@@ -16,8 +16,6 @@
 #include "DX11PixelShader.h"
 #include "DX11VertexShader.h"
 
-#include "DX11BasicRenderer.h"
-#include "DX11DeferredShadingRenderer.h"
 #include "DX11DeferredLightingRenderer.h"
 #include "DX11Text2DRenderer.h"
 #include "DX11DebugRenderer.h"
@@ -41,7 +39,7 @@ namespace mye
 		public:
 
 			DX11Module(void);
-			DX11Module(mye::win::Window *window);
+			DX11Module(mye::win::Window * window);
 
 			~DX11Module(void);
 
@@ -57,7 +55,7 @@ namespace mye
 				return &m_device;
 			}
 
-			void RenderShaderResource(DX11ShaderResource & resource, const mye::math::Vector2i & position, const mye::math::Vector2i & size);
+			void RenderShaderResource(DX11ShaderResource & resource, const mye::math::Vector2i & position, const mye::math::Vector2i & size, int slice = 0);
 			void RenderFrustum(const mye::math::Frustum & frustum, const mye::math::Vector4 & color);
 
 			// Window
@@ -65,7 +63,7 @@ namespace mye
 			void SetWindow(mye::win::Window * window);
 			void FreeWindow(void);
 
-			void OnResize(mye::core::IWindow  *window, const mye::math::Vector2i & size);
+			void OnResize(mye::core::IWindow  * window, const mye::math::Vector2i & size);
 
 			inline DX11DepthBuffer & GetDepthBuffer(void)
 			{
@@ -74,24 +72,22 @@ namespace mye
 
 		private:
 
-			DX11Device         m_device;
-			mye::win::Window * m_window;
-
-			DX11SwapChain      m_swapChain;
+			DX11Device                     m_device;
+			mye::win::Window             * m_window;
+							             
+			DX11SwapChain                  m_swapChain;
 
 			// Renderers
 
-			DX11Text2DRenderer           m_text2dRenderer;
-			DX11BasicRenderer            m_basicRenderer;
-			DX11DeferredShadingRenderer  m_deferredShadingRenderer;
-			DX11DeferredLightingRenderer m_deferredLightingRenderer;
-			DX11DebugRenderer            m_debugRenderer;
+			DX11Text2DRenderer             m_text2dRenderer;
+			DX11DeferredLightingRenderer   m_deferredLightingRenderer;
+			DX11DebugRenderer              m_debugRenderer;
 
 			// FPS Counter
 
-			mye::core::LapStopWatch m_stopWatch;
-			mye::core::Milliseconds m_stopWatchBuffer[__MYE_FPS_COUNTER_BUFFER_SIZE];
-			int                     m_stopWatchBufferHead;
+			mye::core::LapStopWatch        m_stopWatch;
+			mye::core::Milliseconds        m_stopWatchBuffer[__MYE_FPS_COUNTER_BUFFER_SIZE];
+			int                            m_stopWatchBufferHead;
 
 		};
 

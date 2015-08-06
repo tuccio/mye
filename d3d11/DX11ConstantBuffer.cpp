@@ -5,14 +5,15 @@
 using namespace mye::dx11;
 using namespace mye::core;
 
-DX11ConstantBuffer::DX11ConstantBuffer(ResourceManager *owner,
-									   const mye::core::String &name,
-									   ManualResourceLoader *manual,
-									   DX11Device &device) :
-DX11Buffer(owner, name, manual, device),
-	m_size(0)
-{
-}
+DX11ConstantBuffer::DX11ConstantBuffer(void) :
+	DX11Buffer(nullptr, "", nullptr),
+	m_size(0) { }
+
+DX11ConstantBuffer::DX11ConstantBuffer(ResourceManager      * owner,
+									   const String         & name,
+									   ManualResourceLoader * manual) :
+	DX11Buffer(owner, name, manual),
+	m_size(0) { }
 
 
 DX11ConstantBuffer::~DX11ConstantBuffer(void)
@@ -53,10 +54,10 @@ bool DX11ConstantBuffer::Create(size_t size,
 	vertexBufferData.pSysMem = initiationData;
 
 	bool success =
-		!__MYE_DX11_HR_TEST_FAILED(m_device.GetDevice()->CreateBuffer(
-		&vertexBufferDesc,
-		(initiationData ? &vertexBufferData : nullptr),
-		&m_buffer));
+		!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton()->
+			CreateBuffer(&vertexBufferDesc,
+		                 (initiationData ? &vertexBufferData : nullptr),
+		                 &m_buffer));
 
 	return success;
 
@@ -69,23 +70,23 @@ void DX11ConstantBuffer::Bind(DX11PipelineStage stage, int index)
 	{
 
 	case DX11PipelineStage::VERTEX_SHADER:
-		m_device.GetImmediateContext()->VSSetConstantBuffers(index, 1, &m_buffer);
+		DX11Device::GetSingleton().GetImmediateContext()->VSSetConstantBuffers(index, 1, &m_buffer);
 		break;
 
 	case DX11PipelineStage::PIXEL_SHADER:
-		m_device.GetImmediateContext()->PSSetConstantBuffers(index, 1, &m_buffer);
+		DX11Device::GetSingleton().GetImmediateContext()->PSSetConstantBuffers(index, 1, &m_buffer);
 		break;
 
 	case DX11PipelineStage::GEOMETRY_SHADER:
-		m_device.GetImmediateContext()->GSSetConstantBuffers(index, 1, &m_buffer);
+		DX11Device::GetSingleton().GetImmediateContext()->GSSetConstantBuffers(index, 1, &m_buffer);
 		break;
 
 	case DX11PipelineStage::COMPUTE_SHADER:
-		m_device.GetImmediateContext()->CSSetConstantBuffers(index, 1, &m_buffer);
+		DX11Device::GetSingleton().GetImmediateContext()->CSSetConstantBuffers(index, 1, &m_buffer);
 		break;
 
 	default:
-		assert(false);
+		assert(false && "Unsupported DirectX stage");
 		break;
 
 	}
@@ -99,5 +100,5 @@ void DX11ConstantBuffer::GetData(void *data) const
 
 void DX11ConstantBuffer::SetData(const void *data)
 {
-	m_device.GetImmediateContext()->UpdateSubresource(m_buffer, 0, nullptr, data, 0, 0);
+	DX11Device::GetSingleton().GetImmediateContext()->UpdateSubresource(m_buffer, 0, nullptr, data, 0, 0);
 }

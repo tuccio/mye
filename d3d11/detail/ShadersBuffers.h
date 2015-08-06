@@ -43,10 +43,12 @@ namespace mye
 				mye::math::Vector4f position;
 				mye::math::Vector4f direction;
 
+				float intensity;
+
 				float spotAngle;
 				float range;
 
-				float __fill[2];
+				float __fill[1];
 
 			};
 
@@ -55,19 +57,28 @@ namespace mye
 				mye::math::Vector4f position;
 			};
 
-			struct RenderConfigurationBuffer
+			struct __MYE_ALIGNED(16) RenderConfigurationBuffer
 			{
 
-				mye::math::Vector2i resolution;
+				float        resolution[2];
 
-				float               gamma;
+				float        gamma;
 
-				int                 shadowMapResolution;
+				int          shadowMapResolution;
+				float        shadowMapInvResolution;
+				float        shadowMapBias;
+				float        shadowMapSlopeScaledBias;
+				float        shadowMapNormalOffsetBias;
 
-				float               vsmMinVariance;
-				float               vsmMinBleeding;
+				float        vsmMinVariance;
+				float        vsmMinBleeding;
 
-				float               __fill[2];
+				unsigned int csmSplits;
+				int          csmDebug;
+				
+				int          pcfEnabled;
+				unsigned int pcfKernel;
+				float        pcfKernelInvSquare;
 
 			};
 

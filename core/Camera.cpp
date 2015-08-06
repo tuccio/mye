@@ -246,35 +246,25 @@ Ray Camera::RayCast(const Vector2 & screenCoords) const
 
 }
 
-Matrix4 Camera::GetViewMatrix(void) const
+void Camera::UpdateView(void) const
 {
-
-	if (m_viewMatrixUptodate)
-	{
-		return m_viewMatrix;
-	}
 
 	Matrix3 R  = RotationMatrix3(m_orientation);
 	Matrix3 Rt = R.Transpose();
 	Vector3 t  = - (Rt * m_position);
 
-	Matrix4 viewMatrix(Rt);
+	m_viewMatrix = Matrix4(Rt);
 
-	viewMatrix.m03() = t.x();
-	viewMatrix.m13() = t.y();
-	viewMatrix.m23() = t.z();
+	m_viewMatrix.m03() = t.x();
+	m_viewMatrix.m13() = t.y();
+	m_viewMatrix.m23() = t.z();
 
-	return viewMatrix;
+	m_viewMatrixUptodate = true;
 
 }
 
-Matrix4 Camera::GetProjectionMatrix(void) const
+void Camera::UpdateProjection(void) const
 {
-
-	if (m_projectionMatrixUptodate)
-	{
-		return m_projectionMatrix;
-	}
 
 	Real tanFovY  = Tangent(m_fovY * 0.5f);
 	Real yScale   = 1.f / tanFovY;
@@ -283,14 +273,26 @@ Matrix4 Camera::GetProjectionMatrix(void) const
 
 	Real Q = m_farClipDistance * invDepth;
 
-	Matrix4 projectionMatrix(0);
+	m_projectionMatrix = Matrix4(0);
 
-	projectionMatrix.m00() = xScale;
-	projectionMatrix.m11() = yScale;
-	projectionMatrix.m22() = Q;
-	projectionMatrix.m23() = - Q * m_nearClipDistance;
-	projectionMatrix.m32() = 1;
+	m_projectionMatrix.m00() = xScale;
+	m_projectionMatrix.m11() = yScale;
+	m_projectionMatrix.m22() = Q;
+	m_projectionMatrix.m23() = - Q * m_nearClipDistance;
+	m_projectionMatrix.m32() = 1;
 
-	return projectionMatrix;
+	m_projectionMatrixUptodate = true;
+
+}
+
+void Camera::UpdateFrustum(void) const
+{
+
+	m_frustum = Frustum(m_position,
+	                    Forward(), Up(), Right(),
+	                    m_nearClipDistance, m_farClipDistance,
+	                    GetFovX(), GetFovY());
+
+	m_frustumUptodate = true;
 
 }

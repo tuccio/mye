@@ -23,7 +23,7 @@ namespace mye
 
 		public:
 
-			DX11DebugRenderer(DX11Device & device);
+			DX11DebugRenderer(void);
 			~DX11DebugRenderer(void);
 
 			bool Init(void);
@@ -31,7 +31,7 @@ namespace mye
 
 			void Render(ID3D11RenderTargetView * target);
 
-			void EnqueueShaderResource(DX11ShaderResource & shaderResource, const mye::math::Vector2i & position, const mye::math::Vector2i & size);
+			void EnqueueShaderResource(DX11ShaderResource & shaderResource, const mye::math::Vector2i & position, const mye::math::Vector2i & size, int slice = 0);
 			void EnqueueLine(const mye::math::Vector3 & from, const mye::math::Vector3 & to, const mye::math::Vector4 & color);
 			void EnqueueFrustum(const mye::math::Frustum & frustum, const mye::math::Vector4 & color);
 
@@ -42,6 +42,7 @@ namespace mye
 				DX11ShaderResource * shaderResource;
 				int                  position[2];
 				float                size[2];
+				int                  slice;
 			};
 
 			struct __Line
@@ -51,20 +52,19 @@ namespace mye
 				float color[4];
 			};
 
-			bool                      m_initialized;
+			bool                            m_initialized;
+									      
+			DX11VertexShaderPointer         m_texturedSimpleVS;
+			DX11PixelShaderPointer          m_texturedSimplePS;
+			DX11PixelShaderPointer          m_texturedArrayPS;
+									      
+			DX11VertexShaderPointer         m_primitiveVS;
+			DX11PixelShaderPointer          m_primitivePS;
+									      
+			ID3D11SamplerState            * m_linearSampler;
 
-			DX11Device              & m_device;
-
-			DX11VertexShaderPointer   m_texturedSimpleVS;
-			DX11PixelShaderPointer    m_texturedSimplePS;
-
-			DX11VertexShaderPointer   m_primitiveVS;
-			DX11PixelShaderPointer    m_primitivePS;
-
-			ID3D11SamplerState * m_linearSampler;
-
-			std::vector<__ShadowResource> m_shaderResources;
-			std::vector<__Line>          m_lines;
+			std::vector<__ShadowResource>   m_shaderResources;
+			std::vector<__Line>             m_lines;
 
 		};
 

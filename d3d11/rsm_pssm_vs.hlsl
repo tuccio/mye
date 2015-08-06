@@ -13,7 +13,7 @@ cbuffer cbTransform : register(b0)
 
 cbuffer cbCrop : register(b1)
 {
-	float4x4 g_cropMatrix[__MYE_PSSM_SPLITS];
+	float4x4 g_cropMatrix[__MYE_PSSM_MAX_SPLITS];
 }
 
 
@@ -49,6 +49,7 @@ struct VSOutput
 VSOutput main(VSInput input)
 {
 
+	//float4x4 transform = mul(g_cropMatrix[input.instance], g_worldViewProj);
 	float4x4 transform = mul(g_cropMatrix[input.instance], g_worldViewProj);
 
 	VSOutput output;

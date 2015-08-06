@@ -20,11 +20,11 @@ namespace mye
 
 		protected:
 
-			DX11Font* CreateImpl(const mye::core::String &name,
-				mye::core::ManualResourceLoader *manual,
-				const mye::core::Parameters &params);
+			DX11Font * CreateImpl(const mye::core::String         & name,
+			                      mye::core::ManualResourceLoader * manual,
+			                      const mye::core::Parameters     & params);
 
-			void FreeImpl(mye::core::Resource *resource);
+			void FreeImpl(mye::core::Resource * resource);
 
 		};
 

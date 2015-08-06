@@ -79,8 +79,9 @@ void WinGame::Run(void)
 
 }
 
-void Quit(void)
+void WinGame::Quit(void)
 {
+	Game::Quit();
 	PostQuitMessage(WM_QUIT);
 }
 
