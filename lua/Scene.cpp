@@ -33,8 +33,8 @@ namespace mye
 
 				Class<SceneModule>("SceneModule").
 
-					Function("AddGameObject", &SceneModule::AddGameObject).
-					Function("RemoveGameObject", &SceneModule::RemoveGameObject).
+					Function("AddGameObject",    (void (SceneModule::*) (const GameObjectHandle &)) &SceneModule::AddGameObject).
+					Function("RemoveGameObject", (void (SceneModule::*) (const GameObjectHandle &)) &SceneModule::RemoveGameObject).
 					Function("Pick", &SceneModule::Pick).
 
 					Property("camera", (Camera * (SceneModule::*) ()) &SceneModule::GetCamera, &SceneModule::SetCamera)

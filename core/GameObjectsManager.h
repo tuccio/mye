@@ -1,6 +1,8 @@
 #pragma once
 
+#include <iterator>
 #include <unordered_map>
+
 #include "String.h"
 
 namespace mye
@@ -35,27 +37,30 @@ namespace mye
 		class GameObject;
 		class GameObjectsManager;
 
-		class ActiveGameObjectsIterator
+		typedef std::unordered_map<GameObjectHandle, GameObject *, GameObjectHandleIDHasher> ObjectsHashMap;
+		typedef std::unordered_multimap<String, GameObjectHandle>                            ObjectsNamesMap;
+
+		class ActiveGameObjectsIterator :
+			public std::iterator<std::input_iterator_tag, GameObjectHandle>
 		{
 
 		public:
 
 			ActiveGameObjectsIterator(GameObjectsManager * gom,
-				std::list<GameObjectHandle> * list,
-				const std::list<GameObjectHandle>::iterator & it);
+									  const ObjectsHashMap::iterator & it);
 
 			ActiveGameObjectsIterator & operator++ (void);
 			ActiveGameObjectsIterator   operator++ (int);
 
+			bool operator == (const ActiveGameObjectsIterator &) const;
 			bool operator != (const ActiveGameObjectsIterator &) const;
 
 			GameObjectHandle operator * (void) const;
 
 		private:
 
-			std::list<GameObjectHandle>           * m_list;
-			std::list<GameObjectHandle>::iterator   m_it;
-			GameObjectsManager                    * m_gom;
+			ObjectsHashMap::iterator   m_it;
+			GameObjectsManager       * m_gom;
 
 		};
 
@@ -97,16 +102,13 @@ namespace mye
 			inline GameObjectHandle CreateHandle(void);
 			inline void FreeHandle(const GameObjectHandle & hObj);
 
-			typedef std::unordered_map<GameObjectHandle, GameObject *, GameObjectHandleIDHasher> ObjectsHashMap;
-			typedef std::unordered_multimap<String, GameObjectHandle> ObjectsNamesMap;
+			
 
 			ObjectsHashMap  m_objects;
 			ObjectsNamesMap m_namedObjects;
 
 			std::list<GameObjectHandle> m_freeHandles;
-			int m_lastId;
-
-			std::list<GameObjectHandle> m_activeObjects;
+			int                         m_lastId;
 
 		private:
 

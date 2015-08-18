@@ -159,7 +159,10 @@ namespace mye
 					Property("csmSplits",                 &RendererConfiguration::GetCSMSplits,                 &RendererConfiguration::SetCSMSplits).
 					Property("csmDebug",                  &RendererConfiguration::GetCSMDebug,                  &RendererConfiguration::SetCSMDebug).
 					Property("pcfEnabled",                &RendererConfiguration::GetPCFEnabled,                &RendererConfiguration::SetPCFEnabled).
-					Property("pcfKernel",                 &RendererConfiguration::GetPCFKernel,                 &RendererConfiguration::SetPCFKernel),
+					Property("pcfKernel",                 &RendererConfiguration::GetPCFKernel,                 &RendererConfiguration::SetPCFKernel).
+					Property("lpvRSMSamples",             &RendererConfiguration::GetLPVRSMSamples,             &RendererConfiguration::SetLPVRSMSamples).
+					Property("lpvResolution",             &RendererConfiguration::GetLPVResolution,             &RendererConfiguration::SetLPVResolution).
+					Property("lpvIterations",             &RendererConfiguration::GetLPVIterations,             &RendererConfiguration::SetLPVIterations),
 
 				Class<Component>(MYE_LUA_COMPONENT),
 

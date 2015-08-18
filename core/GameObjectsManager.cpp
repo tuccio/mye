@@ -126,14 +126,14 @@ GameObjectHandle GameObjectsManager::CreateEntity(const String & entity,
 void GameObjectsManager::Destroy(const GameObjectHandle & hObj)
 {
 
-	GameObject *o = Get(hObj);
+	GameObject * o = Get(hObj);
 
 	if (o)
 	{
 
-		o->OnDestruction();
+		const String & name = o->GetName();
 
-		String name = o->GetName();
+		o->OnDestruction();
 
 		if (!name.IsEmpty())
 		{
@@ -155,6 +155,7 @@ void GameObjectsManager::Destroy(const GameObjectHandle & hObj)
 
 		delete o;
 		m_objects.erase(m_objects.find(hObj));
+
 		FreeHandle(hObj);
 
 	}
@@ -178,12 +179,12 @@ GameObjectHandle GameObjectsManager::Find(const String & name)
 void GameObjectsManager::Rename(const GameObjectHandle & hObj, const String & name)
 {
 
-	GameObject *o = Get(hObj);
+	GameObject * o = Get(hObj);
 
 	if (o)
 	{
 
-		const String &oldName = o->GetName();
+		const String & oldName = o->GetName();
 
 		if (!oldName.IsEmpty())
 		{
@@ -218,37 +219,37 @@ void GameObjectsManager::Rename(const GameObjectHandle & hObj, const String & na
 
 GameObjectsManager::Iterator GameObjectsManager::begin(void)
 {
-	return Iterator(this, &m_activeObjects, m_activeObjects.begin());
+	return Iterator(this, m_objects.begin());
 }
 
 GameObjectsManager::Iterator GameObjectsManager::end(void)
 {
-	return Iterator(this, &m_activeObjects, m_activeObjects.end());
+	return Iterator(this, m_objects.end());
 }
 
 ActiveGameObjectsIterator::ActiveGameObjectsIterator(GameObjectsManager * gom,
-													 std::list<GameObjectHandle> * list,
-													 const std::list<GameObjectHandle>::iterator & it) :
+													 const ObjectsHashMap::iterator & it) :
 	m_it(it),
-	m_list(list),
 	m_gom(gom)
 {
 
 
-	while (m_it != m_list->end() && m_gom->Get(*m_it) == nullptr)
+	/*while (m_it != m_objects->end() && m_it->second == nullptr)
 	{
 		m_it++;
-	};
+	};*/
 
 }
 
 ActiveGameObjectsIterator & ActiveGameObjectsIterator::operator++ (void)
 {
 	
-	do 
+	/*do 
 	{
 		m_it++;
-	} while (m_it != m_list->end() && m_gom->Get(*m_it) == nullptr);
+	} while (m_it != m_list->end() && m_gom->Get(*m_it) == nullptr);*/
+
+	m_it++;
 
 	return *this;
 
@@ -265,14 +266,19 @@ ActiveGameObjectsIterator ActiveGameObjectsIterator::operator++ (int)
 
 }
 
-bool ActiveGameObjectsIterator::operator != (const ActiveGameObjectsIterator & it) const
+bool ActiveGameObjectsIterator::operator== (const ActiveGameObjectsIterator & it) const
+{
+	return it.m_it == m_it;
+}
+
+bool ActiveGameObjectsIterator::operator!= (const ActiveGameObjectsIterator & it) const
 {
 	return it.m_it != m_it;
 }
 
 GameObjectHandle ActiveGameObjectsIterator::operator* (void) const
 {
-	return *m_it;
+	return m_it->second->GetHandle();
 }
 
 GameObjectsManager::__ObjectInfo GameObjectsManager::__InstantiateObject(const String & name)
@@ -298,7 +304,5 @@ void GameObjectsManager::__InitObject(__ObjectInfo objectInfo)
 	}
 
 	objectInfo.object->OnCreation(this, objectInfo.handle);
-
-	m_activeObjects.push_front(objectInfo.handle);
 
 }

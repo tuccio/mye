@@ -7,7 +7,9 @@
 using namespace mye::dx11;
 using namespace mye::core;
 
+#if _DEBUG
 #define MYE_DX11_DEBUG
+#endif
 
 DX11Device::DX11Device(void) :
 	m_device(nullptr),
@@ -53,13 +55,13 @@ bool DX11Device::Create(void)
 		ZeroMemory(&blendStateDescription, sizeof(D3D11_BLEND_DESC));
 
 		blendStateDescription.RenderTarget[0].BlendEnable           = TRUE;
-		blendStateDescription.RenderTarget[0].SrcBlend              = D3D11_BLEND_SRC_ALPHA;
+		blendStateDescription.RenderTarget[0].SrcBlend              = D3D11_BLEND_ONE;
 		blendStateDescription.RenderTarget[0].DestBlend             = D3D11_BLEND_INV_SRC_ALPHA;
 		blendStateDescription.RenderTarget[0].BlendOp               = D3D11_BLEND_OP_ADD;
 		blendStateDescription.RenderTarget[0].SrcBlendAlpha         = D3D11_BLEND_ONE;
 		blendStateDescription.RenderTarget[0].DestBlendAlpha        = D3D11_BLEND_ZERO;
 		blendStateDescription.RenderTarget[0].BlendOpAlpha          = D3D11_BLEND_OP_ADD;
-		blendStateDescription.RenderTarget[0].RenderTargetWriteMask = 0x0f;
+		blendStateDescription.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
 		__MYE_DX11_HR_DEBUG(m_device->CreateBlendState(&blendStateDescription, &m_blendOn));
 

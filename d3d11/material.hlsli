@@ -3,8 +3,8 @@
 
 struct Material
 {
-	float4 diffuseColor;
-	float4 specularColor;
+	float3 diffuseColor;
+	float3 specularColor;
 	float  specular;
 	float  roughness;
 	float  metallic;

@@ -13,6 +13,11 @@
 #define __MYE_DX11_TEXTURE_SLOT_GBUFFER2           t12
 #define __MYE_DX11_TEXTURE_SLOT_GBUFFER3           t13
 #define __MYE_DX11_TEXTURE_SLOT_RANDOM             t14
+#define __MYE_DX11_TEXTURE_SLOT_LPVLIGHT_RED       t15
+#define __MYE_DX11_TEXTURE_SLOT_LPVLIGHT_GREEN     t16
+#define __MYE_DX11_TEXTURE_SLOT_LPVLIGHT_BLUE      t17
+#define __MYE_DX11_TEXTURE_SLOT_LPVGEOMETRY        t18
+#define __MYE_DX11_TEXTURE_SLOT_LIGHTBUFFER        t19
 										           
 #define __MYE_DX11_SAMPLER_SLOT_DIFFUSE            s0
 #define __MYE_DX11_SAMPLER_SLOT_NORMALMAP          s1
@@ -20,6 +25,9 @@
 #define __MYE_DX11_SAMPLER_SLOT_SHADOWMAP          s3
 #define __MYE_DX11_SAMPLER_SLOT_SHADOWMAP_CMP      s4
 #define __MYE_DX11_SAMPLER_SLOT_LINEAR             s5
+#define __MYE_DX11_SAMPLER_SLOT_ANISOTROPIC        s6
+#define __MYE_DX11_SAMPLER_SLOT_LPV                s7
+#define __MYE_DX11_SAMPLER_SLOT_RANDOM             s8
 
 #define __MYE_DX11_BUFFER_SLOT_CAMERATRANSFORM     b7
 #define __MYE_DX11_BUFFER_SLOT_LIGHT               b8

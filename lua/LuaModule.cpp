@@ -13,8 +13,8 @@
 #include <mye/core/String.h>
 #include <mye/core/ResourceTypeManager.h>
 
+#include <list>
 #include <iostream>
-
 
 using namespace mye::lua;
 using namespace mye::core;
@@ -141,7 +141,9 @@ void LuaModule::Update(void)
 
 	GameObjectsModule * gom = Game::GetSingleton().GetGameObjectsModule();
 
-	for (auto hObj : *gom)
+	std::list<GameObjectHandle> objects(gom->begin(), gom->end());
+
+	for (auto hObj : objects)
 	{
 
 		luapp11::Object o(m_state, hObj);
@@ -177,7 +179,6 @@ BehaviourScriptPointer LuaModule::LoadBehaviour(const String & name)
 
 ProcedureScriptPointer LuaModule::LoadProcedure(const mye::core::String & name)
 {
-
 
 	Parameters params;
 

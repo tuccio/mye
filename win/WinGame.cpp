@@ -55,6 +55,8 @@ void WinGame::Run(void)
 
 		m_eventManager->Update();
 
+		m_gameobjects->Preupdate();
+
 		FloatSeconds dt(m_timer.Lap());
 
 		m_script->Preupdate(dt);
@@ -70,7 +72,6 @@ void WinGame::Run(void)
 		//m_scene->Update();
 		m_graphics->Render();
 
-		m_gameobjects->FinalizeUpdate();
 
 	}
 	while (msg.message != WM_QUIT);

@@ -1,12 +1,13 @@
 #pragma pack_matrix(row_major)
 
 #include "constants.hlsli"
+#include "gamma.hlsli"
 #include "material.hlsli"
 #include "register_slots.hlsli"
 
 /* Constant buffers */
 
-cbuffer cbMaterial : register(b0)
+cbuffer cbMaterial : register(__MYE_DX11_BUFFER_SLOT_MATERIAL)
 {
 	Material g_material;
 };
@@ -19,33 +20,24 @@ struct PSInput
 	float2 texcoord   : TEXCOORD;
 };
 
-struct PSOutput
-{
-	float4 color : SV_Target0;
-};
-
 /* Buffers */
 
-Texture2D g_lightbuffer : register(t0);
+Texture2D g_lightbuffer : register(__MYE_DX11_TEXTURE_SLOT_LIGHTBUFFER);
 
 /* Main */
 
-PSOutput main(PSInput input) : SV_TARGET
+float4 main(PSInput input) : SV_TARGET
 {
-
-	PSOutput output;
 
 	int3 screenPosition = int3(input.positionCS.xy, 0);
 
 	float4 lighting = g_lightbuffer.Load(screenPosition);
 
-	float3 diffuse  = g_material.diffuseColor  * lighting.xyz;
+	float3 diffuse  = saturate(Gamma(g_material.diffuseColor) * MYE_INV_PI * lighting.xyz);
 	float3 specular = g_material.specularColor * lighting.w;
 
 	//output.color = float4(saturate(diffuse + specular), 1);
 
-	output.color = saturate(float4(g_material.diffuseColor * lighting.xyz * MYE_INV_PI, 1));
-
-	return output;
+	return float4(diffuse, 1.f);
 
 }

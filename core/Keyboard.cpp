@@ -19,6 +19,6 @@ void Keyboard::NotifyHeldKeys(void)
 
 	for (auto & keyPressed : m_pressedKeys)
 	{
-		MYE_EVENT_MANAGER_ENQUEUE(KeyboardEventKeyHold, keyPressed.key, keyPressed.timer.GetElapsedTime());
+		MYE_EVENT_MANAGER_ENQUEUE_NEXT_FRAME(KeyboardEventKeyHold, keyPressed.key, keyPressed.timer.GetElapsedTime());
 	}
 }

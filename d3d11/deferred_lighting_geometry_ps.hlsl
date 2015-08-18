@@ -1,10 +1,11 @@
 #pragma pack_matrix(row_major)
 
 #include "material.hlsli"
+#include "register_slots.hlsli"
 
 /* Constant buffers */
 
-cbuffer cbMaterial
+cbuffer cbMaterial : register(__MYE_DX11_BUFFER_SLOT_MATERIAL)
 {
 	Material g_material;
 };

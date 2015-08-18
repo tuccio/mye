@@ -286,16 +286,11 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 	transformCBuffer.Create(sizeof(detail::TransformBuffer));
 	cropMatrixCBuffer.Create(sizeof(Matrix4) * m_csmSplits, &m_cropMatrix[0]);
 	materialCBuffer.Create(sizeof(detail::MaterialBuffer));
+	lightCBuffer.Create(sizeof(detail::LightBuffer));
 
-	detail::LightBuffer lightBuffer;
+	MakeLightBuffer(lightCBuffer, light);
 
-	lightBuffer.color     = Vector4f(light->GetColor(), 1);
-	lightBuffer.direction = Vector4f(light->GetDirection(), 1);
-	lightBuffer.intensity = light->GetIntensity();
-
-	lightCBuffer.Create(sizeof(detail::LightBuffer), &lightBuffer);
 	lightCBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_LIGHT);
-
 	cropMatrixCBuffer.Bind(DX11PipelineStage::VERTEX_SHADER, 1);
 
 	m_pssmVS->Use();
@@ -324,39 +319,18 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 			if (gpuBuffer && gpuBuffer->Load())
 			{
 
-				detail::TransformBuffer transformBuffer;
-
-				transformBuffer.world               = tc->GetWorldMatrix() * rc->GetModelMatrix();
-				transformBuffer.worldView           = shadowViewMatrix * transformBuffer.world;
-				transformBuffer.worldViewProjection = m_lightSpaceTransform * transformBuffer.world;
+				MakeTransformBuffer(transformCBuffer, tc->GetWorldMatrix() * rc->GetModelMatrix(), shadowViewMatrix, shadowProjMatrix);
+				MakeMaterialBuffer(materialCBuffer, rc->GetMaterial());
 
 				transformCBuffer.Bind(DX11PipelineStage::VERTEX_SHADER, 0);
-				transformCBuffer.SetData(&transformBuffer);
-
-				MaterialPointer material = rc->GetMaterial();
-
-				detail::MaterialBuffer materialBuffer;
-
-				materialBuffer.diffuseColor  = material->GetDiffuseColor();
-				materialBuffer.specularColor = material->GetSpecularColor();
-				materialBuffer.specular      = material->GetSpecular();
-				materialBuffer.metallic      = material->GetMetallic();
-				materialBuffer.roughness     = material->GetRoughness();
-
 				materialCBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_MATERIAL);
-				materialCBuffer.SetData(&materialBuffer);
 
-				//DX11VertexBuffer vertexBuffer(nullptr, "", nullptr, m_device);
 				DX11VertexBufferPointer vertexBuffer = Resource::StaticCast<DX11VertexBuffer>(gpuBuffer);
 
-				//vertexBuffer.Create(mesh.get());
 				vertexBuffer->Bind();
 
-				DX11Device::GetSingleton().GetImmediateContext()->
-					IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-				DX11Device::GetSingleton().GetImmediateContext()->
-					DrawInstanced(vertexBuffer->GetVerticesCount(), m_csmSplits, 0, 0);
+				DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+				DX11Device::GetSingleton().GetImmediateContext()->DrawInstanced(vertexBuffer->GetVerticesCount(), m_csmSplits, 0, 0);
 
 				vertexBuffer->Unbind();
 

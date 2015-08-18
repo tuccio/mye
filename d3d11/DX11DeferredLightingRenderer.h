@@ -54,6 +54,7 @@ namespace mye
 								         
 			DX11VertexShaderPointer      m_deferredLightsVS;
 			DX11PixelShaderPointer       m_deferredLightsPS;
+			DX11PixelShaderPointer       m_deferredLPVPS;
 								         
 			DX11VertexShaderPointer      m_deferredFinalVS;
 			DX11PixelShaderPointer       m_deferredFinalPS;
@@ -67,14 +68,18 @@ namespace mye
 								      
 			DX11ConstantBuffer           m_transformBuffer;
 			DX11ConstantBuffer           m_lightBuffer;
-			DX11ConstantBuffer           m_cameraBuffer;
 			DX11ConstantBuffer           m_materialBuffer;
 			DX11ConstantBuffer           m_configurationBuffer;
+			DX11ConstantBuffer           m_cameraTransformBuffer;
 								         
 			DX11DepthBuffer              m_depthBuffer;
 								       
+			ID3D11SamplerState         * m_lpvSamplerState;
+			ID3D11SamplerState         * m_randomSamplerState;
 			ID3D11SamplerState         * m_shadowMapSamplerState;
 			ID3D11SamplerState         * m_shadowMapSamplerCmpState;
+
+			ID3D11BlendState           * m_accumulateBlendState;
 									   
 			DX11TexturePointer           m_randomCosSin;
 								       
@@ -89,8 +94,8 @@ namespace mye
 			bool __CreateConstantBuffers(void);
 			void __DestroyConstantBuffers(void);
 
-			bool __CreateSamplerStates(void);
-			void __DestroySamplerStates(void);
+			bool __CreateContextStates(void);
+			void __DestroyContextStates(void);
 
 			void __UpdateRenderConfiguration(void);
 

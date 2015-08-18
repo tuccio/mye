@@ -6,7 +6,7 @@
 
 #include "EventManager.h"
 
-#include <deque>
+#include <vector>
 
 namespace mye
 {
@@ -28,9 +28,13 @@ namespace mye
 			void PostDestroy(GameObjectHandle hObj);
 
 			void Update(void);
-			void FinalizeUpdate(void);
+			void Preupdate(void);
 			
 			void OnEvent(const IEvent * event);
+
+		private:
+
+			std::vector<GameObjectHandle> m_destructionQueue;
 
 		};
 

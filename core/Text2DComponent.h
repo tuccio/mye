@@ -6,7 +6,6 @@
 #include "GPUBuffer.h"
 #include "ManualLambdaLoader.h"
 #include "VertexData.h"
-#include "VertexBuffer.h"
 
 namespace mye
 {
@@ -70,7 +69,7 @@ namespace mye
 
 			Text2DComponent * Clone(void) const;
 
-			VertexBufferPointer GetVertexBuffer(void);
+			GPUBufferPointer GetVertexBuffer(void);
 
 			void UpdateText(void);
 

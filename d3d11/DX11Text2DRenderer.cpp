@@ -117,7 +117,9 @@ void DX11Text2DRenderer::Render(ID3D11RenderTargetView *target)
 	DX11Device::GetSingleton().SetBlending(true);
 	DX11Device::GetSingleton().SetDepthTest(DX11DepthTest::OFF);
 
-	for (Text2DComponent * t2dc : Game::GetSingleton().GetSceneModule()->GetText2DList())
+	SceneModule * scene = Game::GetSingleton().GetSceneModule();
+
+	for (Text2DComponent * t2dc : scene->GetText2DList())
 	{
 
 		// Draw text

@@ -4,9 +4,9 @@
 struct Light
 {
 
-	float4 color;
-	float4 position;
-	float4 direction;
+	float3 color;
+	float3 position;
+	float3 direction;
 
 	float  intensity;
 	float  spotAngle;

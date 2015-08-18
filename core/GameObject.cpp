@@ -16,10 +16,10 @@ GameObject::GameObject(void) :
 	m_behaviour(nullptr)
 {
 	TransformComponent t;
-	AddComponent(dynamic_cast<const Component&>(t));
+	AddComponent(dynamic_cast<const Component &>(t));
 }
 
-GameObject::GameObject(const String &name) :
+GameObject::GameObject(const String & name) :
 	INamedObject(name),
 	m_owner(nullptr),
 	m_behaviour(nullptr)
@@ -54,14 +54,14 @@ Component * GameObject::AddComponent(const Component & component)
 
 		if (componentType == ComponentTypes::TRANSFORM)
 		{
-			m_transform = static_cast<const TransformComponent&>(component);
+			m_transform = static_cast<const TransformComponent &>(component);
 			m_components[m_transform.GetName()] = &m_transform;
 			result = static_cast<Component*>(&m_transform);
 		}
 		else
 		{
 
-			Component * newComponent = static_cast<Component*>(component.Clone());
+			Component * newComponent = static_cast<Component *>(component.Clone());
 			m_components[component.GetName()] = newComponent;
 
 			newComponent->OnAttach(this);
@@ -70,7 +70,7 @@ Component * GameObject::AddComponent(const Component & component)
 			{
 
 			case ComponentTypes::BEHAVIOUR:
-				m_behaviour = static_cast<BehaviourComponent*>(newComponent);
+				m_behaviour = static_cast<BehaviourComponent *>(newComponent);
 				break;
 
 			}
@@ -222,21 +222,21 @@ void GameObject::Clear(void)
 
 	}*/
 
-	std::vector<String> components;
+	std::vector<const String *> components;
 
-	for (auto p : m_components)
+	for (auto & p : m_components)
 	{
 
 		if (p.second->GetComponentType() != ComponentTypes::TRANSFORM)
 		{
-			components.push_back(p.first);
+			components.push_back(&(p.first));
 		}
 
 	}
 
-	for (auto & c : components)
+	for (auto c : components)
 	{
-		RemoveComponent(c);
+		RemoveComponent(*c);
 	}
 
 	m_owner = nullptr;
@@ -246,8 +246,8 @@ void GameObject::Clear(void)
 
 }
 
-void GameObject::OnCreation(GameObjectsManager * owner,
-							const GameObjectHandle & handle)
+void GameObject::OnCreation(GameObjectsManager     * owner,
+                            const GameObjectHandle & handle)
 {
 
 	m_owner    = owner;
@@ -257,7 +257,8 @@ void GameObject::OnCreation(GameObjectsManager * owner,
 
 	Game::GetSingleton().GetScriptModule()->Init(this);
 
-	MYE_EVENT_MANAGER_ENQUEUE(GameObjectEventCreate, this);
+	MYE_EVENT_MANAGER_ENQUEUE_NEXT_FRAME(GameObjectEventCreate, m_handle);
+
 }
 
 void GameObject::OnDestruction(void)

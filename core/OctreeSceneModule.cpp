@@ -9,7 +9,7 @@ OctreeSceneModule::OctreeSceneModule(const Vector3 & center,
 									 float size,
 									 unsigned int maxdepth) :
 									 m_dynamicObjects(center, size, maxdepth),
-									 m_lights(center, size, maxdepth, detail::LightAABBBounds { { center.x(), center.y(), center.z() }, size * 0.5f })
+									 m_lights(center, size, maxdepth, detail::LightAABBBounds { { center.x(), center.y(), center.z() }, size * .5f })
 {
 }
 
@@ -54,41 +54,51 @@ GameObjectsList OctreeSceneModule::GetObjectsList(void)
 	return m_objects;
 }
 
-void OctreeSceneModule::AddGameObject(const GameObjectHandle & hObj)
+void OctreeSceneModule::AddGameObject(GameObject * gameObject)
 {
 
-	GameObject * object = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
-
-	if (object->GetRenderComponent() && m_dynamicObjects.Insert(object))
+	if (gameObject)
 	{
-		m_objects.push_back(object);
-	}
 
-	if (object->GetLightComponent())
-	{
-		m_lights.Insert(object);
+		SceneModule::AddGameObject(gameObject);
+
+		if (gameObject->GetRenderComponent() && m_dynamicObjects.Insert(gameObject))
+		{
+			m_objects.push_back(gameObject);
+		}
+
+		if (gameObject->GetLightComponent())
+		{
+			m_lights.Insert(gameObject);
+		}
+
 	}
 
 }
 
-void OctreeSceneModule::RemoveGameObject(const GameObjectHandle & hObj)
+void OctreeSceneModule::RemoveGameObject(GameObject * gameObject)
 {
 
-	GameObject * object = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
-
-	if (object->GetRenderComponent())
+	if (gameObject)
 	{
-		m_dynamicObjects.Remove(object);
-	}
 
-	if (object->GetLightComponent())
-	{
-		m_lights.Remove(object);
-	}
+		if (gameObject->GetRenderComponent())
+		{
+			m_dynamicObjects.Remove(gameObject);
+		}
 
+		if (gameObject->GetLightComponent())
+		{
+			m_lights.Remove(gameObject);
+		}
+
+		SceneModule::RemoveGameObject(gameObject);
+
+	}
+	
 }
 
-GameObjectRayIntersection OctreeSceneModule::Pick(const mye::math::Ray & ray)
+GameObjectRayIntersection OctreeSceneModule::Pick(const Ray & ray)
 {
 
 	Real t;
@@ -101,7 +111,7 @@ GameObjectRayIntersection OctreeSceneModule::Pick(const mye::math::Ray & ray)
 
 	else
 	{
-		return { GameObjectHandle(), -0.0f };
+		return { GameObjectHandle(), -.0f };
 	}
 
 }
@@ -115,7 +125,7 @@ void OctreeSceneModule::Reset(const mye::math::Vector3 & center,
 	m_lights.Destroy();
 
 	m_dynamicObjects.Create(center, size, maxdepth);
-	m_lights.Create(center, size, maxdepth, detail::LightAABBBounds { { center.x(), center.y(), center.z() }, size * 0.5f });
+	m_lights.Create(center, size, maxdepth, detail::LightAABBBounds { { center.x(), center.y(), center.z() }, size * .5f });
 
 }
 

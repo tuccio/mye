@@ -52,16 +52,26 @@ const SceneModule::Text2DList & SceneModule::GetText2DList(void) const
 
 void SceneModule::AddGameObject(const GameObjectHandle & hObj)
 {
+	GameObject * gameObject = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
+	AddGameObject(gameObject);
+}
 
-	GameObject * go = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
+void SceneModule::RemoveGameObject(const GameObjectHandle & hObj)
+{
+	GameObject * gameObject = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
+	RemoveGameObject(gameObject);
+}
 
-	assert(go && "Non-existent object added to the scene");
+void SceneModule::AddGameObject(GameObject * gameObject)
+{
 
-	if (go)
+	assert(gameObject && "Non-existent object added to the scene");
+
+	if (gameObject)
 	{
 
-		auto lc = go->GetLightComponent();
-		auto t2dc = go->GetText2DComponent();
+		auto lc = gameObject->GetLightComponent();
+		auto t2dc = gameObject->GetText2DComponent();
 
 		if (lc)
 		{
@@ -77,16 +87,14 @@ void SceneModule::AddGameObject(const GameObjectHandle & hObj)
 
 }
 
-void SceneModule::RemoveGameObject(const GameObjectHandle & hObj)
+void SceneModule::RemoveGameObject(GameObject * gameObject)
 {
 
-	GameObject * go = Game::GetSingleton().GetGameObjectsModule()->Get(hObj);
-
-	if (go)
+	if (gameObject)
 	{
 
-		auto lc = go->GetLightComponent();
-		auto t2dc = go->GetText2DComponent();
+		auto lc = gameObject->GetLightComponent();
+		auto t2dc = gameObject->GetText2DComponent();
 
 		if (lc)
 		{
@@ -201,6 +209,16 @@ void SceneModule::OnEvent(const IEvent * e)
 		}
 
 	}
+		break;
+
+	case EventType::GAME_OBJECT_DESTROY:
+	{
+
+		const GameObjectEventDestroy * goEvent = static_cast<const GameObjectEventDestroy *>(e);
+		RemoveGameObject(goEvent->hObj);
+
+	}
+		break;
 
 	}
 

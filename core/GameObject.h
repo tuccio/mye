@@ -100,11 +100,11 @@ namespace mye
 			IEvent
 		{
 
-			GameObjectEventCreate(GameObject * object) :
+			GameObjectEventCreate(GameObjectHandle hObj) :
 				IEvent(EventType::GAME_OBJECT_CREATE),
-				object(object) { }
+				hObj(hObj) { }
 
-			GameObject * object;
+			GameObjectHandle hObj;
 
 		};
 
@@ -112,11 +112,11 @@ namespace mye
 			IEvent
 		{
 
-			GameObjectEventDestroy(GameObject * object) :
+			GameObjectEventDestroy(GameObjectHandle hObj) :
 				IEvent(EventType::GAME_OBJECT_DESTROY),
-				object(object) { }
+				hObj(hObj) { }
 
-			GameObject * object;
+			GameObjectHandle hObj;
 
 		};
 
@@ -139,18 +139,6 @@ namespace mye
 
 			GameObject * object;
 
-
-		};
-
-		struct GameObjectEventFree :
-			IEvent
-		{
-
-			GameObjectEventFree(GameObject * object) :
-				IEvent(EventType::GAME_OBJECT_FREE),
-				object(object) { }
-
-			GameObject * object;
 
 		};
 

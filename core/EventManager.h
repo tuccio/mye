@@ -9,7 +9,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "Lockable.h"
+#include "ThreadConfig.h"
 #include "Singleton.h"
 
 #define __MYE_EVENT_MANAGER_CALL_LOOP(r, Data, Element)   em->BOOST_PP_SEQ_ELEM(1, Data)(Element, BOOST_PP_SEQ_ELEM(0, Data));
@@ -34,7 +34,6 @@ namespace mye
 			GAME_OBJECT_CREATE,
 			GAME_OBJECT_DESTROY,
 			GAME_OBJECT_MOVE,
-			GAME_OBJECT_FREE,
 			GAME_OBJECT_ADD_COMPONENT,
 			GAME_OBJECT_REMOVE_COMPONENT,
 
@@ -71,8 +70,7 @@ namespace mye
 		};
 
 		class EventManager :
-			public Singleton<EventManager>,
-			public Lockable
+			public Singleton<EventManager>
 		{
 
 		public:
@@ -99,6 +97,9 @@ namespace mye
 			EventsQueue  m_events[2];
 
 			short        m_currentQueue;
+
+			mutable boost::recursive_mutex m_queueLock[2];
+			mutable boost::recursive_mutex m_listenersLock;
 
 		};
 

@@ -44,7 +44,7 @@ PSOutput main(PSInput input)
 {
 
 	float3 N = normalize(input.normalWS);
-	float3 L = LightVector(input.positionWS, g_light);
+	float3 L = LightVector(g_light, input.positionWS);
 
 	float depth = LightSpaceLinearDepth(g_light, input.positionLS, input.positionWS);
 
@@ -54,7 +54,7 @@ PSOutput main(PSInput input)
 
 	output.position = float4(input.positionWS, 1);
 	output.normal   = float4(N, 1);
-	output.flux     = g_light.intensity * g_light.color * g_material.diffuseColor * NdotL;
+	output.flux     = float4(g_light.intensity * g_light.color * g_material.diffuseColor * NdotL, 1);
 	output.vsm      = ComputeMoments(depth);
 
 	return output;

@@ -59,8 +59,8 @@ namespace mye
 			const LightsList & GetLightsList(void) const;
 			const Text2DList & GetText2DList(void) const;
 
-			virtual void AddGameObject    (const GameObjectHandle & hObj);
-			virtual void RemoveGameObject (const GameObjectHandle & hObj);
+			void AddGameObject(const GameObjectHandle & hObj);
+			void RemoveGameObject(const GameObjectHandle & hObj);
 
 			virtual GameObjectRayIntersection Pick(const mye::math::Ray & ray);
 			
@@ -99,6 +99,9 @@ namespace mye
 
 			LightsList m_lights;
 			Text2DList m_textes;
+
+			virtual void AddGameObject(GameObject * gameObject);
+			virtual void RemoveGameObject(GameObject * gameObject);
 
 		};
 

@@ -1,6 +1,5 @@
 #include "Text2DComponent.h"
 
-#include "VertexBuffer.h"
 #include "VertexData.h"
 #include "ResourceTypeManager.h"
 #include "Game.h"
@@ -11,6 +10,7 @@ using namespace mye::core;
 using namespace mye::math;
 
 #define __MYE_TEXT2D_BUFFER_NAME ("__MYE_TEXT2D_BUFFER_" + PointerToString(this))
+
 
 Text2DComponent::Text2DComponent(void) :
 	Component(ComponentTypes::TEXT2D, "text2d"),
@@ -29,7 +29,7 @@ Text2DComponent::Text2DComponent(void) :
 Text2DComponent::Text2DComponent(const Vector2i & position,
 								 //const Vector4 & color,
 								 FontPointer font,
-								 const String &text) :
+								 const String & text) :
 	Component(ComponentTypes::TEXT2D, "text2d"),
 	m_position(position),
 	m_font(font),
@@ -58,9 +58,9 @@ const String & Text2DComponent::GetText(void) const
 	return m_text;
 }
 
-void Text2DComponent::SetText(const String &text)
+void Text2DComponent::SetText(const String & text)
 {
-	m_text    = text;
+	m_text = text;
 	m_vb->Unload();
 }
 
@@ -69,7 +69,7 @@ const Vector2i & Text2DComponent::GetPosition(void) const
 	return m_position;
 }
 
-void Text2DComponent::SetPosition(const Vector2i &position)
+void Text2DComponent::SetPosition(const Vector2i & position)
 {
 	m_position = position;
 	m_vb->Unload();
@@ -80,9 +80,9 @@ FontPointer Text2DComponent::GetFont(void) const
 	return m_font;
 }
 
-void Text2DComponent::SetFont(const FontPointer &font)
+void Text2DComponent::SetFont(const FontPointer & font)
 {
-	m_font    = font;
+	m_font = font;
 	m_vb->Unload();
 }
 
@@ -103,19 +103,19 @@ void Text2DComponent::SetPointSize(const mye::math::Vector2 & pointSize)
 
 }
 
-const mye::math::Vector4& Text2DComponent::GetColor(void) const
+const mye::math::Vector4 & Text2DComponent::GetColor(void) const
 {
 	return m_color;
 }
 
-void Text2DComponent::SetColor(const mye::math::Vector4f& color)
+void Text2DComponent::SetColor(const mye::math::Vector4f & color)
 {
 	m_color = color;
 }
 
-VertexBufferPointer Text2DComponent::GetVertexBuffer(void)
+GPUBufferPointer Text2DComponent::GetVertexBuffer(void)
 {
-	return Resource::DynamicCast<VertexBuffer>(m_vb);
+	return m_vb;
 }
 
 Text2DComponent * Text2DComponent::Clone(void) const
@@ -196,8 +196,10 @@ void Text2DComponent::UpdateText(void)
 
 	}
 
-	VertexBuffer * vb = dynamic_cast<VertexBuffer*>(m_vb.get());
-	vb->Create(data.GetData(), n, vDecl);
+	// Need to create the buffer using some parameter
+	//vb->Create(data.GetData(), n, vDecl);
+
+	
 
 }
 
@@ -230,8 +232,6 @@ bool Text2DLoader::Load(Resource * resource)
 
 void Text2DLoader::Unload(Resource * resource)
 {
-
-	VertexBuffer *vb = dynamic_cast<VertexBuffer*>(m_t2dc->m_vb.get());
-	vb->Clear();
-
+	GPUBufferPointer vb = m_t2dc->GetVertexBuffer();
+	vb->Unload();
 }

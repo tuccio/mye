@@ -92,8 +92,8 @@ namespace mye
 
 			GameObjectsList FindObjects(const mye::math::AABB & aabb);
 
-			void AddGameObject(const GameObjectHandle & hObj);
-			void RemoveGameObject(const GameObjectHandle & hObj);
+			void AddGameObject(GameObject * gameObject);
+			void RemoveGameObject(GameObject * gameObject);
 
 			GameObjectRayIntersection Pick(const mye::math::Ray & ray);
 

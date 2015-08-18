@@ -24,11 +24,6 @@ cbuffer cbLight : register(__MYE_DX11_BUFFER_SLOT_LIGHT)
 	Light g_light;
 };
 
-cbuffer cbCamera : register(__MYE_DX11_BUFFER_SLOT_CAMERATRANSFORM)
-{
-	float4x4 g_cameraViewProj;
-};
-
 RSMTexel RSMRead(in float2 texcoord)
 {
 

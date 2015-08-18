@@ -3,7 +3,9 @@
 #include "DX11Device.h"
 #include "DX11Buffer.h"
 
-#include <mye/core/VertexBuffer.h>
+#include <mye/core/VertexDeclaration.h>
+#include <mye/core/Mesh.h>
+#include <mye/core/Model.h>
 
 namespace mye
 {
@@ -32,7 +34,7 @@ namespace mye
 
 			void Clear(void);
 
-			void Bind(void);
+			void Bind(unsigned int slot = 0);
 			void Unbind(void);
 
 			size_t GetVerticesCount(void) const;

@@ -4,6 +4,9 @@
 #include "light.hlsli"
 #include "light_directional.hlsli"
 #include "register_slots.hlsli"
+#include "renderer_configuration.hlsli"
+
+#define MYE_CONE90_SOLID_ANGLE 2.0943951f
 
 /* Constant buffers */
 
@@ -42,15 +45,18 @@ PSOutput main(PSInput input)
 {
 
 	float3 N = normalize(input.normalWS);
-	float3 L = LightVector(input.positionWS, g_light);
+	float3 L = LightVector(g_light, input.positionWS);
 
 	float4 NdotL = saturate(dot(N, L));
+
+	float  omega      = MYE_CONE90_SOLID_ANGLE / (r.shadowMapResolution * r.shadowMapResolution);
+	float3 irradiance = LightIrradiance(g_light, input.positionWS);
 
 	PSOutput output;
 
 	output.position = float4(input.positionWS, 1);
 	output.normal   = float4(N, 1);
-	output.flux     = g_light.intensity * g_light.color * g_material.diffuseColor * NdotL;
+	output.flux     = float4(irradiance * MYE_INV_PI * g_material.diffuseColor * NdotL * omega, 1);
 
 	return output;
 

@@ -192,10 +192,10 @@ bool DX11VertexBuffer::Create(Model *model)
 
 }
 
-void DX11VertexBuffer::Bind(void)
+void DX11VertexBuffer::Bind(unsigned int slot)
 {
 	UINT offset = 0;
-	DX11Device::GetSingleton().GetImmediateContext()->IASetVertexBuffers(0, 1, &m_buffer, &m_stride, &offset);
+	DX11Device::GetSingleton().GetImmediateContext()->IASetVertexBuffers(slot, 1, &m_buffer, &m_stride, &offset);
 }
 
 void DX11VertexBuffer::Unbind(void)

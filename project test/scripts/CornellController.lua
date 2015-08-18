@@ -81,6 +81,14 @@ function CornellController:OnKeyboardKeyPress(key)
 		
 		hFrustumRenderer.camera:SetCamera(Scene.camera)
 		
+	elseif key == KeyboardVK.G then
+	
+		local hLPVAnim = GameObjects:Find('lpvAnim')
+		
+		if not hLPVAnim:Exists() then
+			hLPVAnim = GameObjects:CreateEntity('LPVAnimationController', 'lpvAnim')
+		end
+		
 	elseif key == KeyboardVK.V then
 		
 		local hCam = GameObjects:Find('camera')
@@ -88,7 +96,7 @@ function CornellController:OnKeyboardKeyPress(key)
 		local viewMatrix = hCam.camera:GetViewMatrix()
 		local projMatrix = hCam.camera:GetProjectionMatrix()
 		
-		local viewProj = projMatrix * viewMatrix
+		local viewProj    = projMatrix * viewMatrix
 		local viewProjInv = viewProj:Inverse()
 		
 		local octavePrintMatrix4 = function (m)

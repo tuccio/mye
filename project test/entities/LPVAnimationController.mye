@@ -1,0 +1,8 @@
+entity LPVAnimationController
+{
+
+	real speed         = 1.0;
+	real elapsed       = 0.0;
+	int  maxIterations = 16;
+
+};

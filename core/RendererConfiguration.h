@@ -30,7 +30,10 @@ namespace mye
 			PCFENABLED,
 			PCFKERNEL,
 			CSMSPLITS,
-			CSMDEBUG
+			CSMDEBUG,
+			LPVRSMSAMPLES,
+			LPVRESOLUTION,
+			LPVITERATIONS
 		};
 
 		class RendererConfiguration;
@@ -65,6 +68,10 @@ namespace mye
 			mye::math::Real     m_vsmMinVariance;
 			mye::math::Real     m_vsmMinBleeding;
 
+			mye::math::Real     m_lpvRSMSamples;
+			mye::math::Real     m_lpvResolution;
+			unsigned int        m_lpvIterations;
+
 			unsigned int        m_csmSplits;
 			unsigned int        m_pcfKernel;
 
@@ -85,7 +92,10 @@ namespace mye
 				m_pcfEnabled(false),
 				m_csmDebug(false),
 				m_csmSplits(3),
-				m_pcfKernel(3)
+				m_pcfKernel(3),
+				m_lpvRSMSamples(256),
+				m_lpvResolution(32),
+				m_lpvIterations(15)
 			{
 			}
 																							 
@@ -105,6 +115,10 @@ namespace mye
 																						      				             
 			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::PCFENABLED,                PCFEnabled,                m_pcfEnabled)
 			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::PCFKERNEL,                 PCFKernel,                 m_pcfKernel)
+
+			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::LPVRSMSAMPLES,             LPVRSMSamples,             m_lpvRSMSamples)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::LPVRESOLUTION,             LPVResolution,             m_lpvResolution)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::LPVITERATIONS,             LPVIterations,             m_lpvIterations)
 
 		};
 

@@ -131,6 +131,8 @@ bool DX11DepthBuffer::Resize(int width, int height)
 		return Create();
 	}
 
+	return false;
+
 }
 
 bool DX11DepthBuffer::ResizeArray(int size)
