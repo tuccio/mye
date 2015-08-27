@@ -26,14 +26,26 @@ SHRGB SHAdd(in SHRGB a, in SHRGB b)
 
 }
 
+float SHDot(in float4 a, in float4 b)
+{
+	return dot(a, b);
+}
+
 float3 SHDot(in SHRGB a, in float4 b)
 {
 	return float3(dot(a.red, b), dot(a.green, b), dot(a.blue, b));
 }
 
-float SHDot(in float4 a, in float4 b)
+float SHDotAbs(in float4 a, in float4 b)
 {
-	return dot(a, b);
+	return a.x * b.x + dot(abs(a.yzw), abs(b.yzw));
+}
+
+float3 SHDotAbs(in SHRGB a, in float4 b)
+{
+	return float3(SHDotAbs(a.red,   b),
+	              SHDotAbs(a.green, b),
+	              SHDotAbs(a.blue,  b));
 }
 
 float4 SHScale(in float4 a, in float b)
@@ -62,7 +74,9 @@ SHRGB SHScale(in float4 a, in float3 b)
 
 float4 SHCosineLobe(in float3 direction)
 {
-	return float4(MYE_COSLOBE_ZH_C0, - MYE_COSLOBE_ZH_C1 * direction.y, MYE_COSLOBE_ZH_C1 * direction.z, - MYE_COSLOBE_ZH_C1 * direction.x);
+	/*return float4(MYE_COSLOBE_ZH_C0, - MYE_COSLOBE_ZH_C1 * direction.y, MYE_COSLOBE_ZH_C1 * direction.z, - MYE_COSLOBE_ZH_C1 * direction.x);*/
+	//return float4(MYE_COSLOBE_ZH_C0, MYE_COSLOBE_ZH_C1 * direction.y, MYE_COSLOBE_ZH_C1 * direction.z, MYE_COSLOBE_ZH_C1 * direction.x);
+	return float4(MYE_COSLOBE_ZH_C0, - MYE_COSLOBE_ZH_C1, MYE_COSLOBE_ZH_C1, - MYE_COSLOBE_ZH_C1) * float4(1.f, direction.yzx);
 }
 
 #endif

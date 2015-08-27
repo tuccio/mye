@@ -12,6 +12,7 @@
 
 #include "DX11PixelShader.h"
 #include "DX11VertexShader.h"
+#include "DX11ShaderProgram.h"
 
 #include <mye/core/EventManager.h>
 #include <mye/core/RendererConfiguration.h>
@@ -47,17 +48,12 @@ namespace mye
 
 		private:
 
-			bool                         m_initialized;						     
-								       
-			DX11VertexShaderPointer      m_deferredGeometryVS;
-			DX11PixelShaderPointer       m_deferredGeometryPS;
-								         
-			DX11VertexShaderPointer      m_deferredLightsVS;
-			DX11PixelShaderPointer       m_deferredLightsPS;
-			DX11PixelShaderPointer       m_deferredLPVPS;
-								         
-			DX11VertexShaderPointer      m_deferredFinalVS;
-			DX11PixelShaderPointer       m_deferredFinalPS;
+			bool                         m_initialized;
+
+			DX11ShaderProgramPointer     m_deferredGeometry;
+			DX11ShaderProgramPointer     m_deferredLights;
+			DX11ShaderProgramPointer     m_deferredLightsLPV;
+			DX11ShaderProgramPointer     m_deferredFinal;
 								         
 			DX11Texture                  m_gbuffer0;
 			DX11Texture                  m_gbuffer1;

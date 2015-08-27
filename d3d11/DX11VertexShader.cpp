@@ -10,8 +10,14 @@
 #include <sstream>
 #include <string>
 
+#include <boost/property_tree/json_parser.hpp>
+
+#include <boost/algorithm/string.hpp>
+
 using namespace mye::dx11;
 using namespace mye::core;
+
+static VertexDeclaration __ParseJSONInput(const String & input);
 
 DX11VertexShader::DX11VertexShader(ResourceManager      * owner,
                                    const String         & name,
@@ -48,7 +54,6 @@ mye::core::String DX11VertexShader::GetCompileError(void)
 {
 	return m_compileError;
 }
-
 
 bool DX11VertexShader::LoadImpl(void)
 {
@@ -105,7 +110,21 @@ bool DX11VertexShader::LoadImpl(void)
 				                   &m_shader)))
 		{
 
-			if (m_params.Contains("inputLayoutVector"))
+			if (m_params.Contains("input"))
+			{
+
+				String input = m_params.GetString("input");
+
+				auto vDesc = MakeInputElementVector(__ParseJSONInput(input));
+
+				if (!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton()->
+					CreateInputLayout(&vDesc[0], vDesc.size(), code->GetBufferPointer(), code->GetBufferSize(), &m_inputLayout)))
+				{
+					success = true;
+				}
+
+			}
+			else if (m_params.Contains("inputLayoutVector")) // TODO: Remove
 			{
 
 				const void * ptr = m_params.GetPointer("inputLayoutVector");
@@ -155,4 +174,136 @@ void DX11VertexShader::Destroy(void)
 {
 	__MYE_DX11_RELEASE_COM_OPTIONAL(m_shader);
 	m_compileError.Clear();
+}
+
+static VertexDeclaration __ParseJSONInput(const String & input)
+{
+
+	std::istringstream ss;
+
+	ss.str(input.CString());
+
+	boost::property_tree::ptree pt;
+
+	try
+	{
+		read_json(ss, pt);
+	}
+	catch (boost::property_tree::json_parser_error &) {
+	}
+
+	VertexDeclaration vd;
+
+	for (auto & p : pt)
+	{
+
+		DataFormat format;
+		VertexAttributeSemantic semantic;
+
+		if (boost::iequals("position", p.first))
+		{
+			semantic = VertexAttributeSemantic::POSITION;
+		}
+		else if (boost::iequals("normal", p.first))
+		{
+			semantic = VertexAttributeSemantic::NORMAL;
+		}
+		else if (boost::iequals("texcoord0", p.first))
+		{
+			semantic = VertexAttributeSemantic::TEXCOORD0;
+		}
+		else if (boost::iequals("texcoord1", p.first))
+		{
+			semantic = VertexAttributeSemantic::TEXCOORD1;
+		}
+		else if (boost::iequals("texcoord2", p.first))
+		{
+			semantic = VertexAttributeSemantic::TEXCOORD2;
+		}
+		else if (boost::iequals("texcoord3", p.first))
+		{
+			semantic = VertexAttributeSemantic::TEXCOORD3;
+		}
+		else if (boost::iequals("texcoord4", p.first))
+		{
+			semantic = VertexAttributeSemantic::TEXCOORD4;
+		}
+		else if (boost::iequals("texcoord5", p.first))
+		{
+			semantic = VertexAttributeSemantic::TEXCOORD5;
+		}
+		else if (boost::iequals("texcoord6", p.first))
+		{
+			semantic = VertexAttributeSemantic::TEXCOORD6;
+		}
+		else if (boost::iequals("texcoord7", p.first))
+		{
+			semantic = VertexAttributeSemantic::TEXCOORD7;
+		}
+		else if (boost::iequals("tangent", p.first))
+		{
+			semantic = VertexAttributeSemantic::TANGENT;
+		}
+		else if (boost::iequals("bitangent", p.first))
+		{
+			semantic = VertexAttributeSemantic::BITANGENT;
+		}
+		else if (boost::iequals("diffuse", p.first))
+		{
+			semantic = VertexAttributeSemantic::DIFFUSE;
+		}
+		else if (boost::iequals("specular", p.first))
+		{
+			semantic = VertexAttributeSemantic::SPECULAR;
+		}
+		else
+		{
+			continue;
+		}
+
+		auto second = p.second.get_value<std::string>();
+
+		if (boost::iequals("float", second))
+		{
+			format = DataFormat::FLOAT;
+		}
+		else if (boost::iequals("float2", second))
+		{
+			format = DataFormat::FLOAT2;
+		}
+		else if (boost::iequals("float3", second))
+		{
+			format = DataFormat::FLOAT3;
+		}
+		else if (boost::iequals("float4", second))
+		{
+			format = DataFormat::FLOAT4;
+		}
+		else if (boost::iequals("int", second))
+		{
+			format = DataFormat::INT;
+		}
+		else if (boost::iequals("int2", second))
+		{
+			format = DataFormat::INT2;
+		}
+		else if (boost::iequals("int3", second))
+		{
+			format = DataFormat::INT3;
+		}
+		else if (boost::iequals("int4", second))
+		{
+			format = DataFormat::INT4;
+		}
+		else
+		{
+			continue;
+		}
+
+		vd.AddAttribute(semantic, format);
+
+	}
+
+	return vd;
+
 }

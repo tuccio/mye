@@ -5,9 +5,20 @@
 
 cbuffer cbCameraTransform : register(__MYE_DX11_BUFFER_SLOT_CAMERATRANSFORM)
 {
-	float4x4 g_cameraView;
-	float4x4 g_cameraViewProj;
-	float4x4 g_cameraInvViewProj;
+
+	struct Camera
+	{
+
+		float4x4 view;
+		float4x4 viewProj;
+		float4x4 invViewProj;
+
+		float    near;
+		float    far;
+		float    fovy;
+		float    ratio;
+
+	} g_camera;
 };
 
 #endif

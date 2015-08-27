@@ -1,0 +1,18 @@
+{
+
+	"vertex" : {
+		"source" : "./shaders/lpv_propagate_vs.cso",
+		"precompiled" : true
+	},
+	
+	"pixel" : {
+		"source" : "./shaders/lpv_propagate_ps.cso",
+		"precompiled" : true
+	},
+	
+	"geometry" : {
+		"source" : "./shaders/lpv_propagate_gs.cso",
+		"precompiled" : true
+	}
+	
+}

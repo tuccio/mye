@@ -4,15 +4,19 @@ function CornellController:Init()
 	
 	local hCam = GameObjects:CreateEntity('Camera', 'camera')
 	
-	hCam.transform.position    = vec3(0, 1, 3)
-	hCam.transform.orientation = quaternion(0, 0, 1, 0)
+	hCam.transform.position     = vec3(0, 1, 3)
+	hCam.transform.orientation  = quaternion(0, 0, 1, 0)
 	
-	Graphics.window.caption = 'Cornell box test'
+	Graphics.window.caption     = 'Cornell box test'
 	
+	r.lpvEnabled                = true
+	r.lpvAABB                   = AABB.FromCenterHalfExtents(vec3(0), vec3(3.5))
 	r.shadowMapBias             = 0
 	r.shadowMapNormalOffsetBias = 0.01
-	r.pcfEnabled                = true
+	r.pcfEnabled                = false
 	r.csmSplits                 = 1
+	r.lpvGeometryInjectionBias  = 0.5
+	r.lpvFluxInjectionBias      = 0.5
 	
 	if hCam and hCam:Exists() then
 	
@@ -138,6 +142,20 @@ function CornellController:OnKeyboardKeyPress(key)
 		
 		print('viewProjInv:')
 		octavePrintMatrix4(viewProjInv)
+		
+	elseif key == KeyboardVK.P then
+	
+		local newIt     = math.min(r.lpvIterations + 1, 32)
+		r.lpvIterations = newIt
+		
+		print('Iterations: ' .. newIt)
+	
+	elseif key == KeyboardVK.O then
+	
+		local newIt     = math.max(r.lpvIterations - 1, 0)
+		r.lpvIterations = newIt
+		
+		print('Iterations: ' .. newIt)
 		
 	end
 

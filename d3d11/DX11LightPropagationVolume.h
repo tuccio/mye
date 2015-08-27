@@ -7,6 +7,7 @@
 #include "DX11ReflectiveShadowMap.h"
 #include "DX11Texture.h"
 #include "DX11ConstantBuffer.h"
+#include "DX11ShaderProgram.h"
 
 #include <mye/math/Math.h>
 #include <array>
@@ -88,10 +89,22 @@ namespace mye
 			inline DX11LightVolume    & GetLightVolume(void)    { return m_lightVolume[m_currentVolume]; }
 			inline DX11GeometryVolume & GetGeometryVolume(void) { return m_geometryVolume; }
 
+			mye::math::Real GetGeometryInjectionBias(void) const;
+			void SetGeometryInjectionBias(mye::math::Real bias);
+
+			mye::math::Real GetFluxInjectionBias(void) const;
+			void SetFluxInjectionBias(mye::math::Real bias);
+
 		private:
 
-			DX11VertexShaderPointer     m_lpvRSMSamplerVS;
-			DX11PixelShaderPointer      m_lpvRSMSamplerPS;
+			DX11ShaderProgramPointer    m_lpvRSMSampling;
+			DX11ShaderProgramPointer    m_lpvInjectFlux;
+			DX11ShaderProgramPointer    m_lpvInjectGeometry;
+			DX11ShaderProgramPointer    m_lpvPropagate;
+			DX11ShaderProgramPointer    m_lpvPropagateFirst;
+
+			/*DX11VertexShaderPointer     m_lpvRSMSamplingVS;
+			DX11PixelShaderPointer      m_lpvRSMSamplingPS;
 
 			DX11VertexShaderPointer     m_lpvInjectFluxVS;
 			DX11PixelShaderPointer      m_lpvInjectFluxPS;
@@ -103,7 +116,8 @@ namespace mye
 
 			DX11VertexShaderPointer     m_lpvPropagateVS;
 			DX11PixelShaderPointer      m_lpvPropagatePS;
-			DX11GeometryShaderPointer   m_lpvPropagateGS;
+			DX11PixelShaderPointer      m_lpvPropagateFirstPS;
+			DX11GeometryShaderPointer   m_lpvPropagateGS;*/
 								     
 			DX11Texture                 m_position;
 			DX11Texture                 m_normal;
@@ -128,6 +142,9 @@ namespace mye
 			DX11ConstantBuffer          m_lpvConfig;
 
 			uint8_t                     m_currentVolume;
+
+			mye::math::Real             m_geometryInjectionBias;
+			mye::math::Real             m_fluxInjectionBias;
 
 			/* Private functions */
 

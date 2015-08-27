@@ -27,25 +27,23 @@ VSOutput main(VSInput input)
 	int3 texcoords = int3(i, j, 0);
 
 	float3 position = g_position.Load(texcoords).xyz;
-
-	VSOutput output;
-
-	output.normal     = g_normal.Load(texcoords).xyz;
-	output.flux       = g_flux.Load(texcoords).rgb;
+	float3 normal   = g_normal.Load(texcoords).xyz;
+	float3 flux     = g_flux.Load(texcoords).rgb;
 
 	// If a VPL direction doesn't point towards the center of the cell, it
 	// should not contribute to the cell flux, but rather be injected
 	// to the cell it is pointing to
 
-	//output.cell       = LPVGetGridCell(position) + .5f * output.normal;
-	output.cell = (position - g_lpv.minCorner) / g_lpv.cellSize + .5f * output.normal;
+	float3 cell = (position - g_lpv.minCorner) / g_lpv.cellSize + g_lpv.fluxInjectionBias * normal;
 
-	float invLPVResolution = 1.f / g_lpv.lpvResolution;
+	VSOutput output;
 
-	output.positionCS = float4(2.f * output.cell.x * invLPVResolution - 1.f,
-							   1.f - 2.f * output.cell.y * invLPVResolution,
-							   0.f,
-	                           1.f);
+	output.normal = normal;
+	output.flux   = flux;
+	output.cell   = int3(cell);
+
+	float2 cellCS     = 2.f * cell.xy / g_lpv.lpvResolution - 1.f;
+	output.positionCS = float4(cellCS.x, - cellCS.y, 0.f, 1.f);
 
 	return output;
 	

@@ -17,7 +17,7 @@
 			<direction>0.57735 -0.57735 -0.57735</direction>
 			<!--<direction>0.466643 -0.679889 -0.565681</direction>-->
 			<color>1 1 1</color>
-			<intensity>3</power>
+			<intensity>4.5</intensity>
 		</light>
 	</gameobject>
 	

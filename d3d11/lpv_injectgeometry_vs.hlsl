@@ -28,19 +28,26 @@ VSOutput main(VSInput input)
 	int3 texcoords = int3(i, j, 0);
 
 	float3 position = g_position.Load(texcoords).xyz;
-	float4 viewZ    = mul(g_cameraView, float4(position, 1)).z;
+	float3 normal   = g_normal.Load(texcoords).xyz;
+	float4 viewZ    = abs(mul(g_camera.view, float4(position, 1)).z);
+
+	// Geometry volume is shifted by half a cell as in crytek paper, so that
+	// the edges of LPV cell are placed in the center of the geometry volume,
+	// achieving better interpolation during the propagation
+
+	//float3 cell = (position - g_lpv.minCorner + g_lpv.geometryInjectionBias * normal) / g_lpv.cellSize - .5f;
+	//float3 cell = (position - g_lpv.minCorner) / g_lpv.cellSize + .5f + g_lpv.geometryInjectionBias * normal;
+	float3 cell = (position - g_lpv.minCorner) / g_lpv.cellSize - .5f - g_lpv.geometryInjectionBias * normal;
 
 	VSOutput output;
 
-	output.normal     = g_normal.Load(texcoords).xyz;
-	output.cell       = LPVGetGridCell(position) + .5f * output.normal;
+	output.normal = normal;
+	output.cell   = int3(cell);
 
-	output.positionCS = float4(2.f * (output.cell.x + .5f) / g_lpv.lpvResolution - 1.f,
-	                           1.f - 2.f * (output.cell.y + .5f) / g_lpv.lpvResolution,
-	                           0.f,
-	                           1.f);
+	float2 cellCS     = 2.f * cell.xy / g_lpv.lpvResolution - 1.f;
+	output.positionCS = float4(cellCS.x, - cellCS.y, 0.f, 1.f);
 
-	output.surfelArea = 4.f * viewZ * viewZ / (g_lpv.rsmResolution * g_lpv.rsmResolution * g_lpv.cellSize * g_lpv.cellSize);
+	output.surfelArea = 4.f * tan(g_camera.fovy * .5f) / g_camera.ratio;
 
 	return output;
 

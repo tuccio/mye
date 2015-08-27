@@ -100,6 +100,8 @@ PSOutput main(PSInput input)
 		output.normal   *= invSamples;
 		//output.flux     *= invSamples;
 		output.flux     *= .25f;
+
+		output.normal = normalize(output.normal);
 	}
 
 	return output;

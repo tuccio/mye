@@ -30,12 +30,14 @@ VSOutput main(VSInput input)
 	                           0.f,
 	                           1.f);*/
 
-	float invLPVResolution = 1.f / g_lpv.lpvResolution;
+	float2 cellCS     = 2.f * (output.cell.xy + .5f) / g_lpv.lpvResolution - 1.f;
 
-	output.positionCS = float4(2.f * (.5f + output.cell.x) * invLPVResolution - 1.f,
-	                           1.f - 2.f * (.5f + output.cell.y) * invLPVResolution,
-	                           0.f,
-	                           1.f);
+	output.positionCS = float4(cellCS.x, - cellCS.y, 0.f, 1.f);
+
+	/*output.positionCS = float4(2.f * output.cell.x * invLPVResolution - 1.f,
+							   1.f - 2.f * output.cell.y * invLPVResolution,
+							   0.f,
+							   1.f);*/
 
 	return output;
 

@@ -4,10 +4,6 @@
 #include "constants.hlsli"
 #include "spherical_harmonics.hlsli"
 
-#define MYE_LPV_FRONT_SOLID_ANGLE (0.4006696846f)
-#define MYE_LPV_SIDE_SOLID_ANGLE  (0.4234413544f)
-
-
 struct LPVConfiguration
 {
 
@@ -18,6 +14,9 @@ struct LPVConfiguration
 
 	uint   rsmResolution;
 	uint   lpvResolution;
+
+	float  geometryInjectionBias;
+	float  fluxInjectionBias;
 
 };
 
@@ -40,9 +39,9 @@ float3 LPVGetGridCell(in float3 position)
 	return (position - g_lpv.minCorner) / g_lpv.cellSize;
 }
 
-float3 LPVSampleCoords(in int3 cell)
+float3 LPVSampleCoords(in float3 cell)
 {
-	return float3(cell) / g_lpv.lpvResolution;
+	return cell / g_lpv.lpvResolution;
 }
 
 float4 LPVFlux(in SHRGB sh, in float3 direction)
@@ -57,9 +56,7 @@ float4 LPVFlux(in SHRGB sh, in float3 direction)
 
 }
 
-SHRGB LPVLoadOffset(in LPV lpv,
-                    int3 cell,
-                    int3 offset)
+SHRGB LPVLoadOffset(in LPV lpv, int3 cell, int3 offset)
 {
 
 	SHRGB sh;
@@ -72,28 +69,34 @@ SHRGB LPVLoadOffset(in LPV lpv,
 
 }
 
-void LPVAddAdjacentContribution(inout SHRGB sh,
-                                in LPV lpv,                                
-                                in int3 cell,
-                                in float3 sourceDirection)
+#ifndef MYE_PROPAGATE_NO_OCCLUSION
+
+float4 LPVOcclusion(in LPV lpv, in int3 cell, in float3 sourceDirection)
 {
-
-	float3 fluxDirection = - sourceDirection;
-	float4 shDirection   = SHCosineLobe(fluxDirection);
-
-	SHRGB  shAdjRadiance = LPVLoadOffset(lpv, cell, sourceDirection);
-
-	float3 shIrradiance  = saturate(SHDot(shAdjRadiance, shDirection));
-
-	//float4 shOcclusion   = lpv.geometry.Sample(lpv.lpvSampler, LPVSampleCoords(cell + sourceDirection));
-	//float  occlusion     = 1.f - SHDot(shOcclusion, shDirection);
-	float  occlusion = 1.f;
-
-	SHRGB  shFrontFlux   = SHScale(shDirection, MYE_LPV_FRONT_SOLID_ANGLE * MYE_INV_PI * occlusion * shIrradiance);
-
-	sh = SHAdd(sh, shFrontFlux);
-
-
+	//float3 coords = float3(cell) + .5f + sourceDirection;
+	float3 coords = float3(cell) + 1.f + sourceDirection;
+	float3 sampleCoords = LPVSampleCoords(coords);
+	return lpv.geometry.Sample(lpv.lpvSampler, sampleCoords);
+	//return lpv.geometry.Load(int4(coords, 0));
 }
+
+float LPVVisibility(in float4 shFluxDirection, in float4 shOcclusion)
+{
+	return 1 - saturate(SHDot(shOcclusion, shFluxDirection));
+}
+
+#else
+
+float4 LPVOcclusion(in LPV lpv, in int3 cell, in float3 sourceDirection)
+{
+	return float4(0, 0, 0, 0);
+}
+
+float LPVVisibility(in float4 shFluxDirection, in float4 shOcclusion)
+{
+	return 1;
+}
+
+#endif
 
 #endif

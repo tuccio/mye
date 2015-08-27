@@ -160,9 +160,13 @@ namespace mye
 					Property("csmDebug",                  &RendererConfiguration::GetCSMDebug,                  &RendererConfiguration::SetCSMDebug).
 					Property("pcfEnabled",                &RendererConfiguration::GetPCFEnabled,                &RendererConfiguration::SetPCFEnabled).
 					Property("pcfKernel",                 &RendererConfiguration::GetPCFKernel,                 &RendererConfiguration::SetPCFKernel).
+					Property("lpvEnabled",                &RendererConfiguration::GetLPVEnabled,                &RendererConfiguration::SetLPVEnabled).
+					Property("lpvAABB",                   &RendererConfiguration::GetLPVAABB,                   &RendererConfiguration::SetLPVAABB).
 					Property("lpvRSMSamples",             &RendererConfiguration::GetLPVRSMSamples,             &RendererConfiguration::SetLPVRSMSamples).
 					Property("lpvResolution",             &RendererConfiguration::GetLPVResolution,             &RendererConfiguration::SetLPVResolution).
-					Property("lpvIterations",             &RendererConfiguration::GetLPVIterations,             &RendererConfiguration::SetLPVIterations),
+					Property("lpvIterations",             &RendererConfiguration::GetLPVIterations,             &RendererConfiguration::SetLPVIterations).
+					Property("lpvGeometryInjectionBias",  &RendererConfiguration::GetLPVGeometryInjectionBias,  &RendererConfiguration::SetLPVGeometryInjectionBias).
+					Property("lpvFluxInjectionBias",      &RendererConfiguration::GetLPVFluxInjectionBias,      &RendererConfiguration::SetLPVFluxInjectionBias),
 
 				Class<Component>(MYE_LUA_COMPONENT),
 

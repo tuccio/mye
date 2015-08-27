@@ -14,7 +14,9 @@ using namespace mye::dx11;
 using namespace mye::math;
 
 DX11LightPropagationVolume::DX11LightPropagationVolume(void) :
-	m_currentVolume(0) { }
+	m_currentVolume(0),
+	m_geometryInjectionBias(.0f),
+	m_fluxInjectionBias(.5f) { }
 
 bool DX11LightPropagationVolume::Create(size_t dimensions, size_t resolution)
 {
@@ -77,6 +79,8 @@ void DX11LightPropagationVolume::Init(const Camera * camera, const Vector3 & vol
 	m_lightVolume[0].Clear();
 	m_lightVolume[1].Clear();
 
+	m_geometryVolume.Clear();
+
 	Vector3 diffCorner  = volumeMaxCorner - volumeMinCorner;
 	Vector3 center      = .5f * diffCorner + volumeMinCorner;
 
@@ -87,7 +91,7 @@ void DX11LightPropagationVolume::Init(const Camera * camera, const Vector3 & vol
 	m_volumeMinCorner = volumeAABB.GetMinimum();
 	m_volumeMaxCorner = volumeAABB.GetMaximum();
 
-	MakeLPVConfigurationBuffer(m_lpvConfig, m_volumeMinCorner, m_volumeMaxCorner, m_volumeCellSize, m_sampleResolution, m_volumeResolution);
+	MakeLPVConfigurationBuffer(m_lpvConfig, m_volumeMinCorner, m_volumeMaxCorner, m_volumeCellSize, m_sampleResolution, m_volumeResolution, m_geometryInjectionBias, m_fluxInjectionBias);
 
 }
 
@@ -137,8 +141,7 @@ void DX11LightPropagationVolume::Inject(DX11ReflectiveShadowMap & rsm)
 	DX11VertexBuffer quadBuffer;
 	quadBuffer.Create(quad, 6, VertexDeclaration({ VertexAttribute(VertexAttributeSemantic::POSITION, DataFormat::FLOAT4) }));
 
-	m_lpvRSMSamplerVS->Use();
-	m_lpvRSMSamplerPS->Use();
+	m_lpvRSMSampling->Use();
 
 	Light * light = rsm.GetLight();
 
@@ -169,9 +172,7 @@ void DX11LightPropagationVolume::Inject(DX11ReflectiveShadowMap & rsm)
 
 	m_lightVolume[0].SetRenderTarget();
 
-	m_lpvInjectFluxVS->Use();
-	m_lpvInjectFluxGS->Use();
-	m_lpvInjectFluxPS->Use();
+	m_lpvInjectFlux->Use();
 
 	m_position.Bind(DX11PipelineStage::VERTEX_SHADER, __MYE_DX11_TEXTURE_SLOT_RSMPOSITION);
 	m_normal.Bind(DX11PipelineStage::VERTEX_SHADER,   __MYE_DX11_TEXTURE_SLOT_RSMNORMAL);
@@ -194,9 +195,9 @@ void DX11LightPropagationVolume::Inject(DX11ReflectiveShadowMap & rsm)
 
 	m_geometryVolume.SetRenderTarget();
 
-	m_lpvInjectGeometryVS->Use();
-	m_lpvInjectGeometryGS->Use();
-	m_lpvInjectGeometryPS->Use();
+	BindConfigurationBuffer(DX11PipelineStage::PIXEL_SHADER, 0);
+
+	m_lpvInjectGeometry->Use();
 
 	DX11Device::GetSingleton().GetImmediateContext()->Draw(numSamples, 0);
 
@@ -204,9 +205,7 @@ void DX11LightPropagationVolume::Inject(DX11ReflectiveShadowMap & rsm)
 	m_normal.Unbind();
 	m_flux.Unbind();
 
-	m_lpvInjectGeometryVS->Dispose();
-	m_lpvInjectGeometryGS->Dispose();
-	m_lpvInjectGeometryPS->Dispose();
+	m_lpvInjectGeometry->Dispose();
 
 	quadBuffer.Destroy();
 
@@ -243,21 +242,40 @@ void DX11LightPropagationVolume::Propagate(unsigned int iterations)
 
 	DX11Device::GetSingleton().SetViewports(&viewport, 1);
 
-	m_lpvPropagateVS->Use();
-	m_lpvPropagateGS->Use();
-	m_lpvPropagatePS->Use();
+	m_lpvPropagateFirst->Use();
 
 	unsigned int verticesCount = m_volumeResolution * m_volumeResolution * m_volumeResolution;
 
 	m_geometryVolume.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_LPVGEOMETRY);
 	BindConfigurationBuffer(DX11PipelineStage::VERTEX_SHADER, 0);
 
-	for (unsigned int i = 0; i < iterations; i++)
+	/* First propagation pass with no occlusion */
+
+	//m_lightVolume[1].Clear();
+	m_lightVolume[1].SetRenderTarget();
+
+	m_lightVolume[0].Bind(DX11PipelineStage::PIXEL_SHADER,
+	                      __MYE_DX11_TEXTURE_SLOT_LPVLIGHT_RED,
+	                      __MYE_DX11_TEXTURE_SLOT_LPVLIGHT_GREEN,
+	                      __MYE_DX11_TEXTURE_SLOT_LPVLIGHT_BLUE);
+
+	DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+	DX11Device::GetSingleton().GetImmediateContext()->Draw(verticesCount, 0);
+
+	m_lightVolume[0].Unbind();
+
+	m_currentVolume = 1;
+
+	/* Then propagate using the occlusion shader */
+
+	m_lpvPropagate->Use();
+
+	for (unsigned int i = 1; i < iterations; i++)
 	{
 
 		uint8_t nextVolume = (i + 1) % 2;
 
-		m_lightVolume[nextVolume].Clear();
+		//m_lightVolume[nextVolume].Clear();
 		m_lightVolume[nextVolume].SetRenderTarget();
 
 		m_lightVolume[m_currentVolume].Bind(DX11PipelineStage::PIXEL_SHADER,
@@ -278,24 +296,77 @@ void DX11LightPropagationVolume::Propagate(unsigned int iterations)
 
 	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(0, nullptr, nullptr);
 
-	m_lpvPropagateVS->Dispose();
-	m_lpvPropagateGS->Dispose();
-	m_lpvPropagatePS->Dispose();
+	m_lpvPropagate->Dispose();
 
 	DX11Device::GetSingleton().SetViewports(&oldViewports[0], oldViewports.size());
 
 }
 
+Real DX11LightPropagationVolume::GetGeometryInjectionBias(void) const
+{
+	return m_geometryInjectionBias;
+}
+
+void DX11LightPropagationVolume::SetGeometryInjectionBias(Real bias)
+{
+	m_geometryInjectionBias = bias;
+}
+
+Real DX11LightPropagationVolume::GetFluxInjectionBias(void) const
+{
+	return m_fluxInjectionBias;
+}
+
+void DX11LightPropagationVolume::SetFluxInjectionBias(Real bias)
+{
+	m_fluxInjectionBias = bias;
+}
+
 bool DX11LightPropagationVolume::__CreateShaders(void)
 {
 
+	m_lpvRSMSampling = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
+		"DX11Shader",
+		"./shaders/lpv_rsmsampler.msh",
+		nullptr,
+		{ { "type", "program" } }
+	);
+
+	m_lpvInjectFlux = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
+		"DX11Shader",
+		"./shaders/lpv_injectflux.msh",
+		nullptr,
+		{ { "type", "program" } }
+	);
+
+	m_lpvInjectGeometry = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
+		"DX11Shader",
+		"./shaders/lpv_injectgeometry.msh",
+		nullptr,
+		{ { "type", "program" } }
+	);
+
+	m_lpvPropagate = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
+		"DX11Shader",
+		"./shaders/lpv_propagate.msh",
+		nullptr,
+		{ { "type", "program" } }
+	);
+
+	m_lpvPropagateFirst = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
+		"DX11Shader",
+		"./shaders/lpv_propagate_first.msh",
+		nullptr,
+		{ { "type", "program" } }
+	);
+/*
 	VertexDeclaration lpvVD({
 		VertexAttribute(VertexAttributeSemantic::POSITION,  DataFormat::FLOAT4),
 	});
 
 	auto lpvILV = MakeInputElementVector(lpvVD);
 
-	m_lpvRSMSamplerVS = ResourceTypeManager::GetSingleton().CreateResource<DX11VertexShader>(
+	m_lpvRSMSamplingVS = ResourceTypeManager::GetSingleton().CreateResource<DX11VertexShader>(
 		"DX11Shader",
 		"./shaders/lpv_rsmsampler_vs.cso",
 		nullptr,
@@ -306,7 +377,7 @@ bool DX11LightPropagationVolume::__CreateShaders(void)
 		})
 	);
 
-	m_lpvRSMSamplerPS = ResourceTypeManager::GetSingleton().CreateResource<DX11PixelShader>(
+	m_lpvRSMSamplingPS = ResourceTypeManager::GetSingleton().CreateResource<DX11PixelShader>(
 		"DX11Shader",
 		"./shaders/lpv_rsmsampler_ps.cso",
 		nullptr,
@@ -406,37 +477,38 @@ bool DX11LightPropagationVolume::__CreateShaders(void)
 		})
 	);
 
-	return m_lpvRSMSamplerVS->Load() &&
-	       m_lpvRSMSamplerPS->Load() &&
-	       m_lpvInjectFluxVS->Load() &&
-	       m_lpvInjectFluxGS->Load() &&
-	       m_lpvInjectFluxPS->Load() &&
-	       m_lpvInjectGeometryVS->Load() &&
-	       m_lpvInjectGeometryGS->Load() &&
-	       m_lpvInjectGeometryPS->Load() &&
-	       m_lpvPropagateVS->Load() &&
-		   m_lpvPropagateGS->Load() &&
-		   m_lpvPropagatePS->Load();
+	m_lpvPropagateFirstPS = ResourceTypeManager::GetSingleton().CreateResource<DX11PixelShader>(
+		"DX11Shader",
+		"./shaders/lpv_propagate_first_ps.cso",
+		nullptr,
+		Parameters({
+			{ "type", "pixel" },
+			{ "precompiled", "true" }
+		})
+	);*/
+
+	return m_lpvRSMSampling->Load() &&
+	       m_lpvInjectFlux->Load() &&
+	       m_lpvInjectGeometry->Load() &&
+	       m_lpvPropagateFirst->Load() &&
+	       m_lpvPropagate->Load();
 
 }
 
 void DX11LightPropagationVolume::__DestroyShaders(void)
 {
-
-	m_lpvRSMSamplerVS->Unload();
-	m_lpvRSMSamplerPS->Unload();
-
-	m_lpvInjectFluxVS->Unload();
-	m_lpvInjectFluxGS->Unload();
-	m_lpvInjectFluxPS->Unload();
-
+	m_lpvRSMSampling    = nullptr;
+	m_lpvInjectFlux     = nullptr;
+	m_lpvInjectGeometry = nullptr;
+	m_lpvPropagate      = nullptr;
+	m_lpvPropagateFirst = nullptr;
 }
 
 bool DX11LightPropagationVolume::__CreateBuffers(void)
 {
 	return m_lightBuffer.Create(sizeof(detail::LightBuffer)) &&
 	       m_cameraTransformBuffer.Create(sizeof(Matrix4)) &&
-		   m_lpvConfig.Create(sizeof(detail::LPVConfiguration));
+	       m_lpvConfig.Create(sizeof(detail::LPVConfiguration));
 }
 
 void DX11LightPropagationVolume::__DestroyBuffers(void)
@@ -452,9 +524,9 @@ bool DX11LightPropagationVolume::__CreateContextStates(void)
 	D3D11_SAMPLER_DESC linearSamplerDesc;
 
 	linearSamplerDesc.Filter         = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	linearSamplerDesc.AddressU       = D3D11_TEXTURE_ADDRESS_CLAMP;
-	linearSamplerDesc.AddressV       = D3D11_TEXTURE_ADDRESS_CLAMP;
-	linearSamplerDesc.AddressW       = D3D11_TEXTURE_ADDRESS_CLAMP;
+	linearSamplerDesc.AddressU       = D3D11_TEXTURE_ADDRESS_BORDER;
+	linearSamplerDesc.AddressV       = D3D11_TEXTURE_ADDRESS_BORDER;
+	linearSamplerDesc.AddressW       = D3D11_TEXTURE_ADDRESS_BORDER;
 	linearSamplerDesc.MipLODBias     = 0.0f;
 	linearSamplerDesc.MaxAnisotropy  = 0;
 	linearSamplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;

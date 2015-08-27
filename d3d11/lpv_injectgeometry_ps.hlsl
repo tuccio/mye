@@ -1,5 +1,6 @@
 #include "spherical_harmonics.hlsli"
 #include "constants.hlsli"
+#include "lpv.hlsli"
 
 struct PSInput
 {
@@ -9,12 +10,7 @@ struct PSInput
 	float  surfelArea : SURFELAREA;
 };
 
-struct PSOutput
-{
-	float4 geometry : SV_Target0;
-};
-
-PSOutput main(PSInput input)
+float4 main(PSInput input) : SV_Target0
 {
 
 	if (length(input.normal) < 0.01)
@@ -22,12 +18,8 @@ PSOutput main(PSInput input)
 		discard;
 	}
 
-	float4 sh = SHCosineLobe(normalize(input.normal));
+	float4 sh = SHCosineLobe(normalize(-input.normal));
 
-	PSOutput output;
-
-	output.geometry = SHScale(sh, saturate(input.surfelArea));
-
-	return output;
+	return SHScale(sh, saturate(input.surfelArea / (g_lpv.cellSize * g_lpv.cellSize)));
 
 }

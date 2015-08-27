@@ -15,6 +15,7 @@
 #include <mye/d3d11/DX11TextureManager.h>
 #include <mye/d3d11/DX11BufferManager.h>
 #include <mye/d3d11/DX11FontManager.h>
+#include <mye/d3d11/DX11ShaderProgram.h>
 
 #include <mye/lua/LuaModule.h>
 
@@ -137,6 +138,8 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 	{
 		game.ImportScene(projectName);
 	}
+
+	
 
 	ProcedureScriptPointer main = lua.LoadProcedure(mainScriptName);
 

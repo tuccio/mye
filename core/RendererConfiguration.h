@@ -1,6 +1,7 @@
 #pragma once
 
 #include <mye/math/Math.h>
+#include <mye/math/Geometry.h>
 
 #include <algorithm>
 #include <vector>
@@ -31,9 +32,13 @@ namespace mye
 			PCFKERNEL,
 			CSMSPLITS,
 			CSMDEBUG,
+			LPVENABLED,
+			LPVAABB,
 			LPVRSMSAMPLES,
 			LPVRESOLUTION,
-			LPVITERATIONS
+			LPVITERATIONS,
+			LPVGEOMETRYINJECTIONBIAS,
+			LPVFLUXINJECTIONBIAS
 		};
 
 		class RendererConfiguration;
@@ -68,9 +73,14 @@ namespace mye
 			mye::math::Real     m_vsmMinVariance;
 			mye::math::Real     m_vsmMinBleeding;
 
+			bool                m_lpvEnabled;
+			mye::math::AABB     m_lpvAABB;
+
 			mye::math::Real     m_lpvRSMSamples;
 			mye::math::Real     m_lpvResolution;
 			unsigned int        m_lpvIterations;
+			mye::math::Real     m_lpvGeometryInjectionBias;
+			mye::math::Real     m_lpvFluxInjectionBias;
 
 			unsigned int        m_csmSplits;
 			unsigned int        m_pcfKernel;
@@ -93,9 +103,13 @@ namespace mye
 				m_csmDebug(false),
 				m_csmSplits(3),
 				m_pcfKernel(3),
+				m_lpvEnabled(false),
+				m_lpvAABB(mye::math::AABB::FromMinMax(-1, 1)),
 				m_lpvRSMSamples(256),
 				m_lpvResolution(32),
-				m_lpvIterations(15)
+				m_lpvIterations(8),
+				m_lpvGeometryInjectionBias(0.f),
+				m_lpvFluxInjectionBias(.5f)
 			{
 			}
 																							 
@@ -116,9 +130,13 @@ namespace mye
 			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::PCFENABLED,                PCFEnabled,                m_pcfEnabled)
 			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::PCFKERNEL,                 PCFKernel,                 m_pcfKernel)
 
+			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::LPVENABLED,                LPVEnabled,                m_lpvEnabled)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::LPVAABB,                   LPVAABB,                   m_lpvAABB)
 			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::LPVRSMSAMPLES,             LPVRSMSamples,             m_lpvRSMSamples)
 			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::LPVRESOLUTION,             LPVResolution,             m_lpvResolution)
 			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::LPVITERATIONS,             LPVIterations,             m_lpvIterations)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::LPVGEOMETRYINJECTIONBIAS,  LPVGeometryInjectionBias,  m_lpvGeometryInjectionBias)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::LPVFLUXINJECTIONBIAS,      LPVFluxInjectionBias,      m_lpvFluxInjectionBias)
 
 		};
 

@@ -94,8 +94,8 @@ void DX11Module::Render(void)
 
 	__MYE_DX11_RENDERER.Render(backBuffer);
 
-	m_text2dRenderer.Render(backBuffer);
-	m_debugRenderer.Render(backBuffer);
+	//m_text2dRenderer.Render(backBuffer);
+	//m_debugRenderer.Render(backBuffer);
 
 	m_swapChain->Present((m_vsync ? 1 : 0), 0);
 	

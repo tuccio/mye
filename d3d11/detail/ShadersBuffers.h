@@ -115,7 +115,22 @@ namespace mye
 				unsigned int rsmResolution;
 				unsigned int lpvResolution;
 
-				float        __fill2[2];
+				float        geometryInjectionBias;
+				float        fluxInjectionBias;
+
+			};
+
+			struct CameraBuffer
+			{
+
+				mye::math::Matrix4 view;
+				mye::math::Matrix4 viewProj;
+				mye::math::Matrix4 invViewProj;
+
+				float              near;
+				float              far;
+				float              fovy;
+				float              ratio;
 
 			};
 
@@ -183,7 +198,9 @@ namespace mye
 											   const mye::math::Vector3 & maxCorner,
 											   mye::math::Real cellSize,
 											   unsigned int rsmResolution,
-											   unsigned int lpvResolution)
+											   unsigned int lpvResolution,
+											   mye::math::Real geometryInjectionBias,
+											   mye::math::Real fluxInjectionBias)
 		{
 
 			detail::LPVConfiguration lpvConfig;
@@ -195,7 +212,23 @@ namespace mye
 			lpvConfig.rsmResolution = rsmResolution;
 			lpvConfig.lpvResolution = lpvResolution;
 
+			lpvConfig.geometryInjectionBias = geometryInjectionBias;
+			lpvConfig.fluxInjectionBias     = fluxInjectionBias;
+
 			b.SetData(&lpvConfig);
+
+		}
+
+		inline void MakeCameraBuffer(DX11ConstantBuffer & b,
+		                             const mye::math::Matrix4 & view,
+		                             const mye::math::Matrix4 & viewProj,
+		                             const mye::math::Matrix4 & invViewProj,
+		                             float near, float far,
+		                             float fovy, float ratio)
+		{
+
+			detail::CameraBuffer cb = {	view, viewProj, invViewProj, near, far, fovy, ratio };
+			b.SetData(&cb);
 
 		}
 

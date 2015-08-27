@@ -1,0 +1,16 @@
+{
+
+	"vertex" : {
+		"source" : "./shaders/lpv_rsmsampler_vs.cso",
+		"precompiled" : true,
+		"input" : {
+			"position" : "float4"
+		}
+	},
+	
+	"pixel" : {
+		"source" : "./shaders/lpv_rsmsampler_ps.cso",
+		"precompiled" : true
+	}
+	
+}
