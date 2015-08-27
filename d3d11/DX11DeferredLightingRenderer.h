@@ -9,6 +9,7 @@
 #include "DX11RenderTarget.h"
 #include "DX11ReflectiveShadowMap.h"
 #include "DX11LightPropagationVolume.h"
+#include "DX11VertexBuffer.h"
 
 #include "DX11PixelShader.h"
 #include "DX11VertexShader.h"
@@ -67,6 +68,10 @@ namespace mye
 			DX11ConstantBuffer           m_materialBuffer;
 			DX11ConstantBuffer           m_configurationBuffer;
 			DX11ConstantBuffer           m_cameraTransformBuffer;
+			DX11ConstantBuffer           m_matrixBuffer;
+			DX11ConstantBuffer           m_pssmSliceBuffer;
+
+			DX11VertexBufferPointer      m_quadVertexBuffer;
 								         
 			DX11DepthBuffer              m_depthBuffer;
 								       

@@ -107,11 +107,12 @@ bool DX11ReflectiveShadowMap::Create(void)
 	);
 	
 	if (m_rsmVS->Load() &&
-		m_singlePS->Load() &&
-		m_pssmGS->Load() &&
-		m_pssmVS->Load() &&
-		__CreateRenderTargets() &&
-		__CreateDepthBuffers())
+	    m_singlePS->Load() &&
+	    m_pssmGS->Load() &&
+	    m_pssmVS->Load() &&
+	    __CreateRenderTargets() &&
+	    __CreateDepthBuffers() &&
+	    __CreateConstantBuffers())
 	{
 		m_initialized = true;
 	}
@@ -124,6 +125,7 @@ void DX11ReflectiveShadowMap::Destroy(void)
 
 	__DestroyRenderTargets();
 	__DestroyDepthBuffers();
+	__DestroyConstantBuffers();
 
 	m_initialized = false;
 
@@ -266,6 +268,8 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 
 	}
 
+	m_cropMatrixCBuffer.SetData(&m_cropMatrix[0]);
+
 	ID3D11RenderTargetView * renderTargets[3] =
 	{
 		m_position.GetRenderTargetView(),
@@ -278,20 +282,10 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 	                                                   renderTargets,
 	                                                   m_depth.GetDepthStencilView());
 
-	DX11ConstantBuffer transformCBuffer;
-	DX11ConstantBuffer cropMatrixCBuffer;
-	DX11ConstantBuffer materialCBuffer;
-	DX11ConstantBuffer lightCBuffer;
+	MakeLightBuffer(m_lightCBuffer, light);
 
-	transformCBuffer.Create(sizeof(detail::TransformBuffer));
-	cropMatrixCBuffer.Create(sizeof(Matrix4) * m_csmSplits, &m_cropMatrix[0]);
-	materialCBuffer.Create(sizeof(detail::MaterialBuffer));
-	lightCBuffer.Create(sizeof(detail::LightBuffer));
-
-	MakeLightBuffer(lightCBuffer, light);
-
-	lightCBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_LIGHT);
-	cropMatrixCBuffer.Bind(DX11PipelineStage::VERTEX_SHADER, 1);
+	m_lightCBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_LIGHT);
+	m_cropMatrixCBuffer.Bind(DX11PipelineStage::VERTEX_SHADER, 1);
 
 	m_pssmVS->Use();
 	m_pssmGS->Use();
@@ -319,11 +313,11 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 			if (gpuBuffer && gpuBuffer->Load())
 			{
 
-				MakeTransformBuffer(transformCBuffer, tc->GetWorldMatrix() * rc->GetModelMatrix(), shadowViewMatrix, shadowProjMatrix);
-				MakeMaterialBuffer(materialCBuffer, rc->GetMaterial());
+				MakeTransformBuffer(m_transformCBuffer, tc->GetWorldMatrix() * rc->GetModelMatrix(), shadowViewMatrix, shadowProjMatrix);
+				MakeMaterialBuffer(m_materialCBuffer, rc->GetMaterial());
 
-				transformCBuffer.Bind(DX11PipelineStage::VERTEX_SHADER, 0);
-				materialCBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_MATERIAL);
+				m_transformCBuffer.Bind(DX11PipelineStage::VERTEX_SHADER, 0);
+				m_materialCBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_MATERIAL);
 
 				DX11VertexBufferPointer vertexBuffer = Resource::StaticCast<DX11VertexBuffer>(gpuBuffer);
 
@@ -345,11 +339,6 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 	m_singlePS->Dispose();
 
 	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(0, nullptr, nullptr);
-
-	transformCBuffer.Destroy();
-	cropMatrixCBuffer.Destroy();
-	materialCBuffer.Destroy();
-	lightCBuffer.Destroy();
 
 }
 
@@ -551,4 +540,24 @@ bool DX11ReflectiveShadowMap::__CreateDepthBuffers(void)
 void DX11ReflectiveShadowMap::__DestroyDepthBuffers(void)
 {
 	m_depth.Destroy();
+}
+
+bool DX11ReflectiveShadowMap::__CreateConstantBuffers(void)
+{
+
+	return m_transformCBuffer.Create(sizeof(detail::TransformBuffer)) &&
+	       m_cropMatrixCBuffer.Create(sizeof(Matrix4) * m_csmSplits) &&
+	       m_materialCBuffer.Create(sizeof(detail::MaterialBuffer)) &&
+	       m_lightCBuffer.Create(sizeof(detail::LightBuffer));
+
+}
+
+void DX11ReflectiveShadowMap::__DestroyConstantBuffers(void)
+{
+
+	m_transformCBuffer.Destroy();
+	m_cropMatrixCBuffer.Destroy();
+	m_materialCBuffer.Destroy();
+	m_lightCBuffer.Destroy();
+
 }

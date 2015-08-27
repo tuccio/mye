@@ -39,6 +39,8 @@ bool DX11LightPropagationVolume::Create(size_t dimensions, size_t resolution)
 	m_flux.SetParametersList(textureParams);
 	m_depth.SetParametersList(textureParams);
 
+	m_quadVertexBuffer = ResourceTypeManager::GetSingleton().GetResource<DX11VertexBuffer>("GPUBuffer", "MYE_QUAD");
+
 	return	m_position.Create(resolution, resolution, DataFormat::FLOAT4) &&
 	        m_normal.Create(resolution, resolution, DataFormat::FLOAT4) &&
 	        m_flux.Create(resolution, resolution, DataFormat::FLOAT4) &&
@@ -129,17 +131,7 @@ void DX11LightPropagationVolume::Inject(DX11ReflectiveShadowMap & rsm)
 
 	DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_LINEAR, 1, &m_linearSampler);
 
-	float quad[] = {
-		-1.0f, 1.0f, 0.0f, 1.0f,
-		1.0f, -1.0f, 0.0f, 1.0f,
-		-1.0f, -1.0f, 0.0f, 1.0f,
-		1.0f, 1.0f, 0.0f, 1.0f,
-		1.0f, -1.0f, 0.0f, 1.0f,
-		-1.0f, 1.0f, 0.0f, 1.0f,
-	};
-
-	DX11VertexBuffer quadBuffer;
-	quadBuffer.Create(quad, 6, VertexDeclaration({ VertexAttribute(VertexAttributeSemantic::POSITION, DataFormat::FLOAT4) }));
+	m_quadVertexBuffer->Load();
 
 	m_lpvRSMSampling->Use();
 
@@ -154,12 +146,12 @@ void DX11LightPropagationVolume::Inject(DX11ReflectiveShadowMap & rsm)
 	rsm.GetFluxShaderResource().Bind(DX11PipelineStage::PIXEL_SHADER,     __MYE_DX11_TEXTURE_SLOT_RSMFLUX);
 	rsm.GetDepthShaderResource().Bind(DX11PipelineStage::PIXEL_SHADER,    __MYE_DX11_TEXTURE_SLOT_SHADOWMAP);
 
-	quadBuffer.Bind();
+	m_quadVertexBuffer->Bind();
 
 	DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	DX11Device::GetSingleton().GetImmediateContext()->Draw(6, 0);
 
-	quadBuffer.Unbind();
+	m_quadVertexBuffer->Unbind();
 
 	rsm.GetPositionShaderResource().Unbind();
 	rsm.GetNormalShaderResource().Unbind();
@@ -206,8 +198,6 @@ void DX11LightPropagationVolume::Inject(DX11ReflectiveShadowMap & rsm)
 	m_flux.Unbind();
 
 	m_lpvInjectGeometry->Dispose();
-
-	quadBuffer.Destroy();
 
 	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(0, nullptr, nullptr);
 	DX11Device::GetSingleton().SetViewports(&oldViewports[0], oldViewports.size());

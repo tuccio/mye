@@ -61,7 +61,8 @@ LRESULT __stdcall __mye_winmouse_hook(int nCode,
 						Vector2 position((float) (mhookStruct->pt.x - windowRect.left) / (padding.x() + clientRect.right),
 						                 (float) 1.0f - (windowRect.bottom - mhookStruct->pt.y) / (padding.y() + clientRect.bottom));
 
-						WinMouse::GetSingleton().Move(position);
+						//WinMouse::GetSingleton().Move(position);
+						WinMouse::GetSingleton().MoveNextFrame(position);
 
 					}
 

@@ -5,6 +5,7 @@
 #include "DX11VertexShader.h"
 #include "DX11GeometryShader.h"
 #include "DX11PixelShader.h"
+#include "DX11ConstantBuffer.h"
 
 #include <mye/core/Camera.h>
 #include <mye/core/Light.h>
@@ -138,10 +139,18 @@ namespace mye
 
 			mye::core::Light          * m_light;
 
+			DX11ConstantBuffer          m_transformCBuffer;
+			DX11ConstantBuffer          m_cropMatrixCBuffer;
+			DX11ConstantBuffer          m_materialCBuffer;
+			DX11ConstantBuffer          m_lightCBuffer;
+
 			/* Private functions */
 
 			bool                       __CreateRenderTargets(void);
 			void                       __DestroyRenderTargets(void);
+
+			bool                       __CreateConstantBuffers(void);
+			void                       __DestroyConstantBuffers(void);
 
 			bool                       __CreateDepthBuffers(void);
 			void                       __DestroyDepthBuffers(void);

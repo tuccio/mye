@@ -10,6 +10,8 @@
 
 #include "./detail/ShadersBuffers.h"
 
+#include <random>
+
 #define __MYE_DX11_RENDERER m_deferredLightingRenderer
 
 using namespace mye::dx11;
@@ -55,6 +57,8 @@ bool DX11Module::Init(void)
 		DX11RasterizerState rasterizeState({ false, CullMode::NONE });
 
 		rasterizeState.Use();
+
+		__CreateSharedResources();
 
 		if (__MYE_DX11_RENDERER.Init() &&
 			m_text2dRenderer.Init() &&
@@ -215,4 +219,84 @@ void DX11Module::RenderShaderResource(DX11ShaderResource & resource, const Vecto
 void DX11Module::RenderFrustum(const Frustum & frustum, const Vector4 & color)
 {
 	m_debugRenderer.EnqueueFrustum(frustum, color);
+}
+
+void DX11Module::__CreateSharedResources(void)
+{
+
+	static ManualLambdaLoader cosSinLoader(
+		std::function<bool(Resource*)>(
+			[] (Resource * r)
+		{
+			
+			DX11Texture * t = static_cast<DX11Texture*>(r);
+
+			const unsigned int resolution = 256;
+
+			struct __CosSin
+			{
+				float cosAlpha;
+				float sinAlpha;
+			};
+
+			std::vector<__CosSin> data(resolution * resolution);
+			
+			std::random_device                    device;
+			std::mt19937                          generator(device());
+			std::uniform_real_distribution<float> distribution(0.f, TwoPi<float>());
+
+			for (auto & e : data)
+			{
+				float alpha = distribution(generator);
+				e.cosAlpha  = Cosine(alpha);
+				e.sinAlpha  = Sine(alpha);
+			}
+
+			return t->Create(resolution, resolution, DataFormat::FLOAT2, &data[0]);
+
+		}),
+
+		std::function<void(Resource*)>(
+			[] (Resource * r)
+		{
+			DX11Texture * t = static_cast<DX11Texture*>(r);
+			t->Destroy();
+		}));
+
+	static ManualLambdaLoader quadBufferLoader(
+		std::function<bool(Resource*)>(
+			[] (Resource * r)
+		{
+			
+			DX11VertexBuffer * vb = static_cast<DX11VertexBuffer *>(r);
+			
+			float quad[] = {
+				-1.0f, 1.0f, 0.0f, 1.0f,
+				1.0f, -1.0f, 0.0f, 1.0f,
+				-1.0f, -1.0f, 0.0f, 1.0f,
+				1.0f, 1.0f, 0.0f, 1.0f,
+				1.0f, -1.0f, 0.0f, 1.0f,
+				-1.0f, 1.0f, 0.0f, 1.0f
+			};
+
+			return vb->Create(quad, 6, VertexDeclaration({ VertexAttribute(VertexAttributeSemantic::POSITION, DataFormat::FLOAT4) }));
+
+		}),
+
+		std::function<void(Resource*)>(
+			[] (Resource * r)
+		{
+			DX11VertexBuffer * vb = static_cast<DX11VertexBuffer*>(r);
+			vb->Destroy();
+		}));
+
+	ResourceTypeManager::GetSingleton().CreateResource<DX11Texture>("Texture",
+	                                                                "MYE_RANDOM_COS_SIN",
+	                                                                &cosSinLoader);
+
+	ResourceTypeManager::GetSingleton().CreateResource<DX11VertexBuffer>("GPUBuffer",
+	                                                                     "MYE_QUAD",
+	                                                                     &quadBufferLoader,
+	                                                                     { { "type", "vertex" } });
+
 }

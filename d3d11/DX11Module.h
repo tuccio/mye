@@ -89,6 +89,8 @@ namespace mye
 			mye::core::Milliseconds        m_stopWatchBuffer[__MYE_FPS_COUNTER_BUFFER_SIZE];
 			int                            m_stopWatchBufferHead;
 
+			void __CreateSharedResources(void);
+
 		};
 
 	}

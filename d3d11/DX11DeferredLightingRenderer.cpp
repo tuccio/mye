@@ -13,8 +13,6 @@
 
 #include <mye/math/Math.h>
 
-#include <random>
-
 using namespace mye::dx11;
 using namespace mye::core;
 using namespace mye::win;
@@ -83,56 +81,13 @@ bool DX11DeferredLightingRenderer::Init(void)
 	    m_deferredFinal->Load() &&
 	    m_depthBuffer.Create() &&
 	    m_rsm.Create() &&
-	    //m_lpv.Create(configuration->GetLPVResolution(), configuration->GetLPVRSMSamples()) &&
-		m_lpv.Create(configuration->GetLPVResolution(), 128) &&
+	    m_lpv.Create(configuration->GetLPVResolution(), configuration->GetLPVRSMSamples()) &&
 	    __CreateConstantBuffers() &&
 	    __CreateContextStates())
 	{
 
-		static ManualLambdaLoader cosSinLoader(
-			std::function<bool(Resource*)>(
-				[] (Resource * r)
-			{
-				
-				DX11Texture * t = static_cast<DX11Texture*>(r);
-				
-				//Vector2i resolution = DX11Module::GetSingleton().GetRendererConfiguration()->GetScreenResolution();
-
-				const unsigned int resolution = 256;
-
-				struct __CosSin
-				{
-					float cosAlpha;
-					float sinAlpha;
-				};
-
-				std::vector<__CosSin> data(resolution * resolution);
-				
-				std::random_device                    device;
-				std::mt19937                          generator(device());
-				std::uniform_real_distribution<float> distribution(0.f, TwoPi<float>());
-
-				for (auto & e : data)
-				{
-					float alpha = distribution(generator);
-					e.cosAlpha  = Cosine(alpha);
-					e.sinAlpha  = Sine(alpha);
-				}
-
-				return t->Create(resolution, resolution, DataFormat::FLOAT2, &data[0]);
-
-			}),
-
-			std::function<void(Resource*)>(
-				[] (Resource * r)
-			{
-				DX11Texture * t = static_cast<DX11Texture*>(r);
-				t->Destroy();
-			}));
-
-		m_randomCosSin = ResourceTypeManager::GetSingleton().CreateResource<DX11Texture>("Texture",
-		                                                                                 "MYE_RANDOM_COS_SIN",
-		                                                                                 &cosSinLoader);
+		m_randomCosSin     = ResourceTypeManager::GetSingleton().GetResource<DX11Texture>("Texture", "MYE_RANDOM_COS_SIN");
+		m_quadVertexBuffer = ResourceTypeManager::GetSingleton().GetResource<DX11VertexBuffer>("GPUBuffer", "MYE_QUAD");
 
 		MYE_EVENT_MANAGER_ADD_LISTENER(this, EventType::RENDERER_VARIABLE_CHANGE);
 
@@ -265,27 +220,11 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 		ID3D11RenderTargetView * lbuffer = m_lbuffer.GetRenderTargetView();
 
-		float quad[] = {
-			-1.0f,  1.0f, 0.0f, 1.0f,
-			 1.0f, -1.0f, 0.0f, 1.0f,
-			-1.0f, -1.0f, 0.0f, 1.0f,
-			 1.0f,  1.0f, 0.0f, 1.0f,
-			 1.0f, -1.0f, 0.0f, 1.0f,
-			-1.0f,  1.0f, 0.0f, 1.0f
-		};
-
-		DX11VertexBuffer quadBuffer;
-		quadBuffer.Create(quad, 6, VertexDeclaration({ VertexAttribute(VertexAttributeSemantic::POSITION, DataFormat::FLOAT4) }));
-
-		DX11ConstantBuffer matrixBuffer;
-		matrixBuffer.Create(sizeof(Matrix4));
+		m_quadVertexBuffer->Load();
 
 		MakeCameraBuffer(m_cameraTransformBuffer,
 		                 view, viewProjection, viewProjection.Inverse(),
 		                 camera->GetNearClipDistance(), camera->GetFarClipDistance(), camera->GetFovYRadians(), camera->GetClipAspectRatio());
-
-		DX11ConstantBuffer pssmSliceBuffer;
-		pssmSliceBuffer.Create(sizeof(detail::PSSMSlice) * m_rsm.GetCSMSplits());
 
 		m_cameraTransformBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_CAMERATRANSFORM);
 
@@ -322,8 +261,8 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 					pssmBufferData.push_back({ m_rsm.GetPSSMCropMatrix(i), sliceSplits[i].near, sliceSplits[i].far });
 				}
 
-				pssmSliceBuffer.SetData(&pssmBufferData[0]);
-				pssmSliceBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_PSSMBUFFER);
+				m_pssmSliceBuffer.SetSubData(&pssmBufferData[0], 0, m_rsm.GetCSMSplits() * sizeof(detail::PSSMSlice));
+				m_pssmSliceBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_PSSMBUFFER);
 
 				//for (int i = 0; i < slices; i++)
 				//{
@@ -369,8 +308,8 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 			rsmDepth.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_SHADOWMAP);
 
-			matrixBuffer.SetData(&shadowViewProjMatrix);
-			matrixBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_LIGHTSPACETRANSFORM);
+			m_matrixBuffer.SetData(&shadowViewProjMatrix);
+			m_matrixBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_LIGHTSPACETRANSFORM);
 
 			m_configurationBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_RENDERCONFIGURATION);
 
@@ -380,12 +319,12 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 			backCull.Use();
 
-			quadBuffer.Bind();
+			m_quadVertexBuffer->Bind();
 
 			DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-			DX11Device::GetSingleton().GetImmediateContext()->Draw(quadBuffer.GetVerticesCount(), 0);
+			DX11Device::GetSingleton().GetImmediateContext()->Draw(m_quadVertexBuffer->GetVerticesCount(), 0);
 
-			quadBuffer.Unbind();
+			m_quadVertexBuffer->Unbind();
 
 			rsmDepth.Unbind();
 
@@ -436,12 +375,12 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 										__MYE_DX11_TEXTURE_SLOT_LPVLIGHT_GREEN,
 										__MYE_DX11_TEXTURE_SLOT_LPVLIGHT_BLUE);
 
-			quadBuffer.Bind();
+			m_quadVertexBuffer->Bind();
 
 			DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-			DX11Device::GetSingleton().GetImmediateContext()->Draw(quadBuffer.GetVerticesCount(), 0);
+			DX11Device::GetSingleton().GetImmediateContext()->Draw(m_quadVertexBuffer->GetVerticesCount(), 0);
 
-			quadBuffer.Unbind();
+			m_quadVertexBuffer->Unbind();
 
 			m_gbuffer0.Unbind();
 			m_gbuffer1.Unbind();
@@ -449,9 +388,6 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 			m_lpv.GetLightVolume().Unbind();
 
 		}
-
-		matrixBuffer.Destroy();
-		quadBuffer.Destroy();
 
 		/* Final pass (shading) */
 
@@ -503,9 +439,7 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 		m_lbuffer.Unbind();
 
-		DX11Module::GetSingleton().RenderShaderResource(m_lbuffer, Vector2i(300, 0), Vector2i(267, 150));
-
-		pssmSliceBuffer.Destroy();
+		//DX11Module::GetSingleton().RenderShaderResource(m_lbuffer, Vector2i(300, 0), Vector2i(267, 150));
 
 	}
 
@@ -518,7 +452,9 @@ bool DX11DeferredLightingRenderer::__CreateConstantBuffers(void)
 	       m_lightBuffer.Create(sizeof(detail::LightBuffer)) &&
 		   m_cameraTransformBuffer.Create(sizeof(float) * 52) &&
 	       m_materialBuffer.Create(sizeof(detail::MaterialBuffer)) &&
-	       m_configurationBuffer.Create(sizeof(detail::RenderConfigurationBuffer));
+	       m_configurationBuffer.Create(sizeof(detail::RenderConfigurationBuffer)) &&
+           m_matrixBuffer.Create(sizeof(Matrix4)) &&
+		   m_pssmSliceBuffer.Create(sizeof(detail::PSSMSlice) * __MYE_RSM_MAX_CSM_COUNT);
 
 }
 

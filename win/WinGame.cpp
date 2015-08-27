@@ -1,9 +1,37 @@
 #include "WinGame.h"
 #include "Utils.h"
 
+#include <boost/thread/condition.hpp>
+#include <boost/thread/thread.hpp>
+
 using namespace std;
 using namespace mye::core;
 using namespace mye::win;
+
+static boost::condition_variable s_renderCondition;
+static boost::mutex              s_renderMutex;
+static bool                      s_renderReady = true;
+
+inline void __RenderingThread(GraphicsModule * graphics)
+{
+
+	while (true)
+	{
+
+		graphics->Render();
+
+		{
+			boost::lock_guard<boost::mutex> lock(s_renderMutex);
+			s_renderReady = true;
+		}
+
+		s_renderCondition.notify_one();
+
+		boost::this_thread::interruption_point();
+
+	}
+
+}
 
 WinGame::WinGame(InputModule       * input,
                  GameObjectsModule * gameobjects,
@@ -39,10 +67,14 @@ void WinGame::Run(void)
 // 
 // 	m_mainWindow.Show();
 
+	
+
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
 
 	m_timer.Start();
+
+	boost::thread renderingThread(__RenderingThread, m_graphics);
 
 	do
 	{
@@ -70,11 +102,21 @@ void WinGame::Run(void)
 
 		m_physics->Update(dt);
 		//m_scene->Update();
-		m_graphics->Render();
 
+		boost::unique_lock<boost::mutex> lock(s_renderMutex);
+
+		while (!s_renderReady)
+		{
+			s_renderCondition.wait(lock);
+		}
+
+		//m_graphics->Render();
 
 	}
 	while (msg.message != WM_QUIT);
+
+	renderingThread.interrupt();
+	renderingThread.join();
 
 	m_timer.Stop();
 

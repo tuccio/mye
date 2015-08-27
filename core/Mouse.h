@@ -36,6 +36,8 @@ namespace mye
 			inline bool IsPressed(MouseVK key) const;
 
 			inline void Move(const mye::math::Vector2 & position);
+			void MoveNextFrame(const mye::math::Vector2 & position);
+
 			inline mye::math::Vector2 GetPosition(void) const;
 
 			inline mye::math::Vector2 GetDelta(void) const;
@@ -45,10 +47,12 @@ namespace mye
 			inline void SetWheelDelta(int wheelDelta);
 
 			void NotifyHeldKeys(void);
+			void NotifyMovement(void);
 
 		protected:
 
 			std::vector<MousePressedKey> m_pressedKeys;
+			mye::math::Vector2           m_nextFramePosition;
 
 		private:
 
@@ -59,7 +63,8 @@ namespace mye
 
 			int m_wheelDelta;
 
-			bool m_firstUpdate;
+			bool m_firstUpdate   : 1;
+			bool m_moveNextFrame : 1;
 
 		};
 

@@ -24,13 +24,13 @@ namespace mye
 
 			~DX11ConstantBuffer(void);
 
-			bool Create(size_t size,
-				const void *initiationData = nullptr);
+			bool Create(size_t size, const void * initiationData = nullptr);
 
 			void Bind(DX11PipelineStage stage, int index);
 
-			void GetData(void *data) const;
-			void SetData(const void *data);
+			bool GetData(void * data) const;
+			bool SetData(const void * data);
+			bool SetSubData(const void * data, size_t offset, size_t size);
 
 		protected:
 

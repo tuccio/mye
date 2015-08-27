@@ -35,18 +35,17 @@ size_t DX11ConstantBuffer::CalculateSizeImpl(void)
 	return m_size;
 }
 
-bool DX11ConstantBuffer::Create(size_t size,
-								const void *initiationData)
+bool DX11ConstantBuffer::Create(size_t size, const void * initiationData)
 {
 
 	m_size = size;
 
 	D3D11_BUFFER_DESC vertexBufferDesc;
 
-	vertexBufferDesc.Usage               = D3D11_USAGE_DEFAULT;
+	vertexBufferDesc.Usage               = D3D11_USAGE_DYNAMIC;
 	vertexBufferDesc.ByteWidth           = m_size;
 	vertexBufferDesc.BindFlags           = D3D11_BIND_CONSTANT_BUFFER;
-	vertexBufferDesc.CPUAccessFlags      = 0;
+	vertexBufferDesc.CPUAccessFlags      = D3D11_CPU_ACCESS_WRITE;
 	vertexBufferDesc.MiscFlags           = 0;
 	vertexBufferDesc.StructureByteStride = 0;
 
@@ -93,12 +92,50 @@ void DX11ConstantBuffer::Bind(DX11PipelineStage stage, int index)
 
 }
 
-void DX11ConstantBuffer::GetData(void *data) const
+bool DX11ConstantBuffer::GetData(void * data) const
 {
+
+	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
+
+	if (!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton().GetImmediateContext()->Map(m_buffer, 0, D3D11_MAP_READ, 0, &mappedBuffer)))
+	{
+		memcpy(data, mappedBuffer.pData, m_size);
+		DX11Device::GetSingleton().GetImmediateContext()->Unmap(m_buffer, 0);
+		return true;
+	}
+
+	return false;
 
 }
 
-void DX11ConstantBuffer::SetData(const void *data)
+bool DX11ConstantBuffer::SetData(const void * data)
 {
-	DX11Device::GetSingleton().GetImmediateContext()->UpdateSubresource(m_buffer, 0, nullptr, data, 0, 0);
+
+	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
+
+	if (!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton().GetImmediateContext()->Map(m_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
+	{
+		memcpy(mappedBuffer.pData, data, m_size);
+		DX11Device::GetSingleton().GetImmediateContext()->Unmap(m_buffer, 0);
+		return true;
+	}
+
+	return false;
+
+}
+
+bool DX11ConstantBuffer::SetSubData(const void * data, size_t offset, size_t size)
+{
+
+	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
+
+	if (!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton().GetImmediateContext()->Map(m_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
+	{
+		memcpy(mappedBuffer.pData, (const uint8_t *) data + offset, size);
+		DX11Device::GetSingleton().GetImmediateContext()->Unmap(m_buffer, 0);
+		return true;
+	}
+
+	return false;
+
 }

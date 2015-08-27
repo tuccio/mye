@@ -46,6 +46,7 @@ void InputModule::Preupdate(void)
 
 	if (mouse)
 	{
+		mouse->NotifyMovement();
 		//mouse->ResetDelta();
 		mouse->SetWheelDelta(0);
 		mouse->NotifyHeldKeys();

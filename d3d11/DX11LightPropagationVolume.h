@@ -8,6 +8,7 @@
 #include "DX11Texture.h"
 #include "DX11ConstantBuffer.h"
 #include "DX11ShaderProgram.h"
+#include "DX11VertexBuffer.h"
 
 #include <mye/math/Math.h>
 #include <array>
@@ -102,22 +103,6 @@ namespace mye
 			DX11ShaderProgramPointer    m_lpvInjectGeometry;
 			DX11ShaderProgramPointer    m_lpvPropagate;
 			DX11ShaderProgramPointer    m_lpvPropagateFirst;
-
-			/*DX11VertexShaderPointer     m_lpvRSMSamplingVS;
-			DX11PixelShaderPointer      m_lpvRSMSamplingPS;
-
-			DX11VertexShaderPointer     m_lpvInjectFluxVS;
-			DX11PixelShaderPointer      m_lpvInjectFluxPS;
-			DX11GeometryShaderPointer   m_lpvInjectFluxGS;
-
-			DX11VertexShaderPointer     m_lpvInjectGeometryVS;
-			DX11PixelShaderPointer      m_lpvInjectGeometryPS;
-			DX11GeometryShaderPointer   m_lpvInjectGeometryGS;
-
-			DX11VertexShaderPointer     m_lpvPropagateVS;
-			DX11PixelShaderPointer      m_lpvPropagatePS;
-			DX11PixelShaderPointer      m_lpvPropagateFirstPS;
-			DX11GeometryShaderPointer   m_lpvPropagateGS;*/
 								     
 			DX11Texture                 m_position;
 			DX11Texture                 m_normal;
@@ -140,6 +125,8 @@ namespace mye
 			DX11ConstantBuffer          m_lightBuffer;
 			DX11ConstantBuffer          m_cameraTransformBuffer;
 			DX11ConstantBuffer          m_lpvConfig;
+
+			DX11VertexBufferPointer     m_quadVertexBuffer;;
 
 			uint8_t                     m_currentVolume;
 
