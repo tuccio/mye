@@ -19,7 +19,6 @@ void main(point GSInput input[1],
           inout PointStream<GSOutput> output)
 {
 
-
 	GSOutput element;
 
 	element.depth      = input[0].cell.z;

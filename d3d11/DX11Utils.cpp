@@ -23,7 +23,6 @@ namespace mye
 					nullptr);
 
 				mye::win::ShowErrorBox(output);
-				assert(false);
 
 				return true;
 

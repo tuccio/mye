@@ -52,13 +52,8 @@ WCR::WCR(void)
 	if (!m_registered)
 	{
 
-		auto logger = mye::core::Logger::GetSingletonPointer();
 		String error = GetLastErrorAsString();
-
-		if (logger)
-		{
-			logger->LogError("RegisterClass failed: " + error);
-		}
+		Logger::LogErrorOptional("WIN32 API RegisterClass", error);
 
 		ShowErrorBox(error);
 
@@ -524,27 +519,15 @@ bool Window::_Create(DWORD dwExStyle,
 
 			if (GetLastError())
 			{
-
-				auto logger = mye::core::Logger::GetSingletonPointer();
-
-				if (logger)
-				{
-					logger->LogError("SetWindowLongPtr failed: " + GetLastErrorAsString());
-				}
-
+				String error = GetLastErrorAsString();
+				Logger::LogErrorOptional("WIN32 API SetWindowLongPtr", error);
 			}
 
 		}
 		else
 		{
-
-			auto logger = mye::core::Logger::GetSingletonPointer();
-
-			if (logger)
-			{
-				logger->LogError("CreateWindowEx failed: " + GetLastErrorAsString());
-			}
-
+			String error = GetLastErrorAsString();
+			Logger::LogErrorOptional("WIN32 API CreateWindowEx", error);
 		}
 
 	}

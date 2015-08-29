@@ -44,8 +44,8 @@ VSOutput main(VSInput input)
 	output.normal = normal;
 	output.cell   = int3(cell);
 
-	float2 cellCS     = 2.f * cell.xy / g_lpv.lpvResolution - 1.f;
-	output.positionCS = float4(cellCS.x, - cellCS.y, 0.f, 1.f);
+	float3 cellCS     = 2.f * cell / g_lpv.lpvResolution - 1.f;
+	output.positionCS = float4(cellCS.x, - cellCS.y, cellCS.z, 1.f);
 
 	output.surfelArea = 4.f * tan(g_camera.fovy * .5f) / g_camera.ratio;
 

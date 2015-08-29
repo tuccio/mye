@@ -14,8 +14,9 @@
 	<gameobject name="sun">
 		<light type="directional">
 			<position>-1 1 0</position>
-			<direction>0.57735 -0.57735 -0.57735</direction>
-			<!--<direction>0.466643 -0.679889 -0.565681</direction>-->
+			<!--<direction>0.17942 -0.89712 -0.40371</direction>-->
+			<!--<direction>0.57735 -0.57735 -0.57735</direction>-->
+			<direction>0.15799 -0.78995 -0.59246</direction>
 			<color>1 1 1</color>
 			<intensity>4.5</intensity>
 		</light>

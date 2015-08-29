@@ -24,21 +24,21 @@ namespace mye
 
 			~Logger(void);
 
-			void OpenEventLogFile(const String &file);
-			void OpenErrorLogFile(const String &file);
+			void OpenEventLogFile(const String & file);
+			void OpenErrorLogFile(const String & file);
 
-			void LogEvent(const String &string);
-			void LogError(const String &string);
+			void LogEvent(const String & tag, const String & message);
+			void LogError(const String & tag, const String & message);
 
-			static bool LogEventOptional(const String &string);
-			static bool LogErrorOptional(const String &string);
+			static bool LogEventOptional(const String & tag, const String & message);
+			static bool LogErrorOptional(const String & tag, const String & message);
 
 			String GetLastEvent(void);
 			String GetLastError(void);
 
 		private:
 
-			const char* GetTimestamp(void);
+			const char * GetTimestamp(void);
  
 // 			std::ostream m_eventStream;
 // 			std::ostream m_errorStream;

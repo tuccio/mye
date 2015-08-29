@@ -1,18 +1,15 @@
 {
 
 	"vertex" : {
-		"source" : "./shaders/lpv_injectgeometry_vs.cso",
-		"precompiled" : true
+		"source" : "../d3d11/lpv_injectgeometry_vs.hlsl"
 	},
 	
 	"pixel" : {
-		"source" : "./shaders/lpv_injectgeometry_ps.cso",
-		"precompiled" : true
+		"source" : "../d3d11/lpv_injectgeometry_ps.hlsl"
 	},
 	
 	"geometry" : {
-		"source" : "./shaders/lpv_injectgeometry_gs.cso",
-		"precompiled" : true
+		"source" : "../d3d11/lpv_injectgeometry_gs.hlsl"
 	}
 	
 }

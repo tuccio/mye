@@ -1,0 +1,16 @@
+{
+
+	"vertex" : {
+		"source" : "../d3d11/rsm_vs.hlsl",
+		"input" : {
+			"position"  : "float3",
+			"texcoord0" : "float2",
+			"normal"    : "float3"
+		}
+	},
+	
+	"pixel" : {
+		"source" : "../d3d11/rsm_ps.hlsl"
+	}
+	
+}

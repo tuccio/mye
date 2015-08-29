@@ -2,9 +2,7 @@
 
 #include "DX11DepthBuffer.h"
 #include "DX11Texture.h"
-#include "DX11VertexShader.h"
-#include "DX11GeometryShader.h"
-#include "DX11PixelShader.h"
+#include "DX11ShaderProgram.h"
 #include "DX11ConstantBuffer.h"
 
 #include <mye/core/Camera.h>
@@ -126,11 +124,8 @@ namespace mye
 			int                         m_csmSplits;
 			mye::math::Real             m_csmLogWeight;
 
-			DX11VertexShaderPointer     m_rsmVS;
-			DX11PixelShaderPointer      m_singlePS;
-
-			DX11GeometryShaderPointer   m_pssmGS;
-			DX11VertexShaderPointer     m_pssmVS;
+			DX11ShaderProgramPointer    m_rsm;
+			DX11ShaderProgramPointer    m_rsmPSSM;
 
 			std::vector<PSSMSlice>      m_pssmSlices;
 

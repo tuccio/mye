@@ -4,7 +4,7 @@
 
 #include <mye/core/Resource.h>
 
-#include <d3d11.h>
+#include <vector>
 
 namespace mye
 {
@@ -36,6 +36,9 @@ namespace mye
 			virtual void UnloadImpl(void);
 
 			virtual size_t CalculateSizeImpl(void);
+
+			std::vector<D3D_SHADER_MACRO> CreateDefinesVector(void) const;
+			void FreeDefinesVector(std::vector<D3D_SHADER_MACRO> & defines) const;
 
 			mye::core::String m_source;
 			bool              m_precompiled;

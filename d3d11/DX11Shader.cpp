@@ -1,7 +1,12 @@
 #include "DX11Shader.h"
 
-#include <d3d11.h>
+#include <mye/core/Logger.h>
+
 #include <fstream>
+#include <sstream>
+
+#include <boost/property_tree/json_parser.hpp>
+#include <cstring>
 
 using namespace mye::dx11;
 using namespace mye::core;
@@ -30,7 +35,18 @@ bool DX11Shader::LoadImpl(void)
 
 	bool success = false;
 
-	std::ifstream f(m_name.CString());
+	String sourceFile;
+
+	if (m_params.Contains("source"))
+	{
+		sourceFile = m_params.GetString("source");
+	}
+	else
+	{
+		sourceFile = m_name;
+	}
+
+	std::ifstream f(sourceFile.CString());
 	
 	if (f)
 	{
@@ -39,13 +55,19 @@ bool DX11Shader::LoadImpl(void)
 		{
 
 			m_source = std::string(std::istreambuf_iterator<char>(f),
-				std::istreambuf_iterator<char>()).c_str();
+                                   std::istreambuf_iterator<char>()).c_str();
 
 		}
 		
 		success = true;
 		f.close();
 		
+	}
+	else
+	{
+
+		Logger::LogErrorOptional("DX11 Shader Compilation", "Can't open file " + sourceFile);
+
 	}
 
 	return success;
@@ -60,4 +82,74 @@ void DX11Shader::UnloadImpl(void)
 size_t DX11Shader::CalculateSizeImpl(void)
 {
 	return m_source.Length();
+}
+
+std::vector<D3D_SHADER_MACRO> DX11Shader::CreateDefinesVector(void) const
+{
+
+	std::vector<D3D_SHADER_MACRO> defines;
+
+	if (m_params.Contains("defines"))
+	{
+
+		std::istringstream ss;
+
+		ss.str(m_params.GetString("defines").CString());
+
+		boost::property_tree::ptree pt;
+
+		try
+		{
+			read_json(ss, pt);
+		}
+		catch (boost::property_tree::json_parser_error &) { }
+
+		for (auto & define : pt)
+		{
+
+			auto second = define.second.get_value<std::string>();
+
+			char * name       = new char[define.first.size() + 1];
+			char * definition = new char[second.size() + 1];
+
+			memcpy(name,       define.first.c_str(), define.first.size() + 1);
+			memcpy(definition, second.c_str(),       second.size() + 1);
+
+			D3D_SHADER_MACRO shaderMacro;
+			
+			shaderMacro.Name       = name;
+			shaderMacro.Definition = definition;
+
+			defines.push_back(shaderMacro);
+
+		}
+
+	}
+
+	defines.push_back({ nullptr, nullptr });
+
+	return defines;
+
+}
+
+void DX11Shader::FreeDefinesVector(std::vector<D3D_SHADER_MACRO> & defines) const
+{
+
+	for (auto & define : defines)
+	{
+
+		if (define.Name)
+		{
+			delete define.Name;
+		}
+
+		if (define.Definition)
+		{
+			delete define.Definition;
+		}
+
+	}
+
+	defines.clear();
+
 }

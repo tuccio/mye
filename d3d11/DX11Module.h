@@ -76,6 +76,7 @@ namespace mye
 			mye::win::Window             * m_window;
 							             
 			DX11SwapChain                  m_swapChain;
+			bool                           m_resizeSwapChain;
 
 			// Renderers
 

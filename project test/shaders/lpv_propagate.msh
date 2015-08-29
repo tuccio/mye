@@ -1,18 +1,19 @@
 {
 
 	"vertex" : {
-		"source" : "./shaders/lpv_propagate_vs.cso",
-		"precompiled" : true
+		"source" : "../d3d11/lpv_propagate_vs.hlsl"
 	},
 	
 	"pixel" : {
-		"source" : "./shaders/lpv_propagate_ps.cso",
-		"precompiled" : true
+		"name"   : "LPV_PROPAGATE_PS",
+		"source" : "../d3d11/lpv_propagate_ps.hlsl",
+		"defines" : {
+			"MYE_PROPAGATE_NO_OCCLUSION_TMP" : ""
+		}
 	},
 	
 	"geometry" : {
-		"source" : "./shaders/lpv_propagate_gs.cso",
-		"precompiled" : true
+		"source" : "../d3d11/lpv_propagate_gs.hlsl"
 	}
 	
 }

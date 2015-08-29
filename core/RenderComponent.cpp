@@ -48,7 +48,7 @@ mye::core::MeshPointer RenderComponent::GetMesh(void)
 	return m_mesh;
 }
 
-void RenderComponent::SetMesh(MeshPointer mesh)
+void RenderComponent::SetMesh(const MeshPointer & mesh)
 {
 
 	m_mesh = mesh;
@@ -102,7 +102,7 @@ const mye::math::Matrix4f& RenderComponent::GetModelMatrix(void) const
 	return m_modelMatrix;
 }
 
-void RenderComponent::SetModelMatrix(const mye::math::Matrix4f &matrix)
+void RenderComponent::SetModelMatrix(const mye::math::Matrix4f & matrix)
 {
 	m_modelMatrix = matrix;
 }
@@ -110,4 +110,24 @@ void RenderComponent::SetModelMatrix(const mye::math::Matrix4f &matrix)
 GPUBufferPointer RenderComponent::GetGPUBuffer(void) const
 {
 	return m_gpuBuffer;
+}
+
+TexturePointer RenderComponent::GetDiffuseTexture(void) const
+{
+	return m_diffuseTex;
+}
+
+void RenderComponent::SetDiffuseTexture(const TexturePointer & diffuseTex)
+{
+	m_diffuseTex = diffuseTex;
+}
+
+TexturePointer RenderComponent::GetHeightMap(void) const
+{
+	return m_heightMap;
+}
+
+void RenderComponent::SetHeightMap(const TexturePointer & heightMap)
+{
+	m_heightMap = heightMap;
 }

@@ -13,6 +13,8 @@
 
 #include <mye/math/Math.h>
 
+#include <mye/core/Logger.h>
+
 using namespace mye::dx11;
 using namespace mye::core;
 using namespace mye::win;
@@ -50,32 +52,32 @@ DX11DeferredLightingRenderer::~DX11DeferredLightingRenderer(void)
 bool DX11DeferredLightingRenderer::Init(void)
 {
 
-	m_deferredGeometry = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
-	                                                                                           "./shaders/deferred_lighting_geometry.msh",
-	                                                                                           nullptr,
-	                                                                                           { { "type", "program" } });
+	m_deferredGeometry[0] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
+	                                                                                              "./shaders/deferred_lighting_geometry.msh",
+	                                                                                              nullptr,
+	                                                                                              { { "type", "program" } });
 
 	m_deferredLights = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
-	                                                                                           "./shaders/deferred_lighting_lights.msh",
-	                                                                                           nullptr,
-	                                                                                           { { "type", "program" } });
+	                                                                                         "./shaders/deferred_lighting_lights.msh",
+	                                                                                         nullptr,
+	                                                                                         { { "type", "program" } });
 
 	m_deferredLightsLPV = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
-	                                                                                           "./shaders/deferred_lighting_lights_lpv.msh",
-	                                                                                           nullptr,
-	                                                                                           { { "type", "program" } });
+	                                                                                            "./shaders/deferred_lighting_lights_lpv.msh",
+	                                                                                            nullptr,
+	                                                                                            { { "type", "program" } });
 
 	m_deferredFinal = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
 	                                                                                        "./shaders/deferred_lighting_final.msh",
 	                                                                                        nullptr,
 	                                                                                        { { "type", "program" } });
 
-	auto configuration = static_cast<GraphicsModule*>(Game::GetSingleton().GetGraphicsModule())->GetRendererConfiguration();
+	auto configuration = static_cast<GraphicsModule *>(Game::GetSingleton().GetGraphicsModule())->GetRendererConfiguration();
 
 	m_rsm.SetResolution(configuration->GetShadowMapResolution());
 	m_rsm.SetCSMSplits(configuration->GetCSMSplits());
 
-	if (m_deferredGeometry->Load() &&
+	if (m_deferredGeometry[0]->Load() &&
 	    m_deferredLights->Load() &&
 	    m_deferredLightsLPV->Load() &&
 	    m_deferredFinal->Load() &&
@@ -116,12 +118,16 @@ void DX11DeferredLightingRenderer::Shutdown(void)
 		m_rsm.Destroy();
 		m_lpv.Destroy();
 
-		m_deferredGeometry  = nullptr;
-		m_deferredLights    = nullptr;
-		m_deferredLightsLPV = nullptr;
-		m_deferredFinal     = nullptr;
+		m_deferredGeometry[0] = nullptr;
+		m_deferredGeometry[1] = nullptr;
+		m_deferredGeometry[2] = nullptr;
+		m_deferredGeometry[3] = nullptr;
 
-		auto configuration = static_cast<GraphicsModule*>(Game::GetSingleton().GetGraphicsModule())->GetRendererConfiguration();
+		m_deferredLights      = nullptr;
+		m_deferredLightsLPV   = nullptr;
+		m_deferredFinal       = nullptr;
+
+		auto configuration = static_cast<GraphicsModule *>(Game::GetSingleton().GetGraphicsModule())->GetRendererConfiguration();
 
 		MYE_EVENT_MANAGER_REMOVE_LISTENER(this, EventType::RENDERER_VARIABLE_CHANGE);
 
@@ -160,8 +166,6 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 		/* First step (geometry buffer) */
 
-		m_deferredGeometry->Use();
-
 		ID3D11RenderTargetView * gbuffer[] = {
 			m_gbuffer0.GetRenderTargetView(),
 			m_gbuffer1.GetRenderTargetView()
@@ -177,15 +181,86 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 		DX11Device::GetSingleton().SetBlending(false);
 		DX11Device::GetSingleton().SetDepthTest(DX11DepthTest::ON);
 
+		/* Sort the objects to minimize context switching */
+
+		std::vector<GameObject *> visibleObjectsVector(visibleObjects.begin(), visibleObjects.end());
+
+		std::sort(visibleObjectsVector.begin(), visibleObjectsVector.end(),
+				  [] (GameObject * a, GameObject * b)
+		{
+
+			RenderComponent * rc[] = { a->GetRenderComponent(), b->GetRenderComponent() };
+			int score[] = { 0, 0 };
+
+			for (int i = 0; i < 2; i++)
+			{
+
+				if (rc[i]->GetHeightMap())
+				{
+					score[i] += 1;
+				}
+
+				if (rc[i]->GetDiffuseTexture())
+				{
+					score[i] += 2;
+				}
+
+			}
+
+			return score[0] < score[1];
+
+		});
+
 		backCull.Use();
 
-		for (GameObject * object : visibleObjects)
+
+		enum GBufferContextState { MYE_DIFFUSE_OFF_HEIGHT_OFF, MYE_DIFFUSE_OFF_HEIGHT_ON, MYE_DIFFUSE_ON_HEIGHT_OFF, MYE_DIFFUSE_ON_HEIGHT_ON }
+		gbufferContextState = MYE_DIFFUSE_OFF_HEIGHT_OFF;
+
+		m_deferredGeometry[0]->Use();
+
+		for (GameObject * object : visibleObjectsVector)
 		{
 
 			RenderComponent * rc = object->GetRenderComponent();
 
 			if (rc)
 			{
+
+				/* Context switch */
+
+				bool sameState, changedState = false;
+
+				do 
+				{
+
+					switch (gbufferContextState)
+					{
+
+					case MYE_DIFFUSE_OFF_HEIGHT_OFF:
+
+						if (rc->GetHeightMap() || rc->GetDiffuseTexture())
+						{
+							sameState = false;
+							gbufferContextState = (GBufferContextState) (gbufferContextState + 1);
+							changedState = true;
+						}
+						else
+						{
+							sameState = true;
+						}
+
+						break;
+
+
+					}
+
+				} while (!sameState);
+
+				if (changedState)
+				{
+					m_deferredGeometry[(int) gbufferContextState]->Use();
+				}
 
 				TransformComponent * tc = object->GetTransformComponent();
 
@@ -199,6 +274,24 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 					m_transformBuffer.Bind(DX11PipelineStage::VERTEX_SHADER, 0);
 					m_materialBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_MATERIAL);
+
+					switch (gbufferContextState)
+					{
+
+					case MYE_DIFFUSE_OFF_HEIGHT_ON:
+						Resource::StaticCast<DX11Texture>(rc->GetHeightMap())->Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_NORMALMAP);
+						break;
+
+					case MYE_DIFFUSE_ON_HEIGHT_OFF:
+						Resource::StaticCast<DX11Texture>(rc->GetDiffuseTexture())->Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_DIFFUSE);
+						break;
+
+					case MYE_DIFFUSE_ON_HEIGHT_ON:
+						Resource::StaticCast<DX11Texture>(rc->GetHeightMap())->Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_NORMALMAP);
+						Resource::StaticCast<DX11Texture>(rc->GetDiffuseTexture())->Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_DIFFUSE);
+						break;
+
+					}
 
 					DX11VertexBufferPointer vertexBuffer = Resource::StaticCast<DX11VertexBuffer>(gpuBuffer);
 					vertexBuffer->Bind();
@@ -568,43 +661,41 @@ void DX11DeferredLightingRenderer::__DestroyContextStates(void)
 void DX11DeferredLightingRenderer::OnEvent(const IEvent * event)
 {
 
-	const RenderVariableChange * rEvent = static_cast<const RenderVariableChange *>(event);
+	//const RenderVariableChange * rEvent = static_cast<const RenderVariableChange *>(event);
 
-	switch (rEvent->variable)
-	{
+	//switch (rEvent->variable)
+	//{
 
-	case RendererVariable::SHADOWMAPRESOLUTION:
-		m_rsm.SetResolution(rEvent->configuration->GetShadowMapResolution());
-		break;
+	//case RendererVariable::SHADOWMAPRESOLUTION:
+	//	m_rsm.SetResolution(rEvent->configuration->GetShadowMapResolution());
+	//	break;
 
-	case RendererVariable::CSMSPLITS:
-		m_rsm.SetCSMSplits(rEvent->configuration->GetCSMSplits());
-		break;
+	//case RendererVariable::CSMSPLITS:
+	//	m_rsm.SetCSMSplits(rEvent->configuration->GetCSMSplits());
+	//	break;
 
-	case RendererVariable::LPVFLUXINJECTIONBIAS:
-		m_lpv.SetFluxInjectionBias(rEvent->configuration->GetLPVFluxInjectionBias());
-		break;
+	//case RendererVariable::LPVFLUXINJECTIONBIAS:
+	//	m_lpv.SetFluxInjectionBias(rEvent->configuration->GetLPVFluxInjectionBias());
+	//	break;
 
-	case RendererVariable::LPVGEOMETRYINJECTIONBIAS:
-		m_lpv.SetGeometryInjectionBias(rEvent->configuration->GetLPVGeometryInjectionBias());
-		break;
+	//case RendererVariable::LPVGEOMETRYINJECTIONBIAS:
+	//	m_lpv.SetGeometryInjectionBias(rEvent->configuration->GetLPVGeometryInjectionBias());
+	//	break;
 
-	case RendererVariable::RESOLUTION:
-		
-		/* Resize buffers */
+	//case RendererVariable::RESOLUTION:
+	//	
+	//	/* Resize buffers */
 
-		if (m_initialized)
-		{
+	//	if (m_initialized)
+	//	{
 
-			__ResizeBuffers(rEvent->configuration->GetScreenResolution());
+	//		__ResizeBuffers(rEvent->configuration->GetScreenResolution());
 
-		}
+	//	}
 
-		m_randomCosSin->Unload();
+	//	break;
 
-		break;
-
-	}
+	//}
 
 	m_renderConfigurationUptodate.store(false);
 
@@ -619,6 +710,18 @@ void DX11DeferredLightingRenderer::__UpdateRenderConfiguration(void)
 	{
 
 		auto configuration = DX11Module::GetSingleton().GetRendererConfiguration();
+
+		{
+
+			__ResizeBuffers(configuration->GetScreenResolution());
+
+			m_lpv.SetGeometryInjectionBias(configuration->GetLPVGeometryInjectionBias());
+			m_lpv.SetFluxInjectionBias(configuration->GetLPVFluxInjectionBias());
+
+			m_rsm.SetResolution(configuration->GetShadowMapResolution());
+			m_rsm.SetCSMSplits(configuration->GetCSMSplits());
+
+		}
 
 		detail::RenderConfigurationBuffer r;
 

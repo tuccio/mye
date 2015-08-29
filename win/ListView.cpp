@@ -23,13 +23,8 @@ ListViewWCR::ListViewWCR(void)
 	if (!m_registered)
 	{
 
-		auto logger = mye::core::Logger::GetSingletonPointer();
 		String error = GetLastErrorAsString();
-
-		if (logger)
-		{
-			logger->LogError("RegisterClass failed: " + error);
-		}
+		Logger::LogErrorOptional("WIN32 API RegisterClass", error);
 
 		ShowErrorBox(error);
 

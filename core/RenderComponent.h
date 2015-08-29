@@ -6,6 +6,7 @@
 #include "Material.h"
 #include "Mesh.h"
 #include "GPUBuffer.h"
+#include "Texture.h"
 
 #include <mye/math/Geometry.h>
 
@@ -30,10 +31,8 @@ namespace mye
 			bool IsVisible(void) const;
 			void SetVisible(bool visible);
 
-			//VertexDataPointer GetVertexData(void);
-
 			MeshPointer GetMesh(void);
-			void SetMesh(MeshPointer mesh);
+			void SetMesh(const MeshPointer & mesh);
 
 			MaterialPointer GetMaterial(void) const;
 			void SetMaterial(const MaterialPointer & material);
@@ -43,6 +42,12 @@ namespace mye
 
 			const mye::math::Matrix4 & GetModelMatrix(void) const;
 			void SetModelMatrix(const mye::math::Matrix4 & matrix);
+
+			TexturePointer GetDiffuseTexture(void) const;
+			void SetDiffuseTexture(const TexturePointer & diffuseTex);
+
+			TexturePointer GetHeightMap(void) const;
+			void SetHeightMap(const TexturePointer & heightMap);
 
 			RenderComponent * Clone(void) const;
 
@@ -57,6 +62,9 @@ namespace mye
 			GPUBufferPointer    m_gpuBuffer;
 
 			MaterialPointer     m_material;
+
+			TexturePointer      m_diffuseTex;
+			TexturePointer      m_heightMap;
 			
 			mye::math::AABB     m_bounds;
 			mye::math::Matrix4  m_modelMatrix;

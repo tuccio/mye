@@ -102,9 +102,9 @@ ScriptModule * Game::GetScriptModule(void)
 	return m_script;
 }
 
-void Game::RuntimeError(const String &error)
+void Game::RuntimeError(const String & error)
 {
-	mye::core::Logger::LogErrorOptional(error);
+	mye::core::Logger::LogErrorOptional("Runtime", error);
 }
 
 void Game::ExportScene(const String & path)
@@ -503,7 +503,7 @@ void Game::ImportScene(const String & file, std::list<GameObject*> * allocatedOb
 						rapidxml::xml_attribute<> * modelName = meshNode->first_attribute("name");
 
 						MeshPointer mesh = ResourceTypeManager::GetSingleton().
-							CreateResource<Mesh>("Mesh", modelName->value());
+							CreateResource<Mesh>("Mesh", modelName->value(), nullptr, { { "tangent", "true" }, { "bitangent", "true" } });
 
 						gameObject->GetRenderComponent()->SetMesh(mesh);
 

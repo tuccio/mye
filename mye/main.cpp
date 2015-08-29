@@ -1,6 +1,7 @@
 #include <mye/core/BulletCollisionShape.h>
 #include <mye/core/EntityManager.h>
 #include <mye/core/FontManager.h>
+#include <mye/core/Logger.h>
 #include <mye/core/ImageManager.h>
 #include <mye/core/MaterialManager.h>
 #include <mye/core/MeshManager.h>
@@ -91,6 +92,7 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 	}
 	else
 	{
+
 		SetCurrentDirectory(commandLine[0].CString());
 		projectName = commandLine[1];
 
@@ -100,6 +102,8 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 		}
 
 	}
+
+	Logger logger("mye_events.log", "mye_errors.log");
 
 	/*
 	 * Create and run the game

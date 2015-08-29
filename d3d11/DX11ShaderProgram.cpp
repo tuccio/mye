@@ -1,8 +1,10 @@
 #include "DX11ShaderProgram.h"
 
+#include <mye/core/Logger.h>
+#include <mye/core/ResourceTypeManager.h>
+
 #include <boost/property_tree/json_parser.hpp>
 
-#include <mye/core/ResourceTypeManager.h>
 #include <sstream>
 
 using namespace mye::core;
@@ -22,8 +24,9 @@ bool DX11ShaderProgram::LoadImpl(void)
 	{
 		json_parser::read_json(m_name.CString(), pt);
 	}
-	catch (json_parser_error &)
+	catch (json_parser_error & e)
 	{
+		Logger::LogErrorOptional("DX11ShaderProgram Parse Error", e.what());
 		return false;
 	}
 
@@ -34,9 +37,11 @@ bool DX11ShaderProgram::LoadImpl(void)
 	if (vertexShader)
 	{
 
+		auto name        = vertexShader->get_optional<std::string>("name");
 		auto source      = vertexShader->get_optional<std::string>("source");
 		auto precompiled = vertexShader->get_optional<bool>("precompiled");
 		auto input       = vertexShader->get_child_optional("input");
+		auto defines     = vertexShader->get_child_optional("defines");
 
 		if (source)
 		{
@@ -44,6 +49,14 @@ bool DX11ShaderProgram::LoadImpl(void)
 			Parameters params;
 
 			params.Add("type", "vertex");
+			params.Add("source", source->c_str());
+
+			if (defines)
+			{
+				std::stringstream ss;
+				json_parser::write_json(ss, *defines);
+				params.Add("defines", ss.str().c_str());
+			}
 
 			if (precompiled && *precompiled)
 			{
@@ -52,16 +65,14 @@ bool DX11ShaderProgram::LoadImpl(void)
 
 			if (input)
 			{
-
 				std::stringstream ss;
-
 				json_parser::write_json(ss, *input);
-
 				params.Add("input", ss.str().c_str());
-
 			}
 
-			m_vertexShader = ResourceTypeManager::GetSingleton().CreateResource<DX11VertexShader>("DX11Shader", source->c_str(), nullptr, params);
+			String resourceName = (name ? name->c_str() : source->c_str());
+
+			m_vertexShader = ResourceTypeManager::GetSingleton().CreateResource<DX11VertexShader>("DX11Shader", resourceName, nullptr, params);
 
 			if (!m_vertexShader->Load())
 			{
@@ -76,8 +87,10 @@ bool DX11ShaderProgram::LoadImpl(void)
 	if (pixelShader)
 	{
 
+		auto name        = pixelShader->get_optional<std::string>("name");
 		auto source      = pixelShader->get_optional<std::string>("source");
 		auto precompiled = pixelShader->get_optional<bool>("precompiled");
+		auto defines     = pixelShader->get_child_optional("defines");
 
 		if (source)
 		{
@@ -85,13 +98,23 @@ bool DX11ShaderProgram::LoadImpl(void)
 			Parameters params;
 
 			params.Add("type", "pixel");
+			params.Add("source", source->c_str());
+
+			if (defines)
+			{
+				std::stringstream ss;
+				json_parser::write_json(ss, *defines);
+				params.Add("defines", ss.str().c_str());
+			}
 
 			if (precompiled && *precompiled)
 			{
 				params.Add("precompiled", "true");
 			}
 
-			m_pixelShader = ResourceTypeManager::GetSingleton().CreateResource<DX11PixelShader>("DX11Shader", source->c_str(), nullptr, params);
+			String resourceName = (name ? name->c_str() : source->c_str());
+
+			m_pixelShader = ResourceTypeManager::GetSingleton().CreateResource<DX11PixelShader>("DX11Shader", resourceName, nullptr, params);
 
 			if (!m_pixelShader->Load())
 			{
@@ -106,8 +129,10 @@ bool DX11ShaderProgram::LoadImpl(void)
 	if (geometryShader)
 	{
 
+		auto name        = geometryShader->get_optional<std::string>("name");
 		auto source      = geometryShader->get_optional<std::string>("source");
 		auto precompiled = geometryShader->get_optional<bool>("precompiled");
+		auto defines     = geometryShader->get_child_optional("defines");
 
 		if (source)
 		{
@@ -115,13 +140,24 @@ bool DX11ShaderProgram::LoadImpl(void)
 			Parameters params;
 
 			params.Add("type", "geometry");
+			params.Add("source", source->c_str());
+
+			if (defines)
+			{
+				std::stringstream ss;
+				json_parser::write_json(ss, *defines);
+				params.Add("defines", ss.str().c_str());
+			}
 
 			if (precompiled && *precompiled)
 			{
 				params.Add("precompiled", "true");
+			
 			}
+			
+			String resourceName = (name ? name->c_str() : source->c_str());
 
-			m_geometryShader = ResourceTypeManager::GetSingleton().CreateResource<DX11GeometryShader>("DX11Shader", source->c_str(), nullptr, params);
+			m_geometryShader = ResourceTypeManager::GetSingleton().CreateResource<DX11GeometryShader>("DX11Shader", resourceName, nullptr, params);
 
 			if (!m_geometryShader->Load())
 			{

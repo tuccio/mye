@@ -182,6 +182,7 @@ void DX11LightPropagationVolume::Inject(DX11ReflectiveShadowMap & rsm)
 	unsigned int numSamples = m_sampleResolution * m_sampleResolution;
 
 	// No buffers bound, vertices are generated through SV_VertexID
+
 	DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 	DX11Device::GetSingleton().GetImmediateContext()->Draw(numSamples, 0);
 
@@ -349,134 +350,7 @@ bool DX11LightPropagationVolume::__CreateShaders(void)
 		nullptr,
 		{ { "type", "program" } }
 	);
-/*
-	VertexDeclaration lpvVD({
-		VertexAttribute(VertexAttributeSemantic::POSITION,  DataFormat::FLOAT4),
-	});
-
-	auto lpvILV = MakeInputElementVector(lpvVD);
-
-	m_lpvRSMSamplingVS = ResourceTypeManager::GetSingleton().CreateResource<DX11VertexShader>(
-		"DX11Shader",
-		"./shaders/lpv_rsmsampler_vs.cso",
-		nullptr,
-		Parameters({
-			{ "type", "vertex" },
-			{ "precompiled", "true" },
-			{ "inputLayoutVector", PointerToString(&lpvILV) }
-		})
-	);
-
-	m_lpvRSMSamplingPS = ResourceTypeManager::GetSingleton().CreateResource<DX11PixelShader>(
-		"DX11Shader",
-		"./shaders/lpv_rsmsampler_ps.cso",
-		nullptr,
-		Parameters({
-			{ "type", "pixel" },
-			{ "precompiled", "true" }
-		})
-	);
-
-	m_lpvInjectFluxVS = ResourceTypeManager::GetSingleton().CreateResource<DX11VertexShader>(
-		"DX11Shader",
-		"./shaders/lpv_injectflux_vs.cso",
-		nullptr,
-		Parameters({
-			{ "type", "vertex" },
-			{ "precompiled", "true" }
-		})
-	);
-
-	m_lpvInjectFluxGS = ResourceTypeManager::GetSingleton().CreateResource<DX11GeometryShader>(
-		"DX11Shader",
-		"./shaders/lpv_injectflux_gs.cso",
-		nullptr,
-		Parameters({
-			{ "type", "geometry" },
-			{ "precompiled", "true" }
-		})
-	);
-
-	m_lpvInjectFluxPS = ResourceTypeManager::GetSingleton().CreateResource<DX11PixelShader>(
-		"DX11Shader",
-		"./shaders/lpv_injectflux_ps.cso",
-		nullptr,
-		Parameters({
-			{ "type", "pixel" },
-			{ "precompiled", "true" }
-		})
-	);
-
-	m_lpvInjectGeometryVS = ResourceTypeManager::GetSingleton().CreateResource<DX11VertexShader>(
-		"DX11Shader",
-		"./shaders/lpv_injectgeometry_vs.cso",
-		nullptr,
-		Parameters({
-			{ "type", "vertex" },
-			{ "precompiled", "true" }
-		})
-	);
-
-	m_lpvInjectGeometryGS = ResourceTypeManager::GetSingleton().CreateResource<DX11GeometryShader>(
-		"DX11Shader",
-		"./shaders/lpv_injectgeometry_gs.cso",
-		nullptr,
-		Parameters({
-			{ "type", "geometry" },
-			{ "precompiled", "true" }
-		})
-	);
-
-	m_lpvInjectGeometryPS = ResourceTypeManager::GetSingleton().CreateResource<DX11PixelShader>(
-		"DX11Shader",
-		"./shaders/lpv_injectgeometry_ps.cso",
-		nullptr,
-		Parameters({
-			{ "type", "pixel" },
-			{ "precompiled", "true" }
-		})
-	);
-
-	m_lpvPropagateVS = ResourceTypeManager::GetSingleton().CreateResource<DX11VertexShader>(
-		"DX11Shader",
-		"./shaders/lpv_propagate_vs.cso",
-		nullptr,
-		Parameters({
-			{ "type", "vertex" },
-			{ "precompiled", "true" }
-		})
-	);
-
-	m_lpvPropagateGS = ResourceTypeManager::GetSingleton().CreateResource<DX11GeometryShader>(
-		"DX11Shader",
-		"./shaders/lpv_propagate_gs.cso",
-		nullptr,
-		Parameters({
-			{ "type", "geometry" },
-			{ "precompiled", "true" }
-		})
-	);
-
-	m_lpvPropagatePS = ResourceTypeManager::GetSingleton().CreateResource<DX11PixelShader>(
-		"DX11Shader",
-		"./shaders/lpv_propagate_ps.cso",
-		nullptr,
-		Parameters({
-			{ "type", "pixel" },
-			{ "precompiled", "true" }
-		})
-	);
-
-	m_lpvPropagateFirstPS = ResourceTypeManager::GetSingleton().CreateResource<DX11PixelShader>(
-		"DX11Shader",
-		"./shaders/lpv_propagate_first_ps.cso",
-		nullptr,
-		Parameters({
-			{ "type", "pixel" },
-			{ "precompiled", "true" }
-		})
-	);*/
-
+	
 	return m_lpvRSMSampling->Load() &&
 	       m_lpvInjectFlux->Load() &&
 	       m_lpvInjectGeometry->Load() &&

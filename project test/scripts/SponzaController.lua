@@ -24,6 +24,10 @@ function SponzaController:Init()
 		hCam.camera.far  = 50
 		--hCam.camera.far  = 5000
 		
+		r.lpvEnabled    = true
+		r.lpvIterations = 26
+		r.lpvAABB       = AABB.FromMinMax(vec3(-20), vec3(20))
+		
 		Scene.camera = hCam.camera
 		
 	else

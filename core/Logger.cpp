@@ -55,20 +55,19 @@ void Logger::OpenErrorLogFile(const String &file)
 
 }
 
-void Logger::LogEvent(const String &string)
+void Logger::LogEvent(const String & tag, const String & message)
 {
-	
-	m_eventFile << GetTimestamp() << " " << string << NewLine;
-	m_lastEvent = string;
+	m_eventFile << GetTimestamp() << " " << tag << ": " << message << NewLine;
+	m_lastEvent = message;
 }
 
-void Logger::LogError(const String &string)
+void Logger::LogError(const String & tag, const String & message)
 {
-	m_errorFile << GetTimestamp() << " " << string << NewLine;
-	m_lastError = string;
+	m_errorFile << GetTimestamp() << " " << tag << ": " << message << NewLine;
+	m_lastError = message;
 }
 
-const char* Logger::GetTimestamp(void)
+const char * Logger::GetTimestamp(void)
 {
 
 	time_t t = time(nullptr);
@@ -91,14 +90,14 @@ String Logger::GetLastError(void)
 	return m_lastError;
 }
 
-bool Logger::LogEventOptional(const String &string)
+bool Logger::LogEventOptional(const String & tag, const String & message)
 {
 
 	Logger *logger = GetSingletonPointer();
 
 	if (logger)
 	{
-		logger->LogEvent(string);
+		logger->LogEvent(tag, message);
 		return true;
 	}
 
@@ -106,14 +105,14 @@ bool Logger::LogEventOptional(const String &string)
 
 }
 
-bool Logger::LogErrorOptional(const String &string)
+bool Logger::LogErrorOptional(const String & tag, const String & message)
 {
 
-	Logger *logger = GetSingletonPointer();
+	Logger * logger = GetSingletonPointer();
 
 	if (logger)
 	{
-		logger->LogError(string);
+		logger->LogError(tag, message);
 		return true;
 	}
 

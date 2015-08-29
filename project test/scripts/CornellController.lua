@@ -10,7 +10,7 @@ function CornellController:Init()
 	Graphics.window.caption     = 'Cornell box test'
 	
 	r.lpvEnabled                = true
-	r.lpvAABB                   = AABB.FromCenterHalfExtents(vec3(0), vec3(3.5))
+	r.lpvAABB                   = AABB.FromCenterHalfExtents(vec3(0), vec3(5))
 	r.shadowMapBias             = 0
 	r.shadowMapNormalOffsetBias = 0.01
 	r.pcfEnabled                = false
@@ -50,7 +50,7 @@ end
 function CornellController:OnKeyboardKeyHold(key, t)
 
 	local angle = 25 * Time.delta
-	local v     = vec3(0, 0, -1)
+	local v     = vec3(0.05, 0.35, 1):Normalize()
 
 	if key == KeyboardVK.R then
 	

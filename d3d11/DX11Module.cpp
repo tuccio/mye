@@ -92,6 +92,33 @@ void DX11Module::Shutdown(void)
 void DX11Module::Render(void)
 {
 
+	if (m_resizeSwapChain)
+	{
+
+		auto size = GetRendererConfiguration()->GetScreenResolution();
+
+		m_swapChain.Resize(size.x(), size.y());
+
+		if (m_device.Exists())
+		{
+
+			D3D11_VIEWPORT viewPort;
+
+			viewPort.MinDepth = 0.f;
+			viewPort.MaxDepth = 1.f;
+			viewPort.TopLeftX = 0.f;
+			viewPort.TopLeftY = 0.f;
+			viewPort.Width    = (float) size.x();
+			viewPort.Height   = (float) size.y();
+
+			m_device.GetImmediateContext()->RSSetViewports(1, &viewPort);
+
+		}
+
+		m_resizeSwapChain = false;
+
+	}
+
 	auto backBuffer = m_swapChain.GetBackBufferRenderTargetView();
 
 	m_swapChain.ClearBackBuffer(m_clearColor);
@@ -169,26 +196,7 @@ void DX11Module::FreeWindow(void)
 void DX11Module::OnResize(IWindow * window, const mye::math::Vector2i & size)
 {
 
-	if (m_swapChain.Exists())
-	{
-		m_swapChain.Resize(size.x(), size.y());
-	}
-	
-	if (m_device.Exists())
-	{
-
-		D3D11_VIEWPORT viewPort;
-
-		viewPort.MinDepth = 0.f;
-		viewPort.MaxDepth = 1.f;
-		viewPort.TopLeftX = 0.f;
-		viewPort.TopLeftY = 0.f;
-		viewPort.Width    = (float) size.x();
-		viewPort.Height   = (float) size.y();
-
-		m_device.GetImmediateContext()->RSSetViewports(1, &viewPort);
-
-	}
+	m_resizeSwapChain = true;
 
 	GetRendererConfiguration()->SetScreenResolution(size);
 

@@ -56,60 +56,22 @@ DX11ReflectiveShadowMap::DX11ReflectiveShadowMap(void) :
 bool DX11ReflectiveShadowMap::Create(void)
 {
 
-	VertexDeclaration rsmVD({
-		VertexAttribute(VertexAttributeSemantic::POSITION,  DataFormat::FLOAT3),
-		VertexAttribute(VertexAttributeSemantic::TEXCOORD0, DataFormat::FLOAT2),
-		VertexAttribute(VertexAttributeSemantic::NORMAL,    DataFormat::FLOAT3)
-	});
-
-	auto rsmILV = MakeInputElementVector(rsmVD);
-
-	m_rsmVS = ResourceTypeManager::GetSingleton().CreateResource<DX11VertexShader>(
+	m_rsm = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
 		"DX11Shader",
-		"./shaders/rsm_vs.cso",
+		"./shaders/rsm.msh",
 		nullptr,
-		Parameters({
-				{ "type", "vertex" },
-				{ "precompiled", "true" },
-				{ "inputLayoutVector", PointerToString(&rsmILV) }
-		})
+		{ { "type", "program" } }
 	);
 
-	m_singlePS = ResourceTypeManager::GetSingleton().CreateResource<DX11PixelShader>(
+	m_rsmPSSM = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
 		"DX11Shader",
-		"./shaders/rsm_ps.cso",
+		"./shaders/rsm_pssm.msh",
 		nullptr,
-		Parameters({
-				{ "type", "pixel" },
-				{ "precompiled", "true" },
-		})
-	);
-
-	m_pssmGS = ResourceTypeManager::GetSingleton().CreateResource<DX11GeometryShader>(
-		"DX11Shader",
-		"./shaders/rsm_pssm_gs.cso",
-		nullptr,
-		Parameters({
-				{ "type", "geometry" },
-				{ "precompiled", "true" },
-		})
-	);
-
-	m_pssmVS = ResourceTypeManager::GetSingleton().CreateResource<DX11VertexShader>(
-		"DX11Shader",
-		"./shaders/rsm_pssm_vs.cso",
-		nullptr,
-		Parameters({
-				{ "type", "vertex" },
-				{ "precompiled", "true" },
-				{ "inputLayoutVector", PointerToString(&rsmILV) }
-		})
+		{ { "type", "program" } }
 	);
 	
-	if (m_rsmVS->Load() &&
-	    m_singlePS->Load() &&
-	    m_pssmGS->Load() &&
-	    m_pssmVS->Load() &&
+	if (m_rsm->Load() &&
+	    m_rsmPSSM->Load() &&
 	    __CreateRenderTargets() &&
 	    __CreateDepthBuffers() &&
 	    __CreateConstantBuffers())
@@ -287,9 +249,7 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 	m_lightCBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_LIGHT);
 	m_cropMatrixCBuffer.Bind(DX11PipelineStage::VERTEX_SHADER, 1);
 
-	m_pssmVS->Use();
-	m_pssmGS->Use();
-	m_singlePS->Use();
+	m_rsmPSSM->Use();
 	
 	DX11RasterizerState cullState({ false, CullMode::NONE });
 
@@ -334,9 +294,7 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 
 	}
 
-	m_pssmVS->Dispose();
-	m_pssmGS->Dispose();
-	m_singlePS->Dispose();
+	m_rsmPSSM->Dispose();
 
 	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(0, nullptr, nullptr);
 

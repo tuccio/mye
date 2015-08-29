@@ -5,6 +5,7 @@
 
 #include <mye/core/FileInputStream.h>
 #include <mye/core/FileInfo.h>
+#include <mye/core/Logger.h>
 
 using namespace mye::dx11;
 using namespace mye::core;
@@ -62,11 +63,22 @@ bool DX11PixelShader::LoadImpl(void)
 		compileFlags |= D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 
+		String sourceFile;
+
+		if (m_params.Contains("source"))
+		{
+			sourceFile = m_params.GetString("source");
+		}
+		else
+		{
+			sourceFile = m_name;
+		}
+
 		if (m_precompiled)
 		{
 
 			std::wstring wfilename;
-			wfilename.assign(m_name.begin(), m_name.end());
+			wfilename.assign(sourceFile.begin(), sourceFile.end());
 
 			D3DReadFileToBlob(wfilename.c_str(), &code);
 
@@ -74,11 +86,13 @@ bool DX11PixelShader::LoadImpl(void)
 		else
 		{
 
+			auto defines = CreateDefinesVector();
+
 			if (__MYE_DX11_HR_TEST_FAILED(D3DCompile(
 					m_source.CString(),
 					m_source.Length(),
-					m_name.CString(),
-					nullptr,
+					sourceFile.CString(),
+					&defines[0],
 					D3D_COMPILE_STANDARD_FILE_INCLUDE,
 					"main",
 					"ps_5_0",
@@ -88,7 +102,10 @@ bool DX11PixelShader::LoadImpl(void)
 					&error)))
 			{
 				m_compileError = (LPCSTR) error->GetBufferPointer();
+				Logger::LogErrorOptional("DX11 Shader Compilation", m_compileError);
 			}
+
+			FreeDefinesVector(defines);
 
 		}
 
@@ -100,6 +117,10 @@ bool DX11PixelShader::LoadImpl(void)
 				                  &m_shader)))
 		{
 			success = true;
+		}
+		else
+		{
+			Logger::LogErrorOptional("DX11 Shader Compilation", sourceFile + " does not appear to be a valid compiled pixel shader.");
 		}
 		
 

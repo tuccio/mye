@@ -14,9 +14,9 @@ namespace mye
 
 		public:
 
-			Texture(ResourceManager *owner,
-				const String &name,
-				ManualResourceLoader *manual);
+			Texture(ResourceManager * owner,
+			        const String & name,
+			        ManualResourceLoader * manual);
 
 			~Texture(void);
 
