@@ -18,7 +18,8 @@ void GenerateMeshFiles(boost::filesystem::path & parent, const char * sceneName,
 
 void CreateScenePropertyTree(const aiScene * scene, const std::string & sceneName, boost::property_tree::ptree & pt, const aiNode * node, const aiMatrix4x4 & world);
 boost::filesystem::path MakeMeshName(const std::string & sceneName, int i);
-boost::filesystem::path MakeTextureName(const std::string & sceneName, int i, const std::string & type);
+boost::filesystem::path MakeTextureName(const std::string & sceneName, int i, const std::string & type, const std::string & ext);
+boost::filesystem::path MakeTextureName(const std::string & sceneName, const std::string & name);
 
 int main(int argc, char * argv[])
 {
@@ -35,6 +36,8 @@ int main(int argc, char * argv[])
 
 	boost::filesystem::path outputFile(argv[2]);
 	boost::filesystem::path parent = outputFile.parent_path();
+
+	boost::filesystem::current_path(parent);
 
 	boost::filesystem::path modelsDirectory = parent / "models";
 
@@ -102,16 +105,16 @@ void GenerateMeshFiles(boost::filesystem::path & parent, const char * sceneName,
 	aiMaterial * meshMaterial = scene->mMaterials[mesh->mMaterialIndex];
 
 	aiString path;
-	path.Set(".");
 
-	if (meshMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS)
+	if (meshMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS ||
+		meshMaterial->GetTexture(aiTextureType_HEIGHT, 0, &path) == AI_SUCCESS)
 	{
-		std::cout << "Found a diffuse texture" << std::endl;
-	}
 
-	if (meshMaterial->GetTexture(aiTextureType_HEIGHT, 0, &path) == AI_SUCCESS)
-	{
-		std::cout << "Found a normal texture" << std::endl;
+		boost::filesystem::path source = path.C_Str();
+		auto destination = MakeTextureName(sceneName, source.string());
+
+		boost::filesystem::copy_file(path.C_Str(), destination, boost::filesystem::copy_option::overwrite_if_exists);
+
 	}
 
 }
@@ -169,6 +172,31 @@ void CreateScenePropertyTree(const aiScene * scene, const std::string & sceneNam
 			ss << aabbMax.x << " " << aabbMax.y << " " << aabbMax.z;
 			gameObject.add("render.aabb.max", ss.str());
 		}
+
+		/* Textures */
+
+		aiMaterial * meshMaterial = scene->mMaterials[mesh->mMaterialIndex];
+		aiString path;
+
+		if (meshMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS)
+		{
+
+			boost::filesystem::path source = path.C_Str();
+			auto destination = MakeTextureName(sceneName, source.string());
+
+			gameObject.add("render.diffusetexture.<xmlattr>.name", destination.string());
+
+		}
+
+		if (meshMaterial->GetTexture(aiTextureType_HEIGHT, 0, &path) == AI_SUCCESS)
+		{
+
+			boost::filesystem::path source = path.C_Str();
+			auto destination = MakeTextureName(sceneName, source.string());
+
+			gameObject.add("render.heightmap.<xmlattr>.name", destination.string());
+
+		}
 		
 
 	}
@@ -185,9 +213,14 @@ boost::filesystem::path MakeMeshName(const std::string & sceneName, int i)
 	return boost::filesystem::path("models") / (sceneName + "_mesh" + std::to_string(i) + ".obj");
 }
 
-boost::filesystem::path MakeTextureName(const std::string & sceneName, int i, const std::string & type)
+boost::filesystem::path MakeTextureName(const std::string & sceneName, int i, const std::string & type, const std::string & ext)
 {
-	return boost::filesystem::path("texture") / (sceneName + "_" + type + std::to_string(i) + ".obj");
+	return boost::filesystem::path("textures") / (sceneName + "_" + type + std::to_string(i) + ext);
+}
+
+boost::filesystem::path MakeTextureName(const std::string & sceneName, const std::string & name)
+{
+	return boost::filesystem::path("textures") / (sceneName + "_" + name);
 }
 
 void FindAABB(const aiMesh * mesh, aiVector3D & min, aiVector3D & max)

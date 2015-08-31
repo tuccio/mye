@@ -156,6 +156,9 @@ void LuaModule::Update(void)
 		}
 
 	}
+
+	//lua_gc(m_state, LUA_GCCOLLECT, 0);
+	lua_gc(m_state, LUA_GCSTEP, 0);
 	
 }
 

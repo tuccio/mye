@@ -29,13 +29,15 @@ void EventManager::TriggerEvent(const IEvent * e)
 {
 
 	m_listenersLock.lock();
+
 	auto eqr = m_listeners.equal_range(e->event);
-	m_listenersLock.unlock();
 
 	for (auto it = eqr.first; it != eqr.second; it++)
 	{
 		it->second->OnEvent(e);
 	}
+
+	m_listenersLock.unlock();
 
 }
 

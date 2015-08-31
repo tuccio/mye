@@ -1,0 +1,12 @@
+{
+    "vertex": {
+        "source": "../d3d11/shaders/text2d_vs.hlsl",
+        "input": {
+            "position": "float2",
+            "texcoord0": "float2"
+        }
+    },
+    "pixel": {
+        "source": "../d3d11/shaders/text2d_ps.hlsl"
+    }
+}

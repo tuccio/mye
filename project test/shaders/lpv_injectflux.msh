@@ -1,15 +1,11 @@
 {
-
-	"vertex" : {
-		"source" : "../d3d11/lpv_injectflux_vs.hlsl"
-	},
-	
-	"pixel" : {
-		"source" : "../d3d11/lpv_injectflux_ps.hlsl"
-	},
-	
-	"geometry" : {
-		"source" : "../d3d11/lpv_injectflux_gs.hlsl"
-	}
-	
+    "geometry": {
+        "source": "../d3d11/shaders/lpv_injectflux_gs.hlsl"
+    },
+    "vertex": {
+        "source": "../d3d11/shaders/lpv_injectflux_vs.hlsl"
+    },
+    "pixel": {
+        "source": "../d3d11/shaders/lpv_injectflux_ps.hlsl"
+    }
 }

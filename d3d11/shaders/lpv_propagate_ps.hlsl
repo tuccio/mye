@@ -1,5 +1,3 @@
-//#define MYE_PROPAGATE_NO_OCCLUSION
-
 #include "lpv.hlsli"
 #include "register_slots.hlsli"
 
@@ -122,8 +120,8 @@ SHRGB GatherContribution(in LPV lpv,
 		SHRGB  shAdjRadiance     = LPVLoadOffset(lpv, cell, sourceDirection);
 							     
 		float3 shIrradiance      = saturate(SHDot(shAdjRadiance, shFluxDirection));
-		//float  occlusion         = LPVVisibility(shSourceDirection, shOcclusion);
-		float  occlusion         = LPVVisibility(shFluxDirection, shOcclusion);
+		float  occlusion         = LPVVisibility(shSourceDirection, shOcclusion);
+		//float  occlusion         = LPVVisibility(shFluxDirection, shOcclusion);
 
 		SHRGB  shFrontFlux       = SHScale(shFluxDirection, MYE_LPV_FRONT_SOLID_ANGLE * MYE_INV_PI * occlusion * shIrradiance);
 

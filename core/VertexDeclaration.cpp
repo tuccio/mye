@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include <boost/algorithm/string.hpp>
+
 using namespace mye::core;
 
 static const size_t __dataTypeSize[static_cast<unsigned int>(DataFormat::COUNT)] =
@@ -115,4 +117,116 @@ VertexDeclaration::Iterator VertexDeclaration::begin() const
 VertexDeclaration::Iterator VertexDeclaration::end() const
 {
 	return m_attributes.end();
+}
+
+bool mye::core::ParseVertexAttributeSemantic(const char * s, VertexAttributeSemantic & attribute)
+{
+
+	if (boost::iequals("position", s))
+	{
+		attribute = VertexAttributeSemantic::POSITION;
+	}
+	else if (boost::iequals("normal", s))
+	{
+		attribute = VertexAttributeSemantic::NORMAL;
+	}
+	else if (boost::iequals("texcoord0", s))
+	{
+		attribute = VertexAttributeSemantic::TEXCOORD0;
+	}
+	else if (boost::iequals("texcoord1", s))
+	{
+		attribute = VertexAttributeSemantic::TEXCOORD1;
+	}
+	else if (boost::iequals("texcoord2", s))
+	{
+		attribute = VertexAttributeSemantic::TEXCOORD2;
+	}
+	else if (boost::iequals("texcoord3", s))
+	{
+		attribute = VertexAttributeSemantic::TEXCOORD3;
+	}
+	else if (boost::iequals("texcoord4", s))
+	{
+		attribute = VertexAttributeSemantic::TEXCOORD4;
+	}
+	else if (boost::iequals("texcoord5", s))
+	{
+		attribute = VertexAttributeSemantic::TEXCOORD5;
+	}
+	else if (boost::iequals("texcoord6", s))
+	{
+		attribute = VertexAttributeSemantic::TEXCOORD6;
+	}
+	else if (boost::iequals("texcoord7", s))
+	{
+		attribute = VertexAttributeSemantic::TEXCOORD7;
+	}
+	else if (boost::iequals("tangent", s))
+	{
+		attribute = VertexAttributeSemantic::TANGENT;
+	}
+	else if (boost::iequals("bitangent", s))
+	{
+		attribute = VertexAttributeSemantic::BITANGENT;
+	}
+	else if (boost::iequals("diffuse", s))
+	{
+		attribute = VertexAttributeSemantic::DIFFUSE;
+	}
+	else if (boost::iequals("specular", s))
+	{
+		attribute = VertexAttributeSemantic::SPECULAR;
+	}
+	else
+	{
+		return false;
+	}
+
+	return true;
+
+}
+
+bool mye::core::ParseDataFormat(const char * s, DataFormat & format)
+{
+
+	if (boost::iequals("float", s))
+	{
+		format = DataFormat::FLOAT;
+	}
+	else if (boost::iequals("float2", s))
+	{
+		format = DataFormat::FLOAT2;
+	}
+	else if (boost::iequals("float3", s))
+	{
+		format = DataFormat::FLOAT3;
+	}
+	else if (boost::iequals("float4", s))
+	{
+		format = DataFormat::FLOAT4;
+	}
+	else if (boost::iequals("int", s))
+	{
+		format = DataFormat::INT;
+	}
+	else if (boost::iequals("int2", s))
+	{
+		format = DataFormat::INT2;
+	}
+	else if (boost::iequals("int3", s))
+	{
+		format = DataFormat::INT3;
+	}
+	else if (boost::iequals("int4", s))
+	{
+		format = DataFormat::INT4;
+	}
+	else
+	{
+		return false;
+	}
+
+	return true;
+
 }

@@ -188,6 +188,8 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 	SceneModule * scene  = Game::GetSingleton().GetSceneModule();
 	Camera      * camera = scene->GetCamera();
 
+	m_pssmSlices = __CSMComputeSplitsDepths(camera->GetNearClipDistance(), camera->GetFarClipDistance());
+
 	auto casters   = __CSMFindPotentialCasters(light->GetDirection(), camera->GetFrustum());
 	auto receivers = scene->GetVisibleObjects(*camera);
 
@@ -209,8 +211,6 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 
 	AABB hCastersAABB   = castersAABB.TransformAffine(m_lightSpaceTransform);
 	AABB hReceiversAABB = receiversAABB.TransformAffine(m_lightSpaceTransform);
-
-	m_pssmSlices = __CSMComputeSplitsDepths(camera->GetNearClipDistance(), camera->GetFarClipDistance());
 
 	// Texel padding for the crop matrix to allow the calculation of derivatives on the
 	// slice border (necessary for slope scaled bias calculation)

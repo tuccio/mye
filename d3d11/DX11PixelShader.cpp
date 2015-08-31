@@ -51,79 +51,75 @@ bool DX11PixelShader::LoadImpl(void)
 
 	bool success = false;
 
-	if (DX11Shader::LoadImpl())
-	{
+	ID3DBlob * code = nullptr;
+	ID3DBlob * error = nullptr;
 
-		ID3DBlob * code = nullptr;
-		ID3DBlob * error = nullptr;
-
-		UINT compileFlags = 0x0;
+	UINT compileFlags = 0x0;
 
 #ifdef _DEBUG
-		compileFlags |= D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+	compileFlags |= D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 
-		String sourceFile;
+	String sourceFile;
 
-		if (m_params.Contains("source"))
+	if (m_params.Contains("source"))
+	{
+		sourceFile = m_params.GetString("source");
+	}
+	else
+	{
+		sourceFile = m_name;
+	}
+
+	if (m_precompiled)
+	{
+
+		std::wstring wfilename;
+		wfilename.assign(sourceFile.begin(), sourceFile.end());
+
+		D3DReadFileToBlob(wfilename.c_str(), &code);
+
+	}
+	else
+	{
+
+		auto defines = CreateDefinesVector();
+
+		String sourceCode = LoadSourceCode();
+
+		if (__MYE_DX11_HR_TEST_FAILED(D3DCompile(
+				sourceCode.CString(),
+				sourceCode.Length(),
+				sourceFile.CString(),
+				&defines[0],
+				D3D_COMPILE_STANDARD_FILE_INCLUDE,
+				"main",
+				"ps_5_0",
+				compileFlags,
+				0x0,
+				&code,
+				&error)))
 		{
-			sourceFile = m_params.GetString("source");
-		}
-		else
-		{
-			sourceFile = m_name;
-		}
-
-		if (m_precompiled)
-		{
-
-			std::wstring wfilename;
-			wfilename.assign(sourceFile.begin(), sourceFile.end());
-
-			D3DReadFileToBlob(wfilename.c_str(), &code);
-
-		}
-		else
-		{
-
-			auto defines = CreateDefinesVector();
-
-			if (__MYE_DX11_HR_TEST_FAILED(D3DCompile(
-					m_source.CString(),
-					m_source.Length(),
-					sourceFile.CString(),
-					&defines[0],
-					D3D_COMPILE_STANDARD_FILE_INCLUDE,
-					"main",
-					"ps_5_0",
-					compileFlags,
-					0x0,
-					&code,
-					&error)))
-			{
-				m_compileError = (LPCSTR) error->GetBufferPointer();
-				Logger::LogErrorOptional("DX11 Shader Compilation", m_compileError);
-			}
-
-			FreeDefinesVector(defines);
-
+			m_compileError = (LPCSTR) error->GetBufferPointer();
+			Logger::LogErrorOptional("DX11 Shader Compilation", m_compileError);
 		}
 
-		if (code &&
-			!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton()->
-				CreatePixelShader(code->GetBufferPointer(),
-				                  code->GetBufferSize(),
-				                  nullptr,
-				                  &m_shader)))
-		{
-			success = true;
-		}
-		else
-		{
-			Logger::LogErrorOptional("DX11 Shader Compilation", sourceFile + " does not appear to be a valid compiled pixel shader.");
-		}
-		
+		FreeDefinesVector(defines);
 
+	}
+
+	if (code &&
+		!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton()->
+			CreatePixelShader(code->GetBufferPointer(),
+			                  code->GetBufferSize(),
+			                  nullptr,
+			                  &m_shader)))
+	{
+		success = true;
+	}
+	else
+	{
+		Logger::LogErrorOptional("DX11 Shader Compilation", sourceFile + " does not appear to be a valid compiled pixel shader.");
 	}
 
 	if (!success)

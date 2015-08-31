@@ -40,8 +40,9 @@ namespace mye
 			std::vector<D3D_SHADER_MACRO> CreateDefinesVector(void) const;
 			void FreeDefinesVector(std::vector<D3D_SHADER_MACRO> & defines) const;
 
-			mye::core::String m_source;
-			bool              m_precompiled;
+			mye::core::String LoadSourceCode(void);
+
+			bool m_precompiled;
 
 		};
 

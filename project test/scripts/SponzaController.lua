@@ -6,27 +6,28 @@ function SponzaController:Init()
 	
 	r.shadowMapBias = 0.001
 	r.pcfEnabled    = false
-	r.csmSplits     = 3
+	r.csmSplits     = 1
+		
+	r.lpvEnabled    = true
+	r.lpvIterations = 26
+	r.lpvAABB       = AABB.FromMinMax(vec3(-20), vec3(20))
+	
+	--r.lpvAABB       = AABB.FromMinMax(vec3(-200), vec3(200))
 	
 	local hCam = GameObjects:CreateEntity('Camera', 'camera')
 	
 	if hCam and hCam:Exists() then
 	
-		hCam.transform.position    = vec3(8, 3 , 0.38)
-		hCam.transform.orientation = quaternion(0.716371, -0.063844, -0.692049, -0.0616764)
+		hCam.transform.position    = vec3(-8.47068, 3.23661, -0.0175723)
+		hCam.transform.orientation = quaternion(0.730156, 0.0297107, 0.68207, -0.0277546)
 	
 		hCam.speed       = 3
-		
 		--hCam.speed       = 300
 	
 		hCam.camera.fovy = 70
 		hCam.camera.near = 0.01
 		hCam.camera.far  = 50
 		--hCam.camera.far  = 5000
-		
-		r.lpvEnabled    = true
-		r.lpvIterations = 26
-		r.lpvAABB       = AABB.FromMinMax(vec3(-20), vec3(20))
 		
 		Scene.camera = hCam.camera
 		
@@ -81,55 +82,9 @@ function SponzaController:OnKeyboardKeyPress(key)
 		
 		hFrustumRenderer.camera:SetCamera(Scene.camera)
 		
-	elseif key == KeyboardVK.V then
+	elseif key == KeyboardVK.G then
 		
-		local hCam = GameObjects:Find('camera')
-		
-		local viewMatrix = hCam.camera:GetViewMatrix()
-		local projMatrix = hCam.camera:GetProjectionMatrix()
-		
-		local viewProj = projMatrix * viewMatrix
-		local viewProjInv = viewProj:Inverse()
-		
-		local octavePrintMatrix4 = function (m)
-		
-			local r = '['
-			
-			for i = 0, 3 do
-			
-				for j = 0, 3 do
-				
-					r = r .. tostring(m:Get(i, j))
-					
-					if j < 3 then
-						r = r .. ', '
-					end
-					
-				end
-				
-				if i < 3 then
-					r = r .. '; '
-				end
-				
-			end
-			
-			r = r .. ']'
-			
-			print(r)
-			
-		end
-		
-		print('view:')
-		octavePrintMatrix4(viewMatrix)
-		
-		print('proj:')
-		octavePrintMatrix4(projMatrix)
-		
-		print('viewProj:')
-		octavePrintMatrix4(viewProj)
-		
-		print('viewProjInv:')
-		octavePrintMatrix4(viewProjInv)
+		r.lpvEnabled = not r.lpvEnabled
 		
 	end
 

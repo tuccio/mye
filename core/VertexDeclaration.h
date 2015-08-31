@@ -54,6 +54,9 @@ namespace mye
 
 		size_t GetDataTypeSize(DataFormat type);
 
+		bool ParseVertexAttributeSemantic(const char * s, VertexAttributeSemantic & attribute);
+		bool ParseDataFormat(const char * s, DataFormat & format);
+
 		struct VertexAttribute
 		{
 

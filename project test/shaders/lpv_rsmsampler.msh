@@ -1,14 +1,11 @@
 {
-
-	"vertex" : {
-		"source" : "../d3d11/lpv_rsmsampler_vs.hlsl",
-		"input" : {
-			"position" : "float4"
-		}
-	},
-	
-	"pixel" : {
-		"source" : "../d3d11/lpv_rsmsampler_ps.hlsl"
-	}
-	
+    "vertex": {
+        "source": "../d3d11/shaders/lpv_rsmsampler_vs.hlsl",
+        "input": {
+            "position": "float4"
+        }
+    },
+    "pixel": {
+        "source": "../d3d11/shaders/lpv_rsmsampler_ps.hlsl"
+    }
 }

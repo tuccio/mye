@@ -7,8 +7,7 @@
 #include "DX11SwapChain.h"
 #include "DX11Texture.h"
 
-#include "DX11PixelShader.h"
-#include "DX11VertexShader.h"
+#include "DX11ShaderProgram.h"
 
 #include <mye/win/Window.h>
 
@@ -35,8 +34,7 @@ namespace mye
 
 			bool                      m_initialized;
 								      
-			DX11VertexShaderPointer   m_text2dVS;
-			DX11PixelShaderPointer    m_text2dPS;
+			DX11ShaderProgramPointer  m_text2d;
 								      
 			ID3D11SamplerState      * m_fontTextureSampler;
 								      

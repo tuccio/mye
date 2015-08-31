@@ -82,7 +82,7 @@ float4 LPVOcclusion(in LPV lpv, in int3 cell, in float3 sourceDirection)
 
 float LPVVisibility(in float4 shFluxDirection, in float4 shOcclusion)
 {
-	return 1 - saturate(SHDotAbs(shOcclusion, shFluxDirection));
+	return 1 - saturate(SHDot(shOcclusion, shFluxDirection));
 }
 
 #else

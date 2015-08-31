@@ -127,10 +127,14 @@ namespace mye
 				mye::math::Matrix4 viewProj;
 				mye::math::Matrix4 invViewProj;
 
+				float              eye[3];
+
 				float              near;
 				float              far;
 				float              fovy;
 				float              ratio;
+
+				float              __fill;
 
 			};
 
@@ -223,11 +227,23 @@ namespace mye
 		                             const mye::math::Matrix4 & view,
 		                             const mye::math::Matrix4 & viewProj,
 		                             const mye::math::Matrix4 & invViewProj,
+									 const mye::math::Vector3 & eye,
 		                             float near, float far,
 		                             float fovy, float ratio)
 		{
 
-			detail::CameraBuffer cb = {	view, viewProj, invViewProj, near, far, fovy, ratio };
+			detail::CameraBuffer cb;
+
+			cb.view        = view;
+			cb.viewProj    = viewProj;
+			cb.invViewProj = invViewProj;
+			cb.near        = near;
+			cb.far         = far;
+			cb.fovy        = fovy;
+			cb.ratio       = ratio;
+
+			detail::VectorCopy(cb.eye, eye);
+
 			b.SetData(&cb);
 
 		}

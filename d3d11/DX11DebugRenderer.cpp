@@ -47,77 +47,30 @@ bool DX11DebugRenderer::Init(void)
 	if (!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton()->CreateSamplerState(&linearSamplerDesc, &m_linearSampler)))
 	{
 
-		VertexDeclaration vd = {
-				{ VertexAttributeSemantic::POSITION, DataFormat::FLOAT2 },
-				{ VertexAttributeSemantic::TEXCOORD0, DataFormat::FLOAT2 }
-		};
-	
-		auto debugTextureViewILV = MakeInputElementVector(vd);
-
-		m_texturedSimpleVS = ResourceTypeManager::GetSingleton().CreateResource<DX11VertexShader>(
+		m_texturedSimple = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
 			"DX11Shader",
-			"./shaders/textured_simple_vs.cso",
+			"./shaders/debug_textured_simple.msh",
 			nullptr,
-			Parameters({
-					{ "type", "vertex" },
-					{ "precompiled", "true" },
-					{ "inputLayoutVector", PointerToString(&debugTextureViewILV) }
-			})
+			{ { "type", "program" } }
 		);
 
-		m_texturedSimplePS = ResourceTypeManager::GetSingleton().CreateResource<DX11PixelShader>(
+		m_texturedArray = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
 			"DX11Shader",
-			"./shaders/textured_simple_ps.cso",
+			"./shaders/debug_textured_arrayslice.msh",
 			nullptr,
-			Parameters({
-					{ "type", "pixel" },
-					{ "precompiled", "true" }
-			})
+			{ { "type", "program" } }
 		);
 
-		m_texturedArrayPS = ResourceTypeManager::GetSingleton().CreateResource<DX11PixelShader>(
+		m_primitives = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
 			"DX11Shader",
-			"./shaders/textured_arrayslice_ps.cso",
+			"./shaders/debug_primitives.msh",
 			nullptr,
-			Parameters({
-					{ "type", "pixel" },
-					{ "precompiled", "true" }
-			})
+			{ { "type", "program" } }
 		);
 
-		VertexDeclaration pVD = {
-			{ VertexAttributeSemantic::POSITION, DataFormat::FLOAT3 },
-			{ VertexAttributeSemantic::DIFFUSE, DataFormat::FLOAT4 }
-		};
-
-		auto debugPrimitiveILV = MakeInputElementVector(pVD);
-
-		m_primitiveVS = ResourceTypeManager::GetSingleton().CreateResource<DX11VertexShader>(
-			"DX11Shader",
-			"./shaders/debug_primitives_vs.cso",
-			nullptr,
-			Parameters({
-					{ "type", "vertex" },
-					{ "precompiled", "true" },
-					{ "inputLayoutVector", PointerToString(&debugPrimitiveILV) }
-			})
-		);
-
-		m_primitivePS = ResourceTypeManager::GetSingleton().CreateResource<DX11PixelShader>(
-			"DX11Shader",
-			"./shaders/debug_primitives_ps.cso",
-			nullptr,
-			Parameters({
-					{ "type", "pixel" },
-					{ "precompiled", "true" }
-			})
-		);
-
-		if (m_texturedSimpleVS->Load() &&
-			m_texturedSimplePS->Load() &&
-			m_texturedArrayPS->Load() &&
-			m_primitiveVS->Load() &&
-			m_primitivePS->Load())
+		if (m_texturedSimple->Load() &&
+		    m_texturedArray->Load() &&
+		    m_primitives->Load())
 		{
 
 			m_initialized = true;
@@ -136,8 +89,9 @@ void DX11DebugRenderer::Shutdown(void)
 	if (m_initialized)
 	{
 
-		m_texturedSimpleVS->Unload();
-		m_texturedSimplePS->Unload();
+		m_texturedSimple = nullptr;
+		m_texturedArray  = nullptr;
+		m_primitives     = nullptr;
 
 		m_initialized = false;
 
@@ -192,8 +146,7 @@ void DX11DebugRenderer::Render(ID3D11RenderTargetView * target)
 
 		}
 
-		m_primitiveVS->Use();
-		m_primitivePS->Use();
+		m_primitives->Use();
 
 		DX11VertexBuffer vb;
 		vb.Create(vd.GetData(), vd.GetVerticesCount(), pVD);
@@ -243,7 +196,7 @@ void DX11DebugRenderer::Render(ID3D11RenderTargetView * target)
 		DX11ConstantBuffer transformBuffer;
 		transformBuffer.Create(sizeof(Matrix4));
 
-		m_texturedSimpleVS->Use();
+		m_texturedSimple->Use();
 		
 		//transformBuffer.SetData(&orthoProj);
 
@@ -286,7 +239,7 @@ void DX11DebugRenderer::Render(ID3D11RenderTargetView * target)
 
 				__SRBuffer b = { sr.slice };
 
-				m_texturedArrayPS->Use();
+				m_texturedArray->Use();
 
 				srBuffer.SetData(&b);
 				srBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, 0);
@@ -294,7 +247,7 @@ void DX11DebugRenderer::Render(ID3D11RenderTargetView * target)
 			}
 			else
 			{
-				m_texturedSimplePS->Use();
+				m_texturedSimple->Use();
 			}
 
 

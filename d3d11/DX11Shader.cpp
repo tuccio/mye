@@ -22,7 +22,6 @@ DX11Shader::~DX11Shader(void) { }
 
 void DX11Shader::Destroy(void)
 {
-	m_source.Clear();
 }
 
 void DX11Shader::Use(void)
@@ -32,56 +31,16 @@ void DX11Shader::Use(void)
 
 bool DX11Shader::LoadImpl(void)
 {
-
-	bool success = false;
-
-	String sourceFile;
-
-	if (m_params.Contains("source"))
-	{
-		sourceFile = m_params.GetString("source");
-	}
-	else
-	{
-		sourceFile = m_name;
-	}
-
-	std::ifstream f(sourceFile.CString());
-	
-	if (f)
-	{
-
-		if (!m_precompiled)
-		{
-
-			m_source = std::string(std::istreambuf_iterator<char>(f),
-                                   std::istreambuf_iterator<char>()).c_str();
-
-		}
-		
-		success = true;
-		f.close();
-		
-	}
-	else
-	{
-
-		Logger::LogErrorOptional("DX11 Shader Compilation", "Can't open file " + sourceFile);
-
-	}
-
-	return success;
-	
+	return false;
 }
 
 void DX11Shader::UnloadImpl(void)
 {
-	Destroy();
 }
 
 size_t DX11Shader::CalculateSizeImpl(void)
 {
-	return m_source.Length();
+	return 0;
 }
 
 std::vector<D3D_SHADER_MACRO> DX11Shader::CreateDefinesVector(void) const
@@ -140,16 +99,51 @@ void DX11Shader::FreeDefinesVector(std::vector<D3D_SHADER_MACRO> & defines) cons
 
 		if (define.Name)
 		{
-			delete define.Name;
+			delete const_cast<char*>(define.Name);
 		}
 
 		if (define.Definition)
 		{
-			delete define.Definition;
+			delete const_cast<char*>(define.Definition);
 		}
 
 	}
 
 	defines.clear();
+
+}
+
+String DX11Shader::LoadSourceCode(void)
+{
+
+	String sourceCode;
+	String sourceFile;
+
+	if (m_params.Contains("source"))
+	{
+		sourceFile = m_params.GetString("source");
+	}
+	else
+	{
+		sourceFile = m_name;
+	}
+
+	std::ifstream f(sourceFile.CString());
+
+	if (f)
+	{
+
+		sourceCode = std::string(std::istreambuf_iterator<char>(f),
+		                         std::istreambuf_iterator<char>()).c_str();
+
+	}
+	else
+	{
+
+		Logger::LogErrorOptional("DX11 Shader Compilation", "Can't open file " + sourceFile);
+
+	}
+
+	return sourceCode;
 
 }

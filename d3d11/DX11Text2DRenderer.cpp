@@ -31,15 +31,15 @@ bool DX11Text2DRenderer::Init(void)
 
 	ZeroMemory(&fontSamplerDesc, sizeof(D3D11_SAMPLER_DESC));
 
-	fontSamplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	fontSamplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
-	fontSamplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
-	fontSamplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
-	fontSamplerDesc.MipLODBias = 0.0f;
-	fontSamplerDesc.MaxAnisotropy = 1;
+	fontSamplerDesc.Filter         = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	fontSamplerDesc.AddressU       = D3D11_TEXTURE_ADDRESS_BORDER;
+	fontSamplerDesc.AddressV       = D3D11_TEXTURE_ADDRESS_BORDER;
+	fontSamplerDesc.AddressW       = D3D11_TEXTURE_ADDRESS_BORDER;
+	fontSamplerDesc.MipLODBias     = 0.0f;
+	fontSamplerDesc.MaxAnisotropy  = 1;
 	fontSamplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-	fontSamplerDesc.MinLOD = 0.0f;
-	fontSamplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	fontSamplerDesc.MinLOD         = 0.0f;
+	fontSamplerDesc.MaxLOD         = D3D11_FLOAT32_MAX;
 
 	if (!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton()->CreateSamplerState(&fontSamplerDesc, &m_fontTextureSampler)))
 	{
@@ -52,30 +52,14 @@ bool DX11Text2DRenderer::Init(void)
 
 		auto textILV = MakeInputElementVector(textVD);
 
-		m_text2dVS = ResourceTypeManager::GetSingleton().CreateResource<DX11VertexShader>(
+		m_text2d = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
 			"DX11Shader",
-			"./shaders/text2d_vs.cso",
+			"./shaders/text2d.msh",
 			nullptr,
-			Parameters({
-				{ "type", "vertex" },
-				{ "precompiled", "true" },
-				{ "inputLayoutVector", PointerToString(&textILV) }
-			})
-		);
+			{ { "type", "program" } });
 
-		m_text2dPS = ResourceTypeManager::GetSingleton().CreateResource<DX11PixelShader>(
-			"DX11Shader",
-			"./shaders/text2d_ps.cso",
-			nullptr,
-			Parameters({
-				{ "type", "pixel" },
-				{ "precompiled", "true" },
-			})
-		);
-
-		if (m_text2dVS->Load() &&
-			m_text2dPS->Load() &&
-			__CreateConstantBuffers())
+		if (m_text2d->Load() &&
+		    __CreateConstantBuffers())
 		{
 
 			m_initialized = true;
@@ -96,8 +80,7 @@ void DX11Text2DRenderer::Shutdown(void)
 
 		__MYE_DX11_RELEASE_COM(m_fontTextureSampler);
 
-		m_text2dVS->Unload();
-		m_text2dPS->Unload();
+		m_text2d->Unload();
 
 		m_initialized = false;
 
@@ -105,11 +88,10 @@ void DX11Text2DRenderer::Shutdown(void)
 
 }
 
-void DX11Text2DRenderer::Render(ID3D11RenderTargetView *target)
+void DX11Text2DRenderer::Render(ID3D11RenderTargetView * target)
 {
 
-	m_text2dVS->Use();
-	m_text2dPS->Use();
+	m_text2d->Use();
 
 	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(1, &target, nullptr);
 	DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(0, 1, &m_fontTextureSampler);

@@ -496,6 +496,8 @@ void Game::ImportScene(const String & file, std::list<GameObject*> * allocatedOb
 					gameObject->AddComponent(RenderComponent());
 
 					rapidxml::xml_node<> * meshNode = render->first_node("mesh");
+					rapidxml::xml_node<> * diffuseTextureNode = render->first_node("diffusetexture");
+					rapidxml::xml_node<> * heightMapNode = render->first_node("heightmap");
 
 					if (meshNode)
 					{
@@ -506,6 +508,28 @@ void Game::ImportScene(const String & file, std::list<GameObject*> * allocatedOb
 							CreateResource<Mesh>("Mesh", modelName->value(), nullptr, { { "tangent", "true" }, { "bitangent", "true" } });
 
 						gameObject->GetRenderComponent()->SetMesh(mesh);
+
+					}
+
+					if (diffuseTextureNode)
+					{
+
+						rapidxml::xml_attribute<> * textureName = diffuseTextureNode->first_attribute("name");
+
+						TexturePointer texture = ResourceTypeManager::GetSingleton().
+							CreateResource<Texture>("Texture", textureName->value(), nullptr);
+
+					}
+
+					if (heightMapNode)
+					{
+
+						rapidxml::xml_attribute<> * textureName = heightMapNode->first_attribute("name");
+
+						TexturePointer texture = ResourceTypeManager::GetSingleton().
+							CreateResource<Texture>("Texture", textureName->value(), nullptr);
+
+						texture->Load();
 
 					}
 

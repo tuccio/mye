@@ -1,19 +1,15 @@
 {
-
-	"vertex" : {
-		"source" : "../d3d11/lpv_propagate_vs.hlsl"
-	},
-	
-	"pixel" : {
-		"name"   : "LPV_PROPAGATE_NO_OCCLUSION_PS",
-		"source" : "../d3d11/lpv_propagate_ps.hlsl",
-		"defines" : {
-			"MYE_PROPAGATE_NO_OCCLUSION" : ""
-		}
-	},
-	
-	"geometry" : {
-		"source" : "../d3d11/lpv_propagate_gs.hlsl"
-	}
-	
+    "geometry": {
+        "source": "../d3d11/shaders/lpv_propagate_gs.hlsl"
+    },
+    "vertex": {
+        "source": "../d3d11/shaders/lpv_propagate_vs.hlsl"
+    },
+    "pixel": {
+        "source": "../d3d11/shaders/lpv_propagate_ps.hlsl",
+        "name": "LPV_PROPAGATE_NO_OCCLUSION_PS",
+        "defines": {
+            "MYE_PROPAGATE_NO_OCCLUSION": ""
+        }
+    }
 }

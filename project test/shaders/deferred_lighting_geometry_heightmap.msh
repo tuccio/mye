@@ -1,15 +1,21 @@
 {
     "vertex": {
         "source": "../d3d11/shaders/deferred_lighting_geometry_vs.hlsl",
-        "name": "DEFERRED_LIGHTING_GEOMETRY_VS",
         "input": {
             "position": "float3",
             "texcoord0": "float2",
             "normal": "float3"
+        },
+        "name": "DEFERRED_LIGHTING_GEOMETRY_VS",
+        "defines": {
+            "MYE_USE_HEIGHT_MAP": ""
         }
     },
     "pixel": {
         "source": "../d3d11/shaders/deferred_lighting_geometry_ps.hlsl",
-        "name": "DEFERRED_LIGHTING_GEOMETRY_PS"
+        "name": "DEFERRED_LIGHTING_GEOMETRY_PS",
+        "defines": {
+            "MYE_USE_HEIGHT_MAP": ""
+        }
     }
 }

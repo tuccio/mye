@@ -16,7 +16,6 @@ struct PSInput
 {
 
 	float4 positionCS : SV_Position;
-	float2 texcoord   : TEXCOORD;
 	float3 normalWS   : NORMALWS;
 	float3 positionWS : POSITIONWS;
 

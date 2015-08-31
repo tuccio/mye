@@ -1,33 +1,17 @@
 #include "Image.h"
+#include "Logger.h"
 
 #include <fstream>
 
 using namespace mye::core;
 
-Image::Image(ResourceManager *owner,
-			 const String &name,
-			 ManualResourceLoader *manual) :
+Image::Image(ResourceManager      * owner,
+			 const String         & name,
+			 ManualResourceLoader * manual) :
 	Resource(owner, name, manual),
 	m_id(IL_INVALID_VALUE)
 {
 }
-
-// Image::Image(unsigned int width, unsigned int height) :
-// 	m_width(width),
-// 	m_height(height)
-// {
-// 
-// 	if (width && height)
-// 	{
-// 		m_data = new ColorRGB[width * height];
-// 	}
-// 	else
-// 	{
-// 		m_data = nullptr;
-// 	}
-// 
-// }
-
 
 Image::~Image(void)
 {
@@ -58,15 +42,23 @@ bool Image::LoadImpl(void)
 
 		std::ifstream f(m_name.CString());
 
-		if (!f.fail() &&
-			ilLoadImage(m_name.CString()) &&
-			ilConvertImage(IL_RGBA, IL_FLOAT))
+		if (f)
 		{
-			loaded = true;
+			
+			if (ilLoadImage(m_name.CString()) &&
+				ilConvertImage(IL_RGBA, IL_FLOAT))
+			{
+				loaded = true;
+			}
+			else
+			{
+				Logger::LogErrorOptional("Image Load", "Failed to load image " + m_name + ".");
+			}
+
 		}
 		else
 		{
-			ilDeleteImage(m_id);
+			Logger::LogErrorOptional("Image Load", "Failed to open file " + m_name + ".");
 		}
 
 	}
@@ -100,7 +92,7 @@ int Image::GetHeight(void) const
 	return ilGetInteger(IL_IMAGE_HEIGHT);
 }
 
-const void* Image::GetData(void) const
+const void * Image::GetData(void) const
 {
 	ilBindImage(m_id);
 	return (const void*) ilGetData();

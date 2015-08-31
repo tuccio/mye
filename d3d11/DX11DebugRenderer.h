@@ -5,8 +5,7 @@
 #include "DX11SwapChain.h"
 #include "DX11Texture.h"
 
-#include "DX11PixelShader.h"
-#include "DX11VertexShader.h"
+#include "DX11ShaderProgram.h"
 
 #include <mye/win/Window.h>
 
@@ -54,12 +53,9 @@ namespace mye
 
 			bool                            m_initialized;
 									      
-			DX11VertexShaderPointer         m_texturedSimpleVS;
-			DX11PixelShaderPointer          m_texturedSimplePS;
-			DX11PixelShaderPointer          m_texturedArrayPS;
-									      
-			DX11VertexShaderPointer         m_primitiveVS;
-			DX11PixelShaderPointer          m_primitivePS;
+			DX11ShaderProgramPointer        m_texturedSimple;
+			DX11ShaderProgramPointer        m_texturedArray;
+			DX11ShaderProgramPointer        m_primitives;
 									      
 			ID3D11SamplerState            * m_linearSampler;
 

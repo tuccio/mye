@@ -51,7 +51,7 @@ namespace mye
 
 			bool                         m_initialized;
 
-			DX11ShaderProgramPointer     m_deferredGeometry[4];
+			DX11ShaderProgramPointer     m_deferredGeometry[2];
 			DX11ShaderProgramPointer     m_deferredLights;
 			DX11ShaderProgramPointer     m_deferredLightsLPV;
 			DX11ShaderProgramPointer     m_deferredFinal;

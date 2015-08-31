@@ -57,6 +57,11 @@ bool DX11DeferredLightingRenderer::Init(void)
 	                                                                                              nullptr,
 	                                                                                              { { "type", "program" } });
 
+	m_deferredGeometry[1] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
+	                                                                                              "./shaders/deferred_lighting_geometry_heightmap.msh",
+	                                                                                              nullptr,
+	                                                                                              { { "type", "program" } });
+
 	m_deferredLights = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
 	                                                                                         "./shaders/deferred_lighting_lights.msh",
 	                                                                                         nullptr,
@@ -147,8 +152,8 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 	RendererConfiguration * r = DX11Module::GetSingleton().GetRendererConfiguration();
 
-	SceneModule * scene   = Game::GetSingleton().GetSceneModule();
-	Camera      * camera  = scene->GetCamera();
+	SceneModule * scene  = Game::GetSingleton().GetSceneModule();
+	Camera      * camera = scene->GetCamera();
 
 	if (camera)
 	{
@@ -157,8 +162,15 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 		Matrix4 projection     = camera->GetProjectionMatrix();
 		Matrix4 viewProjection = projection * view;
 
-		auto visibleObjects = scene->GetVisibleObjects(*camera);
-		//auto visibleObjects = scene->GetObjectsList();
+		MakeCameraBuffer(m_cameraTransformBuffer,
+						 view, viewProjection, viewProjection.Inverse(),
+						 camera->GetPosition(),
+						 camera->GetNearClipDistance(), camera->GetFarClipDistance(), camera->GetFovYRadians(), camera->GetClipAspectRatio());
+
+		m_cameraTransformBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_CAMERATRANSFORM);
+
+		//auto visibleObjects = scene->GetVisibleObjects(*camera);
+		auto visibleObjects = scene->GetObjectsList();
 
 		DX11RasterizerState backCull({ false, CullMode::BACK });
 
@@ -188,34 +200,17 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 		std::sort(visibleObjectsVector.begin(), visibleObjectsVector.end(),
 				  [] (GameObject * a, GameObject * b)
 		{
-
-			RenderComponent * rc[] = { a->GetRenderComponent(), b->GetRenderComponent() };
-			int score[] = { 0, 0 };
-
-			for (int i = 0; i < 2; i++)
-			{
-
-				if (rc[i]->GetHeightMap())
-				{
-					score[i] += 1;
-				}
-
-				if (rc[i]->GetDiffuseTexture())
-				{
-					score[i] += 2;
-				}
-
-			}
-
-			return score[0] < score[1];
+			
+			return a->GetRenderComponent()->GetHeightMap() &&
+			       !b->GetRenderComponent()->GetHeightMap();
 
 		});
 
 		backCull.Use();
 
 
-		enum GBufferContextState { MYE_DIFFUSE_OFF_HEIGHT_OFF, MYE_DIFFUSE_OFF_HEIGHT_ON, MYE_DIFFUSE_ON_HEIGHT_OFF, MYE_DIFFUSE_ON_HEIGHT_ON }
-		gbufferContextState = MYE_DIFFUSE_OFF_HEIGHT_OFF;
+		enum GBufferContextState { MYE_HEIGHT_OFF, MYE_HEIGHT_ON }
+		gbufferContextState = MYE_HEIGHT_OFF;
 
 		m_deferredGeometry[0]->Use();
 
@@ -237,9 +232,9 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 					switch (gbufferContextState)
 					{
 
-					case MYE_DIFFUSE_OFF_HEIGHT_OFF:
+					case MYE_HEIGHT_OFF:
 
-						if (rc->GetHeightMap() || rc->GetDiffuseTexture())
+						if (rc->GetHeightMap())
 						{
 							sameState = false;
 							gbufferContextState = (GBufferContextState) (gbufferContextState + 1);
@@ -278,17 +273,12 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 					switch (gbufferContextState)
 					{
 
-					case MYE_DIFFUSE_OFF_HEIGHT_ON:
-						Resource::StaticCast<DX11Texture>(rc->GetHeightMap())->Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_NORMALMAP);
-						break;
+					case MYE_HEIGHT_ON:
 
-					case MYE_DIFFUSE_ON_HEIGHT_OFF:
-						Resource::StaticCast<DX11Texture>(rc->GetDiffuseTexture())->Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_DIFFUSE);
-						break;
+						DX11TexturePointer heightMap = Resource::StaticCast<DX11Texture>(rc->GetHeightMap());;
+						heightMap->Load();
+						heightMap->Bind(DX11PipelineStage::VERTEX_SHADER, __MYE_DX11_TEXTURE_SLOT_HEIGHTMAP);
 
-					case MYE_DIFFUSE_ON_HEIGHT_ON:
-						Resource::StaticCast<DX11Texture>(rc->GetHeightMap())->Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_NORMALMAP);
-						Resource::StaticCast<DX11Texture>(rc->GetDiffuseTexture())->Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_DIFFUSE);
 						break;
 
 					}
@@ -314,12 +304,6 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 		ID3D11RenderTargetView * lbuffer = m_lbuffer.GetRenderTargetView();
 
 		m_quadVertexBuffer->Load();
-
-		MakeCameraBuffer(m_cameraTransformBuffer,
-		                 view, viewProjection, viewProjection.Inverse(),
-		                 camera->GetNearClipDistance(), camera->GetFarClipDistance(), camera->GetFovYRadians(), camera->GetClipAspectRatio());
-
-		m_cameraTransformBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_CAMERATRANSFORM);
 
 		m_randomCosSin->Load();
 
