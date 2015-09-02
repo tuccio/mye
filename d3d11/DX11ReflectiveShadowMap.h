@@ -106,6 +106,11 @@ namespace mye
 				return m_light;
 			}
 
+			void SetVolumeConstraint(const mye::math::AABB & aabb)
+			{
+				m_volumeConstraint = aabb;
+			}
+
 		private:
 
 			bool                        m_initialized;
@@ -124,8 +129,8 @@ namespace mye
 			int                         m_csmSplits;
 			mye::math::Real             m_csmLogWeight;
 
-			DX11ShaderProgramPointer    m_rsm;
-			DX11ShaderProgramPointer    m_rsmPSSM;
+			DX11ShaderProgramPointer    m_rsm[2];
+			DX11ShaderProgramPointer    m_rsmPSSM[2];
 
 			std::vector<PSSMSlice>      m_pssmSlices;
 
@@ -138,6 +143,8 @@ namespace mye
 			DX11ConstantBuffer          m_cropMatrixCBuffer;
 			DX11ConstantBuffer          m_materialCBuffer;
 			DX11ConstantBuffer          m_lightCBuffer;
+
+			mye::math::AABB             m_volumeConstraint;
 
 			/* Private functions */
 

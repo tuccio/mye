@@ -4,6 +4,7 @@
 #include "gamma.hlsli"
 #include "material.hlsli"
 #include "register_slots.hlsli"
+#include "common_samplers.hlsli"
 
 /* Constant buffers */
 
@@ -15,7 +16,6 @@ cbuffer cbMaterial : register(__MYE_DX11_BUFFER_SLOT_MATERIAL)
 #ifdef MYE_USE_DIFFUSE_TEXTURE
 
 Texture2D    g_diffuseTexture : register(__MYE_DX11_TEXTURE_SLOT_DIFFUSE);
-SamplerState g_diffuseSampler : register(__MYE_DX11_SAMPLER_SLOT_DIFFUSE);
 
 #endif
 
@@ -43,7 +43,7 @@ float4 main(PSInput input) : SV_TARGET
 	float3 diffuseColor;
 
 #ifdef MYE_USE_DIFFUSE_TEXTURE
-	diffuseColor = Gamma(g_diffuseTexture.Sample(g_diffuseSampler, input.texcoord));
+	diffuseColor = Gamma(g_diffuseTexture.Sample(g_anisotropicSampler, input.texcoord));
 #else
 	diffuseColor = Gamma(g_material.diffuseColor);
 #endif
@@ -52,7 +52,7 @@ float4 main(PSInput input) : SV_TARGET
 	float3 specular = g_material.specularColor * lighting.w;
 
 	//output.color = float4(saturate(diffuse + specular), 1);
-
+	//return float4(.5f * input.texcoord + .5f, 0, 1);
 	return float4(diffuse, 1.f);
 
 }

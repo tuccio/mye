@@ -74,6 +74,7 @@ bool DX11Texture::LoadImpl(void)
 
 			if (generateMips)
 			{
+				tex2dDesc.MipLevels  = 0;
 				tex2dDesc.MiscFlags |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
 			}
 

@@ -4,30 +4,32 @@ function SponzaController:Init()
 	
 	Graphics.window.caption = 'Sponza test'
 	
-	r.shadowMapBias = 0.001
-	r.pcfEnabled    = false
-	r.csmSplits     = 1
+	r.shadowMapBias             = 0
+	r.shadowMapNormalOffsetBias = 0.1
+	r.pcfEnabled                = false
+	r.csmSplits                 = 1
 		
 	r.lpvEnabled    = true
-	r.lpvIterations = 26
-	r.lpvAABB       = AABB.FromMinMax(vec3(-20), vec3(20))
+	r.lpvIterations = 16
+	r.lpvAABB       = AABB.FromMinMax(vec3(-25), vec3(25))
 	
-	--r.lpvAABB       = AABB.FromMinMax(vec3(-200), vec3(200))
+	--r.lpvAABB       = AABB.FromMinMax(vec3(-1400), vec3(1400))
 	
 	local hCam = GameObjects:CreateEntity('Camera', 'camera')
 	
 	if hCam and hCam:Exists() then
 	
-		hCam.transform.position    = vec3(-8.47068, 3.23661, -0.0175723)
+		hCam.transform.position    = vec3(-8.47068, 4.23661, -0.0175723)
+		--hCam.transform.position    = vec3(-87, 240, -26)
 		hCam.transform.orientation = quaternion(0.730156, 0.0297107, 0.68207, -0.0277546)
 	
 		hCam.speed       = 3
-		--hCam.speed       = 300
+		--hCam.speed       = 150
 	
 		hCam.camera.fovy = 70
 		hCam.camera.near = 0.01
 		hCam.camera.far  = 50
-		--hCam.camera.far  = 5000
+		--hCam.camera.far  = 2500
 		
 		Scene.camera = hCam.camera
 		
@@ -47,7 +49,7 @@ end
 function SponzaController:OnKeyboardKeyHold(key, t)
 
 	local angle = 25 * Time.delta
-	local v     = vec3(1, 0, 0.1):Normalize()
+	local v     = vec3(1, 0, 1):Normalize()
 
 	if key == KeyboardVK.R then
 	

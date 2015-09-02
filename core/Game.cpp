@@ -276,9 +276,9 @@ void Game::ExportScene(const String & path)
 							" " +
 							ToString(rc->GetBounds().GetMaximum().z()));
 
-						rapidxml::xml_node<> *AABB = document.allocate_node(rapidxml::node_element,	"aabb");
+						rapidxml::xml_node<> * AABB = document.allocate_node(rapidxml::node_element,	"aabb");
 
-						rapidxml::xml_node<> *mesh = document.allocate_node(rapidxml::node_element, "mesh");
+						rapidxml::xml_node<> * mesh = document.allocate_node(rapidxml::node_element, "mesh");
 
 						mesh->append_attribute(document.allocate_attribute("name", 
 							document.allocate_string(rc->GetMesh().get()->GetName().CString())));
@@ -342,7 +342,7 @@ void Game::ImportScene(const String & file, std::list<GameObject*> * allocatedOb
 
 			Vector3 center(0.0f);
 			float size = 1024.0f;
-			unsigned int maxdepth = 32;
+			unsigned int maxdepth = 8;
 
 			if (centerNode)
 			{
@@ -517,7 +517,9 @@ void Game::ImportScene(const String & file, std::list<GameObject*> * allocatedOb
 						rapidxml::xml_attribute<> * textureName = diffuseTextureNode->first_attribute("name");
 
 						TexturePointer texture = ResourceTypeManager::GetSingleton().
-							CreateResource<Texture>("Texture", textureName->value(), nullptr);
+							CreateResource<Texture>("Texture", textureName->value(), nullptr, { { "generateMips", "true" } });
+
+						gameObject->GetRenderComponent()->SetDiffuseTexture(texture);
 
 					}
 
@@ -527,9 +529,9 @@ void Game::ImportScene(const String & file, std::list<GameObject*> * allocatedOb
 						rapidxml::xml_attribute<> * textureName = heightMapNode->first_attribute("name");
 
 						TexturePointer texture = ResourceTypeManager::GetSingleton().
-							CreateResource<Texture>("Texture", textureName->value(), nullptr);
+							CreateResource<Texture>("Texture", textureName->value(), nullptr, { { "generateMips", "true" } });
 
-						texture->Load();
+						gameObject->GetRenderComponent()->SetHeightMap(texture);
 
 					}
 

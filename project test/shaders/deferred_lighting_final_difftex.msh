@@ -8,7 +8,10 @@
         }
     },
     "pixel": {
-		"name": "DEFERRED_FINAL_PS",
-        "source": "../d3d11/shaders/deferred_lighting_final_ps.hlsl"
+		"name": "DEFERRED_FINAL_PS_DIFFTEX",
+        "source": "../d3d11/shaders/deferred_lighting_final_ps.hlsl",
+		"defines" : {
+			"MYE_USE_DIFFUSE_TEXTURE" : ""
+		}
     }
 }

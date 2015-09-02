@@ -54,7 +54,7 @@ namespace mye
 			DX11ShaderProgramPointer     m_deferredGeometry[2];
 			DX11ShaderProgramPointer     m_deferredLights;
 			DX11ShaderProgramPointer     m_deferredLightsLPV;
-			DX11ShaderProgramPointer     m_deferredFinal;
+			DX11ShaderProgramPointer     m_deferredFinal[2];
 								         
 			DX11Texture                  m_gbuffer0;
 			DX11Texture                  m_gbuffer1;
@@ -74,11 +74,13 @@ namespace mye
 			DX11VertexBufferPointer      m_quadVertexBuffer;
 								         
 			DX11DepthBuffer              m_depthBuffer;
-								       
+			
+			ID3D11SamplerState         * m_linearSamplerState;
 			ID3D11SamplerState         * m_lpvSamplerState;
 			ID3D11SamplerState         * m_randomSamplerState;
 			ID3D11SamplerState         * m_shadowMapSamplerState;
 			ID3D11SamplerState         * m_shadowMapSamplerCmpState;
+			ID3D11SamplerState         * m_anisotropicSampler;
 
 			ID3D11BlendState           * m_accumulateBlendState;
 									   

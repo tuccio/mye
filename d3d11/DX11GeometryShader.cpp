@@ -8,6 +8,7 @@
 #include <mye/core/Logger.h>
 #include <mye/core/Utils.h>
 
+#include <algorithm>
 #include <sstream>
 #include <string>
 
@@ -87,6 +88,8 @@ bool DX11GeometryShader::LoadImpl(void)
 
 		auto defines = CreateDefinesVector();
 
+		defines.insert(defines.begin(), { "MYE_GEOMETRY_SHADER", "" });
+
 		String sourceCode = LoadSourceCode();
 
 		if (__MYE_DX11_HR_TEST_FAILED(D3DCompile(
@@ -105,6 +108,9 @@ bool DX11GeometryShader::LoadImpl(void)
 			m_compileError = (LPCSTR) error->GetBufferPointer();
 			Logger::LogErrorOptional("DX11 Shader Compilation", m_compileError);
 		}
+
+		// Need to remove statically allocated strings before deleting
+		defines.erase(defines.begin());
 
 		FreeDefinesVector(defines);
 

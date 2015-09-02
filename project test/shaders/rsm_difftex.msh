@@ -1,0 +1,17 @@
+{
+    "vertex": {
+        "source": "../d3d11/shaders/rsm_vs.hlsl",
+        "input": {
+            "position": "float3",
+            "texcoord0": "float2",
+            "normal": "float3"
+        }
+    },
+    "pixel": {
+		"name": "RSM_PS_DIFFTEX",
+        "source": "../d3d11/shaders/rsm_ps.hlsl",
+		"defines": {
+			"MYE_USE_DIFFUSE_TEXTURE": ""
+		}
+    }
+}

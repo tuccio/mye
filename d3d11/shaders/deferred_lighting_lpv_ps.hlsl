@@ -37,7 +37,7 @@ float4 main(PSInput input) : SV_Target0
 
 	float3 cell         = (data.position - g_lpv.minCorner) / g_lpv.cellSize;
 	float3 sampleCoords = cell / g_lpv.lpvResolution;
-	//float4 shOcclusion  = LPVOcclusion(lpv, cell, float3(0, 0, 0));
+	float4 shOcclusion  = LPVOcclusion(lpv, cell, float3(0, 0, 0));
 
 	SHRGB sh;
 
@@ -50,7 +50,7 @@ float4 main(PSInput input) : SV_Target0
 	sh.blue  = g_lightVolumeBlue.Sample(g_lpvSampler,  sampleCoords);
 
 	float3 intensity  = saturate(SHDot(sh, shNormal)) * MYE_INV_PI;
-	//float  visibility = LPVVisibility(sh.red, shOcclusion);
+	float  visibility = LPVVisibility(sh.red, shOcclusion);
 
 	// As in the crytek paper, approximate the distance r from the surfel as half the
 	// cell size, and thus calculate the irradiance like I/r^2

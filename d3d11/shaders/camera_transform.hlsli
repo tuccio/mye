@@ -13,7 +13,7 @@ cbuffer cbCameraTransform : register(__MYE_DX11_BUFFER_SLOT_CAMERATRANSFORM)
 		float4x4 viewProj;
 		float4x4 invViewProj;
 
-		float3   eye;
+		float3   position;
 
 		float    near;
 		float    far;

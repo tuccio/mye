@@ -3,6 +3,6 @@
 
 #include "renderer_configuration.hlsli"
 
-#define __MYE_PSSM_MAX_SPLITS 6
+#define __MYE_PSSM_MAX_SPLITS 8
 
 #endif

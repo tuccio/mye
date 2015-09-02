@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<scene module="octree" size="2048">
+<scene>
 	<gameobject name="controller" entity="SponzaController">
 	</gameobject>
 	<gameobject name="console" entity="DeveloperConsole">
@@ -16,10 +16,10 @@
 	<gameobject name="arcs_floor">
 		<render>
 			<mesh name="models\sponza_mesh0.obj"/>
-			<material diffuse_color="0.596078 0.567843 0.5396081" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-11.5728 2.69331 -2.41598</min>
-				<max>11.5872 4.81331 2.41895</max>
+				<min>-1.21979e-012 -1.21979e-012 0</min>
+				<max>10.9272 2.95724 2.37059</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_SP_LUK.JPG"/>
 			<heightmap name="textures\sponza_sp_luk-bump.JPG"/>
@@ -28,10 +28,10 @@
 	<gameobject name="arcs_03">
 		<render>
 			<mesh name="models\sponza_mesh1.obj"/>
-			<material diffuse_color="0.596078 0.567843 0.5396081" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-10.9128 2.69331 -2.57834</min>
-				<max>10.9272 4.97331 2.58132</max>
+				<min>-1.21979e-012 -1.21979e-012 0</min>
+				<max>10.8472 2.99493 2.52351</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_SP_LUK.JPG"/>
 			<heightmap name="textures\sponza_sp_luk-bump.JPG"/>
@@ -40,10 +40,10 @@
 	<gameobject name="object32">
 		<render>
 			<mesh name="models\sponza_mesh2.obj"/>
-			<material diffuse_color="0.570981 0.564706 0.5270591" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.713726 0.705882 0.6588241" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-16.2036 2.33331 -7.21851</min>
-				<max>16.2172 8.12331 7.22149</max>
+				<min>-1.21979e-012 -1.21979e-012 0</min>
+				<max>16.2172 2.34731 2.25079</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_00_SKAP.JPG"/>
 			<heightmap name="textures\sponza_00_SKAP.JPG"/>
@@ -52,20 +52,20 @@
 	<gameobject name="object31">
 		<render>
 			<mesh name="models\sponza_mesh3.obj"/>
-			<material diffuse_color="0.627451 0.627451 0.6274511" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.784314 0.784314 0.7843141" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-11.6528 5.88331 -3.25851</min>
-				<max>11.6672 6.04331 3.26149</max>
+				<min>-1.21979e-012 -1.21979e-012 0</min>
+				<max>10.8472 5.92831 2.44149</max>
 			</aabb>
 		</render>
 	</gameobject>
 	<gameobject name="pillar_cor">
 		<render>
 			<mesh name="models\sponza_mesh4.obj"/>
-			<material diffuse_color="0.589804 0.567843 0.536471" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.737255 0.709804 0.6705881" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-11.5728 6.04331 -3.17851</min>
-				<max>11.5872 7.74331 3.18149</max>
+				<min>-1.21979e-012 -1.21979e-012 0</min>
+				<max>10.6772 7.74331 3.18149</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_01_STUB.JPG"/>
 			<heightmap name="textures\sponza_01_STUB-bump.jpg"/>
@@ -74,10 +74,10 @@
 	<gameobject name="pillar_flo">
 		<render>
 			<mesh name="models\sponza_mesh5.obj"/>
-			<material diffuse_color="0.589804 0.567843 0.536471" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.737255 0.709804 0.6705881" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-6.92276 0.093312 -3.17851</min>
-				<max>6.93724 2.33331 3.18149</max>
+				<min>-1.21979e-012 -1.21979e-012 0</min>
+				<max>2.34393 2.33331 2.52149</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_01_STUB.JPG"/>
 			<heightmap name="textures\sponza_01_STUB-bump.jpg"/>
@@ -86,10 +86,10 @@
 	<gameobject name="object28">
 		<render>
 			<mesh name="models\sponza_mesh6.obj"/>
-			<material diffuse_color="0.64 0.627451 0.5992161" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.8 0.784314 0.749021" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-7.00276 5.88331 -3.25851</min>
-				<max>7.01724 6.04331 3.26149</max>
+				<min>-1.21979e-012 -1.21979e-012 0</min>
+				<max>2.60724 5.93331 2.45149</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_01_S_BA.JPG"/>
 			<heightmap name="textures\sponza_01_S_BA.JPG"/>
@@ -98,10 +98,10 @@
 	<gameobject name="object27">
 		<render>
 			<mesh name="models\sponza_mesh7.obj"/>
-			<material diffuse_color="0.596078 0.567843 0.5396081" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-7.01476 7.74331 -3.27051</min>
-				<max>7.02924 8.12331 3.27349</max>
+				<min>-1.21979e-012 -1.21979e-012 -1.5884e+038</min>
+				<max>2.55224 7.74331 2.50649</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_01_ST_KP.JPG"/>
 			<heightmap name="textures\sponza_01_St_kp-bump.jpg"/>
@@ -110,10 +110,10 @@
 	<gameobject name="pillar_qua">
 		<render>
 			<mesh name="models\sponza_mesh8.obj"/>
-			<material diffuse_color="0.589804 0.567843 0.536471" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.737255 0.709804 0.6705881" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-6.92276 6.04331 -3.17851</min>
-				<max>6.93724 7.74331 3.18149</max>
+				<min>-1.21979e-012 -1.21979e-012 0</min>
+				<max>2.53724 7.74331 2.52149</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_01_STUB.JPG"/>
 			<heightmap name="textures\sponza_01_STUB-bump.jpg"/>
@@ -122,10 +122,10 @@
 	<gameobject name="pillar_rou">
 		<render>
 			<mesh name="models\sponza_mesh9.obj"/>
-			<material diffuse_color="0.661961 0.64 0.6149021" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.827451 0.8 0.7686281" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-11.4528 6.04331 -3.05851</min>
-				<max>11.4672 7.74331 3.06149</max>
+				<min>-1.21979e-012 -1.21979e-012 0</min>
+				<max>8.62246 7.06331 2.92803</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_X01_ST.JPG"/>
 		</render>
@@ -133,10 +133,10 @@
 	<gameobject name="arcs_floo0">
 		<render>
 			<mesh name="models\sponza_mesh10.obj"/>
-			<material diffuse_color="0.596078 0.567843 0.5396081" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-10.9128 2.69331 -3.17851</min>
-				<max>10.9272 4.81331 3.18149</max>
+				<min>-1.21979e-012 -1.21979e-012 0</min>
+				<max>0.251324 4.54731 3.18149</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_SP_LUK.JPG"/>
 			<heightmap name="textures\sponza_sp_luk-bump.JPG"/>
@@ -145,10 +145,10 @@
 	<gameobject name="object23">
 		<render>
 			<mesh name="models\sponza_mesh11.obj"/>
-			<material diffuse_color="0.570981 0.564706 0.5270591" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.713726 0.705882 0.6588241" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-11.6728 5.72331 -3.27851</min>
-				<max>11.6872 15.6533 3.28149</max>
+				<min>-1.21979e-012 -1.21979e-012 0</min>
+				<max>0.00724 5.75831 2.49404</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_00_SKAP.JPG"/>
 			<heightmap name="textures\sponza_00_SKAP.JPG"/>
@@ -157,10 +157,10 @@
 	<gameobject name="object21">
 		<render>
 			<mesh name="models\sponza_mesh12.obj"/>
-			<material diffuse_color="0.752942 0.693334 0.5898041" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.941177 0.866667 0.7372551" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-11.5728 2.69331 -3.17851</min>
-				<max>11.5872 10.0933 3.18149</max>
+				<min>-1.21979e-012 -1.21979e-012 0</min>
+				<max>4.40724 10.0933 3.18149</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_KAMEN-stup.JPG"/>
 			<heightmap name="textures\sponza_KAMEN-stup.jpg"/>
@@ -169,10 +169,10 @@
 	<gameobject name="puillar_fl">
 		<render>
 			<mesh name="models\sponza_mesh13.obj"/>
-			<material diffuse_color="0.589804 0.567843 0.536471" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.737255 0.709804 0.6705881" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-11.6968 0.093312 -3.30251</min>
-				<max>11.7112 2.69331 3.30549</max>
+				<min>-1.21979e-012 -1.21979e-012 -2.06451</min>
+				<max>10.8032 2.69331 0</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_01_STUB.JPG"/>
 			<heightmap name="textures\sponza_01_STUB-bump.jpg"/>
@@ -181,10 +181,10 @@
 	<gameobject name="object19">
 		<render>
 			<mesh name="models\sponza_mesh14.obj"/>
-			<material diffuse_color="0.596078 0.567843 0.5396081" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-11.6648 7.74331 -3.27051</min>
-				<max>11.6792 8.12331 3.27349</max>
+				<min>-11.6648 -1.21979e-012 0</min>
+				<max>-1.21979e-012 8.12331 2.17949</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_01_ST_KP.JPG"/>
 			<heightmap name="textures\sponza_01_St_kp-bump.jpg"/>
@@ -193,10 +193,10 @@
 	<gameobject name="relief">
 		<render>
 			<mesh name="models\sponza_mesh15.obj"/>
-			<material diffuse_color="0.42353 0.398431 0.3921571" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.529412 0.498039 0.4901961" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>10.9272 11.0533 -1.77851</min>
-				<max>10.9272 13.9533 1.78149</max>
+				<min>-1.21979e-012 -1.21979e-012 0</min>
+				<max>10.9272 13.9533 0.651487</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_RELJEF.JPG"/>
 			<heightmap name="textures\sponza_reljef-bump.jpg"/>
@@ -205,10 +205,10 @@
 	<gameobject name="arcs_small">
 		<render>
 			<mesh name="models\sponza_mesh16.obj"/>
-			<material diffuse_color="0.596078 0.567843 0.5396081" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-11.5728 8.12331 -2.51851</min>
-				<max>11.5872 9.56251 2.52149</max>
+				<min>-1.21979e-012 -1.21979e-012 -0.267677</min>
+				<max>10.9272 8.6705 0</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_SP_LUK.JPG"/>
 			<heightmap name="textures\sponza_sp_luk-bump.JPG"/>
@@ -217,10 +217,10 @@
 	<gameobject name="holes">
 		<render>
 			<mesh name="models\sponza_mesh17.obj"/>
-			<material diffuse_color="0.661961 0.64 0.6149021" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.827451 0.8 0.7686281" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-11.5728 11.0533 -3.17851</min>
-				<max>9.34474 12.1308 3.18149</max>
+				<min>-0.40776 -1.21979e-012 0</min>
+				<max>-1.21979e-012 11.0533 2.57404</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_X01_ST.JPG"/>
 		</render>
@@ -228,10 +228,10 @@
 	<gameobject name="outside01">
 		<render>
 			<mesh name="models\sponza_mesh18.obj"/>
-			<material diffuse_color="0.501961 0.458039 0.4486271" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.627451 0.572549 0.5607841" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-17.4028 -0.906689 -7.79851</min>
-				<max>17.4172 15.6533 7.80149</max>
+				<min>-1.21979e-012 -1.21979e-012 0</min>
+				<max>0.00724 15.6533 3.18149</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_KAMEN.JPG"/>
 			<heightmap name="textures\sponza_KAMEN-bump.jpg"/>
@@ -240,10 +240,10 @@
 	<gameobject name="arcs_long">
 		<render>
 			<mesh name="models\sponza_mesh19.obj"/>
-			<material diffuse_color="0.596078 0.567843 0.5396081" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-10.9128 8.12331 -3.17851</min>
-				<max>10.9272 9.55766 3.18149</max>
+				<min>-1.21979e-012 -1.21979e-012 0</min>
+				<max>4.40724 8.53614 2.52149</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_SP_LUK.JPG"/>
 			<heightmap name="textures\sponza_sp_luk-bump.JPG"/>
@@ -252,10 +252,10 @@
 	<gameobject name="parapet">
 		<render>
 			<mesh name="models\sponza_mesh20.obj"/>
-			<material diffuse_color="0.596078 0.567843 0.5396081" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-11.5728 5.88331 -3.17851</min>
-				<max>11.5872 15.6533 3.18149</max>
+				<min>-1.21979e-012 -1.21979e-012 0</min>
+				<max>8.39224 11.0533 2.57404</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_SP_LUK.JPG"/>
 			<heightmap name="textures\sponza_sp_luk-bump.JPG"/>
@@ -264,10 +264,10 @@
 	<gameobject name="round_hole">
 		<render>
 			<mesh name="models\sponza_mesh21.obj"/>
-			<material diffuse_color="0.596078 0.567843 0.5396081" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-11.5728 14.5433 -3.17851</min>
-				<max>7.12724 15.2233 3.18149</max>
+				<min>-1.21979e-012 -1.21979e-012 -1.5884e+038</min>
+				<max>2.45612 15.0496 2.64149</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_SP_LUK.JPG"/>
 			<heightmap name="textures\sponza_sp_luk-bump.JPG"/>
@@ -276,10 +276,10 @@
 	<gameobject name="ceiling">
 		<render>
 			<mesh name="models\sponza_mesh22.obj"/>
-			<material diffuse_color="0.752942 0.693334 0.5898041" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.941177 0.866667 0.7372551" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-16.2036 2.69331 -7.21851</min>
-				<max>16.218 10.0933 7.22149</max>
+				<min>-1.21979e-012 -1.21979e-012 0</min>
+				<max>11.5872 9.68622 1.38058</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_KAMEN-stup.JPG"/>
 			<heightmap name="textures\sponza_KAMEN-stup.jpg"/>
@@ -288,10 +288,10 @@
 	<gameobject name="arcs_01">
 		<render>
 			<mesh name="models\sponza_mesh23.obj"/>
-			<material diffuse_color="0.596078 0.567843 0.5396081" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-10.9128 8.12331 -2.67851</min>
-				<max>10.9272 9.72251 2.68149</max>
+				<min>-1.21979e-012 -1.21979e-012 -0.081028</min>
+				<max>10.8997 8.93501 0</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_SP_LUK.JPG"/>
 			<heightmap name="textures\sponza_sp_luk-bump.JPG"/>
@@ -300,10 +300,10 @@
 	<gameobject name="object6">
 		<render>
 			<mesh name="models\sponza_mesh24.obj"/>
-			<material diffuse_color="0.570981 0.564706 0.5270591" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.713726 0.705882 0.6588241" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-11.6968 2.33331 -3.30251</min>
-				<max>11.7112 2.69331 3.30549</max>
+				<min>-1.21979e-012 -1.21979e-012 -1.5884e+038</min>
+				<max>11.5864 2.44331 2.38513</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_00_SKAP.JPG"/>
 			<heightmap name="textures\sponza_00_SKAP.JPG"/>
@@ -312,10 +312,10 @@
 	<gameobject name="object5">
 		<render>
 			<mesh name="models\sponza_mesh25.obj"/>
-			<material diffuse_color="0.570981 0.564706 0.5270591" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.713726 0.705882 0.6588241" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-7.04676 2.33331 -3.30251</min>
-				<max>7.06124 2.69331 3.30549</max>
+				<min>-1.21979e-012 -1.21979e-012 0</min>
+				<max>2.53644 2.44331 2.71513</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_00_SKAP.JPG"/>
 			<heightmap name="textures\sponza_00_SKAP.JPG"/>
@@ -324,10 +324,10 @@
 	<gameobject name="object4">
 		<render>
 			<mesh name="models\sponza_mesh26.obj"/>
-			<material diffuse_color="0.596078 0.567843 0.5396081" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-11.5711 7.74331 -3.17686</min>
-				<max>11.5856 8.12331 3.17983</max>
+				<min>-1.21979e-012 -1.21979e-012 0</min>
+				<max>4.40724 8.04331 2.85149</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_01_ST_KP.JPG"/>
 			<heightmap name="textures\sponza_01_St_kp-bump.jpg"/>
@@ -336,10 +336,10 @@
 	<gameobject name="object3">
 		<render>
 			<mesh name="models\sponza_mesh27.obj"/>
-			<material diffuse_color="0.64 0.627451 0.5992161" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.8 0.784314 0.749021" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-11.5484 5.88331 -3.15418</min>
-				<max>11.5629 6.04331 3.15716</max>
+				<min>-1.21979e-012 -1.21979e-012 0</min>
+				<max>4.62897 5.93331 2.94333</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_01_S_BA.JPG"/>
 			<heightmap name="textures\sponza_01_S_BA.JPG"/>
@@ -348,10 +348,10 @@
 	<gameobject name="arcs_02">
 		<render>
 			<mesh name="models\sponza_mesh28.obj"/>
-			<material diffuse_color="0.596078 0.567843 0.5396081" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-11.0728 8.12331 -2.51851</min>
-				<max>11.0872 9.72247 2.52149</max>
+				<min>-1.21979e-012 -1.21979e-012 0</min>
+				<max>4.40724 8.64479 2.49404</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_SP_LUK.JPG"/>
 			<heightmap name="textures\sponza_sp_luk-bump.JPG"/>
@@ -360,10 +360,10 @@
 	<gameobject name="arcs_04">
 		<render>
 			<mesh name="models\sponza_mesh29.obj"/>
-			<material diffuse_color="0.596078 0.567843 0.5396081" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.745098 0.709804 0.674511" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-11.0728 2.69331 -2.51851</min>
-				<max>11.0872 4.97331 2.52149</max>
+				<min>-1.21979e-012 -1.21979e-012 0</min>
+				<max>2.20724 2.98295 2.45374</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_SP_LUK.JPG"/>
 			<heightmap name="textures\sponza_sp_luk-bump.JPG"/>
@@ -372,10 +372,10 @@
 	<gameobject name="walls">
 		<render>
 			<mesh name="models\sponza_mesh30.obj"/>
-			<material diffuse_color="0.501961 0.458039 0.4486271" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.627451 0.572549 0.5607841" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-16.2036 0.093311 -7.21851</min>
-				<max>16.218 15.6533 7.22208</max>
+				<min>-1.21979e-012 -1.21979e-012 -0.098513</min>
+				<max>11.5872 14.8033 0</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_KAMEN.JPG"/>
 			<heightmap name="textures\sponza_KAMEN-bump.jpg"/>
@@ -384,10 +384,10 @@
 	<gameobject name="defaultobject">
 		<render>
 			<mesh name="models\sponza_mesh31.obj"/>
-			<material diffuse_color="0.8 0.8 0.81" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="1 1 11" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>3.47724 1.47331 7.21901</min>
-				<max>5.33724 3.16335 7.22149</max>
+				<min>-1.21979e-012 -1.21979e-012 0</min>
+				<max>3.47724 1.47331 7.22149</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_PROZOR1.JPG"/>
 			<heightmap name="textures\sponza_PROZOR1.JPG"/>
@@ -396,10 +396,10 @@
 	<gameobject name="defaultobject">
 		<render>
 			<mesh name="models\sponza_mesh32.obj"/>
-			<material diffuse_color="0.627451 0.627451 0.6274511" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.784314 0.784314 0.7843141" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>16.1972 4.82331 -0.927261</min>
-				<max>16.5797 8.40104 0.930239</max>
+				<min>-1.21979e-012 -1.21979e-012 0</min>
+				<max>16.2647 8.10346 0.001489</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_VRATA_KR.JPG"/>
 			<heightmap name="textures\sponza_VRATA_KR.JPG"/>
@@ -408,10 +408,10 @@
 	<gameobject name="defaultobject">
 		<render>
 			<mesh name="models\sponza_mesh33.obj"/>
-			<material diffuse_color="0.501961 0.458039 0.4486271" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.627451 0.572549 0.5607841" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-16.2036 0.093311 -7.21851</min>
-				<max>-2.42276 15.0933 7.22208</max>
+				<min>-16.2036 -1.21979e-012 -1.5884e+038</min>
+				<max>-1.21979e-012 0.093313 7.22149</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_KAMEN.JPG"/>
 			<heightmap name="textures\sponza_KAMEN-bump.jpg"/>
@@ -420,10 +420,10 @@
 	<gameobject name="defaultobject">
 		<render>
 			<mesh name="models\sponza_mesh34.obj"/>
-			<material diffuse_color="0.501961 0.458039 0.4486271" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.627451 0.572549 0.5607841" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-17.4028 -0.906689 -7.79851</min>
-				<max>17.4172 10.2533 7.80149</max>
+				<min>-0.97276 -1.21979e-012 0</min>
+				<max>-1.21979e-012 0.093313 7.26159</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_KAMEN.JPG"/>
 			<heightmap name="textures\sponza_KAMEN-bump.jpg"/>
@@ -432,10 +432,10 @@
 	<gameobject name="windows">
 		<render>
 			<mesh name="models\sponza_mesh35.obj"/>
-			<material diffuse_color="0.8 0.8 0.81" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="1 1 11" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-5.32276 1.47331 7.21653</min>
-				<max>5.33724 3.5513 7.46649</max>
+				<min>-3.74276 -1.21979e-012 -1.5884e+038</min>
+				<max>-1.21979e-012 3.16327 7.21653</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_PROZOR1.JPG"/>
 			<heightmap name="textures\sponza_PROZOR1.JPG"/>
@@ -444,10 +444,10 @@
 	<gameobject name="doors">
 		<render>
 			<mesh name="models\sponza_mesh36.obj"/>
-			<material diffuse_color="0.627451 0.627451 0.6274511" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.784314 0.784314 0.7843141" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-1.23276 0.093313 7.11149</min>
-				<max>1.24724 3.00331 7.58482</max>
+				<min>-1.21979e-012 -1.21979e-012 0</min>
+				<max>0.79724 0.093313 7.26899</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_VRATA_KO.JPG"/>
 			<heightmap name="textures\sponza_VRATA_KO.JPG"/>
@@ -456,10 +456,10 @@
 	<gameobject name="defaultobject">
 		<render>
 			<mesh name="models\sponza_mesh37.obj"/>
-			<material diffuse_color="0.627451 0.627451 0.6274511" specular="0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.784314 0.784314 0.7843141" specular="0" roughness="0" metallic="0"/>
 			<aabb>
-				<min>-0.92151 0.093311 -7.58101</min>
-				<max>0.93599 3.67104 -7.19851</max>
+				<min>-1.21979e-012 -1.21979e-012 -7.26601</min>
+				<max>0.00724 3.37346 0</max>
 			</aabb>
 			<diffusetexture name="textures\sponza_VRATA_KR.JPG"/>
 			<heightmap name="textures\sponza_VRATA_KR.JPG"/>

@@ -34,6 +34,8 @@ int main(int argc, char * argv[])
 
 	const aiScene * scene = importer.ReadFile(argv[1], aiProcessPreset_TargetRealtime_MaxQuality);
 
+	//aiApplyPostProcessing(scene, aiProcess_ValidateDataStructure | aiProcess_FindInvalidData);
+
 	boost::filesystem::path outputFile(argv[2]);
 	boost::filesystem::path parent = outputFile.parent_path();
 
@@ -104,16 +106,32 @@ void GenerateMeshFiles(boost::filesystem::path & parent, const char * sceneName,
 
 	aiMaterial * meshMaterial = scene->mMaterials[mesh->mMaterialIndex];
 
-	aiString path;
+	aiString diffusePath, heightPath;
 
-	if (meshMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS ||
-		meshMaterial->GetTexture(aiTextureType_HEIGHT, 0, &path) == AI_SUCCESS)
+	if (meshMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &diffusePath) == AI_SUCCESS)
 	{
 
-		boost::filesystem::path source = path.C_Str();
+		boost::filesystem::path source = diffusePath.C_Str();
 		auto destination = MakeTextureName(sceneName, source.string());
 
-		boost::filesystem::copy_file(path.C_Str(), destination, boost::filesystem::copy_option::overwrite_if_exists);
+		if (!boost::filesystem::is_regular_file(destination))
+		{
+			boost::filesystem::copy_file(diffusePath.C_Str(), destination);
+			
+		}
+
+	}
+
+	if (meshMaterial->GetTexture(aiTextureType_HEIGHT, 0, &heightPath) == AI_SUCCESS)
+	{
+
+		boost::filesystem::path source = heightPath.C_Str();
+		auto destination = MakeTextureName(sceneName, source.string());
+
+		if (!boost::filesystem::is_regular_file(destination))
+		{
+			boost::filesystem::copy_file(heightPath.C_Str(), destination);
+		}
 
 	}
 
@@ -140,7 +158,9 @@ void CreateScenePropertyTree(const aiScene * scene, const std::string & sceneNam
 			gameObject.add("<xmlattr>.name", node->mName.C_Str());
 		}
 
-		gameObject.add("render.mesh.<xmlattr>.name", MakeMeshName(sceneName, node->mMeshes[0]).string());
+		std::string meshName = MakeMeshName(sceneName, node->mMeshes[0]).string();
+
+		gameObject.add("render.mesh.<xmlattr>.name", meshName);
 		
 		aiMaterial * material = scene->mMaterials[mesh->mMaterialIndex];
 		
@@ -160,7 +180,7 @@ void CreateScenePropertyTree(const aiScene * scene, const std::string & sceneNam
 		
 		aiVector3D aabbMin, aabbMax;
 		FindAABB(mesh, aabbMin, aabbMax);
-		
+
 		{
 			std::stringstream ss;
 			ss << aabbMin.x << " " << aabbMin.y << " " << aabbMin.z;
@@ -176,22 +196,22 @@ void CreateScenePropertyTree(const aiScene * scene, const std::string & sceneNam
 		/* Textures */
 
 		aiMaterial * meshMaterial = scene->mMaterials[mesh->mMaterialIndex];
-		aiString path;
+		aiString diffusePath, heightPath;
 
-		if (meshMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS)
+		if (meshMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &diffusePath) == AI_SUCCESS)
 		{
 
-			boost::filesystem::path source = path.C_Str();
+			boost::filesystem::path source = diffusePath.C_Str();
 			auto destination = MakeTextureName(sceneName, source.string());
 
 			gameObject.add("render.diffusetexture.<xmlattr>.name", destination.string());
 
 		}
 
-		if (meshMaterial->GetTexture(aiTextureType_HEIGHT, 0, &path) == AI_SUCCESS)
+		if (meshMaterial->GetTexture(aiTextureType_HEIGHT, 0, &heightPath) == AI_SUCCESS)
 		{
 
-			boost::filesystem::path source = path.C_Str();
+			boost::filesystem::path source = heightPath.C_Str();
 			auto destination = MakeTextureName(sceneName, source.string());
 
 			gameObject.add("render.heightmap.<xmlattr>.name", destination.string());
@@ -220,13 +240,64 @@ boost::filesystem::path MakeTextureName(const std::string & sceneName, int i, co
 
 boost::filesystem::path MakeTextureName(const std::string & sceneName, const std::string & name)
 {
-	return boost::filesystem::path("textures") / (sceneName + "_" + name);
+
+	auto slashPos = name.find_last_of("\\/");
+
+	if (slashPos != std::string::npos)
+	{
+		return boost::filesystem::path("textures") / (sceneName + "_" + name.substr(slashPos + 1));
+	}
+	else
+	{
+		return boost::filesystem::path("textures") / (sceneName + "_" + name);
+	}
+
 }
 
 void FindAABB(const aiMesh * mesh, aiVector3D & min, aiVector3D & max)
 {
 
-	if (mesh->mNumVertices)
+	min = aiVector3D(10e10f, 10e10f, 10e10f);
+	max = aiVector3D(-10e10f, -10e10f, -10e10f);
+
+	for (unsigned int i = 0; i < mesh->mNumVertices; ++i)
+	{
+
+		const aiVector3D v = mesh->mVertices[i];
+
+		if (v.x < min.x)
+		{
+			min.x = v.x;
+		}
+
+		if (v.y < min.y)
+		{
+			min.y = v.y;
+		}
+
+		if (v.z < min.z)
+		{
+			min.z = v.z;
+		}
+
+		if (v.x > max.x)
+		{
+			max.x = v.x;
+		}
+
+		if (v.y > max.y)
+		{
+			max.y = v.y;
+		}
+
+		if (v.z > max.z)
+		{
+			max.z = v.z;
+		}
+
+	}
+
+	/*if (mesh->mNumVertices)
 	{
 
 		auto minMaxX = std::minmax(mesh->mVertices,
@@ -249,6 +320,6 @@ void FindAABB(const aiMesh * mesh, aiVector3D & min, aiVector3D & max)
 		max.y = minMaxY.second->y;
 		max.z = minMaxZ.second->z;
 
-	}
+	}*/
 
 }

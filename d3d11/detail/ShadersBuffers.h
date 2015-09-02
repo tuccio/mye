@@ -127,7 +127,7 @@ namespace mye
 				mye::math::Matrix4 viewProj;
 				mye::math::Matrix4 invViewProj;
 
-				float              eye[3];
+				float              position[3];
 
 				float              near;
 				float              far;
@@ -227,7 +227,7 @@ namespace mye
 		                             const mye::math::Matrix4 & view,
 		                             const mye::math::Matrix4 & viewProj,
 		                             const mye::math::Matrix4 & invViewProj,
-									 const mye::math::Vector3 & eye,
+									 const mye::math::Vector3 & position,
 		                             float near, float far,
 		                             float fovy, float ratio)
 		{
@@ -242,7 +242,7 @@ namespace mye
 			cb.fovy        = fovy;
 			cb.ratio       = ratio;
 
-			detail::VectorCopy(cb.eye, eye);
+			detail::VectorCopy(cb.position, position);
 
 			b.SetData(&cb);
 

@@ -123,7 +123,6 @@ namespace mye
 			ID3D11BlendState          * m_additiveBlend;
 							         
 			DX11ConstantBuffer          m_lightBuffer;
-			DX11ConstantBuffer          m_cameraTransformBuffer;
 			DX11ConstantBuffer          m_lpvConfig;
 
 			DX11VertexBufferPointer     m_quadVertexBuffer;;

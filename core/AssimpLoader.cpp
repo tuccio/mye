@@ -21,11 +21,9 @@ bool AssimpLoader::LoadMesh(const String &filename, Mesh *mesh)
 		filename.CString(),
 		aiProcessPreset_TargetRealtime_MaxQuality);
 
-	if (scene &&
-		//aiApplyPostProcessing(scene, aiProcess_CalcTangentSpace) &&
-		scene->HasMeshes())
+	if (scene && scene->HasMeshes())
 	{
-		loaded = LoadMesh(scene->mMeshes[0], mesh);
+		loaded = LoadMesh(scene, scene->mMeshes[0], mesh);
 	}
 
 	importer.FreeScene();
@@ -34,7 +32,7 @@ bool AssimpLoader::LoadMesh(const String &filename, Mesh *mesh)
 
 }
 
-bool AssimpLoader::LoadMesh(const aiMesh *assimpMesh, Mesh *mesh)
+bool AssimpLoader::LoadMesh(const aiScene * scene, const aiMesh * assimpMesh, Mesh * mesh)
 {
 
 	if (!mesh || !assimpMesh)
@@ -95,6 +93,11 @@ bool AssimpLoader::LoadMesh(const aiMesh *assimpMesh, Mesh *mesh)
 
 	}
 
+	if (tangent || bitangent)
+	{
+		aiApplyPostProcessing(scene, aiProcess_CalcTangentSpace);
+	}
+
 	if (assimpMesh->HasFaces())
 	{
 
@@ -105,7 +108,7 @@ bool AssimpLoader::LoadMesh(const aiMesh *assimpMesh, Mesh *mesh)
 			triangleIndex++)
 		{
 
-			unsigned int *indices = assimpMesh->mFaces[triangleIndex].mIndices;
+			unsigned int * indices = assimpMesh->mFaces[triangleIndex].mIndices;
 
 			for (int j = 0; j < 3; j++)
 			{
@@ -137,7 +140,7 @@ bool AssimpLoader::LoadMesh(const aiMesh *assimpMesh, Mesh *mesh)
 						j,
 						VertexAttributeSemantic::TEXCOORD0,
 						DataFormat::FLOAT2,
-						&assimpMesh->mNormals[indices[j]]);
+						&assimpMesh->mTextureCoords[0][indices[j]]);
 
 				}
 
@@ -207,10 +210,10 @@ bool AssimpLoader::LoadModel(const aiScene *scene, Model *model)
 	for (int i = 0; i < scene->mNumMeshes; i++)
 	{
 
-		Mesh *mesh = model->AddMesh();
+		Mesh * mesh = model->AddMesh();
 		mesh->SetParametersList(model->GetParametersList());
 
-		LoadMesh(scene->mMeshes[i], mesh);
+		LoadMesh(scene, scene->mMeshes[i], mesh);
 		mesh->CalculateSize();
 
 	}

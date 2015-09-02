@@ -3,9 +3,9 @@
 
 using namespace mye::core;
 
-Resource::Resource(ResourceManager *owner,
-				   const String &name,
-				   ManualResourceLoader *manual) :
+Resource::Resource(ResourceManager      * owner,
+				   const String         & name,
+				   ManualResourceLoader * manual) :
 	INamedObject(name)
 {
 
@@ -168,7 +168,7 @@ void Resource::UnloadImpl(void)
 
 }
 
-void Resource::SetParametersList(const Parameters &params)
+void Resource::SetParametersList(const Parameters & params)
 {
 	m_params = params;
 }

@@ -74,9 +74,6 @@ void DX11LightPropagationVolume::Destroy(void)
 
 void DX11LightPropagationVolume::Init(const Camera * camera, const Vector3 & volumeMinCorner, const Vector3 & volumeMaxCorner)
 {
-	
-	Matrix4 viewProjection = camera->GetProjectionMatrix() * camera->GetViewMatrix();
-	m_cameraTransformBuffer.SetData(viewProjection.Data());
 
 	m_lightVolume[0].Clear();
 	m_lightVolume[1].Clear();
@@ -371,14 +368,12 @@ void DX11LightPropagationVolume::__DestroyShaders(void)
 bool DX11LightPropagationVolume::__CreateBuffers(void)
 {
 	return m_lightBuffer.Create(sizeof(detail::LightBuffer)) &&
-	       m_cameraTransformBuffer.Create(sizeof(Matrix4)) &&
 	       m_lpvConfig.Create(sizeof(detail::LPVConfiguration));
 }
 
 void DX11LightPropagationVolume::__DestroyBuffers(void)
 {
 	m_lightBuffer.Destroy();
-	m_cameraTransformBuffer.Destroy();
 	m_lpvConfig.Destroy();
 }
 

@@ -53,6 +53,18 @@ namespace mye
 				format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 				break;
 
+			case mye::core::DataFormat::HALF:
+				format = DXGI_FORMAT_R16_FLOAT;
+				break;
+
+			case mye::core::DataFormat::HALF2:
+				format = DXGI_FORMAT_R16G16_FLOAT;
+				break;
+
+			case mye::core::DataFormat::HALF4:
+				format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+				break;
+
 			case mye::core::DataFormat::INT:
 				format = DXGI_FORMAT_R32_SINT;
 				break;

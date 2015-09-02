@@ -17,8 +17,8 @@ using namespace mye::dx11;
 using namespace mye::core;
 using namespace mye::math;
 
-#define __MYE_RSM_DEFAULT_RESOLUTION 1024
-#define __MYE_RSM_DEFAULT_CSM_SLICES 4
+#define __MYE_RSM_DEFAULT_RESOLUTION     1024
+#define __MYE_RSM_DEFAULT_CSM_SLICES     4
 #define __MYE_RSM_DEFAULT_CSM_LOG_WEIGHT 0.65f
 
 template <typename Iterator>
@@ -48,7 +48,8 @@ DX11ReflectiveShadowMap::DX11ReflectiveShadowMap(void) :
 	m_initialized(false),
 	m_csmSplits(__MYE_RSM_DEFAULT_CSM_SLICES),
 	m_csmLogWeight(__MYE_RSM_DEFAULT_CSM_LOG_WEIGHT),
-	m_light(nullptr)
+	m_light(nullptr),
+	m_volumeConstraint(AABB::FromMinMax(0, 0))
 {
 	SetResolution(__MYE_RSM_DEFAULT_RESOLUTION);
 }
@@ -56,22 +57,38 @@ DX11ReflectiveShadowMap::DX11ReflectiveShadowMap(void) :
 bool DX11ReflectiveShadowMap::Create(void)
 {
 
-	m_rsm = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
+	m_rsm[0] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
 		"DX11Shader",
 		"./shaders/rsm.msh",
 		nullptr,
 		{ { "type", "program" } }
 	);
 
-	m_rsmPSSM = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
+	m_rsm[1] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
+		"DX11Shader",
+		"./shaders/rsm_difftex.msh",
+		nullptr,
+		{ { "type", "program" } }
+	);
+
+	m_rsmPSSM[0] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
 		"DX11Shader",
 		"./shaders/rsm_pssm.msh",
 		nullptr,
 		{ { "type", "program" } }
 	);
+
+	m_rsmPSSM[1] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
+		"DX11Shader",
+		"./shaders/rsm_pssm_difftex.msh",
+		nullptr,
+		{ { "type", "program" } }
+	);
 	
-	if (m_rsm->Load() &&
-	    m_rsmPSSM->Load() &&
+	if (m_rsm[0]->Load() &&
+	    m_rsm[1]->Load() &&
+	    m_rsmPSSM[0]->Load() &&
+		m_rsmPSSM[1]->Load() &&
 	    __CreateRenderTargets() &&
 	    __CreateDepthBuffers() &&
 	    __CreateConstantBuffers())
@@ -156,12 +173,10 @@ void DX11ReflectiveShadowMap::Render(Light * light)
 
 void DX11ReflectiveShadowMap::Bind(DX11PipelineStage stage, int slice)
 {
-
 	m_depth.Bind(stage,    __MYE_DX11_TEXTURE_SLOT_SHADOWMAP);
 	m_position.Bind(stage, __MYE_DX11_TEXTURE_SLOT_RSMPOSITION);
 	m_normal.Bind(stage,   __MYE_DX11_TEXTURE_SLOT_RSMNORMAL);
 	m_flux.Bind(stage,     __MYE_DX11_TEXTURE_SLOT_RSMFLUX);
-
 }
 
 void DX11ReflectiveShadowMap::Unbind(void)
@@ -230,7 +245,7 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 
 	}
 
-	m_cropMatrixCBuffer.SetData(&m_cropMatrix[0]);
+	m_cropMatrixCBuffer.SetSubData(&m_cropMatrix[0], 0, sizeof(Matrix4) * m_csmSplits);
 
 	ID3D11RenderTargetView * renderTargets[3] =
 	{
@@ -248,8 +263,6 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 
 	m_lightCBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_LIGHT);
 	m_cropMatrixCBuffer.Bind(DX11PipelineStage::VERTEX_SHADER, 1);
-
-	m_rsmPSSM->Use();
 	
 	DX11RasterizerState cullState({ false, CullMode::NONE });
 
@@ -258,43 +271,47 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 	for (GameObject * object : casters)
 	{
 
-		RenderComponent * rc = object->GetRenderComponent();
+		RenderComponent * rc   = object->GetRenderComponent();
+		TransformComponent * tc = object->GetTransformComponent();
 
-		if (rc)
+
+		GPUBufferPointer gpuBuffer = rc->GetGPUBuffer();
+
+		if (gpuBuffer && gpuBuffer->Load())
 		{
 
-			TransformComponent * tc = object->GetTransformComponent();
+			DX11TexturePointer difftex = Resource::StaticCast<DX11Texture>(rc->GetDiffuseTexture());
 
-			//MeshPointer mesh = rc->GetMesh();
-
-			GPUBufferPointer gpuBuffer = rc->GetGPUBuffer();
-
-			//if (mesh && mesh->Load())
-			if (gpuBuffer && gpuBuffer->Load())
+			if (difftex && difftex->Load())
 			{
-
-				MakeTransformBuffer(m_transformCBuffer, tc->GetWorldMatrix() * rc->GetModelMatrix(), shadowViewMatrix, shadowProjMatrix);
-				MakeMaterialBuffer(m_materialCBuffer, rc->GetMaterial());
-
-				m_transformCBuffer.Bind(DX11PipelineStage::VERTEX_SHADER, 0);
-				m_materialCBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_MATERIAL);
-
-				DX11VertexBufferPointer vertexBuffer = Resource::StaticCast<DX11VertexBuffer>(gpuBuffer);
-
-				vertexBuffer->Bind();
-
-				DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-				DX11Device::GetSingleton().GetImmediateContext()->DrawInstanced(vertexBuffer->GetVerticesCount(), m_csmSplits, 0, 0);
-
-				vertexBuffer->Unbind();
-
+				m_rsmPSSM[1]->Use();
+				difftex->Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_DIFFUSE);
 			}
+			else
+			{
+				m_rsmPSSM[0]->Use();
+			}
+
+			MakeTransformBuffer(m_transformCBuffer, tc->GetWorldMatrix() * rc->GetModelMatrix(), shadowViewMatrix, shadowProjMatrix);
+			MakeMaterialBuffer(m_materialCBuffer, rc->GetMaterial());
+
+			m_transformCBuffer.Bind(DX11PipelineStage::VERTEX_SHADER, 0);
+			m_materialCBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_MATERIAL);
+
+			DX11VertexBufferPointer vertexBuffer = Resource::StaticCast<DX11VertexBuffer>(gpuBuffer);
+
+			vertexBuffer->Bind();
+
+			DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			DX11Device::GetSingleton().GetImmediateContext()->DrawInstanced(vertexBuffer->GetVerticesCount(), m_csmSplits, 0, 0);
+
+			vertexBuffer->Unbind();
 
 		}
 
 	}
 
-	m_rsmPSSM->Dispose();
+	m_rsmPSSM[0]->Dispose();
 
 	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(0, nullptr, nullptr);
 
@@ -347,7 +364,9 @@ Matrix4 DX11ReflectiveShadowMap::__CSMCropMatrix(const Matrix4 & shadowViewProjM
 
 	AABB hFrustumAABB = BoundingAABB(hFrustumCorners, hFrustumCorners + 8);
 
-	AABB cropAABB = (hCastersAABB ^ hReceiversAABB) ^ hFrustumAABB;
+	AABB cropAABB = (hCastersAABB ^ hReceiversAABB) ^ hFrustumAABB + m_volumeConstraint;
+
+	//AABB cropAABB = hCastersAABB ^ hFrustumAABB + m_volumeConstraint;
 
 	Vector3 cropAABBMax = cropAABB.GetMaximum();
 	Vector3 cropAABBMin = cropAABB.GetMinimum();
@@ -359,7 +378,7 @@ Matrix4 DX11ReflectiveShadowMap::__CSMCropMatrix(const Matrix4 & shadowViewProjM
 	Real maxZ = Min(hReceiversAABB.GetMaximum().z(), hFrustumAABB.GetMaximum().z()) + padding;
 
 	Vector2 S = 2.f / (maxXY - minXY);
-	Vector2 O = -.5f * S * (maxXY + minXY);
+	Vector2 O = - .5f * S * (maxXY + minXY);
 
 	Real SZ = 1.f / (maxZ - minZ);
 	Real OZ = - minZ * SZ;
@@ -504,7 +523,7 @@ bool DX11ReflectiveShadowMap::__CreateConstantBuffers(void)
 {
 
 	return m_transformCBuffer.Create(sizeof(detail::TransformBuffer)) &&
-	       m_cropMatrixCBuffer.Create(sizeof(Matrix4) * m_csmSplits) &&
+	       m_cropMatrixCBuffer.Create(sizeof(Matrix4) * __MYE_RSM_MAX_CSM_COUNT) &&
 	       m_materialCBuffer.Create(sizeof(detail::MaterialBuffer)) &&
 	       m_lightCBuffer.Create(sizeof(detail::LightBuffer));
 

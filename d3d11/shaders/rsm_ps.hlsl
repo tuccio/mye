@@ -7,6 +7,7 @@
 #include "light_directional.hlsli"
 #include "register_slots.hlsli"
 #include "renderer_configuration.hlsli"
+#include "common_samplers.hlsli"
 
 #define MYE_CONE90_SOLID_ANGLE        2.09439510f
 #define MYE_CONE90_SOLID_ANGLE_INV_PI .666666667f
@@ -22,6 +23,12 @@ cbuffer cbMaterial : register(__MYE_DX11_BUFFER_SLOT_MATERIAL)
 {
 	Material g_material;
 };
+
+#ifdef MYE_USE_DIFFUSE_TEXTURE
+
+Texture2D    g_diffuseTexture : register(__MYE_DX11_TEXTURE_SLOT_DIFFUSE);
+
+#endif
 
 /* Input/Output structures */
 
@@ -50,6 +57,18 @@ PSOutput main(PSInput input)
 	float3 N = normalize(input.normalWS);
 	float3 L = LightVector(g_light, input.positionWS);
 
+	float3 albedo;
+
+#ifdef MYE_USE_DIFFUSE_TEXTURE
+
+	albedo = Gamma(g_diffuseTexture.Sample(g_linearSampler, input.texcoord));
+
+#else
+
+	albedo = Gamma(g_material.diffuseColor);
+
+#endif
+
 	float4 NdotL = saturate(dot(N, L));
 
 	//float  omega      = MYE_CONE90_SOLID_ANGLE / (r.shadowMapResolution * r.shadowMapResolution);
@@ -61,7 +80,7 @@ PSOutput main(PSInput input)
 	output.position = float4(input.positionWS, 1);
 	output.normal   = float4(N, 1);
 	//output.flux     = float4(irradiance * MYE_INV_PI * g_material.diffuseColor * NdotL * omega, 1);
-	output.flux     = float4(irradiance * Gamma(g_material.diffuseColor) * NdotL * omegaInvPi, 1);
+	output.flux     = float4(irradiance * albedo * NdotL * omegaInvPi, 1);
 
 	return output;
 

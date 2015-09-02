@@ -15,19 +15,19 @@ cbuffer cbTransform : register(b0)
 struct VSInput
 {
 
-	float3 position  : POSITION;
-	float2 texcoord  : TEXCOORD0;
-	float3 normal    : NORMAL;
+	float3 position : POSITION;
+	float2 texcoord : TEXCOORD0;
+	float3 normal   : NORMAL;
 
 };
 
 struct VSOutput
 {
 
-	float4 positionCS  : SV_Position;
-	float2 texcoord    : TEXCOORD;
-	float3 normalWS    : NORMALWS;
-	float3 positionWS  : POSITIONWS;
+	float4 positionCS : SV_Position;
+	float2 texcoord   : TEXCOORD;
+	float3 normalWS   : NORMALWS;
+	float3 positionWS : POSITIONWS;
 
 };
 
