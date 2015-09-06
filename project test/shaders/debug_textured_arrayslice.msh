@@ -1,10 +1,10 @@
 {
     "vertex": {
         "source": "../d3d11/shaders/debug_textured_simple_vs.hlsl",
-        "input": {
-            "position": "float2",
-            "texcoord0": "float2"
-        }
+        "input": [
+            { "position": "float2" },
+            { "texcoord0": "float2" }
+        ]
     },
     "pixel": {
         "source": "../d3d11/shaders/debug_textured_arrayslice_ps.hlsl"

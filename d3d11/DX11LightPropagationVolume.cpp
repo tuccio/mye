@@ -22,7 +22,7 @@ bool DX11LightPropagationVolume::Create(size_t dimensions, size_t resolution)
 {
 
 	m_volumeResolution = dimensions;
-	m_sampleResolution = resolution;
+	m_rsmSamples       = resolution;
 
 	Parameters textureParams = {
 		{ "renderTarget", "true" }
@@ -34,17 +34,17 @@ bool DX11LightPropagationVolume::Create(size_t dimensions, size_t resolution)
 		{ "renderTarget", "true" }
 	};
 
-	m_position.SetParametersList(textureParams);
+	/*m_position.SetParametersList(textureParams);
 	m_normal.SetParametersList(textureParams);
 	m_flux.SetParametersList(textureParams);
-	m_depth.SetParametersList(textureParams);
+	m_depth.SetParametersList(textureParams);*/
 
 	m_quadVertexBuffer = ResourceTypeManager::GetSingleton().GetResource<DX11VertexBuffer>("GPUBuffer", "MYE_QUAD");
 
-	return	m_position.Create(resolution, resolution, DataFormat::FLOAT4) &&
-	        m_normal.Create(resolution, resolution, DataFormat::FLOAT4) &&
-	        m_flux.Create(resolution, resolution, DataFormat::FLOAT4) &&
-	        m_depth.Create(resolution, resolution, DataFormat::FLOAT) &&
+	return	/*m_position.Create(resolution, resolution, DataFormat::HALF4) &&
+	        m_normal.Create(resolution, resolution,   DataFormat::HALF4) &&
+	        m_flux.Create(resolution, resolution,     DataFormat::HALF4) &&
+	        m_depth.Create(resolution, resolution,    DataFormat::FLOAT) &&*/
 			m_lightVolume[0].Create(dimensions) &&
 			m_lightVolume[1].Create(dimensions) &&
 			m_geometryVolume.Create(dimensions) &&
@@ -57,9 +57,9 @@ bool DX11LightPropagationVolume::Create(size_t dimensions, size_t resolution)
 void DX11LightPropagationVolume::Destroy(void)
 {
 
-	m_position.Destroy();
+	/*m_position.Destroy();
 	m_normal.Destroy();
-	m_flux.Destroy();
+	m_flux.Destroy();*/
 
 	m_lightVolume[0].Destroy();
 	m_lightVolume[1].Destroy();
@@ -90,7 +90,7 @@ void DX11LightPropagationVolume::Init(const Camera * camera, const Vector3 & vol
 	m_volumeMinCorner = volumeAABB.GetMinimum();
 	m_volumeMaxCorner = volumeAABB.GetMaximum();
 
-	MakeLPVConfigurationBuffer(m_lpvConfig, m_volumeMinCorner, m_volumeMaxCorner, m_volumeCellSize, m_sampleResolution, m_volumeResolution, m_geometryInjectionBias, m_fluxInjectionBias);
+	MakeLPVConfigurationBuffer(m_lpvConfig, m_volumeMinCorner, m_volumeMaxCorner, m_volumeCellSize, m_rsmSamples, m_volumeResolution, m_geometryInjectionBias, m_fluxInjectionBias);
 
 }
 
@@ -103,47 +103,45 @@ void DX11LightPropagationVolume::Inject(DX11ReflectiveShadowMap & rsm)
 
 	D3D11_VIEWPORT viewport;
 
-	viewport.Width    = m_sampleResolution;
-	viewport.Height   = m_sampleResolution;
+	viewport.Width    = m_rsmSamples;
+	viewport.Height   = m_rsmSamples;
 	viewport.MinDepth = 0.f;
 	viewport.MaxDepth = 1.f;
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
 
-	DX11Device::GetSingleton().SetViewports(&viewport, 1);
+	//DX11Device::GetSingleton().SetViewports(&viewport, 1);
 
-	/* RSM Downsampling */
+	///* RSM Downsampling */
 
-	DX11Device::GetSingleton().SetDepthTest(DX11DepthTest::OFF);
-	DX11Device::GetSingleton().SetBlending(false);
+	//DX11Device::GetSingleton().SetDepthTest(DX11DepthTest::OFF);
+	//DX11Device::GetSingleton().SetBlending(false);
 
-	ID3D11RenderTargetView * rsmRenderTargets[] = {
-		m_position.GetRenderTargetView(),
-		m_normal.GetRenderTargetView(),
-		m_flux.GetRenderTargetView(),
-		m_depth.GetRenderTargetView()
-	};
+	//ID3D11RenderTargetView * rsmRenderTargets[] = {
+	//	m_position.GetRenderTargetView(),
+	//	m_normal.GetRenderTargetView(),
+	//	m_flux.GetRenderTargetView(),
+	//	m_depth.GetRenderTargetView()
+	//};
 
-	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(4, rsmRenderTargets, nullptr);
+	//DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(4, rsmRenderTargets, nullptr);
 
-	DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_LINEAR, 1, &m_linearSampler);
+	//m_quadVertexBuffer->Load();
 
-	m_quadVertexBuffer->Load();
+	//m_lpvRSMSampling->Use();
 
-	m_lpvRSMSampling->Use();
+	//Light * light = rsm.GetLight();
 
-	Light * light = rsm.GetLight();
+	//MakeLightBuffer(m_lightBuffer, light);
 
-	MakeLightBuffer(m_lightBuffer, light);
+	//m_lightBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_LIGHT);
 
-	m_lightBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_LIGHT);
+	//rsm.GetPositionShaderResource().Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_RSMPOSITION);
+	//rsm.GetNormalShaderResource().Bind(DX11PipelineStage::PIXEL_SHADER,   __MYE_DX11_TEXTURE_SLOT_RSMNORMAL);
+	//rsm.GetFluxShaderResource().Bind(DX11PipelineStage::PIXEL_SHADER,     __MYE_DX11_TEXTURE_SLOT_RSMFLUX);
+	//rsm.GetDepthShaderResource().Bind(DX11PipelineStage::PIXEL_SHADER,    __MYE_DX11_TEXTURE_SLOT_SHADOWMAP);
 
-	rsm.GetPositionShaderResource().Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_RSMPOSITION);
-	rsm.GetNormalShaderResource().Bind(DX11PipelineStage::PIXEL_SHADER,   __MYE_DX11_TEXTURE_SLOT_RSMNORMAL);
-	rsm.GetFluxShaderResource().Bind(DX11PipelineStage::PIXEL_SHADER,     __MYE_DX11_TEXTURE_SLOT_RSMFLUX);
-	rsm.GetDepthShaderResource().Bind(DX11PipelineStage::PIXEL_SHADER,    __MYE_DX11_TEXTURE_SLOT_SHADOWMAP);
-
-	m_quadVertexBuffer->Bind();
+	/*m_quadVertexBuffer->Bind();
 
 	DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	DX11Device::GetSingleton().GetImmediateContext()->Draw(6, 0);
@@ -155,7 +153,7 @@ void DX11LightPropagationVolume::Inject(DX11ReflectiveShadowMap & rsm)
 	rsm.GetFluxShaderResource().Unbind();
 	rsm.GetDepthShaderResource().Unbind();
 
-	DX11Module::GetSingleton().RenderShaderResource(m_flux, Vector2i(150, 0), Vector2i(150));
+	DX11Module::GetSingleton().RenderShaderResource(m_flux, Vector2i(150, 0), Vector2i(150));*/
 
 	/* Injection */
 
@@ -163,12 +161,16 @@ void DX11LightPropagationVolume::Inject(DX11ReflectiveShadowMap & rsm)
 
 	m_lpvInjectFlux->Use();
 
-	m_position.Bind(DX11PipelineStage::VERTEX_SHADER, __MYE_DX11_TEXTURE_SLOT_RSMPOSITION);
+	/*m_position.Bind(DX11PipelineStage::VERTEX_SHADER, __MYE_DX11_TEXTURE_SLOT_RSMPOSITION);
 	m_normal.Bind(DX11PipelineStage::VERTEX_SHADER,   __MYE_DX11_TEXTURE_SLOT_RSMNORMAL);
-	m_flux.Bind(DX11PipelineStage::VERTEX_SHADER,     __MYE_DX11_TEXTURE_SLOT_RSMFLUX);
+	m_flux.Bind(DX11PipelineStage::VERTEX_SHADER,     __MYE_DX11_TEXTURE_SLOT_RSMFLUX);*/
 
 	viewport.Height   = m_volumeResolution;
 	viewport.Width    = m_volumeResolution;
+
+	rsm.GetPositionShaderResource().Bind(DX11PipelineStage::VERTEX_SHADER, __MYE_DX11_TEXTURE_SLOT_RSMPOSITION);
+	rsm.GetNormalShaderResource().Bind(DX11PipelineStage::VERTEX_SHADER,   __MYE_DX11_TEXTURE_SLOT_RSMNORMAL);
+	rsm.GetFluxShaderResource().Bind(DX11PipelineStage::VERTEX_SHADER,     __MYE_DX11_TEXTURE_SLOT_RSMFLUX);
 
 	DX11Device::GetSingleton().SetViewports(&viewport, 1);
 
@@ -176,7 +178,7 @@ void DX11LightPropagationVolume::Inject(DX11ReflectiveShadowMap & rsm)
 
 	DX11Device::GetSingleton().GetImmediateContext()->OMSetBlendState(m_additiveBlend, nullptr, 0xFFFFFFFF);
 
-	unsigned int numSamples = m_sampleResolution * m_sampleResolution;
+	unsigned int numSamples = m_rsmSamples * m_rsmSamples;
 
 	// No buffers bound, vertices are generated through SV_VertexID
 
@@ -191,9 +193,13 @@ void DX11LightPropagationVolume::Inject(DX11ReflectiveShadowMap & rsm)
 
 	DX11Device::GetSingleton().GetImmediateContext()->Draw(numSamples, 0);
 
-	m_position.Unbind();
+	rsm.GetPositionShaderResource().Unbind();
+	rsm.GetNormalShaderResource().Unbind();
+	rsm.GetFluxShaderResource().Unbind();
+
+	/*m_position.Unbind();
 	m_normal.Unbind();
-	m_flux.Unbind();
+	m_flux.Unbind();*/
 
 	m_lpvInjectGeometry->Dispose();
 
@@ -310,8 +316,19 @@ void DX11LightPropagationVolume::SetFluxInjectionBias(Real bias)
 	m_fluxInjectionBias = bias;
 }
 
+size_t DX11LightPropagationVolume::GetRSMSamples(void) const
+{
+	return m_rsmSamples;
+}
+
+void DX11LightPropagationVolume::SetRSMSamples(size_t samples)
+{
+	m_rsmSamples = samples;
+}
+
 bool DX11LightPropagationVolume::__CreateShaders(void)
 {
+
 
 	m_lpvRSMSampling = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
 		"DX11Shader",
@@ -380,22 +397,6 @@ void DX11LightPropagationVolume::__DestroyBuffers(void)
 bool DX11LightPropagationVolume::__CreateContextStates(void)
 {
 
-	D3D11_SAMPLER_DESC linearSamplerDesc;
-
-	linearSamplerDesc.Filter         = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	linearSamplerDesc.AddressU       = D3D11_TEXTURE_ADDRESS_BORDER;
-	linearSamplerDesc.AddressV       = D3D11_TEXTURE_ADDRESS_BORDER;
-	linearSamplerDesc.AddressW       = D3D11_TEXTURE_ADDRESS_BORDER;
-	linearSamplerDesc.MipLODBias     = 0.0f;
-	linearSamplerDesc.MaxAnisotropy  = 0;
-	linearSamplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-	linearSamplerDesc.BorderColor[0] = 0;
-	linearSamplerDesc.BorderColor[1] = 0;
-	linearSamplerDesc.BorderColor[2] = 0;
-	linearSamplerDesc.BorderColor[3] = 0;
-	linearSamplerDesc.MinLOD         = 0;
-	linearSamplerDesc.MaxLOD         = D3D11_FLOAT32_MAX;
-
 	D3D11_BLEND_DESC additiveBlendDesc;
 
 	additiveBlendDesc.AlphaToCoverageEnable                 = FALSE;
@@ -409,14 +410,13 @@ bool DX11LightPropagationVolume::__CreateContextStates(void)
 	additiveBlendDesc.RenderTarget[0].SrcBlendAlpha         = D3D11_BLEND_ONE;
 	additiveBlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
-	return !__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton()->CreateSamplerState(&linearSamplerDesc, &m_linearSampler)) &&
-	       !__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton()->CreateBlendState(&additiveBlendDesc, &m_additiveBlend));
+	return !__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton()->CreateBlendState(&additiveBlendDesc, &m_additiveBlend));
 
 }
 
 void DX11LightPropagationVolume::__DestroyContextStates(void)
 {
-	__MYE_DX11_RELEASE_COM_OPTIONAL(m_linearSampler);
+	__MYE_DX11_RELEASE_COM_OPTIONAL(m_additiveBlend);
 }
 
 /* Light volume */
@@ -436,9 +436,9 @@ bool DX11LightVolume::Create(size_t resolution)
 	m_shG.SetParametersList(volumeParams);
 	m_shB.SetParametersList(volumeParams);
 
-	return m_shR.Create(resolution, resolution, DataFormat::FLOAT4) &&
-	       m_shG.Create(resolution, resolution, DataFormat::FLOAT4) &&
-	       m_shB.Create(resolution, resolution, DataFormat::FLOAT4);
+	return m_shR.Create(resolution, resolution, DataFormat::HALF4) &&
+	       m_shG.Create(resolution, resolution, DataFormat::HALF4) &&
+	       m_shB.Create(resolution, resolution, DataFormat::HALF4);
 
 }
 
@@ -507,7 +507,7 @@ bool DX11GeometryVolume::Create(size_t resolution)
 
 	m_geometryVolume.SetParametersList(volumeParams);
 
-	return m_geometryVolume.Create(resolution, resolution, DataFormat::FLOAT4);
+	return m_geometryVolume.Create(resolution, resolution, DataFormat::HALF4);
 
 }
 

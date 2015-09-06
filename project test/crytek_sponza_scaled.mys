@@ -24,7 +24,7 @@
 			<heightmap name="textures\crytek_sponza_scaled_vase_round_normalheight.png"/>
 		</render>
 	</gameobject>
-	<gameobject name="defaultobject">
+	<gameobject>
 		<render>
 			<mesh name="models\crytek_sponza_scaled_mesh1.obj"/>
 			<material diffuse_color="0.4704 0.4704 0.47041" specular="0" roughness="0" metallic="0"/>
@@ -562,7 +562,7 @@
 			<heightmap name="textures\crytek_sponza_scaled_vase_round_normalheight.png"/>
 		</render>
 	</gameobject>
-	<gameobject name="defaultobject">
+	<gameobject>
 		<render>
 			<mesh name="models\crytek_sponza_scaled_mesh47.obj"/>
 			<material diffuse_color="0.4704 0.4704 0.47041" specular="0" roughness="0" metallic="0"/>
@@ -806,7 +806,7 @@
 			<heightmap name="textures\crytek_sponza_scaled_vase_round_normalheight.png"/>
 		</render>
 	</gameobject>
-	<gameobject name="defaultobject">
+	<gameobject>
 		<render>
 			<mesh name="models\crytek_sponza_scaled_mesh68.obj"/>
 			<material diffuse_color="0.4704 0.4704 0.47041" specular="0" roughness="0" metallic="0"/>
@@ -922,7 +922,7 @@
 			<heightmap name="textures\crytek_sponza_scaled_vase_round_normalheight.png"/>
 		</render>
 	</gameobject>
-	<gameobject name="defaultobject">
+	<gameobject>
 		<render>
 			<mesh name="models\crytek_sponza_scaled_mesh78.obj"/>
 			<material diffuse_color="0.4704 0.4704 0.47041" specular="0" roughness="0" metallic="0"/>
@@ -1727,7 +1727,7 @@
 			<heightmap name="textures\crytek_sponza_scaled_vase_round_normalheight.png"/>
 		</render>
 	</gameobject>
-	<gameobject name="defaultobject">
+	<gameobject>
 		<render>
 			<mesh name="models\crytek_sponza_scaled_mesh147.obj"/>
 			<material diffuse_color="0.4704 0.4704 0.47041" specular="0" roughness="0" metallic="0"/>
@@ -2019,7 +2019,7 @@
 			<heightmap name="textures\crytek_sponza_scaled_vase_round_normalheight.png"/>
 		</render>
 	</gameobject>
-	<gameobject name="defaultobject">
+	<gameobject>
 		<render>
 			<mesh name="models\crytek_sponza_scaled_mesh172.obj"/>
 			<material diffuse_color="0.4704 0.4704 0.47041" specular="0" roughness="0" metallic="0"/>
@@ -2348,7 +2348,7 @@
 			<heightmap name="textures\crytek_sponza_scaled_vase_round_normalheight.png"/>
 		</render>
 	</gameobject>
-	<gameobject name="defaultobject">
+	<gameobject>
 		<render>
 			<mesh name="models\crytek_sponza_scaled_mesh200.obj"/>
 			<material diffuse_color="0.4704 0.4704 0.47041" specular="0" roughness="0" metallic="0"/>
@@ -2395,7 +2395,7 @@
 			<heightmap name="textures\crytek_sponza_scaled_background_normalheight.png"/>
 		</render>
 	</gameobject>
-	<gameobject name="defaultobject">
+	<gameobject>
 		<render>
 			<mesh name="models\crytek_sponza_scaled_mesh204.obj"/>
 			<material diffuse_color="0.4704 0.4704 0.47041" specular="0" roughness="0" metallic="0"/>
@@ -2499,7 +2499,7 @@
 			<heightmap name="textures\crytek_sponza_scaled_vase_round_normalheight.png"/>
 		</render>
 	</gameobject>
-	<gameobject name="defaultobject">
+	<gameobject>
 		<render>
 			<mesh name="models\crytek_sponza_scaled_mesh213.obj"/>
 			<material diffuse_color="0.4704 0.4704 0.47041" specular="0" roughness="0" metallic="0"/>
@@ -3024,7 +3024,7 @@
 			<heightmap name="textures\crytek_sponza_scaled_background_normalheight.png"/>
 		</render>
 	</gameobject>
-	<gameobject name="defaultobject">
+	<gameobject>
 		<render>
 			<mesh name="models\crytek_sponza_scaled_mesh258.obj"/>
 			<material diffuse_color="0.4704 0.4704 0.47041" specular="0" roughness="0" metallic="0"/>
@@ -3566,7 +3566,7 @@
 			<heightmap name="textures\crytek_sponza_scaled_spnza_bricks_a_normalheight.png"/>
 		</render>
 	</gameobject>
-	<gameobject name="defaultobject">
+	<gameobject>
 		<render>
 			<mesh name="models\crytek_sponza_scaled_mesh305.obj"/>
 			<material diffuse_color="0.4704 0.4704 0.47041" specular="0" roughness="0" metallic="0"/>
@@ -3623,7 +3623,7 @@
 			<heightmap name="textures\crytek_sponza_scaled_spnza_bricks_a_normalheight.png"/>
 		</render>
 	</gameobject>
-	<gameobject name="defaultobject">
+	<gameobject>
 		<render>
 			<mesh name="models\crytek_sponza_scaled_mesh310.obj"/>
 			<material diffuse_color="0.4704 0.4704 0.47041" specular="0" roughness="0" metallic="0"/>

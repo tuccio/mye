@@ -12,7 +12,7 @@ struct LPVConfiguration
 
 	float  cellSize;
 
-	uint   rsmResolution;
+	uint   rsmSamples;
 	uint   lpvResolution;
 
 	float  geometryInjectionBias;
@@ -74,7 +74,6 @@ SHRGB LPVLoadOffset(in LPV lpv, int3 cell, int3 offset)
 float4 LPVOcclusion(in LPV lpv, in int3 cell, in float3 sourceDirection)
 {
 	float3 coords = float3(cell) + sourceDirection;
-	//float3 coords = float3(cell) + .5f + sourceDirection;
 	//float3 coords = float3(cell) + 1.f + sourceDirection;
 	float3 sampleCoords = LPVSampleCoords(coords);
 	return lpv.geometry.Sample(lpv.lpvSampler, sampleCoords);
@@ -83,7 +82,7 @@ float4 LPVOcclusion(in LPV lpv, in int3 cell, in float3 sourceDirection)
 
 float LPVVisibility(in float4 shFluxDirection, in float4 shOcclusion)
 {
-	return 1 - saturate(SHDotAbs(shOcclusion, shFluxDirection));
+	return 1 - saturate(SHDot(shOcclusion, shFluxDirection));
 }
 
 #else

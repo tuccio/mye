@@ -15,7 +15,7 @@ cbuffer cbMaterial : register(__MYE_DX11_BUFFER_SLOT_MATERIAL)
 
 #ifdef MYE_USE_DIFFUSE_TEXTURE
 
-Texture2D    g_diffuseTexture : register(__MYE_DX11_TEXTURE_SLOT_DIFFUSE);
+Texture2D g_diffuseTexture : register(__MYE_DX11_TEXTURE_SLOT_DIFFUSE);
 
 #endif
 
@@ -40,19 +40,19 @@ float4 main(PSInput input) : SV_TARGET
 
 	float4 lighting = g_lightbuffer.Load(screenPosition);
 
-	float3 diffuseColor;
+	float3 diffuseAlbedo;
 
 #ifdef MYE_USE_DIFFUSE_TEXTURE
-	diffuseColor = Gamma(g_diffuseTexture.Sample(g_anisotropicSampler, input.texcoord));
+	diffuseAlbedo = Gamma(g_diffuseTexture.Sample(g_anisotropicSampler, input.texcoord));
 #else
-	diffuseColor = Gamma(g_material.diffuseColor);
+	diffuseAlbedo = Gamma(g_material.diffuseColor);
 #endif
 
-	float3 diffuse  = saturate(diffuseColor * MYE_INV_PI * lighting.xyz);
-	float3 specular = g_material.specularColor * lighting.w;
+	float3 diffuse  = saturate(diffuseAlbedo * MYE_INV_PI * lighting.xyz);
 
-	//output.color = float4(saturate(diffuse + specular), 1);
-	//return float4(.5f * input.texcoord + .5f, 0, 1);
+	//diffuse = float3(input.texcoord / 5.f + .5f, 0);
+	//float3 specular = g_material.specularColor * lighting.w;
+
 	return float4(diffuse, 1.f);
 
 }

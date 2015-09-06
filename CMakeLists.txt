@@ -82,6 +82,9 @@ add_subdirectory ( obj2mys )
 
 # Temporary
 
-add_subdirectory ( messingwithentities )
 add_subdirectory ( mathtest )
 add_subdirectory ( octreetest )
+
+#shaders
+
+#add_custom_command ( TARGET mye POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/d3d11/shaders $<TARGET_FILE_DIR:mye>/shaders )

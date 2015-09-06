@@ -17,11 +17,13 @@ namespace mye
 
 		public:
 
-			Image(ResourceManager *owner,
-				const String &name,
-				ManualResourceLoader *manual);
+			Image(ResourceManager * owner = nullptr,
+			      const String & name = "",
+			      ManualResourceLoader * manual = nullptr);
 
-			//Image(unsigned int width, unsigned int height);
+			Image(const Image & image);
+			Image(Image && image);
+
 			~Image(void);
 
 			mye::math::Vector4f operator() (unsigned int width, unsigned int height);
@@ -29,9 +31,11 @@ namespace mye
 			int GetWidth(void) const;
 			int GetHeight(void) const;
 
-			const void* GetData(void) const;
+			const void * GetData(void) const;
 
-			void Delete(void);
+			void Destroy(void);
+
+			Image Scale(float scale) const;
 
 		protected:
 

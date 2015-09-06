@@ -1,9 +1,0 @@
-entity Sphere
-{
-
-	float radius(12);
-		
-	vec3 position(0, 0, 0);
-	string name("the real ball l0l");
-	
-}

@@ -77,7 +77,7 @@ namespace mye
 			DX11LightPropagationVolume(void);
 
 			bool Create(size_t dimensions = 32,
-			            size_t resolution = mye::core::Game::GetSingleton().GetGraphicsModule()->GetRendererConfiguration()->GetShadowMapResolution() / 4);
+			            size_t rsmSamples = 256);
 
 			void Destroy(void);
 
@@ -96,6 +96,9 @@ namespace mye
 			mye::math::Real GetFluxInjectionBias(void) const;
 			void SetFluxInjectionBias(mye::math::Real bias);
 
+			void   SetRSMSamples(size_t samples);
+			size_t GetRSMSamples(void) const;
+
 		private:
 
 			DX11ShaderProgramPointer    m_lpvRSMSampling;
@@ -112,14 +115,13 @@ namespace mye
 			DX11LightVolume             m_lightVolume[2];
 			DX11GeometryVolume          m_geometryVolume;
 							         
-			size_t                      m_sampleResolution;
+			size_t                      m_rsmSamples;
 			size_t                      m_volumeResolution;
 							         
 			mye::math::Vector3          m_volumeMinCorner;
 			mye::math::Vector3          m_volumeMaxCorner;
 			mye::math::Real             m_volumeCellSize;
-							         
-			ID3D11SamplerState        * m_linearSampler;
+
 			ID3D11BlendState          * m_additiveBlend;
 							         
 			DX11ConstantBuffer          m_lightBuffer;

@@ -4,12 +4,13 @@ function SponzaController:Init()
 	
 	Graphics.window.caption = 'Sponza test'
 	
-	r.shadowMapBias             = 0
-	r.shadowMapNormalOffsetBias = 0.1
+	r.shadowMapBias             = 0.001
+	r.shadowMapNormalOffsetBias = 0
 	r.pcfEnabled                = false
+	r.pcfKernel                 = 1
 	r.csmSplits                 = 1
 		
-	r.lpvEnabled    = true
+	r.lpvEnabled    = false
 	r.lpvIterations = 16
 	r.lpvAABB       = AABB.FromMinMax(vec3(-25), vec3(25))
 	
@@ -28,7 +29,7 @@ function SponzaController:Init()
 	
 		hCam.camera.fovy = 70
 		hCam.camera.near = 0.01
-		hCam.camera.far  = 50
+		hCam.camera.far  = 35
 		--hCam.camera.far  = 2500
 		
 		Scene.camera = hCam.camera

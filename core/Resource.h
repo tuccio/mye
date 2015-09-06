@@ -47,8 +47,8 @@ namespace mye
 				return std::dynamic_pointer_cast<T, R>(r);
 			}
 
-			Resource(ResourceManager * owner,
-			         const String & name,
+			Resource(ResourceManager      * owner,
+			         const String         & name,
 			         ManualResourceLoader * manual);
 
 			virtual ~Resource(void);
@@ -63,7 +63,7 @@ namespace mye
 
 			ResourceLoadState GetState(void) const;
 
-			void SetParametersList(const Parameters &params);
+			void       SetParametersList(const Parameters &params);
 			Parameters GetParametersList(void) const;
 
 		protected:
@@ -77,14 +77,15 @@ namespace mye
 
 			virtual size_t CalculateSizeImpl(void) = 0;
 
-			ResourceManager      *m_owner;
-			ManualResourceLoader *m_manual;
+			ResourceManager      * m_owner;
+			ManualResourceLoader * m_manual;
 
-			ResourceLoadState     m_loadingState;
+			ResourceLoadState      m_loadingState;
 
-			size_t m_size;
+			size_t                 m_size;
 
-			Parameters m_params;
+			Parameters             m_params;
+			bool                   m_paramsChanged;
 
 
 		};

@@ -27,7 +27,7 @@ PSOutput main(PSInput input)
 	float3 N  = normalize(input.normal);
 	float4 sh = SHCosineLobe(N);
 	
-	float3 intensity = saturate(input.flux.rgb * MYE_INV_PI);
+	float3 intensity = saturate(input.flux * MYE_INV_PI);
 
 	PSOutput output;
 

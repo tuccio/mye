@@ -2,6 +2,9 @@
 
 #include "material.hlsli"
 #include "register_slots.hlsli"
+#include "parallax_mapping.hlsli"
+#include "common_samplers.hlsli"
+#include "packing.hlsli"
 
 /* Constant buffers */
 
@@ -23,12 +26,15 @@ struct PSInput
 
 	float2 texcoord    : TEXCOORD0;
 
-	float3 eyeTS       : EYETS;
-
 	float3 normalTS    : NORMALTS;
 
 	float3 tangentWS   : TANGENTWS;
 	float3 bitangentWS : BITANGENTWS;
+
+#ifdef MYE_USE_PARALLAX
+	float3 eyeTS       : EYETS;
+#endif
+
 #endif
 
 };
@@ -41,41 +47,62 @@ struct PSOutput
 
 #ifdef MYE_USE_HEIGHT_MAP
 
-#include "parallax_mapping.hlsli"
+Texture2D g_normalHeightMap : register(__MYE_DX11_TEXTURE_SLOT_HEIGHTMAP);
 
 #endif
+
 
 /* Main */
 
 PSOutput main(PSInput input) : SV_TARGET
 {
 
-	float3 x        = input.positionWS;
-	float3 N        = input.normalWS;
-	float  uv       = 0.f;
+	float3 x = input.positionWS;
+	float3 N;
 	
 #ifdef MYE_USE_HEIGHT_MAP
 
 	float2 texcoord = input.texcoord;
 
-	float3x3 tangentToWorldSpace = {
+	float3x3 worldToTangentSpace = {
 		input.tangentWS,
 		input.bitangentWS,
 		input.normalWS
 	};
 
-	ParallaxMapping(input.eyeTS, input.normalTS, tangentToWorldSpace, texcoord, x, N);
+	float3x3 tangentToWorldSpace = transpose(worldToTangentSpace);
 
-	N = input.normalWS;
+#ifdef MYE_USE_PARALLAX
+
+	//ParallaxMapping(input.eyeTS, input.normalTS, tangentToWorldSpace, texcoord, x, N);
+
+#else
+
+	// Plain normal mapping
+
+	float3 sampledNormalTS = g_normalHeightMap.Sample(g_linearSampler, input.texcoord).rgb;
+	
+	N = normalize(mul(tangentToWorldSpace, 2.f * sampledNormalTS - 1.f));
+
+	//N = normalize(input.normalWS);
+	//N = sampledNormalTS;
+
+#endif
+
+#else
+
+	N = normalize(input.normalWS);
 
 #endif
 
 	PSOutput output;
 
 	output.gbuffer0.xyz = N;
-	output.gbuffer0.w   = g_material.specular;
+	//output.gbuffer0.w   = g_material.specular;
+	output.gbuffer0.w   = 1;
+
 	output.gbuffer1.xyz = x;
-	output.gbuffer1.w   = uv;
+	output.gbuffer1.w   = 1.f;
 
 	return output;
 

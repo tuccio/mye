@@ -34,7 +34,7 @@ namespace mye
 
 			DX11ReflectiveShadowMap(void);
 
-			bool Create(void);
+			bool Create(bool vsm = false);
 			void Destroy(void);
 
 			void Render(mye::core::Light * light);
@@ -86,6 +86,11 @@ namespace mye
 				return m_depth;
 			}
 
+			inline DX11ShaderResource & GetVSMMoments(void)
+			{
+				return m_vsmMoments;
+			}
+
 			inline const mye::math::Matrix4 & GetLightSpaceTransformMatrix(void)
 			{
 				return m_lightSpaceTransform;
@@ -118,6 +123,7 @@ namespace mye
 			DX11Texture                 m_position;
 			DX11Texture                 m_normal;
 			DX11Texture                 m_flux;
+			DX11Texture                 m_vsmMoments;
 
 			DX11Texture                 m_positionArray;
 
@@ -145,6 +151,8 @@ namespace mye
 			DX11ConstantBuffer          m_lightCBuffer;
 
 			mye::math::AABB             m_volumeConstraint;
+
+			bool                        m_vsm;
 
 			/* Private functions */
 

@@ -7,7 +7,7 @@
 #define __MYE_DX11_TEXTURE_SLOT_SHADOWMAP          t3
 #define __MYE_DX11_TEXTURE_SLOT_RSMPOSITION        t4
 #define __MYE_DX11_TEXTURE_SLOT_RSMNORMAL          t5
-#define __MYE_DX11_TEXTURE_SLOT_RSMALBEDO          t6
+#define __MYE_DX11_TEXTURE_SLOT_RSMFLUX            t6
 #define __MYE_DX11_TEXTURE_SLOT_GBUFFER0           t10
 #define __MYE_DX11_TEXTURE_SLOT_GBUFFER1           t11
 #define __MYE_DX11_TEXTURE_SLOT_GBUFFER2           t12

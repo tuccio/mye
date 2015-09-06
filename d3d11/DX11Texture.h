@@ -47,6 +47,8 @@ namespace mye
 			bool Create(int width, int height, mye::core::DataFormat format, void * data = nullptr);
 			void Destroy(void);
 
+			void GenerateMips(void);
+
 		protected:
 
 			bool LoadImpl(void);

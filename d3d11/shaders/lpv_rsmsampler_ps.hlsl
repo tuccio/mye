@@ -82,7 +82,7 @@ PSOutput main(PSInput input)
 			{
 				output.position += float4(texel.position, 1);
 				output.normal   += float4(texel.normal, 1);
-				output.flux     += texel.flux;
+				output.flux     += float4(texel.flux, 1);
 				samples++;
 			}
 

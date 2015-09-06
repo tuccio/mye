@@ -49,41 +49,81 @@ DX11ReflectiveShadowMap::DX11ReflectiveShadowMap(void) :
 	m_csmSplits(__MYE_RSM_DEFAULT_CSM_SLICES),
 	m_csmLogWeight(__MYE_RSM_DEFAULT_CSM_LOG_WEIGHT),
 	m_light(nullptr),
-	m_volumeConstraint(AABB::FromMinMax(0, 0))
+	m_volumeConstraint(AABB::FromMinMax(0, 0)),
+	m_vsm(false)
 {
 	SetResolution(__MYE_RSM_DEFAULT_RESOLUTION);
 }
 
-bool DX11ReflectiveShadowMap::Create(void)
+bool DX11ReflectiveShadowMap::Create(bool vsm)
 {
 
-	m_rsm[0] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
-		"DX11Shader",
-		"./shaders/rsm.msh",
-		nullptr,
-		{ { "type", "program" } }
-	);
+	m_vsm = vsm;
 
-	m_rsm[1] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
-		"DX11Shader",
-		"./shaders/rsm_difftex.msh",
-		nullptr,
-		{ { "type", "program" } }
-	);
+	if (vsm)
+	{
 
-	m_rsmPSSM[0] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
-		"DX11Shader",
-		"./shaders/rsm_pssm.msh",
-		nullptr,
-		{ { "type", "program" } }
-	);
+		m_rsm[0] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
+			"DX11Shader",
+			"./shaders/rsm_vsm.msh",
+			nullptr,
+			{ { "type", "program" } }
+		);
 
-	m_rsmPSSM[1] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
-		"DX11Shader",
-		"./shaders/rsm_pssm_difftex.msh",
-		nullptr,
-		{ { "type", "program" } }
-	);
+		m_rsm[1] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
+			"DX11Shader",
+			"./shaders/rsm_difftex_vsm.msh",
+			nullptr,
+			{ { "type", "program" } }
+		);
+
+		m_rsmPSSM[0] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
+			"DX11Shader",
+			"./shaders/rsm_pssm_vsm.msh",
+			nullptr,
+			{ { "type", "program" } }
+		);
+
+		m_rsmPSSM[1] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
+			"DX11Shader",
+			"./shaders/rsm_pssm_difftex_vsm.msh",
+			nullptr,
+			{ { "type", "program" } }
+		);
+
+	}
+	else
+	{
+
+		m_rsm[0] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
+			"DX11Shader",
+			"./shaders/rsm.msh",
+			nullptr,
+			{ { "type", "program" } }
+		);
+
+		m_rsm[1] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
+			"DX11Shader",
+			"./shaders/rsm_difftex.msh",
+			nullptr,
+			{ { "type", "program" } }
+		);
+
+		m_rsmPSSM[0] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
+			"DX11Shader",
+			"./shaders/rsm_pssm.msh",
+			nullptr,
+			{ { "type", "program" } }
+		);
+
+		m_rsmPSSM[1] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
+			"DX11Shader",
+			"./shaders/rsm_pssm_difftex.msh",
+			nullptr,
+			{ { "type", "program" } }
+		);
+
+	}
 	
 	if (m_rsm[0]->Load() &&
 	    m_rsm[1]->Load() &&
@@ -167,6 +207,15 @@ void DX11ReflectiveShadowMap::Render(Light * light)
 
 	}
 
+	m_position.GenerateMips();
+	m_flux.GenerateMips();
+	m_normal.GenerateMips();
+
+	if (m_vsm)
+	{
+		m_vsmMoments.GenerateMips();
+	}
+
 	DX11Device::GetSingleton().GetImmediateContext()->RSSetViewports(numViewports, oldViewports);
 
 }
@@ -247,31 +296,76 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 
 	m_cropMatrixCBuffer.SetSubData(&m_cropMatrix[0], 0, sizeof(Matrix4) * m_csmSplits);
 
-	ID3D11RenderTargetView * renderTargets[3] =
+	ID3D11RenderTargetView * renderTargets[4] =
 	{
 		m_position.GetRenderTargetView(),
 		m_normal.GetRenderTargetView(),
-		m_flux.GetRenderTargetView()
+		m_flux.GetRenderTargetView(),
+		m_vsmMoments.GetRenderTargetView()
 	};
 
 	DX11Device::GetSingleton().SetDepthTest(DX11DepthTest::ON);
-	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(3,
-	                                                   renderTargets,
-	                                                   m_depth.GetDepthStencilView());
+
+	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets((m_vsm ? 4 : 3),
+	                                                                     renderTargets,
+	                                                                     m_depth.GetDepthStencilView());
 
 	MakeLightBuffer(m_lightCBuffer, light);
 
 	m_lightCBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_LIGHT);
-	m_cropMatrixCBuffer.Bind(DX11PipelineStage::VERTEX_SHADER, 1);
+	
 	
 	DX11RasterizerState cullState({ false, CullMode::NONE });
 
 	cullState.Use();
 
+	bool cascaded = m_csmSplits > 1;
+
+	DX11ShaderProgramPointer * rsmShader;
+
+	if (cascaded)
+	{
+		m_cropMatrixCBuffer.Bind(DX11PipelineStage::VERTEX_SHADER, 1);
+		rsmShader = m_rsmPSSM;
+	}
+	else
+	{
+		shadowProjMatrix = m_cropMatrix[0] * shadowProjMatrix;
+		rsmShader = m_rsm;
+	}
+
+	std::unordered_map<GameObject *, int> visibleObjectsSortKeys(casters.size());
+
+	std::transform(casters.begin(), casters.end(),
+	               std::inserter(visibleObjectsSortKeys, visibleObjectsSortKeys.begin()),
+	               [&shadowProjMatrix] (GameObject * gameObject) {
+
+		int key;
+
+		Vector3 x = gameObject->GetAABB().GetCenter();
+
+		Vector4 clipPosition = shadowProjMatrix * Vector4(x, 1);
+
+		key = (int) (1024.f * clipPosition.z() / clipPosition.w());
+
+		return std::make_pair(gameObject, key);
+
+	});
+
+	std::vector<GameObject *> sortedVisibleObjects(casters.begin(), casters.end());
+
+	std::sort(sortedVisibleObjects.begin(), sortedVisibleObjects.end(),
+			  [&visibleObjectsSortKeys] (GameObject * a, GameObject * b)
+	{
+		return visibleObjectsSortKeys[a] < visibleObjectsSortKeys[b];
+	});
+
+	int currentState = -1;
+
 	for (GameObject * object : casters)
 	{
 
-		RenderComponent * rc   = object->GetRenderComponent();
+		RenderComponent    * rc = object->GetRenderComponent();
 		TransformComponent * tc = object->GetTransformComponent();
 
 
@@ -284,12 +378,19 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 
 			if (difftex && difftex->Load())
 			{
-				m_rsmPSSM[1]->Use();
+
+				if (currentState != 1)
+				{
+					rsmShader[1]->Use();
+					currentState = 1;
+				}
+
 				difftex->Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_DIFFUSE);
+
 			}
-			else
+			else if (currentState != 0)
 			{
-				m_rsmPSSM[0]->Use();
+				rsmShader[0]->Use();
 			}
 
 			MakeTransformBuffer(m_transformCBuffer, tc->GetWorldMatrix() * rc->GetModelMatrix(), shadowViewMatrix, shadowProjMatrix);
@@ -303,7 +404,15 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 			vertexBuffer->Bind();
 
 			DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-			DX11Device::GetSingleton().GetImmediateContext()->DrawInstanced(vertexBuffer->GetVerticesCount(), m_csmSplits, 0, 0);
+			
+			if (cascaded)
+			{
+				DX11Device::GetSingleton().GetImmediateContext()->DrawInstanced(vertexBuffer->GetVerticesCount(), m_csmSplits, 0, 0);
+			}
+			else
+			{
+				DX11Device::GetSingleton().GetImmediateContext()->Draw(vertexBuffer->GetVerticesCount(), 0);
+			}
 
 			vertexBuffer->Unbind();
 
@@ -311,7 +420,7 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 
 	}
 
-	m_rsmPSSM[0]->Dispose();
+	rsmShader[0]->Dispose();
 
 	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(0, nullptr, nullptr);
 
@@ -481,15 +590,18 @@ bool DX11ReflectiveShadowMap::__CreateRenderTargets(void)
 
 	Parameters rtParams({ { "renderTarget", "true" } });
 
-	Parameters arrayParams = { { "renderTarget", "true" }, { "slices", ToString(m_csmSplits) } };
+	Parameters arrayParams = { { "renderTarget", "true" }, { "generateMips", "true" }, { "slices", ToString(m_csmSplits) } };
 
 	m_position.SetParametersList(arrayParams);
-	m_flux.SetParametersList(arrayParams);
 	m_normal.SetParametersList(arrayParams);
+	m_flux.SetParametersList(arrayParams);
 
-	return (m_position.Create(m_resolution, m_resolution, DataFormat::FLOAT4) &&
-	        m_normal.Create(m_resolution,   m_resolution, DataFormat::FLOAT4) &&
-	        m_flux.Create(m_resolution,     m_resolution, DataFormat::FLOAT4));
+	m_vsmMoments.SetParametersList(arrayParams);
+
+	return (m_position.Create(m_resolution, m_resolution, DataFormat::HALF4) &&
+	        m_normal.Create(m_resolution,   m_resolution, DataFormat::HALF4) &&
+	        m_flux.Create(m_resolution,     m_resolution, DataFormat::HALF4) &&
+			(!m_vsm || m_vsmMoments.Create(m_resolution, m_resolution, DataFormat::HALF2)));
 
 }
 

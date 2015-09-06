@@ -2,9 +2,7 @@
 
 #include "light.hlsli"
 #include "light_directional.hlsli"
-//#include "vsm.hlsli"
 #include "shadow_mapping.hlsli"
-//#include "shadow_mapping_pcss.hlsli"
 #include "gamma.hlsli"
 #include "gbuffer_read.hlsli"
 

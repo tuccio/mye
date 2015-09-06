@@ -276,22 +276,22 @@ void Game::ExportScene(const String & path)
 							" " +
 							ToString(rc->GetBounds().GetMaximum().z()));
 
-						rapidxml::xml_node<> * AABB = document.allocate_node(rapidxml::node_element,	"aabb");
+						rapidxml::xml_node<> * aabb = document.allocate_node(rapidxml::node_element, "aabb");
 
 						rapidxml::xml_node<> * mesh = document.allocate_node(rapidxml::node_element, "mesh");
 
 						mesh->append_attribute(document.allocate_attribute("name", 
 							document.allocate_string(rc->GetMesh().get()->GetName().CString())));
 
-						AABB->append_node(document.allocate_node(rapidxml::node_element,
+						aabb->append_node(document.allocate_node(rapidxml::node_element,
 							"min",
 							document.allocate_string(AABBmin.CString())));
 
-						AABB->append_node(document.allocate_node(rapidxml::node_element,
+						aabb->append_node(document.allocate_node(rapidxml::node_element,
 							"max",
 							document.allocate_string(AABBmax.CString())));
 
-						renderNode->append_node(AABB);
+						renderNode->append_node(aabb);
 						renderNode->append_node(mesh);
 
 					}

@@ -13,10 +13,11 @@
         ]
     },
     "pixel": {
-		"name": "RSM_PS_DIFFTEX",
+		"name": "RSM_PS_DIFFTEX_VSM",
         "source": "../d3d11/shaders/rsm_ps.hlsl",
 		"defines": {
-			"MYE_USE_DIFFUSE_TEXTURE": ""
+			"MYE_USE_DIFFUSE_TEXTURE": "",
+			"MYE_SHADOW_MAP_VSM": ""
 		}
     }
 }

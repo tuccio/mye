@@ -1,6 +1,7 @@
 #include "register_slots.hlsli"
 #include "lpv.hlsli"
 #include "renderer_configuration.hlsli"
+#include "common_samplers.hlsli"
 
 #include "rsm_read.hlsli"
 
@@ -21,25 +22,22 @@ struct VSOutput
 VSOutput main(VSInput input)
 {
 
-	uint i = input.vertexID / g_lpv.rsmResolution;
-	uint j = input.vertexID % g_lpv.rsmResolution;
+	uint i = input.vertexID / g_lpv.rsmSamples;
+	uint j = input.vertexID % g_lpv.rsmSamples;
 
-	int3 texcoords = int3(i, j, 0);
+	float2 texcoords = (float2(i, j) + .5f) / g_lpv.rsmSamples;
 
-	float3 position = g_position.Load(texcoords).xyz;
-	float3 normal   = g_normal.Load(texcoords).xyz;
-	float3 flux     = g_flux.Load(texcoords).rgb;
+	RSMTexel texel = RSMRead(texcoords);
 
 	// If a VPL direction doesn't point towards the center of the cell, it
 	// should not contribute to the cell flux, but rather be injected
 	// to the cell it is pointing to
 
-	float3 cell = (position - g_lpv.minCorner) / g_lpv.cellSize + g_lpv.fluxInjectionBias * normal;
-
+	float3 cell = (texel.position - g_lpv.minCorner) / g_lpv.cellSize + g_lpv.fluxInjectionBias * texel.normal;
 	VSOutput output;
 
-	output.normal = normal;
-	output.flux   = flux;
+	output.normal = texel.normal;
+	output.flux   = texel.flux * (1024 / g_lpv.rsmSamples);
 	output.cell   = int3(cell);
 
 	float3 cellCS     = 2.f * cell / g_lpv.lpvResolution - 1.f;

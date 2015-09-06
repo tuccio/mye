@@ -9,6 +9,10 @@
 #include "renderer_configuration.hlsli"
 #include "common_samplers.hlsli"
 
+#ifdef MYE_SHADOW_MAP_VSM
+#include "vsm_moments.hlsli"
+#endif
+
 #define MYE_CONE90_SOLID_ANGLE        2.09439510f
 #define MYE_CONE90_SOLID_ANGLE_INV_PI .666666667f
 
@@ -44,9 +48,15 @@ struct PSInput
 
 struct PSOutput
 {
+
 	float4 position : SV_Target0;
 	float4 normal   : SV_Target1;
 	float4 flux     : SV_Target2;
+
+#ifdef MYE_SHADOW_MAP_VSM
+	float2 moments  : SV_Target3;
+#endif
+
 };
 
 /* Main */
@@ -81,6 +91,13 @@ PSOutput main(PSInput input)
 	output.normal   = float4(N, 1);
 	//output.flux     = float4(irradiance * MYE_INV_PI * g_material.diffuseColor * NdotL * omega, 1);
 	output.flux     = float4(irradiance * albedo * NdotL * omegaInvPi, 1);
+
+#ifdef MYE_SHADOW_MAP_VSM
+
+	float depth    = LightSpaceLinearDepth(g_light, input.positionCS, input.positionWS);
+	output.moments = VSMComputeMoments(depth);
+
+#endif
 
 	return output;
 

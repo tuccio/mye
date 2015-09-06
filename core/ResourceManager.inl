@@ -10,23 +10,32 @@ namespace mye
 		                                                              const Parameters & params)
 		{
 
+			std::shared_ptr<ResourceType> p;
+
 			Lock();
 
 			auto it = m_resources.find(name);
 
 			if (it != m_resources.end())
 			{
-				return Resource::DynamicCast<ResourceType>(it->second);
+				p = Resource::DynamicCast<ResourceType>(it->second);
+				p->SetParametersList(params);
 			}
+			else
+			{
 
-			Resource * r = CreateImpl(name, manual, params);
-			r->SetParametersList(params);
+				Resource * r = CreateImpl(name, manual, params);
+				r->SetParametersList(params);
 
-			auto it2 = m_resources.emplace(std::make_pair(name, ResourcePointer(r)));
+				auto it2 = m_resources.emplace(std::make_pair(name, ResourcePointer(r)));
+
+				p = Resource::StaticCast<ResourceType>(it2.first->second);
+
+			}
 			
 			Unlock();
 
-			return Resource::StaticCast<ResourceType>(it2.first->second);
+			return p;
 
 		}
 
@@ -38,9 +47,7 @@ namespace mye
 
 			auto it = m_resources.find(name);
 
-			ResourcePointer r = (it != m_resources.end()
-				? (it->second) :
-				ResourcePointer());
+			ResourcePointer r = (it != m_resources.end() ? (it->second) : ResourcePointer());
 
 			Unlock();
 

@@ -1,6 +1,0 @@
-entity Ball
-{
-
-	vec3 color(1, 2, 3);
-
-};

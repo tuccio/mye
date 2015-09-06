@@ -1,9 +1,6 @@
 {
-    "geometry": {
-        "source": "../d3d11/shaders/rsm_pssm_gs.hlsl"
-    },
     "vertex": {
-        "source": "../d3d11/shaders/rsm_pssm_vs.hlsl",
+        "source": "../d3d11/shaders/rsm_vs.hlsl",
         "input": [
             { "position": "float3" },
             { "texcoord0": "float2" },
@@ -13,10 +10,10 @@
         ]
     },
     "pixel": {
-		"name": "RSM_PS_DIFFTEX",
+		"name": "RSM_PS_VSM",
         "source": "../d3d11/shaders/rsm_ps.hlsl",
 		"defines": {
-			"MYE_USE_DIFFUSE_TEXTURE": ""
+			"MYE_SHADOW_MAP_VSM": ""
 		}
     }
 }

@@ -1,11 +1,13 @@
 {
     "vertex": {
         "source": "../d3d11/shaders/rsm_vs.hlsl",
-        "input": {
-            "position": "float3",
-            "texcoord0": "float2",
-            "normal": "float3"
-        }
+        "input": [
+            { "position": "float3" },
+            { "texcoord0": "float2" },
+            { "normal": "float3" },
+			{ "tangent": "float3" },
+			{ "bitangent": "float3" }
+        ]
     },
     "pixel": {
         "source": "../d3d11/shaders/rsm_ps.hlsl"

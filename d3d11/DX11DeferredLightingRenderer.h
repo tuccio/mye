@@ -18,7 +18,7 @@
 #include <mye/core/EventManager.h>
 #include <mye/core/RendererConfiguration.h>
 
-#include <boost/atomic.hpp>
+#include <boost/thread/mutex.hpp>
 
 namespace mye
 {
@@ -51,6 +51,8 @@ namespace mye
 
 			bool                         m_initialized;
 
+			bool                         m_vsm;
+
 			DX11ShaderProgramPointer     m_deferredGeometry[2];
 			DX11ShaderProgramPointer     m_deferredLights;
 			DX11ShaderProgramPointer     m_deferredLightsLPV;
@@ -59,6 +61,8 @@ namespace mye
 			DX11Texture                  m_gbuffer0;
 			DX11Texture                  m_gbuffer1;
 			DX11Texture                  m_lbuffer;
+
+			DX11Texture                  m_vsmDepth;
 								         
 			DX11ReflectiveShadowMap      m_rsm;
 			DX11LightPropagationVolume   m_lpv;
@@ -87,8 +91,9 @@ namespace mye
 			DX11TexturePointer           m_randomCosSin;
 								       
 			mye::math::Vector4f          m_clearColor;
-									   
-			boost::atomic<bool>          m_renderConfigurationUptodate;
+
+			std::vector<mye::core::RendererVariable> m_renderVariablesChanged;
+			boost::mutex                             m_renderVariablesChangedMutex;
 
 			/* Private methods */
 

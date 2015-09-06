@@ -18,6 +18,21 @@ bool DX11ShaderProgram::LoadImpl(void)
 
 	using namespace boost::property_tree;
 
+	ptree ptCommonDefines;
+
+	if (m_params.Contains("defines"))
+	{
+
+		std::istringstream ss(m_params.GetString("defines").CString());
+
+		try
+		{
+			json_parser::read_json(ss, ptCommonDefines);
+		}
+		catch (json_parser_error &) { }
+
+	}
+
 	ptree pt;
 
 	try
@@ -43,6 +58,16 @@ bool DX11ShaderProgram::LoadImpl(void)
 		auto input       = vertexShader->get_child_optional("input");
 		auto defines     = vertexShader->get_child_optional("defines");
 
+		ptree ptDefines = ptCommonDefines;
+
+		if (defines)
+		{
+			for (auto & d : *defines)
+			{
+				ptDefines.insert(ptDefines.begin(), d);
+			}
+		}
+
 		if (source)
 		{
 
@@ -51,10 +76,9 @@ bool DX11ShaderProgram::LoadImpl(void)
 			params.Add("type", "vertex");
 			params.Add("source", source->c_str());
 
-			if (defines)
 			{
 				std::stringstream ss;
-				json_parser::write_json(ss, *defines);
+				json_parser::write_json(ss, ptDefines);
 				params.Add("defines", ss.str().c_str());
 			}
 
@@ -65,9 +89,15 @@ bool DX11ShaderProgram::LoadImpl(void)
 
 			if (input)
 			{
+
+				ptree ptInput;
+				ptInput.add_child("input", *input);
+
 				std::stringstream ss;
-				json_parser::write_json(ss, *input);
+
+				json_parser::write_json(ss, ptInput);
 				params.Add("input", ss.str().c_str());
+
 			}
 
 			String resourceName = (name ? name->c_str() : source->c_str());
@@ -92,6 +122,16 @@ bool DX11ShaderProgram::LoadImpl(void)
 		auto precompiled = pixelShader->get_optional<bool>("precompiled");
 		auto defines     = pixelShader->get_child_optional("defines");
 
+		ptree ptDefines = ptCommonDefines;
+
+		if (defines)
+		{
+			for (auto & d : *defines)
+			{
+				ptDefines.insert(ptDefines.begin(), d);
+			}
+		}
+
 		if (source)
 		{
 
@@ -100,10 +140,9 @@ bool DX11ShaderProgram::LoadImpl(void)
 			params.Add("type", "pixel");
 			params.Add("source", source->c_str());
 
-			if (defines)
 			{
 				std::stringstream ss;
-				json_parser::write_json(ss, *defines);
+				json_parser::write_json(ss, ptDefines);
 				params.Add("defines", ss.str().c_str());
 			}
 
@@ -134,6 +173,16 @@ bool DX11ShaderProgram::LoadImpl(void)
 		auto precompiled = geometryShader->get_optional<bool>("precompiled");
 		auto defines     = geometryShader->get_child_optional("defines");
 
+		ptree ptDefines = ptCommonDefines;
+
+		if (defines)
+		{
+			for (auto & d : *defines)
+			{
+				ptDefines.insert(ptDefines.begin(), d);
+			}
+		}
+
 		if (source)
 		{
 
@@ -142,10 +191,9 @@ bool DX11ShaderProgram::LoadImpl(void)
 			params.Add("type", "geometry");
 			params.Add("source", source->c_str());
 
-			if (defines)
 			{
 				std::stringstream ss;
-				json_parser::write_json(ss, *defines);
+				json_parser::write_json(ss, ptDefines);
 				params.Add("defines", ss.str().c_str());
 			}
 

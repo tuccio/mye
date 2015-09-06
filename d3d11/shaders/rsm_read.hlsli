@@ -3,21 +3,20 @@
 
 #include "register_slots.hlsli"
 #include "light.hlsli"
+#include "common_samplers.hlsli"
 
 struct RSMTexel
 {
 	float3 position;
 	float3 normal;
-	float4 flux;
+	float3 flux;
 	//float  depth;
 };
 
 Texture2D<float4> g_position : register(__MYE_DX11_TEXTURE_SLOT_RSMPOSITION);
 Texture2D<float4> g_normal   : register(__MYE_DX11_TEXTURE_SLOT_RSMNORMAL);
-Texture2D<float4> g_flux     : register(__MYE_DX11_TEXTURE_SLOT_RSMALBEDO);
+Texture2D<float4> g_flux     : register(__MYE_DX11_TEXTURE_SLOT_RSMFLUX);
 //Texture2D<float>  g_depth    : register(__MYE_DX11_TEXTURE_SLOT_SHADOWMAP);
-
-SamplerState g_linearSampler : register(__MYE_DX11_SAMPLER_SLOT_LINEAR);
 
 cbuffer cbLight : register(__MYE_DX11_BUFFER_SLOT_LIGHT)
 {
@@ -29,9 +28,19 @@ RSMTexel RSMRead(in float2 texcoord)
 
 	RSMTexel texel;
 
+#ifdef MYE_VERTEX_SHADER
+
+	texel.position = g_position.SampleLevel(g_linearSampler, texcoord, 0).xyz;
+	texel.normal   = g_normal.SampleLevel(g_linearSampler, texcoord, 0).xyz;
+	texel.flux     = g_flux.SampleLevel(g_linearSampler, texcoord, 0).rgb;
+
+#else
+
 	texel.position = g_position.Sample(g_linearSampler, texcoord).xyz;
-	texel.normal   = g_normal.Sample(g_linearSampler,   texcoord).xyz;
-	texel.flux     = g_flux.Sample(g_linearSampler, texcoord);
+	texel.normal   = g_normal.Sample(g_linearSampler, texcoord).xyz;
+	texel.flux     = g_flux.Sample(g_linearSampler, texcoord).rgb;
+
+#endif
 
 	return texel;
 

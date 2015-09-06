@@ -3,6 +3,8 @@
 
 #include <fstream>
 
+#include <IL/ilu.h>
+
 using namespace mye::core;
 
 Image::Image(ResourceManager      * owner,
@@ -13,11 +15,24 @@ Image::Image(ResourceManager      * owner,
 {
 }
 
+Image::Image(const Image & image)
+{
+	ilGenImages(1, &m_id);
+	ilBindImage(m_id);
+	ilCopyImage(image.m_id);
+}
+
+Image::Image(Image && image)
+{
+	m_id = image.m_id;
+	image.m_id = IL_INVALID_VALUE;
+}
+
 Image::~Image(void)
 {
 }
 
-void Image::Delete(void)
+void Image::Destroy(void)
 {
 
 	if (m_id != IL_INVALID_VALUE)
@@ -70,7 +85,7 @@ bool Image::LoadImpl(void)
 void Image::UnloadImpl(void)
 {
 
-	Delete();
+	Destroy();
 
 }
 
@@ -95,5 +110,22 @@ int Image::GetHeight(void) const
 const void * Image::GetData(void) const
 {
 	ilBindImage(m_id);
-	return (const void*) ilGetData();
+	return (const void *) ilGetData();
+}
+
+Image Image::Scale(float scale) const
+{
+	
+	Image image(*this);
+
+	ilBindImage(image.m_id);
+
+	int w = ilGetInteger(IL_IMAGE_WIDTH);
+	int h = ilGetInteger(IL_IMAGE_HEIGHT);
+
+	iluImageParameter(ILU_FILTER, ILU_SCALE_BOX);
+	iluScale(w * scale, h * scale, 1);
+
+	return image;
+
 }

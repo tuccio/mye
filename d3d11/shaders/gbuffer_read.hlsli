@@ -27,9 +27,9 @@ GBufferData GBufferRead(in int2 screenPosition)
 	data.screenPosition = screenPosition;
 
 	data.normal         = gbuffer0.xyz;
-	data.position       = gbuffer1.xyz;
-					    
 	data.specularPower  = gbuffer0.w;
+
+	data.position       = gbuffer1.xyz;
 
 	return data;
 

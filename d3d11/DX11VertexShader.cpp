@@ -65,7 +65,7 @@ bool DX11VertexShader::LoadImpl(void)
 	ID3DBlob * code = nullptr;
 	ID3DBlob * error = nullptr;
 
-	UINT compileFlags = 0x0;
+	UINT compileFlags = D3DCOMPILE_PACK_MATRIX_ROW_MAJOR;
 
 #ifdef _DEBUG
 	compileFlags |= D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
@@ -199,22 +199,27 @@ static VertexDeclaration __ParseJSONInput(const String & input)
 	{
 		read_json(ss, pt);
 	}
-	catch (boost::property_tree::json_parser_error &) { }
+	catch (boost::property_tree::json_parser_error & e)	{ }
 
 	VertexDeclaration vd;
 
-	for (auto & p : pt)
+	for (auto & arrayElement : pt.get_child("input"))
 	{
 
-		DataFormat format;
-		VertexAttributeSemantic attribute;
-
-		auto second = p.second.get_value<std::string>();
-
-		if (ParseVertexAttributeSemantic(p.first.c_str(), attribute) &&
-		    ParseDataFormat(second.c_str(), format))
+		for (auto & p : arrayElement.second)
 		{
-			vd.AddAttribute(attribute, format);
+
+			DataFormat format;
+			VertexAttributeSemantic attribute;
+
+			auto second = p.second.get_value<std::string>();
+
+			if (ParseVertexAttributeSemantic(p.first.c_str(), attribute) &&
+				ParseDataFormat(second.c_str(), format))
+			{
+				vd.AddAttribute(attribute, format);
+			}
+
 		}
 
 	}

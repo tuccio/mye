@@ -30,6 +30,9 @@ namespace mye
 
 			virtual void Destroy(void);
 
+			void AddMacroDefinition(const char * label, const char * value = "");
+			void RemoveMacroDefinition(const char * label);
+
 		protected:
 
 			virtual bool LoadImpl(void);

@@ -19,19 +19,11 @@ cbuffer cbTransform : register(b0)
 
 struct VSInput
 {
-
 	float3 position  : POSITION;
-	float3 normal    : NORMAL;
-
-#ifdef MYE_USE_HEIGHT_MAP
-
 	float2 texcoord  : TEXCOORD0;
-
+	float3 normal    : NORMAL;
 	float3 tangent   : TANGENT;
 	float3 bitangent : BITANGENT;
-
-#endif
-
 };
 
 struct VSOutput
@@ -45,12 +37,16 @@ struct VSOutput
 
 	float2 texcoord    : TEXCOORD0;
 
-	float3 eyeTS       : EYETS;
-
 	float3 normalTS    : NORMALTS;
 
 	float3 tangentWS   : TANGENTWS;
 	float3 bitangentWS : BITANGENTWS;
+
+#ifdef MYE_USE_PARALLAX
+
+	float3 eyeTS       : EYETS;
+
+#endif
 
 #endif
 
@@ -61,37 +57,46 @@ struct VSOutput
 VSOutput main(VSInput input)
 {
 
-	float3 normalWS = mul((float3x3) g_world, input.normal);
-
 	VSOutput output;
+
+	float3 normalWS = mul((float3x3) g_world, input.normal);
 
 	output.positionCS  = mul(g_worldViewProj, float4(input.position, 1));
 
 	output.normalWS    = normalWS;
-	output.positionWS  = mul((float3x3) g_world, input.position);
+	output.positionWS  = mul(g_world, float4(input.position, 1)).xyz;
 
 #ifdef MYE_USE_HEIGHT_MAP
 
 	float3 tangentWS   = mul((float3x3) g_world, input.tangent);
 	float3 bitangentWS = mul((float3x3) g_world, input.bitangent);
 
-	float3x3 tangentToWorldSpace = {
+	/*float3x3 tangentToWorldSpace = {
+		tangentWS,
+		bitangentWS,
+		normalWS
+	};*/
+
+	float3x3 worldToTangentSpace = {
 		tangentWS,
 		bitangentWS,
 		normalWS
 	};
 
-	float3x3 worldToTangentSpace = transpose(tangentToWorldSpace);
-
-	float3 eyeWS = output.positionWS - g_camera.position;
-
-	output.eyeTS       = mul(worldToTangentSpace, eyeWS);
 	output.normalTS    = mul(worldToTangentSpace, normalWS);
 				       
 	output.texcoord    = input.texcoord;
 
 	output.tangentWS   = tangentWS;
 	output.bitangentWS = bitangentWS;
+
+#ifdef MYE_USE_PARALLAX
+
+	float3 eyeWS = output.positionWS - g_camera.position;
+
+	output.eyeTS = mul(worldToTangentSpace, eyeWS);
+
+#endif
 
 #endif
 

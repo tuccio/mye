@@ -9,22 +9,28 @@ Resource::Resource(ResourceManager      * owner,
 	INamedObject(name)
 {
 
-	m_owner = owner;
-	m_manual = manual;
+	m_owner         = owner;
+	m_manual        = manual;
 	
-	m_size = 0;
-	m_loadingState = ResourceLoadState::NOT_LOADED;
+	m_size          = 0;
+
+	m_paramsChanged = true;
+
+	m_loadingState  = ResourceLoadState::NOT_LOADED;
 
 }
 
 Resource::Resource(void)
 {
 
-	m_owner = nullptr;
-	m_manual = nullptr;
+	m_owner         = nullptr;
+	m_manual        = nullptr;
 
-	m_size = 0;
-	m_loadingState = ResourceLoadState::NOT_LOADED;
+	m_size          = 0;
+
+	m_paramsChanged = true;
+
+	m_loadingState  = ResourceLoadState::NOT_LOADED;
 
 }
 
@@ -37,8 +43,13 @@ bool Resource::Load(bool background)
 
 	Lock();
 
-	bool loadSuccess = false;
+	bool loadSuccess    = false;
 	bool prepareSuccess = false;
+
+	if (m_paramsChanged)
+	{
+		Unload();
+	}
 
 	if (m_loadingState == ResourceLoadState::NOT_LOADED)
 	{
@@ -88,6 +99,8 @@ bool Resource::Load(bool background)
 		}
 
 	}
+
+	m_paramsChanged = false;
 
 	Unlock();
 
@@ -170,7 +183,10 @@ void Resource::UnloadImpl(void)
 
 void Resource::SetParametersList(const Parameters & params)
 {
-	m_params = params;
+	Lock();
+	m_paramsChanged = true;
+	m_params        = params;
+	Unlock();
 }
 
 Parameters Resource::GetParametersList(void) const

@@ -147,3 +147,79 @@ String DX11Shader::LoadSourceCode(void)
 	return sourceCode;
 
 }
+
+void DX11Shader::AddMacroDefinition(const char * label, const char * value)
+{
+
+
+	if (m_params.Contains("defines"))
+	{
+
+		std::istringstream iss;
+		std::ostringstream oss;
+
+		iss.str(m_params.GetString("defines").CString());
+
+		boost::property_tree::ptree pt;
+
+		try
+		{
+			read_json(iss, pt);
+		}
+		catch (boost::property_tree::json_parser_error &) { }
+
+		// ptree::put overwrites values while add does not
+		pt.put(label, value);
+		write_json(oss, pt);
+
+		m_params.Add("defines", oss.str().c_str());
+
+	}
+	else
+	{
+
+		std::ostringstream ss;
+
+		ss << "{ \"" << label << "\": \"" << value << "\" }";
+		m_params.Add("defines", ss.str().c_str());
+
+	}
+
+	m_paramsChanged = true;
+
+}
+
+void DX11Shader::RemoveMacroDefinition(const char * label)
+{
+
+	if (m_params.Contains("defines"))
+	{
+
+		std::istringstream iss;
+		std::ostringstream oss;
+
+		iss.str(m_params.GetString("defines").CString());
+
+		boost::property_tree::ptree pt;
+
+		try
+		{
+			read_json(iss, pt);
+		}
+		catch (boost::property_tree::json_parser_error &) { }
+
+		if (pt.find(label) != pt.not_found())
+		{
+
+			pt.erase(label);
+			write_json(oss, pt);
+
+			m_params.Add("defines", oss.str().c_str());
+
+		}
+
+	}
+
+	m_paramsChanged = true;
+
+}

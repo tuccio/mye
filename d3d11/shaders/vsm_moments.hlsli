@@ -1,8 +1,9 @@
 #ifndef __MYE_VSM_MOMENTS__
 #define __MYE_VSM_MOMENTS__
 
+/* Source: http://http.developer.nvidia.com/GPUGems3/gpugems3_ch08.html */
 
-float2 ComputeMoments(in float depth)
+float2 VSMComputeMoments(in float depth)
 {
 
 	float2 moments;
@@ -10,11 +11,27 @@ float2 ComputeMoments(in float depth)
 	moments.x = depth;
 
 	float dx = ddx(depth);
-	float dy = ddx(depth);
+	float dy = ddy(depth);
 
-	moments.y = depth * depth + 0.25f * (dx * dx + dy * dy);
+	moments.y = depth * depth + .25f * (dx * dx + dy * dy);
 
 	return moments;
+
+}
+
+float VSMChebyshevUpperBound(float2 moments, float t)
+{
+
+	float p = (t <= moments.x);
+
+	float variance = moments.y - moments.x * moments.x;
+	variance = max(variance, r.vsmMinVariance);
+
+	float d = t - moments.x;
+
+	float pmax = variance / (variance + d * d);
+
+	return max(p, pmax);
 
 }
 

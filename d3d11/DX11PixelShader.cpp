@@ -54,7 +54,7 @@ bool DX11PixelShader::LoadImpl(void)
 	ID3DBlob * code = nullptr;
 	ID3DBlob * error = nullptr;
 
-	UINT compileFlags = 0x0;
+	UINT compileFlags = D3DCOMPILE_PACK_MATRIX_ROW_MAJOR;
 
 #ifdef _DEBUG
 	compileFlags |= D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;

@@ -13,8 +13,11 @@ cbuffer cbTransform
 
 struct VSInput
 {
-	float3 position : POSITION;
-	float2 texcoord : TEXCOORD0;
+	float3 position  : POSITION;
+	float2 texcoord  : TEXCOORD0;
+	float3 normal    : NORMAL;
+	float3 tangent   : TANGENT;
+	float3 bitangent : BITANGENT;
 };
 
 struct VSOutput

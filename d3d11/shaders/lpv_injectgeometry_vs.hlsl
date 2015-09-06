@@ -22,8 +22,8 @@ struct VSOutput
 VSOutput main(VSInput input)
 {
 
-	uint i = input.vertexID / g_lpv.rsmResolution;
-	uint j = input.vertexID % g_lpv.rsmResolution;
+	uint i = input.vertexID / g_lpv.rsmSamples;
+	uint j = input.vertexID % g_lpv.rsmSamples;
 
 	int3 texcoords = int3(i, j, 0);
 
