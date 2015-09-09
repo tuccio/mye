@@ -13,7 +13,7 @@
 #undef near
 #undef far
 
-#define __MYE_RSM_MAX_CSM_COUNT 8
+#define __MYE_RSM_MAX_CSM_COUNT 6
 
 namespace mye
 {

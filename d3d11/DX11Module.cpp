@@ -239,7 +239,7 @@ void DX11Module::__CreateSharedResources(void)
 			
 			DX11Texture * t = static_cast<DX11Texture*>(r);
 
-			const unsigned int resolution = 256;
+			const unsigned int resolution = 8;
 
 			struct __CosSin
 			{

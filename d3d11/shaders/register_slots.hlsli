@@ -24,10 +24,13 @@
 #define __MYE_DX11_SAMPLER_SLOT_HEIGHTMAP          s2
 #define __MYE_DX11_SAMPLER_SLOT_SHADOWMAP          s3
 #define __MYE_DX11_SAMPLER_SLOT_SHADOWMAP_CMP      s4
-#define __MYE_DX11_SAMPLER_SLOT_LINEAR             s5
-#define __MYE_DX11_SAMPLER_SLOT_ANISOTROPIC        s6
-#define __MYE_DX11_SAMPLER_SLOT_LPV                s7
-#define __MYE_DX11_SAMPLER_SLOT_RANDOM             s8
+#define __MYE_DX11_SAMPLER_SLOT_POINT              s5
+#define __MYE_DX11_SAMPLER_SLOT_BILINEAR           s6
+#define __MYE_DX11_SAMPLER_SLOT_TRILINEAR          s7
+#define __MYE_DX11_SAMPLER_SLOT_ANISOTROPIC        s8
+#define __MYE_DX11_SAMPLER_SLOT_LPV                s9
+#define __MYE_DX11_SAMPLER_SLOT_RANDOM             s10
+#define __MYE_DX11_SAMPLER_SLOT_BLUR               s11
 
 #define __MYE_DX11_BUFFER_SLOT_CAMERATRANSFORM     b7
 #define __MYE_DX11_BUFFER_SLOT_LIGHT               b8

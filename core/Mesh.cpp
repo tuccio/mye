@@ -9,9 +9,9 @@
 
 using namespace mye::core;
 
-Mesh::Mesh(ResourceManager *resourceManager,
-		   const String &name,
-		   ManualResourceLoader *loader) :
+Mesh::Mesh(ResourceManager      * resourceManager,
+		   const String         & name,
+		   ManualResourceLoader * loader) :
 Resource(resourceManager, name, loader),
 	m_triangles(0)
 {
@@ -46,12 +46,12 @@ size_t Mesh::GetTrianglesCount(void) const
 	return m_triangles;
 }
 
-const VertexDeclaration& Mesh::GetVertexDeclaration(void) const
+const VertexDeclaration & Mesh::GetVertexDeclaration(void) const
 {
 	return m_data.GetVertexDeclaration();
 }
 
-const void* Mesh::GetData(void) const
+const void * Mesh::GetData(void) const
 {
 	return m_data.GetData();
 }

@@ -229,6 +229,8 @@ namespace mye
 
 		}
 
+		ID3D11SamplerState * CreateSamplerState(D3D11_FILTER filter, D3D11_TEXTURE_ADDRESS_MODE address, int maxAnisotropy = 0, D3D11_COMPARISON_FUNC comparison = D3D11_COMPARISON_ALWAYS);
+
 	}
 
 }

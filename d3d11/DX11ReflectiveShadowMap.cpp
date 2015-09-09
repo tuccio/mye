@@ -19,7 +19,7 @@ using namespace mye::math;
 
 #define __MYE_RSM_DEFAULT_RESOLUTION     1024
 #define __MYE_RSM_DEFAULT_CSM_SLICES     4
-#define __MYE_RSM_DEFAULT_CSM_LOG_WEIGHT 0.65f
+#define __MYE_RSM_DEFAULT_CSM_LOG_WEIGHT 0.35f
 
 template <typename Iterator>
 static AABB MakeAABB(Iterator begin, Iterator end)
@@ -187,7 +187,7 @@ void DX11ReflectiveShadowMap::Render(Light * light)
 {
 
 	D3D11_VIEWPORT oldViewports[D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
-	D3D11_VIEWPORT newViewport = { 0, 0, m_resolution, m_resolution, 0.0f, 1.0f };
+	D3D11_VIEWPORT newViewport = { 0, 0, m_resolution, m_resolution, 0.f, 1.f };
 
 	unsigned int numViewports = D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE;
 
@@ -205,15 +205,6 @@ void DX11ReflectiveShadowMap::Render(Light * light)
 		__RenderDirectionalLight(light);
 		break;
 
-	}
-
-	m_position.GenerateMips();
-	m_flux.GenerateMips();
-	m_normal.GenerateMips();
-
-	if (m_vsm)
-	{
-		m_vsmMoments.GenerateMips();
 	}
 
 	DX11Device::GetSingleton().GetImmediateContext()->RSSetViewports(numViewports, oldViewports);
@@ -590,7 +581,7 @@ bool DX11ReflectiveShadowMap::__CreateRenderTargets(void)
 
 	Parameters rtParams({ { "renderTarget", "true" } });
 
-	Parameters arrayParams = { { "renderTarget", "true" }, { "generateMips", "true" }, { "slices", ToString(m_csmSplits) } };
+	Parameters arrayParams = { { "renderTarget", "true" }, { "slices", ToString(m_csmSplits) } };
 
 	m_position.SetParametersList(arrayParams);
 	m_normal.SetParametersList(arrayParams);
@@ -608,11 +599,13 @@ bool DX11ReflectiveShadowMap::__CreateRenderTargets(void)
 void DX11ReflectiveShadowMap::__DestroyRenderTargets(void)
 {
 
-	for (int i = 0; i < m_csmSplits; i++)
+	m_position.Destroy();
+	m_flux.Destroy();
+	m_normal.Destroy();
+
+	if (m_vsm)
 	{
-		m_position.Destroy();
-		m_flux.Destroy();
-		m_normal.Destroy();
+		m_vsmMoments.Destroy();
 	}
 
 }

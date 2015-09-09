@@ -23,8 +23,8 @@ float4 main(PSInput input) : SV_Target0
 	float3 L = LightVector(g_light, data.position);
 
 	float4 visibility = ShadowMapVisibility(data);
-	float4 NdotL      = saturate(dot(data.normal, L));
+	float3 NdotL      = (dot(data.normal, L));
 
-	return float4(visibility * NdotL * LightIrradiance(g_light, data.position), 1);
+	return visibility * float4(NdotL * LightIrradiance(g_light, data.position), 1);
 
 }

@@ -63,7 +63,14 @@ bool Image::LoadImpl(void)
 			if (ilLoadImage(m_name.CString()) &&
 				ilConvertImage(IL_RGBA, IL_FLOAT))
 			{
+
+				if (ilGetInteger(IL_IMAGE_ORIGIN) == IL_ORIGIN_LOWER_LEFT)
+				{
+					iluFlipImage();
+				}
+
 				loaded = true;
+
 			}
 			else
 			{
@@ -111,21 +118,4 @@ const void * Image::GetData(void) const
 {
 	ilBindImage(m_id);
 	return (const void *) ilGetData();
-}
-
-Image Image::Scale(float scale) const
-{
-	
-	Image image(*this);
-
-	ilBindImage(image.m_id);
-
-	int w = ilGetInteger(IL_IMAGE_WIDTH);
-	int h = ilGetInteger(IL_IMAGE_HEIGHT);
-
-	iluImageParameter(ILU_FILTER, ILU_SCALE_BOX);
-	iluScale(w * scale, h * scale, 1);
-
-	return image;
-
 }

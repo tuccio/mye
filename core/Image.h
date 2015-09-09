@@ -35,8 +35,6 @@ namespace mye
 
 			void Destroy(void);
 
-			Image Scale(float scale) const;
-
 		protected:
 
 			bool LoadImpl(void);

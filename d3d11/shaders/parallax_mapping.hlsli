@@ -51,7 +51,7 @@ void ParallaxMapping(in Texture2D normalHeightMap, in float3 eyeTS, in float3 no
 	while (currentSample < samples)
 	{
 
-		currentSampledHeight = normalHeightMap.SampleGrad(g_linearSampler, texcoord + currentOffset, dx, dy).a;
+		currentSampledHeight = normalHeightMap.SampleGrad(g_trilinearSampler, texcoord + currentOffset, dx, dy).a;
 
 		if (currentSampledHeight > currentRayHeight)
 		{
@@ -85,7 +85,7 @@ void ParallaxMapping(in Texture2D normalHeightMap, in float3 eyeTS, in float3 no
 
 	texcoord += currentOffset;
 	
-	float3 sampledNormalTS = 2.f * normalHeightMap.Sample(g_linearSampler, texcoord).rgb - 1.f;
+	float3 sampledNormalTS = 2.f * normalHeightMap.Sample(g_trilinearSampler, texcoord).rgb - 1.f;
 	
 	normalWS = mul(tangentToWorldSpace, sampledNormalTS);
 

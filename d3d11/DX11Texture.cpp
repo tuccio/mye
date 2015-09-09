@@ -12,6 +12,8 @@
 using namespace mye::dx11;
 using namespace mye::core;
 
+static ID3D11Texture2D * __CreateMipmappedTexture(ImagePointer image);
+
 DX11Texture::DX11Texture(ResourceManager      * owner,
                          const String         & name,
                          ManualResourceLoader * manual) :
@@ -86,47 +88,57 @@ bool DX11Texture::LoadImpl(void)
 		{
 
 			tex2dDesc.MipLevels  = 0;
+			tex2dDesc.Usage      = D3D11_USAGE_DEFAULT;
+			tex2dDesc.MiscFlags |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
+			tex2dDesc.BindFlags |= D3D11_BIND_RENDER_TARGET;
 
-			std::vector<Image> images;
+			if (!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton().GetDevice()->CreateTexture2D(&tex2dDesc, nullptr, &m_texture2d)) &&
+				CreateViews())
+			{
+				DX11Device::GetSingleton().GetImmediateContext()->UpdateSubresource(m_texture2d, 0, nullptr, image->GetData(), m_width * GetDataTypeSize(DataFormat::FLOAT4), 0);
+				GenerateMips();
+				loaded = true;
+			}
+
+			/*ID3D11Texture2D * mipmappedTexture = __CreateMipmappedTexture(image);
+
 			std::vector<D3D11_SUBRESOURCE_DATA> dataDescriptions;
 
-			D3D11_SUBRESOURCE_DATA dataDesc;
+			int size = std::max(m_width, m_height);
 
-			dataDesc.pSysMem          = image->GetData();
-			dataDesc.SysMemPitch      = m_width * GetDataTypeSize(m_format);
-			dataDesc.SysMemSlicePitch = 0;
-
-			dataDescriptions.push_back(dataDesc);
-
-			int size = std::max(m_width, m_height) >> 1;
-
-			float scale = .5f;
+			int subresourceIndex = 0;
 
 			while (size != 0)
 			{
 
-				images.emplace_back(std::move(image->Scale(scale)));
+				D3D11_MAPPED_SUBRESOURCE mappedResource;
 
-				dataDesc.pSysMem = images.back().GetData();
-				dataDesc.SysMemPitch >>= 1;
+				DX11Device::GetSingleton().GetImmediateContext()->Map(mipmappedTexture, subresourceIndex++, D3D11_MAP_READ, 0, &mappedResource);
+
+				D3D11_SUBRESOURCE_DATA dataDesc;
+
+				dataDesc.pSysMem          = mappedResource.pData;
+				dataDesc.SysMemPitch      = mappedResource.RowPitch;
+				dataDesc.SysMemSlicePitch = 0;
 
 				dataDescriptions.push_back(dataDesc);
 
-				scale *= .5f;
 				size >>= 1;
 
 			}
 
 			if (!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton().GetDevice()->CreateTexture2D(&tex2dDesc, &dataDescriptions[0], &m_texture2d)) &&
-			    CreateViews())
+				CreateViews())
 			{
 				loaded = true;
 			}
 
-			for (auto & image : images)
+			for (int i = 0; i < dataDescriptions.size(); i++)
 			{
-				image.Destroy();
+				DX11Device::GetSingleton().GetImmediateContext()->Unmap(mipmappedTexture, i);
 			}
+
+			__MYE_DX11_RELEASE_COM(mipmappedTexture);*/
 
 		}
 		else
@@ -397,3 +409,64 @@ void DX11Texture::GenerateMips(void)
 {
 	DX11Device::GetSingleton().GetImmediateContext()->GenerateMips(m_shaderResourceView);
 }
+
+ID3D11Texture2D * DX11Texture::GetTexture2D(void) const
+{
+	return m_texture2d;
+}
+
+ID3D11Texture3D * DX11Texture::GetTexture3D(void) const
+{
+	return m_texture3d;
+}
+
+//static ID3D11Texture2D * __CreateMipmappedTexture(ImagePointer image)
+//{
+//
+//	ID3D11Texture2D * t2d;
+//
+//	int w = image->GetWidth();
+//	int h = image->GetHeight();
+//
+//	D3D11_TEXTURE2D_DESC tex2dDesc;
+//
+//	tex2dDesc.Width          = w;
+//	tex2dDesc.Height         = h;
+//
+//	tex2dDesc.MipLevels      = 0;
+//	tex2dDesc.ArraySize      = 1;
+//	tex2dDesc.Format         = DXGI_FORMAT_R32G32B32A32_FLOAT;
+//
+//	tex2dDesc.BindFlags      = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+//	tex2dDesc.MiscFlags      = 0;
+//	tex2dDesc.Usage          = D3D11_USAGE_DEFAULT;
+//	tex2dDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+//	tex2dDesc.SampleDesc     = DX11Device::GetSingleton().GetMSAASampleDesc(MSAA::MSAA_OFF, DXGI_FORMAT_R32G32B32A32_FLOAT);
+//
+//	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+//
+//	shaderResourceViewDesc.Format                    = DXGI_FORMAT_R32G32B32A32_FLOAT;
+//	shaderResourceViewDesc.ViewDimension             = D3D11_SRV_DIMENSION_TEXTURE2D;
+//
+//	shaderResourceViewDesc.Texture2D.MostDetailedMip =  0;
+//	shaderResourceViewDesc.Texture2D.MipLevels       = -1;
+//
+//	ID3D11ShaderResourceView * srv;
+//
+//	if (!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton().GetDevice()->CreateTexture2D(&tex2dDesc, nullptr, &t2d)) &&
+//	    !__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton().GetDevice()->CreateShaderResourceView(t2d, &shaderResourceViewDesc, &srv)))
+//	{
+//
+//		DX11Device::GetSingleton().GetImmediateContext()->UpdateSubresource(t2d, 0, nullptr, image->GetData(), w * GetDataTypeSize(DataFormat::FLOAT4), 0);
+//
+//		DX11Device::GetSingleton().GetImmediateContext()->GenerateMips(srv);
+//
+//		__MYE_DX11_RELEASE_COM(srv);
+//
+//		return t2d;
+//
+//	}
+//
+//	return nullptr;
+//
+//}

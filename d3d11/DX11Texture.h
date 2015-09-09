@@ -49,6 +49,9 @@ namespace mye
 
 			void GenerateMips(void);
 
+			ID3D11Texture2D * GetTexture2D(void) const;
+			ID3D11Texture3D * GetTexture3D(void) const;
+
 		protected:
 
 			bool LoadImpl(void);

@@ -30,15 +30,15 @@ RSMTexel RSMRead(in float2 texcoord)
 
 #ifdef MYE_VERTEX_SHADER
 
-	texel.position = g_position.SampleLevel(g_linearSampler, texcoord, 0).xyz;
-	texel.normal   = g_normal.SampleLevel(g_linearSampler, texcoord, 0).xyz;
-	texel.flux     = g_flux.SampleLevel(g_linearSampler, texcoord, 0).rgb;
+	texel.position = g_position.SampleLevel(g_bilinearSampler, texcoord, 0).xyz;
+	texel.normal   = g_normal.SampleLevel(g_bilinearSampler, texcoord, 0).xyz;
+	texel.flux     = g_flux.SampleLevel(g_bilinearSampler, texcoord, 0).rgb;
 
 #else
 
-	texel.position = g_position.Sample(g_linearSampler, texcoord).xyz;
-	texel.normal   = g_normal.Sample(g_linearSampler, texcoord).xyz;
-	texel.flux     = g_flux.Sample(g_linearSampler, texcoord).rgb;
+	texel.position = g_position.Sample(g_trilinearSampler, texcoord).xyz;
+	texel.normal   = g_normal.Sample(g_trilinearSampler, texcoord).xyz;
+	texel.flux     = g_flux.Sample(g_trilinearSampler, texcoord).rgb;
 
 #endif
 

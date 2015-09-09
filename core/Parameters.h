@@ -50,6 +50,7 @@ namespace mye
 			mye::math::QuaternionTempl<T> GetQuaternion(const String & key) const;
 
 			void Add(const String & key, const String & value);
+			void Remove(const String & key);
 			bool Contains(const String & key) const;
 
 			void   Clear(void);

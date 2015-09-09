@@ -11,13 +11,13 @@ AssimpLoader::~AssimpLoader(void)
 {
 }
 
-bool AssimpLoader::LoadMesh(const String &filename, Mesh *mesh)
+bool AssimpLoader::LoadMesh(const String & filename, Mesh * mesh)
 {
 
 	Assimp::Importer importer;
 	bool loaded = false;
 
-	const aiScene * scene = importer.ReadFile(filename.CString(), aiProcessPreset_TargetRealtime_MaxQuality);
+	const aiScene * scene = importer.ReadFile(filename.CString(), aiProcessPreset_TargetRealtime_Quality);
 
 	if (scene && scene->HasMeshes())
 	{
@@ -25,7 +25,6 @@ bool AssimpLoader::LoadMesh(const String &filename, Mesh *mesh)
 	}
 
 	importer.FreeScene();
-
 	return loaded;
 
 }
@@ -51,8 +50,7 @@ bool AssimpLoader::LoadMesh(const aiScene * scene, const aiMesh * assimpMesh, Me
 
 	VertexDeclaration vDecl;
 
-	vDecl.AddAttribute(VertexAttributeSemantic::POSITION,
-		DataFormat::FLOAT3);
+	vDecl.AddAttribute(VertexAttributeSemantic::POSITION, DataFormat::FLOAT3);
 
 	if (texcoord0)
 	{
@@ -84,9 +82,7 @@ bool AssimpLoader::LoadMesh(const aiScene * scene, const aiMesh * assimpMesh, Me
 
 		mesh->Allocate(vDecl, assimpMesh->mNumFaces);
 
-		for (size_t triangleIndex = 0;
-			triangleIndex < assimpMesh->mNumFaces;
-			triangleIndex++)
+		for (size_t triangleIndex = 0; triangleIndex < assimpMesh->mNumFaces; triangleIndex++)
 		{
 
 			unsigned int * indices = assimpMesh->mFaces[triangleIndex].mIndices;
@@ -174,7 +170,7 @@ bool AssimpLoader::LoadModel(const String & filename, Model * model)
 
 }
 
-bool AssimpLoader::LoadModel(const aiScene *scene, Model *model)
+bool AssimpLoader::LoadModel(const aiScene * scene, Model * model)
 {
 
 	if (!model || !scene)

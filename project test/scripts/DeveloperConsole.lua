@@ -19,7 +19,11 @@ function DeveloperConsole:Update()
 			Game:GetMainWindow():Focus()
 		else
 			local f = load(code)
-			f()
+			
+			if not pcall(f) then
+				print('Error executing the line: ' .. code)
+			end
+			
 		end
 		
 	elseif (Input.keyboard:IsPressed(KeyboardVK.F1)) then

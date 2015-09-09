@@ -71,7 +71,7 @@ PSOutput main(PSInput input)
 
 #ifdef MYE_USE_DIFFUSE_TEXTURE
 
-	albedo = Gamma(g_diffuseTexture.Sample(g_linearSampler, input.texcoord));
+	albedo = Gamma(g_diffuseTexture.Sample(g_anisotropicSampler, input.texcoord));
 
 #else
 

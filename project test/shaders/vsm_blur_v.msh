@@ -1,0 +1,19 @@
+{
+    "vertex": {
+		"name": "VSM_BOX_BLUR_VS",
+        "source": "../d3d11/shaders/box_blur_vs.hlsl",
+        "input": [
+            { "position": "float4" }
+        ]
+    },
+    "pixel": {
+		"name": "VSM_BOX_BLUR_V_PS",
+        "source": "../d3d11/shaders/box_blur_ps.hlsl",
+		"defines": {
+			"MYE_BOX_BLUR_TYPE": "float2",
+			"MYE_BOX_BLUR_KERNEL_SIZE": "7",
+			"MYE_BOX_BLUR_TEXTURE_SLOT" : "t20",
+			"MYE_SEPARABLE_CONVOLUTION_VERTICAL": ""
+		}
+    }
+}

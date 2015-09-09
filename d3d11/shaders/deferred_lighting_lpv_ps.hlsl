@@ -49,7 +49,7 @@ float4 main(PSInput input) : SV_Target0
 	sh.green = g_lightVolumeGreen.Sample(g_lpvSampler, sampleCoords);
 	sh.blue  = g_lightVolumeBlue.Sample(g_lpvSampler,  sampleCoords);
 
-	float3 intensity  = saturate(SHDot(sh, shNormal)) * MYE_INV_PI;
+	float3 irradiance = max(0, SHDot(sh, shNormal)) * MYE_INV_PI;
 	float  visibility = LPVVisibility(sh.red, shOcclusion);
 
 	// As in the crytek paper, approximate the distance r from the surfel as half the
@@ -59,6 +59,6 @@ float4 main(PSInput input) : SV_Target0
 
 	//return float4(visibility * intensity * falloff, 1.f);
 
-	return float4(intensity * falloff, 1.f);
+	return float4(irradiance * falloff, 1.f);
 
 }

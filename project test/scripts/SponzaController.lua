@@ -50,7 +50,7 @@ end
 function SponzaController:OnKeyboardKeyHold(key, t)
 
 	local angle = 25 * Time.delta
-	local v     = vec3(1, 0, 1):Normalize()
+	local v     = vec3(0.25, 1, -0.4):Normalize()
 
 	if key == KeyboardVK.R then
 	

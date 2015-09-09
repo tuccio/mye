@@ -32,7 +32,7 @@ int main(int argc, char * argv[])
 
 	Assimp::Importer importer;	
 
-	const aiScene * scene = importer.ReadFile(argv[1], aiProcessPreset_TargetRealtime_MaxQuality);
+	const aiScene * scene = importer.ReadFile(argv[1], aiProcess_GenNormals);
 
 	//aiApplyPostProcessing(scene, aiProcess_ValidateDataStructure | aiProcess_FindInvalidData);
 

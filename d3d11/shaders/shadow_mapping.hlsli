@@ -8,18 +8,22 @@
 #include "renderer_configuration.hlsli"
 #include "common_samplers.hlsli"
 #include "vsm_moments.hlsli"
+#include "gbuffer_read.hlsli"
+#include "camera_transform.hlsli"
 
-#ifdef __MYE_LIGHT_DIRECTIONAL__
+#if !defined(MYE_SHADOW_MAP_VSM) && defined(MYE_SHADOW_MAP_PCF)
+#define __MYE_PCF_SHADOW_MAPPING
+#endif
+
+#ifdef MYE_SHADOW_MAP_CSM
 
 #include "pssm.hlsli"
-#include "camera_transform.hlsli"
-#include "gbuffer_read.hlsli"
 
-#ifdef MYE_SHADOW_MAP_VSM
-#define __MYE_SHADOW_MAP_TYPE Texture2DArray<float2>
-#else
-#define __MYE_SHADOW_MAP_TYPE Texture2DArray<float>
-#endif
+	#ifdef MYE_SHADOW_MAP_VSM
+		#define __MYE_SHADOW_MAP_TYPE Texture2DArray<float2>
+	#else
+		#define __MYE_SHADOW_MAP_TYPE Texture2DArray<float>
+	#endif
 
 cbuffer cbPSSM : register(__MYE_DX11_BUFFER_SLOT_PSSMBUFFER)
 {
@@ -34,11 +38,13 @@ cbuffer cbPSSM : register(__MYE_DX11_BUFFER_SLOT_PSSMBUFFER)
 }
 
 #else
-#ifdef MYE_SHADOW_MAP_VSM
-#define __MYE_SHADOW_MAP_TYPE Texture2D<float2>
-#else
-#define __MYE_SHADOW_MAP_TYPE Texture2D<float>
-#endif
+
+	#ifdef MYE_SHADOW_MAP_VSM
+		#define __MYE_SHADOW_MAP_TYPE Texture2D<float2>
+	#else
+		#define __MYE_SHADOW_MAP_TYPE Texture2D<float>
+	#endif
+
 #endif
 
 cbuffer cbLightSpace : register(__MYE_DX11_BUFFER_SLOT_LIGHTSPACETRANSFORM)
@@ -46,21 +52,23 @@ cbuffer cbLightSpace : register(__MYE_DX11_BUFFER_SLOT_LIGHTSPACETRANSFORM)
 	float4x4 g_lightSpaceTransform;
 }
 
-#define __MYE_POISSON_DISK_TAPS         10
-#define __MYE_POISSON_DISK_INVERSE_TAPS .1f
 
-static float2 g_poissonDisk[__MYE_POISSON_DISK_TAPS] = {
-		{ -0.7215953f, -0.2134517f },
-		{ -0.754268f, 0.3745826f },
-		{ 0.07589724f, -0.2226067f },
-		{ -0.06084631f, 0.3265062f },
-		{ -0.4331634f, -0.7978624f },
-		{ 0.7661136f, 0.2218201f },
-		{ -0.3700204f, 0.7790591f },
-		{ 0.3654317f, 0.8938f },
-		{ 0.1253316f, -0.972573f },
-		{ 0.567069f, -0.4168186f }
-};
+
+//#define __MYE_POISSON_DISK_TAPS         10
+//#define __MYE_POISSON_DISK_INVERSE_TAPS .1f
+//
+//static float2 g_poissonDisk[__MYE_POISSON_DISK_TAPS] = {
+//		{ -0.7215953f, -0.2134517f },
+//		{ -0.754268f, 0.3745826f },
+//		{ 0.07589724f, -0.2226067f },
+//		{ -0.06084631f, 0.3265062f },
+//		{ -0.4331634f, -0.7978624f },
+//		{ 0.7661136f, 0.2218201f },
+//		{ -0.3700204f, 0.7790591f },
+//		{ 0.3654317f, 0.8938f },
+//		{ 0.1253316f, -0.972573f },
+//		{ 0.567069f, -0.4168186f }
+//};
 
 //#define __MYE_POISSON_DISK_TAPS         16
 //#define __MYE_POISSON_DISK_INVERSE_TAPS .0625f
@@ -84,36 +92,36 @@ static float2 g_poissonDisk[__MYE_POISSON_DISK_TAPS] = {
 //	{ 0.825885f, -0.5506428f }
 //};
 
-//#define __MYE_POISSON_DISK_TAPS         25
-//#define __MYE_POISSON_DISK_INVERSE_TAPS .04f
-//
-//static float2 g_poissonDisk[__MYE_POISSON_DISK_TAPS] = {
-//	{ -0.9898047f, 0.08594871f },
-//	{ -0.6846461f, -0.4100073f },
-//	{ -0.5209854f, 0.07060355f },
-//	{ -0.8811331f, 0.4624839f },
-//	{ -0.3824056f, 0.5220858f },
-//	{ 0.06794879f, -0.02269273f },
-//	{ -0.2544252f, -0.2117593f },
-//	{ -0.06239981f, 0.483956f },
-//	{ 0.4625237f, 0.2697102f },
-//	{ 0.2370407f, 0.570186f },
-//	{ -0.2845682f, 0.836255f },
-//	{ 0.1036202f, 0.9931732f },
-//	{ 0.680468f, 0.7108735f },
-//	{ 0.9394944f, 0.3413454f },
-//	{ 0.7305045f, -0.1501098f },
-//	{ 0.3764257f, -0.227539f },
-//	{ -0.574159f, -0.7482516f },
-//	{ -0.1991345f, -0.7522087f },
-//	{ -0.9488707f, -0.2366325f },
-//	{ 0.2172923f, -0.9012405f },
-//	{ 0.001194939f, -0.4869f },
-//	{ 0.529645f, -0.7007937f },
-//	{ 0.7903866f, -0.474292f },
-//	{ 0.3973028f, 0.8530729f },
-//	{ -0.2006629f, 0.1549372f }
-//};
+#define __MYE_POISSON_DISK_TAPS         25
+#define __MYE_POISSON_DISK_INVERSE_TAPS .04f
+
+static float2 g_poissonDisk[__MYE_POISSON_DISK_TAPS] = {
+	{ -0.9898047f, 0.08594871f },
+	{ -0.6846461f, -0.4100073f },
+	{ -0.5209854f, 0.07060355f },
+	{ -0.8811331f, 0.4624839f },
+	{ -0.3824056f, 0.5220858f },
+	{ 0.06794879f, -0.02269273f },
+	{ -0.2544252f, -0.2117593f },
+	{ -0.06239981f, 0.483956f },
+	{ 0.4625237f, 0.2697102f },
+	{ 0.2370407f, 0.570186f },
+	{ -0.2845682f, 0.836255f },
+	{ 0.1036202f, 0.9931732f },
+	{ 0.680468f, 0.7108735f },
+	{ 0.9394944f, 0.3413454f },
+	{ 0.7305045f, -0.1501098f },
+	{ 0.3764257f, -0.227539f },
+	{ -0.574159f, -0.7482516f },
+	{ -0.1991345f, -0.7522087f },
+	{ -0.9488707f, -0.2366325f },
+	{ 0.2172923f, -0.9012405f },
+	{ 0.001194939f, -0.4869f },
+	{ 0.529645f, -0.7007937f },
+	{ 0.7903866f, -0.474292f },
+	{ 0.3973028f, 0.8530729f },
+	{ -0.2006629f, 0.1549372f }
+};
 
 cbuffer cbLight : register(__MYE_DX11_BUFFER_SLOT_LIGHT)
 {
@@ -121,6 +129,8 @@ cbuffer cbLight : register(__MYE_DX11_BUFFER_SLOT_LIGHT)
 }
 
 /* Shadow map and samplers */
+
+#define __MYE_RANDOM_TEXTURE_SIZE 8
 
 __MYE_SHADOW_MAP_TYPE  g_shadowMap           : register(__MYE_DX11_TEXTURE_SLOT_SHADOWMAP);
 SamplerState           g_shadowMapSampler    : register(__MYE_DX11_SAMPLER_SLOT_SHADOWMAP);
@@ -133,16 +143,18 @@ Texture2D<float2> g_randomCosSin : register(__MYE_DX11_TEXTURE_SLOT_RANDOM);
 
 /* Shadow mapping */
 
-#ifndef MYE_SHADOW_MAP_VSM
-
 float ShadowMapBiasedDepth(in float4 lightSpacePosition)
 {
-	return lightSpacePosition.z - r.shadowMapBias;
-}
 
+#ifndef MYE_SHADOW_MAP_VSM
+	return lightSpacePosition.z - r.shadowMapBias;
+#else
+	return lightSpacePosition.z;
 #endif
 
-#if !defined(MYE_SHADOW_MAP_VSM) && defined(MYE_SHADOW_MAP_PCF)
+}
+
+#ifdef __MYE_PCF_SHADOW_MAPPING
 
 float2 ShadowMapPCFDepthGradient(in float4 lightSpacePosition, in float3 projectTexCoord)
 {
@@ -183,45 +195,15 @@ float2 ShadowMapPCFDepthGradient(in float4 lightSpacePosition, in float3 project
 
 }
 
+/* PCF filtering */
+
 float4 ShadowMapCompareDepthPCF(in GBufferData input, in float4 lightSpacePosition, in float3 projectTexCoord, in float lightDepthValue, in float texelScale, in float2 depthGradient, in float4x4 lightSpaceTransform)
 {
-
-	//float shadowFactor = 0.f;
-
-	//int pcfLoopEnd   = ((uint) r.pcfKernel) >> 1;
-	//int pcfLoopBegin = - pcfLoopEnd;
-
-	//for (int i = pcfLoopBegin; i <= pcfLoopEnd; i++)
-	//{
-
-	//	for (int j = pcfLoopBegin; j <= pcfLoopEnd; j++)
-	//	{
-
-	//		float2 delta             = float2(i, j);
-	//		float2 lightSpaceDelta   = delta * texelScale;
-	//		float  slopeScaledBias   = dot(lightSpaceDelta, depthGradient)/* * r.shadowMapSlopeScaledBias*/;
-	//		float  depthLinearApprox = lightDepthValue + slopeScaledBias;
-
-	//		float  sampleContribution = g_shadowMap.SampleCmpLevelZero(g_shadowMapSamplerCmp, projectTexCoord + float3(lightSpaceDelta, 0), depthLinearApprox);
-
-	//		shadowFactor += sampleContribution;
-
-	//	}
-	//}
-
-	//shadowFactor *= r.pcfKernelInvSquare;
-
-	/*float shadowFactor =
-		0.25f * (
-		g_shadowMap.SampleCmpLevelZero(g_shadowMapSamplerCmp, projectTexCoord + float3(float2(-0.5f,  0.5f) * texelScale, 0), lightDepthValue) +
-		g_shadowMap.SampleCmpLevelZero(g_shadowMapSamplerCmp, projectTexCoord + float3(float2( 0.5f,  0.5f) * texelScale, 0), lightDepthValue) +
-		g_shadowMap.SampleCmpLevelZero(g_shadowMapSamplerCmp, projectTexCoord + float3(float2(-1.5f, -1.5f) * texelScale, 0), lightDepthValue) +
-		g_shadowMap.SampleCmpLevelZero(g_shadowMapSamplerCmp, projectTexCoord + float3(float2( 0.5f, -1.5f) * texelScale, 0), lightDepthValue));*/
 
 	float3 offsetVector           = cross(input.normal, g_light.direction.xyz);
 	float3 lightSpaceOffsetVector = normalize(mul((float3x3) lightSpaceTransform, offsetVector));
 
-	float2 rotationCosSin = g_randomCosSin.Sample(g_randomSampler, float2(input.screenPosition) / r.resolution);
+	float2 rotationCosSin = g_randomCosSin.Sample(g_pointSampler, float2(input.screenPosition) / __MYE_RANDOM_TEXTURE_SIZE);
 
 	float2x2 rotation = {
 		rotationCosSin.x, - rotationCosSin.y,
@@ -252,37 +234,41 @@ float4 ShadowMapCompareDepthPCF(in GBufferData input, in float4 lightSpacePositi
 
 #elif !defined(MYE_SHADOW_MAP_VSM)
 
+/* Regular shadow mapping comparison */
+
 float4 ShadowMapCompareDepth(in float3 projectTexCoord, in float lightDepthValue)
 {
 
 	float depthValue = g_shadowMap.Sample(g_shadowMapSampler, projectTexCoord);
+	//float depth = (depthValue < lightDepthValue);
 
-	if (depthValue < lightDepthValue)
-	{
-		return float4(0.f, 0.f, 0.f, 0.f);
-	}
-	else
-	{
-		return float4(1.f, 1.f, 1.f, 1.f);
-	}
+	float depth = (lightDepthValue < depthValue);
+
+	return float4(depth, depth, depth, 1.f);
 
 }
 
 #else
 
-float ShadowMapBiasedDepth(in float4 lightSpacePosition)
-{
-	return lightSpacePosition.z;
-}
+/* VSM depth comparison */
 
+float smootherstep(in float edge0, float edge1, float x)
+{
+	float t = saturate((x - edge0) / (edge1 - edge0));
+	return t * t * t * (t * (t * 6 - 15) + 10);
+}
 
 float4 ShadowMapCompareDepth(in float3 projectTexCoord, in float lightDepthValue)
 {
 
-	float2 moments = g_shadowMap.Sample(g_linearSampler, projectTexCoord).xy;
+#ifdef MYE_SHADOW_MAP_CSM
+	float2 moments = g_shadowMap.SampleLevel(g_anisotropicSampler, projectTexCoord, 0).xy;
+#else
+	float2 moments = g_shadowMap.SampleLevel(g_anisotropicSampler, projectTexCoord.xy, 0).xy;
+#endif
 
-	float pmax = VSMChebyshevUpperBound(moments, lightDepthValue);
-	float p    = smoothstep(r.vsmMinBleeding, 1.f, pmax);
+	float pmax = VSMChebyshevUpperBound(moments, lightDepthValue, r.vsmMinVariance);
+	float p    = smootherstep(r.vsmMinBleeding, 1.f, pmax);
 
 	return float4(p, p, p, 1);
 
@@ -290,7 +276,7 @@ float4 ShadowMapCompareDepth(in float3 projectTexCoord, in float lightDepthValue
 
 #endif
 
-#if defined(__MYE_LIGHT_DIRECTIONAL__)
+#ifdef MYE_SHADOW_MAP_CSM
 
 float4 ShadowMapPSSM(in GBufferData input)
 {
@@ -304,9 +290,9 @@ float4 ShadowMapPSSM(in GBufferData input)
 	float4 cameraSpace = mul(g_camera.viewProj, x);
 	float  cameraDepth = cameraSpace.z;
 
-	int split = r.csmSplits;
+	unsigned int split = r.csmSplits;
 
-	for (int i = 0; i < r.csmSplits; i++)
+	for (unsigned int i = 0; i < r.csmSplits; i++)
 	{
 		if (cameraDepth >= g_slice[i].near && cameraDepth < g_slice[i].far)
 		{
@@ -351,14 +337,14 @@ float4 ShadowMapPSSM(in GBufferData input)
 
 		// Finally compare the depth with the shadow map value like in regular shadow mapping
 
-#if defined(MYE_SHADOW_MAP_PCF) && !defined(MYE_SHADOW_MAP_VSM)
+#ifdef __MYE_PCF_SHADOW_MAPPING
 
 		float  texelScale = 1.f / r.shadowMapResolution;
 
 		float2 texelDepthDelta;
 
 		float4 lightSpaceOffsetPosition = mul(g_lightSpaceTransform, normalOffsetPosition);
-		//CalculateRightAndUpTexelDepthDeltas(ddx(lightSpaceOffsetPosition), ddy(lightSpaceOffsetPosition), texelScale, texelDepthDelta.x, texelDepthDelta.y);
+
 		texelDepthDelta = ShadowMapPCFDepthGradient(lightSpaceOffsetPosition, projectTexCoord);
 
 		//float2 texelDepthDelta = ShadowMapPCFDepthDelta(lightSpaceOffsetPosition, texelScale);
@@ -375,9 +361,6 @@ float4 ShadowMapPSSM(in GBufferData input)
 
 }
 
-#endif
-
-
 #else
 
 float4 ShadowMap(in GBufferData input)
@@ -387,16 +370,28 @@ float4 ShadowMap(in GBufferData input)
 
 	float3 projectTexCoord;
 
-	projectTexCoord.x = (lightSpacePosition.x / lightSpacePosition.w) * .5f + .5f;
-	projectTexCoord.y = 1.f - ((lightSpacePosition.y / lightSpacePosition.w) * .5f + .5f);
+	projectTexCoord.x = lightSpacePosition.x * .5f + .5f;
+	projectTexCoord.y = 1.f - (lightSpacePosition.y * .5f + .5f);
 	projectTexCoord.z = 0.f;
 
-	float  texelScale;
+	float4 normalOffsetPosition     = { input.position + input.normal * r.shadowMapNormalOffsetBias, 1 };
+	float4 lightSpaceOffsetPosition = mul(g_lightSpaceTransform, normalOffsetPosition);
+	float  lightDepthValue          = ShadowMapBiasedDepth(lightSpaceOffsetPosition);
+
+#ifdef __MYE_PCF_SHADOW_MAPPING
+	
 	float2 texelDepthDelta;
+	float  texelScale = 1.f / r.shadowMapResolution;
 
-	float lightDepthValue = ShadowMapBiasedDepth(lightSpacePosition, texelScale, texelDepthDelta);
+	texelDepthDelta = ShadowMapPCFDepthGradient(lightSpaceOffsetPosition, projectTexCoord);
 
-	return float4(ShadowMapCompareDepth(projectTexCoord, lightDepthValue, texelScale, texelDepthDelta).rrr, 1);
+	return ShadowMapCompareDepthPCF(input, lightSpaceOffsetPosition, projectTexCoord, lightDepthValue, texelScale, texelDepthDelta, g_lightSpaceTransform);
+
+#else
+
+	return ShadowMapCompareDepth(projectTexCoord, lightDepthValue);
+
+#endif
 
 }
 
@@ -405,7 +400,7 @@ float4 ShadowMap(in GBufferData input)
 float4 ShadowMapVisibility(in GBufferData input)
 {
 
-#if defined(__MYE_LIGHT_DIRECTIONAL__)
+#ifdef MYE_SHADOW_MAP_CSM
 
 	return ShadowMapPSSM(input);
 
@@ -416,3 +411,5 @@ float4 ShadowMapVisibility(in GBufferData input)
 #endif
 
 }
+
+#endif

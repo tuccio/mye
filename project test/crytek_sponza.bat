@@ -1,1 +1,1 @@
-D:\Documents\mye\bin\Release\mye.exe crytek_sponza_scaled.mys
+D:\Documents\mye\bin\Release\mye.exe crytek_sponza.mys
