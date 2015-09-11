@@ -18,6 +18,7 @@
 #define __MYE_DX11_TEXTURE_SLOT_LPVLIGHT_BLUE      t17
 #define __MYE_DX11_TEXTURE_SLOT_LPVGEOMETRY        t18
 #define __MYE_DX11_TEXTURE_SLOT_LIGHTBUFFER        t19
+#define __MYE_DX11_TEXTURE_SLOT_OCCLUSION          t20
 										           
 #define __MYE_DX11_SAMPLER_SLOT_DIFFUSE            s0
 #define __MYE_DX11_SAMPLER_SLOT_NORMALMAP          s1

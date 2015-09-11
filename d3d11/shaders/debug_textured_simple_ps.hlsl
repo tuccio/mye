@@ -11,5 +11,5 @@ struct PSInput
 
 float4 main(PSInput input) : SV_TARGET
 {
-	return g_diffuse.Sample(g_sampler, input.texcoords);
+	return g_diffuse.Sample(g_sampler, input.texcoords).rrrr;
 }

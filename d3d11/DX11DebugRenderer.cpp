@@ -11,6 +11,8 @@
 
 #include <mye/core/Game.h>
 
+#include <boost/thread/lock_guard.hpp>
+
 using namespace mye::dx11;
 using namespace mye::core;
 using namespace mye::win;
@@ -103,6 +105,8 @@ void DX11DebugRenderer::Shutdown(void)
 
 void DX11DebugRenderer::Render(ID3D11RenderTargetView * target)
 {
+
+	boost::lock_guard<boost::recursive_mutex> lock(m_mutex);
 
 	/* Lines */
 
@@ -289,12 +293,15 @@ void DX11DebugRenderer::Render(ID3D11RenderTargetView * target)
 
 void DX11DebugRenderer::EnqueueShaderResource(DX11ShaderResource & shaderResource, const Vector2i & position, const Vector2i & size, int slice)
 {
+	boost::lock_guard<boost::recursive_mutex> lock(m_mutex);
 	shaderResource.GetShaderResourceView()->AddRef();
 	m_shaderResources.emplace_back(__ShadowResource { &shaderResource, { position.x(), position.y() }, { size.x(), size.y() }, slice });
 }
 
 void DX11DebugRenderer::EnqueueLine(const Vector3 & from, const Vector3 & to, const Vector4 & color)
 {
+
+	boost::lock_guard<boost::recursive_mutex> lock(m_mutex);
 	
 	__Line line = {
 			{ from.x(), from.y(), from.z() },
@@ -308,6 +315,8 @@ void DX11DebugRenderer::EnqueueLine(const Vector3 & from, const Vector3 & to, co
 
 void DX11DebugRenderer::EnqueueFrustum(const Frustum & frustum, const Vector4 & color)
 {
+
+	boost::lock_guard<boost::recursive_mutex> lock(m_mutex);
 
 	auto corners = frustum.GetCorners();
 

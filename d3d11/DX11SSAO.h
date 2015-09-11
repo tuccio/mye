@@ -35,7 +35,7 @@ namespace mye
 			DX11Texture m_ssaoBuffer;
 
 			DX11ShaderProgramPointer m_ssao;
-			DX11ShaderProgramPointer m_ssaoBlur;
+			DX11ShaderProgramPointer m_ssaoBlur[2];
 
 		};
 

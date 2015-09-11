@@ -1,10 +1,7 @@
 #pragma pack_matrix(row_major)
 
-#ifdef MYE_USE_HEIGHT_MAP
-
 #include "camera_transform.hlsli"
-
-#endif
+#include "linear_depth.hlsli"
 
 /* Constant buffers */
 
@@ -59,12 +56,13 @@ VSOutput main(VSInput input)
 
 	VSOutput output;
 
-	float3 normalWS = mul((float3x3) g_world, input.normal);
+	float3 normalWS   = mul((float3x3) g_world, input.normal);
 
-	output.positionCS  = mul(g_worldViewProj, float4(input.position, 1));
+	float4 positionCS = mul(g_worldViewProj, float4(input.position, 1));
+	output.positionCS = LinearizeDepth(positionCS);
 
-	output.normalWS    = normalWS;
-	output.positionWS  = mul(g_world, float4(input.position, 1)).xyz;
+	output.normalWS   = normalWS;
+	output.positionWS = mul(g_world, float4(input.position, 1)).xyz;
 
 #ifdef MYE_USE_HEIGHT_MAP
 

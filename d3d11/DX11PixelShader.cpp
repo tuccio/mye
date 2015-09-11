@@ -56,7 +56,7 @@ bool DX11PixelShader::LoadImpl(void)
 
 	UINT compileFlags = D3DCOMPILE_PACK_MATRIX_ROW_MAJOR;
 
-#ifdef _DEBUG
+#ifdef MYE_DX11_SHADERS_DEBUG
 	compileFlags |= D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 

@@ -43,7 +43,7 @@ void ParallaxMapping(in Texture2D normalHeightMap, in float3 eyeTS, in float3 no
 	float2 currentOffset    = { 0, 0 };
 	float2 lastOffset       = { 0, 0 };
 	
-	float lastSampledHeight     = 1;
+	float lastSampledHeight    = 1;
 	float currentSampledHeight = 1;
 
 	int currentSample = 0;

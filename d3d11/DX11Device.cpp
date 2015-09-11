@@ -8,7 +8,7 @@ using namespace mye::dx11;
 using namespace mye::core;
 
 #if _DEBUG
-#define MYE_DX11_DEBUG
+#define MYE_DX11_DEVICE_DEBUG
 #endif
 
 DX11Device::DX11Device(void) :
@@ -32,7 +32,7 @@ bool DX11Device::Create(void)
 	UINT createDeviceFlags = 0x0;
 	D3D_FEATURE_LEVEL featureLevel;
 
-#ifdef MYE_DX11_DEBUG
+#ifdef MYE_DX11_DEVICE_DEBUG
 	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 

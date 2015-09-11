@@ -38,7 +38,7 @@ DX11DeferredLightingRenderer::DX11DeferredLightingRenderer(void) :
 
 	depthBufferConf.height         = 0;
 	depthBufferConf.width          = 0;
-	depthBufferConf.shaderResource = false;
+	depthBufferConf.shaderResource = true;
 	depthBufferConf.arraySize      = 1;
 
 	m_depthBuffer = DX11DepthBuffer(depthBufferConf);
@@ -134,6 +134,8 @@ bool DX11DeferredLightingRenderer::Init(void)
 
 	auto configuration = static_cast<GraphicsModule *>(Game::GetSingleton().GetGraphicsModule())->GetRendererConfiguration();
 
+	auto resolution = configuration->GetScreenResolution();
+
 	m_rsm.SetResolution(configuration->GetShadowMapResolution());
 	m_rsm.SetCSMSplits(configuration->GetCSMSplits());
 
@@ -147,6 +149,7 @@ bool DX11DeferredLightingRenderer::Init(void)
 	    m_depthBuffer.Create() &&
 	    m_rsm.Create(m_vsm) &&
 	    m_lpv.Create(configuration->GetLPVResolution(), configuration->GetLPVRSMSamples()) &&
+		m_ssao.Create(resolution.x() * .5f, resolution.y() * .5f) &&
 	    __CreateConstantBuffers() &&
 	    __CreateContextStates())
 	{
@@ -212,6 +215,7 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 	
 	DX11Device::GetSingleton().GetImmediateContext()->VSSetSamplers(__MYE_DX11_SAMPLER_SLOT_BILINEAR,    1, &m_bilinearSamplerState);
 
+	DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_POINT   ,    1, &m_pointSamplerState);
 	DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_BILINEAR,    1, &m_bilinearSamplerState);
 	DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_TRILINEAR,   1, &m_trilinearSamplerState);
 	DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_ANISOTROPIC, 1, &m_anisotropicSampler);
@@ -352,7 +356,29 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 		}
 
-		DX11Module::GetSingleton().RenderShaderResource(m_gbuffer0, Vector2i(0, 0), Vector2i(250, 141));
+		DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(0, nullptr, nullptr);
+
+		m_gbuffer0.Bind(DX11PipelineStage::PIXEL_SHADER,    __MYE_DX11_TEXTURE_SLOT_GBUFFER0);
+		m_gbuffer1.Bind(DX11PipelineStage::PIXEL_SHADER,    __MYE_DX11_TEXTURE_SLOT_GBUFFER1);
+
+		// Only required for SSAO
+		
+		m_depthBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_GBUFFER2);
+
+		//DX11Module::GetSingleton().RenderShaderResource(m_gbuffer0, Vector2i(0, 0), Vector2i(250, 141));
+
+		m_randomCosSin->Load();
+		m_randomCosSin->Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_RANDOM);
+
+
+		bool lpvEnabled = r->GetLPVEnabled();
+
+		//if (lpvEnabled)
+		{
+			m_ssao.Render();
+		}
+
+		m_depthBuffer.Unbind();
 
 		/* Second step (light buffer) */
 
@@ -361,10 +387,6 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 		ID3D11RenderTargetView * lbuffer = m_lbuffer.GetRenderTargetView();
 
 		m_quadVertexBuffer->Load();
-
-		m_randomCosSin->Load();
-
-		bool lpvEnabled = r->GetLPVEnabled();
 
 		if (lpvEnabled)
 		{
@@ -376,11 +398,6 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 		{
 			m_rsm.SetVolumeConstraint(AABB::FromMinMax(0, 0));
 		}
-
-		DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(0, nullptr, nullptr);
-
-		m_gbuffer0.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_GBUFFER0);
-		m_gbuffer1.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_GBUFFER1);
 
 		for (Light * light : scene->GetLightsList())
 		{
@@ -449,13 +466,13 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 				DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(1, &vsmDepthRt, nullptr);
 
-				vsmMoments.Bind(DX11PipelineStage::PIXEL_SHADER, 20);
+				vsmMoments.Bind(DX11PipelineStage::PIXEL_SHADER, 32);
 
 				/*ID3D11ShaderResourceView * srv = vsmMoments.GetSliceShadowResourceView(i);
 
 				DX11Device::GetSingleton().GetImmediateContext()->PSSetShaderResources(20, 1, &srv);*/
 
-				if (slices < 0) // TODO: change
+				if (slices == 0)
 				{
 
 					m_vsmBoxBlur[0]->Use();
@@ -485,7 +502,7 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 				DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(1, &vsmDepthRt, nullptr);
 
-				m_vsmDepth[0].Bind(DX11PipelineStage::PIXEL_SHADER, 20);
+				m_vsmDepth[0].Bind(DX11PipelineStage::PIXEL_SHADER, 32);
 
 				if (slices < 0) // TODO: change
 				{
@@ -516,8 +533,6 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 			DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_SHADOWMAP,     1, &m_shadowMapSamplerState);
 			DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_SHADOWMAP_CMP, 1, &m_shadowMapSamplerCmpState);
 			DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_RANDOM,        1, &m_randomSamplerState);			
-
-			m_randomCosSin->Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_RANDOM);
 
 			/* Setup constant buffers */
 
@@ -607,12 +622,18 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 										__MYE_DX11_TEXTURE_SLOT_LPVLIGHT_GREEN,
 										__MYE_DX11_TEXTURE_SLOT_LPVLIGHT_BLUE);
 
+			DX11ShaderResource & occlusion = m_ssao.GetSSAOBuffer();
+
+			occlusion.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_OCCLUSION);
+
 			m_quadVertexBuffer->Bind();
 
 			DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 			DX11Device::GetSingleton().GetImmediateContext()->Draw(m_quadVertexBuffer->GetVerticesCount(), 0);
 
 			m_quadVertexBuffer->Unbind();
+
+			occlusion.Unbind();
 
 			m_gbuffer0.Unbind();
 			m_gbuffer1.Unbind();

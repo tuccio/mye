@@ -5,7 +5,7 @@
  *
  * Shader for box blur using separable convolution, needs these macros to be defined:
  *
- * MYE_BOX_BLUR_RESOLUTION:   The input texture resolution;
+ * MYE_BOX_BLUR_RESOLUTION:   The input texture resolution
  * MYE_BOX_BLUR_TYPE:         Data type for the texture to be blurred
  * MYE_BOX_BLUR_KERNEL_SIZE:  Kernel size (should be an odd number, usually 3/5/7)
  * MYE_BOX_BLUR_TEXTURE_SLOT: The texture slot where the texture to blur is bound
@@ -42,15 +42,15 @@ MYE_BOX_BLUR_TYPE main(PSInput input) : SV_Target0
 	
 	float texsize = 1.f / MYE_BOX_BLUR_RESOLUTION;
 
+#ifdef MYE_SEPARABLE_CONVOLUTION_VERTICAL
+	const float2 offset = { 0.f, texsize };
+#elif defined(MYE_SEPARABLE_CONVOLUTION_HORIZONTAL)
+	const float2 offset = { texsize, 0.f };
+#endif
+
 	[unroll]
 	for (int i = MYE_BOX_BLUR_KERNEL_START; i <= MYE_BOX_BLUR_KERNEL_END; i++)
 	{
-
-#ifdef MYE_SEPARABLE_CONVOLUTION_VERTICAL
-		float2 offset = { 0.f, texsize };
-#elif defined(MYE_SEPARABLE_CONVOLUTION_HORIZONTAL)
-		float2 offset = { texsize, 0.f };
-#endif
 
 #ifdef MYE_BOX_BLUR_ARRAY
 		output += g_texture.SampleLevel(g_blurSampler, float3(input.texcoord + i * offset, input.target), 0);

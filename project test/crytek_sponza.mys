@@ -896,6 +896,7 @@
 				<max>9.54229 9.67191 2.53887</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_338">
@@ -1188,6 +1189,7 @@
 				<max>9.54229 5.29279 2.53887</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_12">
@@ -1365,6 +1367,7 @@
 				<max>-10.2519 8.5303 1.79146</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_160">
@@ -1435,6 +1438,7 @@
 				<max>-6.25269 13.2296 -2.50602</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_157">
@@ -1504,6 +1508,7 @@
 				<max>9.58636 4.40589 2.56225</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_274">
@@ -1840,6 +1845,7 @@
 				<max>-10.2541 13.2454 -0.050443</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_335">
@@ -2144,6 +2150,7 @@
 				<max>7.51202 10.5448 2.11624</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_159">
@@ -2214,6 +2221,7 @@
 				<max>-0.14134 10.5448 2.11624</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_101">
@@ -2765,6 +2773,7 @@
 				<max>-6.25269 13.2296 1.98296</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_64">
@@ -2776,6 +2785,7 @@
 				<max>3.66763 10.5448 -2.48713</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_124">
@@ -2787,6 +2797,7 @@
 				<max>8.96965 8.56359 2.4132</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_235">
@@ -2810,6 +2821,7 @@
 				<max>-3.99929 10.5448 2.11625</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_25">
@@ -2985,6 +2997,7 @@
 				<max>-10.3004 10.4863 0.128001</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_255">
@@ -3171,6 +3184,7 @@
 				<max>9.49216 4.2832 2.43281</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_297">
@@ -3193,6 +3207,7 @@
 				<max>1.74886 13.2296 -2.50602</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_69">
@@ -3216,6 +3231,7 @@
 				<max>-0.14134 10.5448 -2.48713</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_311">
@@ -3333,6 +3349,7 @@
 				<max>1.74886 13.2296 1.98296</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_362">
@@ -3378,6 +3395,7 @@
 				<max>3.66763 10.5448 2.11624</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_326">
@@ -3493,6 +3511,7 @@
 				<max>5.58547 13.2296 1.98296</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_85">
@@ -3596,6 +3615,7 @@
 				<max>7.51202 10.5448 -2.48713</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_236">
@@ -3968,6 +3988,7 @@
 				<max>-3.99929 10.5448 -2.48713</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_300">
@@ -4107,6 +4128,7 @@
 				<max>9.33048 8.5303 1.79146</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_340">
@@ -4153,6 +4175,7 @@
 				<max>-2.41504 13.2296 -2.50602</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_129">
@@ -4188,6 +4211,7 @@
 				<max>5.58547 13.2296 -2.50602</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_22">
@@ -4294,6 +4318,7 @@
 				<max>8.96964 8.56359 -2.52302</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_218">
@@ -4363,6 +4388,7 @@
 				<max>-2.41504 13.2296 1.98296</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_38">
@@ -4409,6 +4435,7 @@
 				<max>-7.84524 10.5448 2.11625</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_61">
@@ -4420,6 +4447,7 @@
 				<max>-7.84524 10.5448 -2.48713</max>
 			</aabb>
 			<diffusetexture name="textures\crytek_sponza_sponza_arch_diff.tga"/>
+			<heightmap name="textures\crytek_sponza_sponza_arch_normalheight.png"/>
 		</render>
 	</gameobject>
 	<gameobject name="sponza_93">

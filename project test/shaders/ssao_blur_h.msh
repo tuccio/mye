@@ -1,0 +1,18 @@
+{
+    "vertex": {
+		"name": "SSAO_BILATERAL_BLUR_VS",
+        "source": "../d3d11/shaders/bilateral_blur_vs.hlsl",
+        "input": [
+            { "position": "float4" }
+        ]
+    },
+    "pixel": {
+		"name": "SSAO_BILATERAL_BLUR_H_PS",
+        "source": "../d3d11/shaders/bilateral_blur_ps.hlsl",
+		"defines": {
+			"MYE_BILATERAL_BLUR_TYPE": "float",
+			"MYE_BILATERAL_BLUR_TEXTURE_SLOT" : "t20",
+			"MYE_SEPARABLE_CONVOLUTION_HORIZONTAL": ""
+		}
+    }
+}

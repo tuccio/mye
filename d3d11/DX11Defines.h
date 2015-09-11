@@ -67,6 +67,7 @@ namespace mye
 #define __MYE_DX11_TEXTURE_SLOT_LPVLIGHT_BLUE       17
 #define __MYE_DX11_TEXTURE_SLOT_LPVGEOMETRY         18
 #define __MYE_DX11_TEXTURE_SLOT_LIGHTBUFFER         19
+#define __MYE_DX11_TEXTURE_SLOT_OCCLUSION           20
 
 #define __MYE_DX11_SAMPLER_SLOT_DIFFUSE             0
 #define __MYE_DX11_SAMPLER_SLOT_NORMALMAP           1

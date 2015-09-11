@@ -74,8 +74,8 @@ SHRGB SHScale(in float4 a, in float3 b)
 
 float4 SHCosineLobe(in float3 direction)
 {
-	/*return float4(MYE_COSLOBE_ZH_C0, - MYE_COSLOBE_ZH_C1 * direction.y, MYE_COSLOBE_ZH_C1 * direction.z, - MYE_COSLOBE_ZH_C1 * direction.x);*/
-	return float4(MYE_COSLOBE_ZH_C0, MYE_COSLOBE_ZH_C1 * direction.y, MYE_COSLOBE_ZH_C1 * direction.z, MYE_COSLOBE_ZH_C1 * direction.x);
+	return float4(MYE_COSLOBE_ZH_C0, - MYE_COSLOBE_ZH_C1 * direction.y, MYE_COSLOBE_ZH_C1 * direction.z, - MYE_COSLOBE_ZH_C1 * direction.x);
+	//return float4(MYE_COSLOBE_ZH_C0, MYE_COSLOBE_ZH_C1 * direction.y, MYE_COSLOBE_ZH_C1 * direction.z, MYE_COSLOBE_ZH_C1 * direction.x);
 	//return float4(MYE_COSLOBE_ZH_C0, - MYE_COSLOBE_ZH_C1, MYE_COSLOBE_ZH_C1, - MYE_COSLOBE_ZH_C1) * float4(1.f, direction.yzx);
 }
 

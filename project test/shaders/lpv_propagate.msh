@@ -9,7 +9,7 @@
         "source": "../d3d11/shaders/lpv_propagate_ps.hlsl",
         "name": "LPV_PROPAGATE_PS",
         "defines": {
-            "MYE_PROPAGATE_NO_OCCLUSION_TMP": ""
+            "MYE_PROPAGATE_NO_OCCLUSION": ""
         }
     }
 }

@@ -11,8 +11,8 @@
         "source": "../d3d11/shaders/box_blur_ps.hlsl",
 		"defines": {
 			"MYE_BOX_BLUR_TYPE": "float2",
-			"MYE_BOX_BLUR_KERNEL_SIZE": "7",
-			"MYE_BOX_BLUR_TEXTURE_SLOT" : "t20",
+			"MYE_BOX_BLUR_KERNEL_SIZE": "15",
+			"MYE_BOX_BLUR_TEXTURE_SLOT" : "t32",
 			"MYE_SEPARABLE_CONVOLUTION_VERTICAL": ""
 		}
     }

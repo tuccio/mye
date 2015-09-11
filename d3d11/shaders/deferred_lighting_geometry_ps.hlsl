@@ -74,13 +74,13 @@ PSOutput main(PSInput input) : SV_TARGET
 
 #ifdef MYE_USE_PARALLAX
 
-	ParallaxMapping(g_normalHeightMap, input.eyeTS, input.normalTS, tangentToWorldSpace, texcoord, x, N);
+	//ParallaxMapping(g_normalHeightMap, input.eyeTS, input.normalTS, tangentToWorldSpace, texcoord, x, N);
 
 #else
 
 	// Plain normal mapping
 
-	float3 sampledNormalTS = g_normalHeightMap.Sample(g_trilinearSampler, input.texcoord).rgb;
+	float3 sampledNormalTS = g_normalHeightMap.Sample(g_anisotropicSampler, input.texcoord).rgb;
 	
 	N = normalize(mul(tangentToWorldSpace, 2.f * sampledNormalTS - 1.f));
 

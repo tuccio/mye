@@ -10,6 +10,7 @@
 #include <mye/win/Window.h>
 
 #include <vector>
+#include <boost/thread/recursive_mutex.hpp>
 
 namespace mye
 {
@@ -61,6 +62,8 @@ namespace mye
 
 			std::vector<__ShadowResource>   m_shaderResources;
 			std::vector<__Line>             m_lines;
+
+			boost::recursive_mutex          m_mutex;
 
 		};
 

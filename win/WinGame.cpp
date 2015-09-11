@@ -34,40 +34,40 @@ inline void __RenderingThread(GraphicsModule * graphics)
 }
 
 WinGame::WinGame(InputModule       * input,
-                 GameObjectsModule * gameobjects,
-                 SceneModule       * scene,
-                 PhysicsModule     * physics,
-                 GraphicsModule    * graphics,
-                 AudioModule       * audio,
-                 ScriptModule      * script) :
-Game(input,
-	gameobjects,
-	scene,
-	physics,
-	graphics,
-	audio,
-	script)
+				 GameObjectsModule * gameobjects,
+				 SceneModule       * scene,
+				 PhysicsModule     * physics,
+				 GraphicsModule    * graphics,
+				 AudioModule       * audio,
+				 ScriptModule      * script) :
+				 Game(input,
+				 gameobjects,
+				 scene,
+				 physics,
+				 graphics,
+				 audio,
+				 script)
 {
-// 	m_mainWindow.AddListener(&m_mainWindowListener);
-// 	m_mainWindow.Create();
+	// 	m_mainWindow.AddListener(&m_mainWindowListener);
+	// 	m_mainWindow.Create();
 }
 
 WinGame::~WinGame(void)
 {
-/*	m_mainWindow.Destroy();*/
+	/*	m_mainWindow.Destroy();*/
 }
 
 void WinGame::Run(void)
 {
 
-// 	if (m_mainWindow.Exists())
-// 	{
-// 		m_mainWindow.Create();
-// 	}
-// 
-// 	m_mainWindow.Show();
+	// 	if (m_mainWindow.Exists())
+	// 	{
+	// 		m_mainWindow.Create();
+	// 	}
+	// 
+	// 	m_mainWindow.Show();
 
-	
+
 
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
@@ -112,8 +112,7 @@ void WinGame::Run(void)
 
 		//m_graphics->Render();
 
-	}
-	while (msg.message != WM_QUIT);
+	} while (msg.message != WM_QUIT);
 
 	renderingThread.interrupt();
 	renderingThread.join();

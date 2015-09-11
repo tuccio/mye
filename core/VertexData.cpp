@@ -1,5 +1,7 @@
 #include "VertexData.h"
 
+#include <cassert>
+
 using namespace mye::core;
 
 VertexData::VertexData(void) :
@@ -78,7 +80,11 @@ void VertexData::SetVertexAttribute(size_t vertexIndex,
 	size_t offset = m_declaration.GetAttributeOffset(semantic);
 	size_t size   = GetDataTypeSize(type);
 
-	memcpy(m_data +	vertexIndex * stride + offset, data, size);
+	size_t totalOffset = vertexIndex * stride + offset;
+
+	assert(totalOffset + size <= GetSize() && "Out of bounds access");
+
+	memcpy(m_data +	totalOffset, data, size);
 
 }
 
@@ -92,6 +98,10 @@ void VertexData::GetVertexAttribute(size_t vertexIndex,
 	size_t offset = m_declaration.GetAttributeOffset(semantic);
 	size_t size   = GetDataTypeSize(type);
 
-	memcpy(data, m_data + vertexIndex * stride + offset, size);
+	size_t totalOffset = vertexIndex * stride + offset;
+
+	assert(totalOffset + size <= GetSize() && "Out of bounds access");
+
+	memcpy(data, m_data + totalOffset, size);
 
 }

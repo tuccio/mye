@@ -1,0 +1,15 @@
+{
+    "vertex": {
+        "source": "../d3d11/shaders/ssao_vs.hlsl",
+        "input": [
+            { "position": "float4" }
+        ]
+    },
+    "pixel": {
+        "source": "../d3d11/shaders/ssao_ps.hlsl",
+		"defines": {
+			"MYE_SSAO_RADIUS": "7.5",
+			"MYE_SSAO_MAX_DISTANCE": "10"
+		}
+    }
+}

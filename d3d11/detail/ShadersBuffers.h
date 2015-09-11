@@ -69,7 +69,7 @@ namespace mye
 			struct __MYE_ALIGNED(16) RenderConfigurationBuffer
 			{
 
-				float        resolution[2];
+				int          resolution[2];
 
 				float        gamma;
 

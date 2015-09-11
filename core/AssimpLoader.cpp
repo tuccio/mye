@@ -17,7 +17,7 @@ bool AssimpLoader::LoadMesh(const String & filename, Mesh * mesh)
 	Assimp::Importer importer;
 	bool loaded = false;
 
-	const aiScene * scene = importer.ReadFile(filename.CString(), aiProcessPreset_TargetRealtime_Quality);
+	const aiScene * scene = importer.ReadFile(filename.CString(), aiProcessPreset_TargetRealtime_MaxQuality);
 
 	if (scene && scene->HasMeshes())
 	{
@@ -48,29 +48,13 @@ bool AssimpLoader::LoadMesh(const aiScene * scene, const aiMesh * assimpMesh, Me
 
 	//int colorChannels = mesh->GetNumColorChannels();
 
-	VertexDeclaration vDecl;
-
-	vDecl.AddAttribute(VertexAttributeSemantic::POSITION, DataFormat::FLOAT3);
-
-	if (texcoord0)
-	{
-		vDecl.AddAttribute(VertexAttributeSemantic::TEXCOORD0, DataFormat::FLOAT2);
-	}
-
-	if (normals)
-	{
-		vDecl.AddAttribute(VertexAttributeSemantic::NORMAL, DataFormat::FLOAT3);
-	}
-
-	if (tangent)
-	{
-		vDecl.AddAttribute(VertexAttributeSemantic::TANGENT, DataFormat::FLOAT3);
-	}
-
-	if (bitangent)
-	{
-		vDecl.AddAttribute(VertexAttributeSemantic::BITANGENT, DataFormat::FLOAT3);
-	}
+	VertexDeclaration vDecl = {
+		{ VertexAttributeSemantic::POSITION, DataFormat::FLOAT3 },
+		{ VertexAttributeSemantic::TEXCOORD0, DataFormat::FLOAT2 },
+		{ VertexAttributeSemantic::NORMAL, DataFormat::FLOAT3 },
+		{ VertexAttributeSemantic::TANGENT, DataFormat::FLOAT3 },
+		{ VertexAttributeSemantic::BITANGENT, DataFormat::FLOAT3 }
+	};
 
 	if ((tangent || bitangent) && !assimpMesh->HasTangentsAndBitangents())
 	{

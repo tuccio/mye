@@ -137,11 +137,11 @@ SHRGB GatherContribution(in LPV lpv,
 			float4 shSideFluxDirection = SHCosineLobe(sideFluxDirection);
 			float4 shSideProjDirection = SHCosineLobe(fluxProjDirection);
 
-			float3 shSideIrradiance    = saturate(SHDot(shAdjRadiance, shSideFluxDirection));
+			float3 shSideIrradiance    = saturate(SHDot(shAdjRadiance, shSideProjDirection));
 			//float  sideOcclusion       = LPVVisibility(shSourceDirection, shOcclusion);
 
-			float  sideOcclusion       = LPVVisibility(SHCosineLobe(-sideFluxDirection), shOcclusion);
-			//float  sideOcclusion       = LPVVisibility(SHCosineLobe(sideFluxDirection), LPVOcclusion(lpv, cell, - sideFluxDirection));
+			//float  sideOcclusion       = LPVVisibility(SHCosineLobe(-sideFluxDirection), shOcclusion);
+			float  sideOcclusion       = LPVVisibility(SHCosineLobe(sideFluxDirection), shOcclusion);
 
 			SHRGB  shSideFlux          = SHScale(shSideProjDirection, MYE_LPV_SIDE_SOLID_ANGLE * MYE_INV_PI * sideOcclusion * shSideIrradiance);
 

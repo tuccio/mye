@@ -10,6 +10,7 @@
 #include "DX11ReflectiveShadowMap.h"
 #include "DX11LightPropagationVolume.h"
 #include "DX11VertexBuffer.h"
+#include "DX11SSAO.h"
 
 #include "DX11PixelShader.h"
 #include "DX11VertexShader.h"
@@ -97,6 +98,8 @@ namespace mye
 			ID3D11BlendState           * m_accumulateBlendState;
 									   
 			DX11TexturePointer           m_randomCosSin;
+
+			DX11SSAO                     m_ssao;
 								       
 			mye::math::Vector4f          m_clearColor;
 

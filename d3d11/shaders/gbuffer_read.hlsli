@@ -1,6 +1,8 @@
 #ifndef __MYE_GBUFFER_READ__
 #define __MYE_GBUFFER_READ__
 
+#include "common_samplers.hlsli"
+
 /* G-Buffer */
 
 Texture2D g_gbuffer0 : register(__MYE_DX11_TEXTURE_SLOT_GBUFFER0);
@@ -25,6 +27,25 @@ GBufferData GBufferRead(in int2 screenPosition)
 	float4 gbuffer1 = g_gbuffer1.Load(texturePosition);
 
 	data.screenPosition = screenPosition;
+
+	data.normal         = gbuffer0.xyz;
+	data.specularPower  = gbuffer0.w;
+
+	data.position       = gbuffer1.xyz;
+
+	return data;
+
+}
+
+GBufferData GBufferSample(in float2 texcoords)
+{
+
+	GBufferData data;
+
+	float4 gbuffer0 = g_gbuffer0.SampleLevel(g_pointSampler, texcoords, 0);
+	float4 gbuffer1 = g_gbuffer1.SampleLevel(g_pointSampler, texcoords, 0);
+
+	//data.screenPosition = screenPosition;
 
 	data.normal         = gbuffer0.xyz;
 	data.specularPower  = gbuffer0.w;

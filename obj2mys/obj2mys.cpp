@@ -32,7 +32,21 @@ int main(int argc, char * argv[])
 
 	Assimp::Importer importer;	
 
-	const aiScene * scene = importer.ReadFile(argv[1], aiProcess_GenNormals);
+	unsigned int ppsteps = aiProcess_CalcTangentSpace | // calculate tangents and bitangents if possible
+		aiProcess_ValidateDataStructure    | // perform a full validation of the loader's output
+		aiProcess_ImproveCacheLocality     | // improve the cache locality of the output vertices
+		aiProcess_RemoveRedundantMaterials | // remove redundant materials
+		aiProcess_FindDegenerates          | // remove degenerated polygons from the import
+		aiProcess_FindInvalidData          | // detect invalid model data, such as invalid normal vectors
+		aiProcess_TransformUVCoords        | // preprocess UV transformations (scaling, translation ...)
+		aiProcess_LimitBoneWeights         | // limit bone weights to 4 per vertex
+		aiProcess_OptimizeMeshes		   | // join small meshes, if possible;
+		aiProcess_SplitByBoneCount         | // split meshes with too many bones. Necessary for our (limited) hardware skinning shader
+		0;
+
+	importer.SetPropertyFloat(AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE, 80.f);
+
+	const aiScene * scene = importer.ReadFile(argv[1], ppsteps | aiProcess_GenSmoothNormals | aiProcess_SplitLargeMeshes | aiProcess_Triangulate | aiProcess_SortByPType | aiProcess_ConvertToLeftHanded);
 
 	//aiApplyPostProcessing(scene, aiProcess_ValidateDataStructure | aiProcess_FindInvalidData);
 

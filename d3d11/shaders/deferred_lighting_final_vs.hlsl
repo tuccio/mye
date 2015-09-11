@@ -1,5 +1,8 @@
 #pragma pack_matrix(row_major)
 
+#include "camera_transform.hlsli"
+#include "linear_depth.hlsli"
+
 /* Constant buffers */
 
 cbuffer cbTransform
@@ -35,8 +38,10 @@ VSOutput main(VSInput input)
 
 	VSOutput output;
 
-	output.positionCS  = mul(g_worldViewProj, float4(input.position, 1));
-	output.texcoord    = input.texcoord;
+	float4 positionCS = mul(g_worldViewProj, float4(input.position, 1));
+	output.positionCS = LinearizeDepth(positionCS);
+
+	output.texcoord   = input.texcoord;
 
 	return output;
 

@@ -73,7 +73,7 @@ SHRGB LPVLoadOffset(in LPV lpv, int3 cell, int3 offset)
 
 float4 LPVOcclusion(in LPV lpv, in int3 cell, in float3 sourceDirection)
 {
-	float3 coords = float3(cell) + sourceDirection;
+	float3 coords = float3(cell) + sourceDirection + .5f;
 	//float3 coords = float3(cell) + 1.f + sourceDirection;
 	float3 sampleCoords = LPVSampleCoords(coords);
 	return lpv.geometry.Sample(lpv.lpvSampler, sampleCoords);
