@@ -48,8 +48,6 @@ int main(int argc, char * argv[])
 
 	const aiScene * scene = importer.ReadFile(argv[1], ppsteps | aiProcess_GenSmoothNormals | aiProcess_SplitLargeMeshes | aiProcess_Triangulate | aiProcess_SortByPType | aiProcess_ConvertToLeftHanded);
 
-	//aiApplyPostProcessing(scene, aiProcess_ValidateDataStructure | aiProcess_FindInvalidData);
-
 	boost::filesystem::path outputFile(argv[2]);
 	boost::filesystem::path parent = outputFile.parent_path();
 
@@ -120,7 +118,7 @@ void GenerateMeshFiles(boost::filesystem::path & parent, const char * sceneName,
 
 	aiMaterial * meshMaterial = scene->mMaterials[mesh->mMaterialIndex];
 
-	aiString diffusePath, heightPath;
+	aiString diffusePath, specularPath, heightPath;
 
 	if (meshMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &diffusePath) == AI_SUCCESS)
 	{
@@ -132,6 +130,20 @@ void GenerateMeshFiles(boost::filesystem::path & parent, const char * sceneName,
 		{
 			boost::filesystem::copy_file(diffusePath.C_Str(), destination);
 			
+		}
+
+	}
+
+	if (meshMaterial->GetTexture(aiTextureType_SPECULAR, 0, &specularPath) == AI_SUCCESS)
+	{
+
+		boost::filesystem::path source = specularPath.C_Str();
+		auto destination = MakeTextureName(sceneName, source.string());
+
+		if (!boost::filesystem::is_regular_file(destination))
+		{
+			boost::filesystem::copy_file(specularPath.C_Str(), destination);
+
 		}
 
 	}
@@ -210,7 +222,7 @@ void CreateScenePropertyTree(const aiScene * scene, const std::string & sceneNam
 		/* Textures */
 
 		aiMaterial * meshMaterial = scene->mMaterials[mesh->mMaterialIndex];
-		aiString diffusePath, heightPath;
+		aiString diffusePath, specularPath, heightPath;
 
 		if (meshMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &diffusePath) == AI_SUCCESS)
 		{
@@ -222,13 +234,23 @@ void CreateScenePropertyTree(const aiScene * scene, const std::string & sceneNam
 
 		}
 
+		if (meshMaterial->GetTexture(aiTextureType_SPECULAR, 0, &specularPath) == AI_SUCCESS)
+		{
+
+			boost::filesystem::path source = specularPath.C_Str();
+			auto destination = MakeTextureName(sceneName, source.string());
+
+			gameObject.add("render.speculartexture.<xmlattr>.name", destination.string());
+
+		}
+
 		if (meshMaterial->GetTexture(aiTextureType_HEIGHT, 0, &heightPath) == AI_SUCCESS)
 		{
 
 			boost::filesystem::path source = heightPath.C_Str();
 			auto destination = MakeTextureName(sceneName, source.string());
 
-			gameObject.add("render.heightmap.<xmlattr>.name", destination.string());
+			gameObject.add("render.normalheightmap.<xmlattr>.name", destination.string());
 
 		}
 		

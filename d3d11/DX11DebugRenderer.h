@@ -57,8 +57,6 @@ namespace mye
 			DX11ShaderProgramPointer        m_texturedSimple;
 			DX11ShaderProgramPointer        m_texturedArray;
 			DX11ShaderProgramPointer        m_primitives;
-									      
-			ID3D11SamplerState            * m_linearSampler;
 
 			std::vector<__ShadowResource>   m_shaderResources;
 			std::vector<__Line>             m_lines;

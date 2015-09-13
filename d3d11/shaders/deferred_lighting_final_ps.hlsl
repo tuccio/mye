@@ -19,6 +19,12 @@ Texture2D g_diffuseTexture : register(__MYE_DX11_TEXTURE_SLOT_DIFFUSE);
 
 #endif
 
+#ifdef MYE_USE_SPECULAR_TEXTURE
+
+Texture2D g_specularTexture : register(__MYE_DX11_TEXTURE_SLOT_SPECULAR);
+
+#endif
+
 /* Input/Output structures */
 
 struct PSInput
@@ -40,7 +46,7 @@ float4 main(PSInput input) : SV_TARGET
 
 	float4 lighting = g_lightbuffer.Load(screenPosition);
 
-	float3 diffuseAlbedo;
+	float3 diffuseAlbedo, specularAlbedo;
 
 #ifdef MYE_USE_DIFFUSE_TEXTURE
 	diffuseAlbedo = Gamma(g_diffuseTexture.Sample(g_anisotropicSampler, input.texcoord));
@@ -48,11 +54,18 @@ float4 main(PSInput input) : SV_TARGET
 	diffuseAlbedo = Gamma(g_material.diffuseColor);
 #endif
 
-	float3 diffuse  = saturate(diffuseAlbedo * MYE_INV_PI * lighting.xyz);
+#ifdef MYE_USE_SPECULAR_TEXTURE
+	specularAlbedo = Gamma(g_specularTexture.Sample(g_anisotropicSampler, input.texcoord));
+#else
+	specularAlbedo = Gamma(g_material.specularColor);
+#endif
+
+	float3 diffuse  = diffuseAlbedo * MYE_INV_PI * lighting.xyz;
+	float3 specular = lighting.w * specularAlbedo * lighting.xyz;
 
 	//diffuse = float3(input.texcoord / 5.f + .5f, 0);
 	//float3 specular = g_material.specularColor * lighting.w;
 
-	return float4(diffuse, 1.f);
+	return float4(saturate(diffuse + specular), 1.f);
 
 }

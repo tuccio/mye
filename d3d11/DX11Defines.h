@@ -51,8 +51,8 @@ namespace mye
 #endif
 
 #define __MYE_DX11_TEXTURE_SLOT_DIFFUSE             0
-#define __MYE_DX11_TEXTURE_SLOT_NORMALMAP           1
-#define __MYE_DX11_TEXTURE_SLOT_HEIGHTMAP           2
+#define __MYE_DX11_TEXTURE_SLOT_SPECULAR            1
+#define __MYE_DX11_TEXTURE_SLOT_NORMALHEIGHTMAP     2
 #define __MYE_DX11_TEXTURE_SLOT_SHADOWMAP           3
 #define __MYE_DX11_TEXTURE_SLOT_RSMPOSITION         4
 #define __MYE_DX11_TEXTURE_SLOT_RSMNORMAL           5
@@ -69,9 +69,7 @@ namespace mye
 #define __MYE_DX11_TEXTURE_SLOT_LIGHTBUFFER         19
 #define __MYE_DX11_TEXTURE_SLOT_OCCLUSION           20
 
-#define __MYE_DX11_SAMPLER_SLOT_DIFFUSE             0
-#define __MYE_DX11_SAMPLER_SLOT_NORMALMAP           1
-#define __MYE_DX11_SAMPLER_SLOT_HEIGHTMAP           2
+
 #define __MYE_DX11_SAMPLER_SLOT_SHADOWMAP           3
 #define __MYE_DX11_SAMPLER_SLOT_SHADOWMAP_CMP       4
 #define __MYE_DX11_SAMPLER_SLOT_POINT               5
@@ -81,6 +79,7 @@ namespace mye
 #define __MYE_DX11_SAMPLER_SLOT_LPV                 9
 #define __MYE_DX11_SAMPLER_SLOT_RANDOM              10
 #define __MYE_DX11_SAMPLER_SLOT_BLUR                11
+
 
 #define __MYE_DX11_BUFFER_SLOT_CAMERATRANSFORM      7
 #define __MYE_DX11_BUFFER_SLOT_LIGHT                8

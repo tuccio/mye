@@ -80,7 +80,12 @@ bool DX11DeferredLightingRenderer::Init(void)
 	                                                                                           { { "type", "program" } });
 
 	m_deferredFinal[1] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
-	                                                                                           "./shaders/deferred_lighting_final_difftex.msh",
+	                                                                                           "./shaders/deferred_lighting_final_diff.msh",
+	                                                                                           nullptr,
+	                                                                                           { { "type", "program" } });
+
+	m_deferredFinal[2] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
+	                                                                                           "./shaders/deferred_lighting_final_diff_spec.msh",
 	                                                                                           nullptr,
 	                                                                                           { { "type", "program" } });
 
@@ -146,6 +151,7 @@ bool DX11DeferredLightingRenderer::Init(void)
 	    m_deferredLightsLPV->Load() &&
 	    m_deferredFinal[0]->Load() &&
 	    m_deferredFinal[1]->Load() &&
+		m_deferredFinal[2]->Load() &&
 	    m_depthBuffer.Create() &&
 	    m_rsm.Create(m_vsm) &&
 	    m_lpv.Create(configuration->GetLPVResolution(), configuration->GetLPVRSMSamples()) &&
@@ -320,7 +326,7 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 				m_transformBuffer.Bind(DX11PipelineStage::VERTEX_SHADER, 0);
 				m_materialBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_MATERIAL);
 
-				TexturePointer heightMap = rc->GetHeightMap();
+				TexturePointer heightMap = rc->GetNormalHeightMap();
 
 				if (heightMap)
 				{
@@ -328,7 +334,7 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 					DX11TexturePointer heightMapDX11 = Resource::StaticCast<DX11Texture>(heightMap);
 
 					heightMapDX11->Load();
-					heightMapDX11->Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_HEIGHTMAP);
+					heightMapDX11->Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_NORMALHEIGHTMAP);
 
 					if (currentState != 1)
 					{
@@ -666,11 +672,19 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 			RenderComponent * rc = object->GetRenderComponent();
 
 			DX11TexturePointer difftex = Resource::StaticCast<DX11Texture>(rc->GetDiffuseTexture());
+			DX11TexturePointer spectex = Resource::StaticCast<DX11Texture>(rc->GetSpecularTexture());
 
 			if (difftex && difftex->Load())
 			{
 
-				if (currentState != 1)
+				if (spectex && spectex->Load())
+				{
+					if (currentState != 2)
+					{
+						m_deferredFinal[2]->Use();
+					}
+				}
+				else if (currentState != 1)
 				{
 					m_deferredFinal[1]->Use();
 				}

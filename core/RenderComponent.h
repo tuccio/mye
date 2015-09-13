@@ -46,8 +46,11 @@ namespace mye
 			TexturePointer GetDiffuseTexture(void) const;
 			void SetDiffuseTexture(const TexturePointer & diffuseTex);
 
-			TexturePointer GetHeightMap(void) const;
-			void SetHeightMap(const TexturePointer & heightMap);
+			TexturePointer GetSpecularTexture(void) const;
+			void SetSpecularTexture(const TexturePointer & specularTex);
+
+			TexturePointer GetNormalHeightMap(void) const;
+			void SetNormalHeightMap(const TexturePointer & heightMap);
 
 			RenderComponent * Clone(void) const;
 
@@ -57,14 +60,14 @@ namespace mye
 
 			bool m_visible;
 			
-			//VertexDataPointer m_vertexData;
 			MeshPointer         m_mesh;
 			GPUBufferPointer    m_gpuBuffer;
 
 			MaterialPointer     m_material;
 
 			TexturePointer      m_diffuseTex;
-			TexturePointer      m_heightMap;
+			TexturePointer      m_specularTex;
+			TexturePointer      m_normalHeightMap;
 			
 			mye::math::AABB     m_bounds;
 			mye::math::Matrix4  m_modelMatrix;

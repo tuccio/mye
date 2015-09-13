@@ -8,16 +8,16 @@
 			{ "tangent": "float3" },
 			{ "bitangent": "float3" }
         ],
-        "name": "DEFERRED_LIGHTING_GEOMETRY_HEIGHTMAP_VS",
+        "name": "DEFERRED_LIGHTING_GEOMETRY_NHMAP_VS",
         "defines": {
-            "MYE_USE_HEIGHT_MAP": ""
+            "MYE_USE_NORMAL_HEIGHT_MAP": ""
         }
     },
     "pixel": {
         "source": "../d3d11/shaders/deferred_lighting_geometry_ps.hlsl",
-        "name": "DEFERRED_LIGHTING_GEOMETRY_HEIGHTMAP_PS",
+        "name": "DEFERRED_LIGHTING_GEOMETRY_NHMAP_PS",
         "defines": {
-            "MYE_USE_HEIGHT_MAP": ""
+            "MYE_USE_NORMAL_HEIGHT_MAP": ""
         }
     }
 }

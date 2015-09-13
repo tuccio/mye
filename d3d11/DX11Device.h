@@ -15,24 +15,6 @@ namespace mye
 	namespace dx11
 	{
 
-		template <typename T>
-		struct RenderTargetGrabber
-		{
-			static inline ID3D11RenderTargetView * GetRenderTargetView(T & renderTarget)
-			{
-				return renderTarget.GetRenderTargetView();
-			}
-		};
-
-		template <>
-		struct RenderTargetGrabber<ID3D11RenderTargetView *>
-		{
-			static inline ID3D11RenderTargetView * GetRenderTargetView(ID3D11RenderTargetView * rtv)
-			{
-				return rtv;
-			}
-		};
-
 		class DX11VertexBuffer;
 
 		enum class DX11DepthTest

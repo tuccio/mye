@@ -495,9 +495,10 @@ void Game::ImportScene(const String & file, std::list<GameObject*> * allocatedOb
 
 					gameObject->AddComponent(RenderComponent());
 
-					rapidxml::xml_node<> * meshNode = render->first_node("mesh");
-					rapidxml::xml_node<> * diffuseTextureNode = render->first_node("diffusetexture");
-					rapidxml::xml_node<> * heightMapNode = render->first_node("heightmap");
+					rapidxml::xml_node<> * meshNode            = render->first_node("mesh");
+					rapidxml::xml_node<> * diffuseTextureNode  = render->first_node("diffusetexture");
+					rapidxml::xml_node<> * specularTextureNode = render->first_node("speculartexture");
+					rapidxml::xml_node<> * normalHeightMapNode = render->first_node("normalheightmap");
 
 					if (meshNode)
 					{
@@ -523,15 +524,27 @@ void Game::ImportScene(const String & file, std::list<GameObject*> * allocatedOb
 
 					}
 
-					if (heightMapNode)
+					if (specularTextureNode)
 					{
 
-						rapidxml::xml_attribute<> * textureName = heightMapNode->first_attribute("name");
+						rapidxml::xml_attribute<> * textureName = diffuseTextureNode->first_attribute("name");
 
 						TexturePointer texture = ResourceTypeManager::GetSingleton().
 							CreateResource<Texture>("Texture", textureName->value(), nullptr, { { "generateMips", "true" } });
 
-						gameObject->GetRenderComponent()->SetHeightMap(texture);
+						gameObject->GetRenderComponent()->SetSpecularTexture(texture);
+
+					}
+
+					if (normalHeightMapNode)
+					{
+
+						rapidxml::xml_attribute<> * textureName = normalHeightMapNode->first_attribute("name");
+
+						TexturePointer texture = ResourceTypeManager::GetSingleton().
+							CreateResource<Texture>("Texture", textureName->value(), nullptr, { { "generateMips", "true" } });
+
+						gameObject->GetRenderComponent()->SetNormalHeightMap(texture);
 
 					}
 

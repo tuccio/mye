@@ -22,7 +22,7 @@ struct PSInput
 	float3 normalWS    : NORMALWS;
 	float3 positionWS  : POSITIONWS;
 
-#ifdef MYE_USE_HEIGHT_MAP
+#ifdef MYE_USE_NORMAL_HEIGHT_MAP
 
 	float2 texcoord    : TEXCOORD0;
 
@@ -45,9 +45,9 @@ struct PSOutput
 	float4 gbuffer1 : SV_Target1;
 };
 
-#ifdef MYE_USE_HEIGHT_MAP
+#ifdef MYE_USE_NORMAL_HEIGHT_MAP
 
-Texture2D g_normalHeightMap : register(__MYE_DX11_TEXTURE_SLOT_HEIGHTMAP);
+Texture2D g_normalHeightMap : register(__MYE_DX11_TEXTURE_SLOT_NORMALHEIGHTMAP);
 
 #endif
 
@@ -60,7 +60,7 @@ PSOutput main(PSInput input) : SV_TARGET
 	float3 x = input.positionWS;
 	float3 N;
 	
-#ifdef MYE_USE_HEIGHT_MAP
+#ifdef MYE_USE_NORMAL_HEIGHT_MAP
 
 	float2 texcoord = input.texcoord;
 
@@ -95,8 +95,7 @@ PSOutput main(PSInput input) : SV_TARGET
 	PSOutput output;
 
 	output.gbuffer0.xyz = N;
-	//output.gbuffer0.w   = g_material.specular;
-	output.gbuffer0.w   = 1;
+	output.gbuffer0.w   = g_material.specular;
 
 	output.gbuffer1.xyz = x;
 	output.gbuffer1.w   = 1.f;

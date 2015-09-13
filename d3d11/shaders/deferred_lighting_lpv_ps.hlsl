@@ -62,12 +62,12 @@ float4 main(PSInput input) : SV_Target0
 	float falloff   = 4.f / (g_lpv.cellSize * g_lpv.cellSize);
 	float occlusion = g_occlusion.Sample(g_bilinearSampler, float2(.5f * input.positionCS.x + .5f, 1.f - (.5f * input.positionCS.y + .5f)));
 
-	//return float4(occlusion * visibility * intensity * falloff, 1.f);
+	//return float4(occlusion * visibility * intensity * falloff, 0.f);
 
-	//return float4(occlusion * irradiance * falloff, 1.f);
+	//return float4(occlusion * irradiance * falloff, 0.f);
 
-	//return float4(occlusion, occlusion, occlusion, 1);
+	//return float4(occlusion, occlusion, occlusion, 0.f);
 
-	return float4(irradiance, 1.f);
+	return float4(irradiance, 0.f);
 
 }

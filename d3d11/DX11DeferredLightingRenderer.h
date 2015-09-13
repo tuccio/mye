@@ -59,7 +59,7 @@ namespace mye
 			DX11ShaderProgramPointer     m_deferredLights;
 
 			DX11ShaderProgramPointer     m_deferredLightsLPV;
-			DX11ShaderProgramPointer     m_deferredFinal[2];
+			DX11ShaderProgramPointer     m_deferredFinal[3];
 
 			DX11ShaderProgramPointer     m_vsmBoxBlur[2];
 			DX11ShaderProgramPointer     m_vsmBoxBlurCSM[2];

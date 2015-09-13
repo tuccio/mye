@@ -30,7 +30,7 @@ struct VSOutput
 	float3 normalWS    : NORMALWS;
 	float3 positionWS  : POSITIONWS;
 
-#ifdef MYE_USE_HEIGHT_MAP
+#ifdef MYE_USE_NORMAL_HEIGHT_MAP
 
 	float2 texcoord    : TEXCOORD0;
 
@@ -64,7 +64,7 @@ VSOutput main(VSInput input)
 	output.normalWS   = normalWS;
 	output.positionWS = mul(g_world, float4(input.position, 1)).xyz;
 
-#ifdef MYE_USE_HEIGHT_MAP
+#ifdef MYE_USE_NORMAL_HEIGHT_MAP
 
 	float3 tangentWS   = mul((float3x3) g_world, input.tangent);
 	float3 bitangentWS = mul((float3x3) g_world, input.bitangent);

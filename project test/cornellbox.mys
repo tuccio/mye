@@ -25,49 +25,49 @@
 	<gameobject name="shortbox">
 		<render>
 			<mesh name="models/cornellbox/shortbox3.obj"/>
-			<material diffuse_color="0.725 0.71 0.68 1" specular="0" metallic="0" roughness="0.6"/>
+			<material diffuse_color="0.725 0.71 0.68 1" specular="0" specular_color="0 0 0" metallic="0" roughness="0.6"/>
 		</render>
 	</gameobject>
 	
 	<gameobject name="tallbox">
 		<render>
 			<mesh name="models/cornellbox/tallbox3.obj"/>
-			<material diffuse_color="0.725 0.71 0.68 1" specular="0" metallic="0" roughness="0.6"/>
+			<material diffuse_color="0.725 0.71 0.68 1" specular="0" specular_color="0 0 0" metallic="0" roughness="0.6"/>
 		</render>
 	</gameobject>
 	
 	<!--<gameobject name="ceiling">
 		<render>
 			<mesh name="models/cornellbox/ceiling2.obj"/>
-			<material diffuse_color="0.725 0.71 0.68 1" specular="0" metallic="0" roughness="0.6"/>
+			<material diffuse_color="0.725 0.71 0.68 1" specular="0" specular_color="0 0 0" metallic="0" roughness="0.6"/>
 		</render>
 	</gameobject>-->
 	
 	<gameobject name="floor">
 		<render>
 			<mesh name="models/cornellbox/floor.obj"/>
-			<material diffuse_color="0.725 0.71 0.68 1" specular="0" metallic="0" roughness="0.6"/>
+			<material diffuse_color="0.725 0.71 0.68 1" specular="0" specular_color="0 0 0" metallic="0" roughness="0.6"/>
 		</render>
 	</gameobject>
 	
 	<gameobject name="leftwall">
 		<render>
 			<mesh name="models/cornellbox/leftwall.obj"/>
-			<material diffuse_color="0.90234 0.44922 0.33984 1" specular="0" metallic="0" roughness="0.6"/>
+			<material diffuse_color="0.90234 0.44922 0.33984 1" specular="0" specular_color="0 0 0" metallic="0" roughness="0.6"/>
 		</render>
 	</gameobject>
 	
 	<gameobject name="rightwall">
 		<render>
 			<mesh name="models/cornellbox/rightwall.obj"/>
-			<material diffuse_color="0.37500 0.65234 0.89844 1" specular="0" metallic="0" roughness="0.6"/>
+			<material diffuse_color="0.37500 0.65234 0.89844 1" specular="0" specular_color="0 0 0" metallic="0" roughness="0.6"/>
 		</render>
 	</gameobject>
 	
 	<gameobject name="backwall">
 		<render>
 			<mesh name="models/cornellbox/backwall.obj"/>
-			<material diffuse_color="0.725 0.71 0.68 1" specular="0" metallic="0" roughness="0.6"/>
+			<material diffuse_color="0.725 0.71 0.68 1" specular="0" specular_color="0 0 0" metallic="0" roughness="0.6"/>
 		</render>
 	</gameobject>
 	

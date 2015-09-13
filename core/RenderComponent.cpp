@@ -122,12 +122,22 @@ void RenderComponent::SetDiffuseTexture(const TexturePointer & diffuseTex)
 	m_diffuseTex = diffuseTex;
 }
 
-TexturePointer RenderComponent::GetHeightMap(void) const
+TexturePointer RenderComponent::GetSpecularTexture(void) const
 {
-	return m_heightMap;
+	return m_specularTex;
 }
 
-void RenderComponent::SetHeightMap(const TexturePointer & heightMap)
+void RenderComponent::SetSpecularTexture(const TexturePointer & specularTex)
 {
-	m_heightMap = heightMap;
+	m_specularTex = specularTex;
+}
+
+TexturePointer RenderComponent::GetNormalHeightMap(void) const
+{
+	return m_normalHeightMap;
+}
+
+void RenderComponent::SetNormalHeightMap(const TexturePointer & normalHeightMap)
+{
+	m_normalHeightMap = normalHeightMap;
 }

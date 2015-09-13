@@ -5,6 +5,7 @@
 #include "shadow_mapping.hlsli"
 #include "gamma.hlsli"
 #include "gbuffer_read.hlsli"
+#include "camera_transform.hlsli"
 
 /* Constant Buffers */
 
@@ -25,6 +26,10 @@ float4 main(PSInput input) : SV_Target0
 	float4 visibility = ShadowMapVisibility(data);
 	float3 NdotL      = saturate(dot(data.normal, L));
 
-	return visibility * float4(NdotL * LightIrradiance(g_light, data.position), 1);
+	float3 V          = normalize(g_camera.position - data.position);
+	float3 H          = normalize(L + V);
+	float  NdotH      = saturate(dot(data.normal, H));
+
+	return visibility * float4(NdotL * LightIrradiance(g_light, data.position), pow(NdotH, data.specularPower));
 
 }

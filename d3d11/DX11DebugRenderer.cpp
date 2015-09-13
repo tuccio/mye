@@ -19,8 +19,7 @@ using namespace mye::win;
 using namespace mye::math;
 
 DX11DebugRenderer::DX11DebugRenderer(void) :
-	m_initialized(false),
-	m_linearSampler(nullptr)
+	m_initialized(false)
 {
 }
 
@@ -32,52 +31,33 @@ DX11DebugRenderer::~DX11DebugRenderer(void)
 bool DX11DebugRenderer::Init(void)
 {
 
-	D3D11_SAMPLER_DESC linearSamplerDesc;
+	m_texturedSimple = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
+		"DX11Shader",
+		"./shaders/debug_textured_simple.msh",
+		nullptr,
+		{ { "type", "program" } }
+	);
 
-	ZeroMemory(&linearSamplerDesc, sizeof(D3D11_SAMPLER_DESC));
+	m_texturedArray = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
+		"DX11Shader",
+		"./shaders/debug_textured_arrayslice.msh",
+		nullptr,
+		{ { "type", "program" } }
+	);
 
-	linearSamplerDesc.Filter         = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	linearSamplerDesc.AddressU       = D3D11_TEXTURE_ADDRESS_CLAMP;
-	linearSamplerDesc.AddressV       = D3D11_TEXTURE_ADDRESS_CLAMP;
-	linearSamplerDesc.AddressW       = D3D11_TEXTURE_ADDRESS_CLAMP;
-	linearSamplerDesc.MipLODBias     = 0.0f;
-	linearSamplerDesc.MaxAnisotropy  = 1;
-	linearSamplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-	linearSamplerDesc.MinLOD         = 0.0f;
-	linearSamplerDesc.MaxLOD         = D3D11_FLOAT32_MAX;
+	m_primitives = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
+		"DX11Shader",
+		"./shaders/debug_primitives.msh",
+		nullptr,
+		{ { "type", "program" } }
+	);
 
-	if (!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton()->CreateSamplerState(&linearSamplerDesc, &m_linearSampler)))
+	if (m_texturedSimple->Load() &&
+		m_texturedArray->Load() &&
+		m_primitives->Load())
 	{
 
-		m_texturedSimple = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
-			"DX11Shader",
-			"./shaders/debug_textured_simple.msh",
-			nullptr,
-			{ { "type", "program" } }
-		);
-
-		m_texturedArray = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
-			"DX11Shader",
-			"./shaders/debug_textured_arrayslice.msh",
-			nullptr,
-			{ { "type", "program" } }
-		);
-
-		m_primitives = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
-			"DX11Shader",
-			"./shaders/debug_primitives.msh",
-			nullptr,
-			{ { "type", "program" } }
-		);
-
-		if (m_texturedSimple->Load() &&
-		    m_texturedArray->Load() &&
-		    m_primitives->Load())
-		{
-
-			m_initialized = true;
-
-		}
+		m_initialized = true;
 
 	}
 
@@ -96,8 +76,6 @@ void DX11DebugRenderer::Shutdown(void)
 		m_primitives     = nullptr;
 
 		m_initialized = false;
-
-		__MYE_DX11_RELEASE_COM(m_linearSampler);
 
 	}
 
@@ -262,9 +240,6 @@ void DX11DebugRenderer::Render(ID3D11RenderTargetView * target)
 
 			transformBuffer.SetData(&qTransform);
 			transformBuffer.Bind(DX11PipelineStage::VERTEX_SHADER, 0);
-
-			sr.shaderResource->Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_DIFFUSE);
-			DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_TEXTURE_SLOT_DIFFUSE, 1, &m_linearSampler);
 
 			quadBuffer.Bind();
 			DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
