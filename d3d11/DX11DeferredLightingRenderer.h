@@ -54,19 +54,20 @@ namespace mye
 
 			bool                         m_vsm;
 
-			DX11ShaderProgramPointer     m_deferredGeometry[2];
+			DX11ShaderProgramPointer     m_deferredGeometry[4];
 
 			DX11ShaderProgramPointer     m_deferredLights;
 
 			DX11ShaderProgramPointer     m_deferredLightsLPV;
-			DX11ShaderProgramPointer     m_deferredFinal[3];
+			DX11ShaderProgramPointer     m_deferredFinal[4];
 
 			DX11ShaderProgramPointer     m_vsmBoxBlur[2];
 			DX11ShaderProgramPointer     m_vsmBoxBlurCSM[2];
 								         
 			DX11Texture                  m_gbuffer0;
 			DX11Texture                  m_gbuffer1;
-			DX11Texture                  m_lbuffer;
+			DX11Texture                  m_diffuseLight;
+			DX11Texture                  m_specularLight;
 
 			DX11Texture                  m_vsmDepth[2];
 								         
@@ -107,6 +108,8 @@ namespace mye
 			boost::mutex                             m_renderVariablesChangedMutex;
 
 			/* Private methods */
+
+			bool __CreateShaders(void);
 
 			void __ResizeBuffers(const mye::math::Vector2i & size);
 

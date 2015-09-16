@@ -89,6 +89,8 @@ namespace mye
 				unsigned int pcfKernel;
 				float        pcfKernelInvSquare;
 
+				float        lpvAttenuation;
+
 			};
 
 			struct PSSMSlice

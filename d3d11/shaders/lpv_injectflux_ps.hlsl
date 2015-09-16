@@ -1,5 +1,6 @@
 #include "spherical_harmonics.hlsli"
 #include "constants.hlsli"
+#include "lpv.hlsli"
 
 struct PSInput
 {
@@ -27,7 +28,7 @@ PSOutput main(PSInput input)
 	float3 N  = normalize(input.normal);
 	float4 sh = SHCosineLobe(N);
 	
-	float3 intensity = saturate(input.flux * MYE_INV_PI);
+	float3 intensity = input.flux;
 
 	PSOutput output;
 

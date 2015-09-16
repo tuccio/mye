@@ -166,7 +166,8 @@ namespace mye
 					Property("lpvResolution",             &RendererConfiguration::GetLPVResolution,             &RendererConfiguration::SetLPVResolution).
 					Property("lpvIterations",             &RendererConfiguration::GetLPVIterations,             &RendererConfiguration::SetLPVIterations).
 					Property("lpvGeometryInjectionBias",  &RendererConfiguration::GetLPVGeometryInjectionBias,  &RendererConfiguration::SetLPVGeometryInjectionBias).
-					Property("lpvFluxInjectionBias",      &RendererConfiguration::GetLPVFluxInjectionBias,      &RendererConfiguration::SetLPVFluxInjectionBias),
+					Property("lpvFluxInjectionBias",      &RendererConfiguration::GetLPVFluxInjectionBias,      &RendererConfiguration::SetLPVFluxInjectionBias).
+					Property("lpvAttenuation",            &RendererConfiguration::GetLPVAttenuation,            &RendererConfiguration::SetLPVAttenuation),
 
 				Class<Component>(MYE_LUA_COMPONENT),
 

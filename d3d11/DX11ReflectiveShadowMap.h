@@ -137,6 +137,7 @@ namespace mye
 
 			DX11ShaderProgramPointer    m_rsm[2];
 			DX11ShaderProgramPointer    m_rsmPSSM[2];
+			DX11ShaderProgramPointer    m_rsmZPrepass;
 
 			std::vector<PSSMSlice>      m_pssmSlices;
 

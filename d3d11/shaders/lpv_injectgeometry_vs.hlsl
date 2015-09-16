@@ -35,9 +35,7 @@ VSOutput main(VSInput input)
 	// the edges of LPV cell are placed in the center of the geometry volume,
 	// achieving better interpolation during the propagation
 
-	//float3 cell = (position - g_lpv.minCorner + g_lpv.geometryInjectionBias * normal) / g_lpv.cellSize - .5f;
-	//float3 cell = (position - g_lpv.minCorner) / g_lpv.cellSize + .5f + g_lpv.geometryInjectionBias * normal;
-	float3 cell = (position - g_lpv.minCorner) / g_lpv.cellSize - .5f - g_lpv.geometryInjectionBias * normal;
+	float3 cell = (position - g_lpv.minCorner) / g_lpv.cellSize + g_lpv.geometryInjectionBias * normal;
 
 	VSOutput output;
 
@@ -47,7 +45,7 @@ VSOutput main(VSInput input)
 	float3 cellCS     = 2.f * cell / g_lpv.lpvResolution - 1.f;
 	output.positionCS = float4(cellCS.x, - cellCS.y, cellCS.z, 1.f);
 
-	output.surfelArea = 4.f * tan(g_camera.fovy * .5f) / g_camera.ratio;
+	output.surfelArea = 4.f * viewZ * viewZ / (g_lpv.rsmSamples * g_lpv.rsmSamples);
 
 	return output;
 

@@ -18,8 +18,12 @@ float4 main(PSInput input) : SV_Target0
 		discard;
 	}
 
-	float4 sh = SHCosineLobe(normalize(-input.normal));
+	float4 shOccluder = SHCosineLobe(normalize(input.normal));
 
-	return SHScale(sh, saturate(input.surfelArea / (g_lpv.cellSize * g_lpv.cellSize)));
+	//float4 shOccluder = SHCosineLobeLinear(float4(0, 0, 0, 2));
+
+	float  areaRatio  = (input.surfelArea / (g_lpv.cellSize * g_lpv.cellSize));
+
+	return SHScale(shOccluder, areaRatio);
 
 }

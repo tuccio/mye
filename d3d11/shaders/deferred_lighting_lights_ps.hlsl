@@ -14,9 +14,15 @@ struct PSInput
 	float4 positionCS : SV_position;
 };
 
+struct PSOutput
+{
+	float4 diffuse : SV_Target0;
+	float4 specular : SV_Target1;
+};
+
 /* Main */
 
-float4 main(PSInput input) : SV_Target0
+PSOutput main(PSInput input)
 {
 
 	GBufferData data = GBufferRead(input.positionCS.xy);
@@ -24,12 +30,19 @@ float4 main(PSInput input) : SV_Target0
 	float3 L = LightVector(g_light, data.position);
 
 	float4 visibility = ShadowMapVisibility(data);
-	float3 NdotL      = saturate(dot(data.normal, L));
+	float  NdotL      = saturate(dot(data.normal, L));
 
 	float3 V          = normalize(g_camera.position - data.position);
 	float3 H          = normalize(L + V);
 	float  NdotH      = saturate(dot(data.normal, H));
 
-	return visibility * float4(NdotL * LightIrradiance(g_light, data.position), pow(NdotH, data.specularPower));
+	float3 irradiance = LightIrradiance(g_light, data.position);
+
+	PSOutput output;
+
+	output.diffuse  = float4(visibility * NdotL * irradiance, 0.f);
+	output.specular = float4(visibility * NdotL * pow(NdotH, data.specularPower) * irradiance, 0.f);
+
+	return output;
 
 }

@@ -6,6 +6,9 @@
 #include "common_samplers.hlsli"
 #include "packing.hlsli"
 
+#define MYE_MIN_SPECULAR 1
+#define MYE_MAX_SPECULAR 10
+
 /* Constant buffers */
 
 cbuffer cbMaterial : register(__MYE_DX11_BUFFER_SLOT_MATERIAL)
@@ -22,9 +25,9 @@ struct PSInput
 	float3 normalWS    : NORMALWS;
 	float3 positionWS  : POSITIONWS;
 
-#ifdef MYE_USE_NORMAL_HEIGHT_MAP
-
 	float2 texcoord    : TEXCOORD0;
+
+#ifdef MYE_USE_NORMAL_HEIGHT_MAP
 
 	float3 normalTS    : NORMALTS;
 
@@ -48,6 +51,12 @@ struct PSOutput
 #ifdef MYE_USE_NORMAL_HEIGHT_MAP
 
 Texture2D g_normalHeightMap : register(__MYE_DX11_TEXTURE_SLOT_NORMALHEIGHTMAP);
+
+#endif
+
+#ifdef MYE_USE_SPECULAR_TEXTURE
+
+Texture2D g_specularTexture : register(__MYE_DX11_TEXTURE_SLOT_SPECULAR);
 
 #endif
 
@@ -95,7 +104,16 @@ PSOutput main(PSInput input) : SV_TARGET
 	PSOutput output;
 
 	output.gbuffer0.xyz = N;
+
+#ifdef MYE_USE_SPECULAR_TEXTURE
+
+	output.gbuffer0.w   = lerp(MYE_MIN_SPECULAR, MYE_MAX_SPECULAR, g_specularTexture.Sample(g_anisotropicSampler, input.texcoord).a);
+
+#else
+
 	output.gbuffer0.w   = g_material.specular;
+
+#endif
 
 	output.gbuffer1.xyz = x;
 	output.gbuffer1.w   = 1.f;

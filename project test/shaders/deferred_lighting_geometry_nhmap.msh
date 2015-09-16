@@ -1,5 +1,6 @@
 {
-    "vertex": {
+	"vertex": {
+		"name": "DEFERRED_LIGHTING_GEOMETRY_NHMAP_VS",
         "source": "../d3d11/shaders/deferred_lighting_geometry_vs.hlsl",
         "input": [
             { "position": "float3" },
@@ -8,14 +9,13 @@
 			{ "tangent": "float3" },
 			{ "bitangent": "float3" }
         ],
-        "name": "DEFERRED_LIGHTING_GEOMETRY_NHMAP_VS",
         "defines": {
             "MYE_USE_NORMAL_HEIGHT_MAP": ""
         }
     },
     "pixel": {
-        "source": "../d3d11/shaders/deferred_lighting_geometry_ps.hlsl",
         "name": "DEFERRED_LIGHTING_GEOMETRY_NHMAP_PS",
+        "source": "../d3d11/shaders/deferred_lighting_geometry_ps.hlsl",
         "defines": {
             "MYE_USE_NORMAL_HEIGHT_MAP": ""
         }

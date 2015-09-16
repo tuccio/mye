@@ -37,7 +37,7 @@ VSOutput main(VSInput input)
 	VSOutput output;
 
 	output.normal = texel.normal;
-	output.flux   = texel.flux * (1024 / g_lpv.rsmSamples);
+	output.flux   = texel.flux /** (1024 / g_lpv.rsmSamples)*/;
 	output.cell   = int3(cell);
 
 	float3 cellCS     = 2.f * cell / g_lpv.lpvResolution - 1.f;

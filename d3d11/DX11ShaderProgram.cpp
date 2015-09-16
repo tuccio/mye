@@ -261,15 +261,27 @@ void DX11ShaderProgram::Use(void)
 	{
 		m_vertexShader->Use();
 	}
+	else
+	{
+		DX11Device::GetSingleton().GetImmediateContext()->VSSetShader(nullptr, nullptr, 0);
+	}
 
 	if (m_pixelShader)
 	{
 		m_pixelShader->Use();
 	}
+	else
+	{
+		DX11Device::GetSingleton().GetImmediateContext()->PSSetShader(nullptr, nullptr, 0);
+	}
 
 	if (m_geometryShader)
 	{
 		m_geometryShader->Use();
+	}
+	else
+	{
+		DX11Device::GetSingleton().GetImmediateContext()->GSSetShader(nullptr, nullptr, 0);
 	}
 
 }

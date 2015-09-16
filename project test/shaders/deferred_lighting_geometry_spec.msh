@@ -1,7 +1,7 @@
 {
     "vertex": {
-        "name": "DEFERRED_LIGHTING_GEOMETRY_VS",
         "source": "../d3d11/shaders/deferred_lighting_geometry_vs.hlsl",
+        "name": "DEFERRED_LIGHTING_GEOMETRY_VS",
         "input": [
             { "position": "float3" },
             { "texcoord0": "float2" },
@@ -12,6 +12,9 @@
     },
     "pixel": {
         "source": "../d3d11/shaders/deferred_lighting_geometry_ps.hlsl",
-        "name": "DEFERRED_LIGHTING_GEOMETRY_PS"
+        "name": "DEFERRED_LIGHTING_GEOMETRY_PS_SPEC",
+		"defines": {
+			"MYE_USE_SPECULAR_TEXTURE": ""
+		}
     }
 }

@@ -241,6 +241,8 @@ void DX11DebugRenderer::Render(ID3D11RenderTargetView * target)
 			transformBuffer.SetData(&qTransform);
 			transformBuffer.Bind(DX11PipelineStage::VERTEX_SHADER, 0);
 
+			sr.shaderResource->Bind(DX11PipelineStage::PIXEL_SHADER, 0);
+
 			quadBuffer.Bind();
 			DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 			DX11Device::GetSingleton().GetImmediateContext()->Draw(6, 0);

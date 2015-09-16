@@ -35,7 +35,8 @@ struct PSInput
 
 /* Buffers */
 
-Texture2D g_lightbuffer : register(__MYE_DX11_TEXTURE_SLOT_LIGHTBUFFER);
+Texture2D g_lightDiffuse  : register(__MYE_DX11_TEXTURE_SLOT_LIGHTDIFFUSE);
+Texture2D g_lightSpecular : register(__MYE_DX11_TEXTURE_SLOT_LIGHTSPECULAR);
 
 /* Main */
 
@@ -44,7 +45,8 @@ float4 main(PSInput input) : SV_TARGET
 
 	int3 screenPosition = int3(input.positionCS.xy, 0);
 
-	float4 lighting = g_lightbuffer.Load(screenPosition);
+	float3 diffuseLighting  = g_lightDiffuse.Load(screenPosition).rgb;
+	float3 specularLighting = g_lightSpecular.Load(screenPosition).rgb;
 
 	float3 diffuseAlbedo, specularAlbedo;
 
@@ -55,16 +57,13 @@ float4 main(PSInput input) : SV_TARGET
 #endif
 
 #ifdef MYE_USE_SPECULAR_TEXTURE
-	specularAlbedo = Gamma(g_specularTexture.Sample(g_anisotropicSampler, input.texcoord));
+	specularAlbedo = Gamma(g_specularTexture.Sample(g_anisotropicSampler, input.texcoord).rgb);
 #else
 	specularAlbedo = Gamma(g_material.specularColor);
 #endif
 
-	float3 diffuse  = diffuseAlbedo * MYE_INV_PI * lighting.xyz;
-	float3 specular = lighting.w * specularAlbedo * lighting.xyz;
-
-	//diffuse = float3(input.texcoord / 5.f + .5f, 0);
-	//float3 specular = g_material.specularColor * lighting.w;
+	float3 diffuse  = diffuseAlbedo  * MYE_INV_PI * diffuseLighting;
+	float3 specular = specularAlbedo * specularLighting;
 
 	return float4(saturate(diffuse + specular), 1.f);
 

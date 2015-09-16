@@ -58,6 +58,13 @@ DX11ReflectiveShadowMap::DX11ReflectiveShadowMap(void) :
 bool DX11ReflectiveShadowMap::Create(bool vsm)
 {
 
+	m_rsmZPrepass = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
+		"DX11Shader",
+		"./shaders/rsm_zprepass.msh",
+		nullptr,
+		{ { "type", "program" } }
+	);
+
 	m_vsm = vsm;
 
 	if (vsm)
@@ -128,7 +135,8 @@ bool DX11ReflectiveShadowMap::Create(bool vsm)
 	if (m_rsm[0]->Load() &&
 	    m_rsm[1]->Load() &&
 	    m_rsmPSSM[0]->Load() &&
-		m_rsmPSSM[1]->Load() &&
+	    m_rsmPSSM[1]->Load() &&
+	    m_rsmZPrepass->Load() &&
 	    __CreateRenderTargets() &&
 	    __CreateDepthBuffers() &&
 	    __CreateConstantBuffers())
@@ -236,6 +244,11 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 	m_normal.ClearRenderTarget(Vector4(0));
 	m_flux.ClearRenderTarget(Vector4(0));
 
+	if (m_vsm)
+	{
+		m_vsmMoments.ClearRenderTarget(Vector4(0));
+	}
+
 	m_depth.Clear();
 
 	/* Find the tight frustum around the scene */
@@ -295,12 +308,6 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 		m_vsmMoments.GetRenderTargetView()
 	};
 
-	DX11Device::GetSingleton().SetDepthTest(DX11DepthTest::ON);
-
-	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets((m_vsm ? 4 : 3),
-	                                                                     renderTargets,
-	                                                                     m_depth.GetDepthStencilView());
-
 	MakeLightBuffer(m_lightCBuffer, light);
 
 	m_lightCBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_LIGHT);
@@ -325,31 +332,57 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 		rsmShader = m_rsm;
 	}
 
-	std::unordered_map<GameObject *, int> visibleObjectsSortKeys(casters.size());
+	m_rsmZPrepass->Use();
 
-	std::transform(casters.begin(), casters.end(),
-	               std::inserter(visibleObjectsSortKeys, visibleObjectsSortKeys.begin()),
-	               [&shadowProjMatrix] (GameObject * gameObject) {
+	DX11Device::GetSingleton().SetDepthTest(DX11DepthTest::ON);
 
-		int key;
+	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(0,
+	                                                                     nullptr,
+	                                                                     m_depth.GetDepthStencilView());
 
-		Vector3 x = gameObject->GetAABB().GetCenter();
 
-		Vector4 clipPosition = shadowProjMatrix * Vector4(x, 1);
-
-		key = (int) (1024.f * clipPosition.z() / clipPosition.w());
-
-		return std::make_pair(gameObject, key);
-
-	});
-
-	std::vector<GameObject *> sortedVisibleObjects(casters.begin(), casters.end());
-
-	std::sort(sortedVisibleObjects.begin(), sortedVisibleObjects.end(),
-			  [&visibleObjectsSortKeys] (GameObject * a, GameObject * b)
+	for (GameObject * object : casters)
 	{
-		return visibleObjectsSortKeys[a] < visibleObjectsSortKeys[b];
-	});
+
+		RenderComponent    * rc = object->GetRenderComponent();
+		TransformComponent * tc = object->GetTransformComponent();
+
+
+		GPUBufferPointer gpuBuffer = rc->GetGPUBuffer();
+
+		if (gpuBuffer && gpuBuffer->Load())
+		{
+
+			MakeTransformBuffer(m_transformCBuffer, tc->GetWorldMatrix() * rc->GetModelMatrix(), shadowViewMatrix, shadowProjMatrix);
+
+			m_transformCBuffer.Bind(DX11PipelineStage::VERTEX_SHADER, 0);
+
+			DX11VertexBufferPointer vertexBuffer = Resource::StaticCast<DX11VertexBuffer>(gpuBuffer);
+
+			vertexBuffer->Bind();
+
+			DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+			if (cascaded)
+			{
+				DX11Device::GetSingleton().GetImmediateContext()->DrawInstanced(vertexBuffer->GetVerticesCount(), m_csmSplits, 0, 0);
+			}
+			else
+			{
+				DX11Device::GetSingleton().GetImmediateContext()->Draw(vertexBuffer->GetVerticesCount(), 0);
+			}
+
+			vertexBuffer->Unbind();
+
+		}
+
+	}
+
+	DX11Device::GetSingleton().SetDepthTest(DX11DepthTest::LOOKUP);
+
+	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets((m_vsm ? 4 : 3),
+	                                                                     renderTargets,
+	                                                                     m_depth.GetDepthStencilView());
 
 	int currentState = -1;
 
@@ -382,6 +415,7 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 			else if (currentState != 0)
 			{
 				rsmShader[0]->Use();
+				currentState = 0;
 			}
 
 			MakeTransformBuffer(m_transformCBuffer, tc->GetWorldMatrix() * rc->GetModelMatrix(), shadowViewMatrix, shadowProjMatrix);
@@ -410,8 +444,6 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 		}
 
 	}
-
-	rsmShader[0]->Dispose();
 
 	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(0, nullptr, nullptr);
 
@@ -592,7 +624,7 @@ bool DX11ReflectiveShadowMap::__CreateRenderTargets(void)
 	return (m_position.Create(m_resolution, m_resolution, DataFormat::HALF4) &&
 	        m_normal.Create(m_resolution,   m_resolution, DataFormat::HALF4) &&
 	        m_flux.Create(m_resolution,     m_resolution, DataFormat::HALF4) &&
-			(!m_vsm || m_vsmMoments.Create(m_resolution, m_resolution, DataFormat::HALF2)));
+			(!m_vsm || m_vsmMoments.Create(m_resolution, m_resolution, DataFormat::FLOAT2)));
 
 }
 

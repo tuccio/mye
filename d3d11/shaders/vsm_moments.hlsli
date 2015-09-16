@@ -19,7 +19,7 @@ float2 VSMComputeMoments(in float depth)
 
 }
 
-float VSMChebyshevUpperBound(float2 moments, float t, float minVariance)
+float VSMChebyshevUpperBound(in float2 moments, in float t, in float minVariance)
 {
 
 	float p = (t <= moments.x);

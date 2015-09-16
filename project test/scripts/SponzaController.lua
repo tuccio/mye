@@ -4,33 +4,31 @@ function SponzaController:Init()
 	
 	Graphics.window.caption = 'Sponza test'
 	
-	r.shadowMapBias             = 0.001
+	r.shadowMapResolution       = 1024
+	r.shadowMapBias             = 0
 	r.shadowMapNormalOffsetBias = 0
-	r.pcfEnabled                = false
-	r.pcfKernel                 = 1
 	r.csmSplits                 = 1
 		
 	r.lpvEnabled    = false
 	r.lpvIterations = 16
-	r.lpvAABB       = AABB.FromMinMax(vec3(-25), vec3(25))
-	
-	--r.lpvAABB       = AABB.FromMinMax(vec3(-1400), vec3(1400))
+	r.lpvResolution = 16
+	r.lpvAABB       = AABB.FromMinMax(vec3(-30), vec3(20))
+		
+	r.lpvFluxInjectionBias     = 0.5
+	r.lpvGeometryInjectionBias = 0
 	
 	local hCam = GameObjects:CreateEntity('Camera', 'camera')
 	
 	if hCam and hCam:Exists() then
 	
 		hCam.transform.position    = vec3(-8.47068, 4.23661, -0.0175723)
-		--hCam.transform.position    = vec3(-87, 240, -26)
 		hCam.transform.orientation = quaternion(0.730156, 0.0297107, 0.68207, -0.0277546)
 	
 		hCam.speed       = 3
-		--hCam.speed       = 150
 	
 		hCam.camera.fovy = 70
 		hCam.camera.near = 0.01
 		hCam.camera.far  = 35
-		--hCam.camera.far  = 2500
 		
 		Scene.camera = hCam.camera
 		
@@ -49,8 +47,8 @@ end
 
 function SponzaController:OnKeyboardKeyHold(key, t)
 
-	local angle = 25 * Time.delta
-	local v     = vec3(0.25, 1, -0.4):Normalize()
+	local angle = 10 * Time.delta
+	local v     = vec3(0.25, 0.3, -0.8):Normalize()
 
 	if key == KeyboardVK.R then
 	
@@ -87,7 +85,33 @@ function SponzaController:OnKeyboardKeyPress(key)
 		
 	elseif key == KeyboardVK.G then
 		
-		r.lpvEnabled = not r.lpvEnabled
+		local enabled = not r.lpvEnabled
+		r.lpvEnabled  = enabled
+		
+		print ('LPV: ' .. (enabled and 'ON' or 'OFF'))
+		
+	elseif key == KeyboardVK.P then
+	
+		local newIt     = math.min(r.lpvIterations + 1, 32)
+		r.lpvIterations = newIt
+		
+		print('Iterations: ' .. newIt)
+	
+	elseif key == KeyboardVK.O then
+	
+		local newIt     = math.max(r.lpvIterations - 1, 0)
+		r.lpvIterations = newIt
+		
+		print('Iterations: ' .. newIt)
+		
+	elseif key == KeyboardVK.J then
+	
+		local hLPVAnim = GameObjects:Find('lpvAnim')
+		
+		if not hLPVAnim:Exists() then
+			hLPVAnim = GameObjects:CreateEntity('LPVAnimationController', 'lpvAnim')
+			hLPVAnim.maxIterations = 32
+		end
 		
 	end
 

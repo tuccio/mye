@@ -30,6 +30,8 @@ cbuffer cbRendererConfiguration : register(__MYE_DX11_BUFFER_SLOT_RENDERINFO)
 		uint  pcfKernel;
 		float pcfKernelInvSquare;
 
+		float lpvAttenuation;
+
     } r;
 
 };

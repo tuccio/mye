@@ -1,6 +1,7 @@
 #ifndef __MYE_LPV__
 #define __MYE_LPV__
 
+#include "common_samplers.hlsli"
 #include "constants.hlsli"
 #include "spherical_harmonics.hlsli"
 
@@ -56,7 +57,7 @@ float4 LPVFlux(in SHRGB sh, in float3 direction)
 
 }
 
-SHRGB LPVLoadOffset(in LPV lpv, int3 cell, int3 offset)
+SHRGB LPVLoadOffset(in LPV lpv, in float3 cell, in int3 offset)
 {
 
 	SHRGB sh;
@@ -65,34 +66,37 @@ SHRGB LPVLoadOffset(in LPV lpv, int3 cell, int3 offset)
 	sh.green = lpv.green.Load(int4(cell + offset, 0));
 	sh.blue  = lpv.blue.Load(int4(cell + offset, 0));
 
+	/*sh.red   = lpv.red.Sample(g_pointSampler, cell + offset);
+	sh.green = lpv.green.Sample(g_pointSampler, cell + offset);
+	sh.blue  = lpv.blue.Sample(g_pointSampler, cell + offset);*/
+
 	return sh;
 
 }
 
 #ifndef MYE_PROPAGATE_NO_OCCLUSION
 
-float4 LPVOcclusion(in LPV lpv, in int3 cell, in float3 sourceDirection)
+float4 LPVOcclusion(in LPV lpv, in float3 cell, in float3 sourceDirection)
 {
-	float3 coords = float3(cell) + sourceDirection + .5f;
-	//float3 coords = float3(cell) + 1.f + sourceDirection;
+	float3 coords       = cell - .5f + sourceDirection * .5f;
 	float3 sampleCoords = LPVSampleCoords(coords);
 	return lpv.geometry.Sample(lpv.lpvSampler, sampleCoords);
 	//return lpv.geometry.Load(int4(coords, 0));
 }
 
-float LPVVisibility(in float4 shFluxDirection, in float4 shOcclusion)
+float LPVVisibility(in float4 shOcclusion, in float fluxDirection)
 {
-	return 1 - saturate(SHDot(shOcclusion, shFluxDirection));
+	return 1.f - saturate(SHReconstruct(shOcclusion, fluxDirection));
 }
 
 #else
 
-float4 LPVOcclusion(in LPV lpv, in int3 cell, in float3 sourceDirection)
+float4 LPVOcclusion(in LPV lpv, in float3 cell, in float3 sourceDirection)
 {
 	return float4(0, 0, 0, 0);
 }
 
-float LPVVisibility(in float4 shFluxDirection, in float4 shOcclusion)
+float LPVVisibility(in float4 shOcclusion, in float3 fluxDirection)
 {
 	return 1;
 }

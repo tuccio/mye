@@ -27,8 +27,7 @@ SamplerState      g_lpvSampler       : register(__MYE_DX11_SAMPLER_SLOT_LPV);
 #define MYE_LPV_FRONT_SOLID_ANGLE (0.4006696846f)
 #define MYE_LPV_SIDE_SOLID_ANGLE  (0.4234413544f)
 
-SHRGB GatherContribution(in LPV lpv,
-                         in int3 cell)
+SHRGB GatherContribution(in LPV lpv, in float3 cell)
 {
 
 	SHRGB sh = (SHRGB) 0;
@@ -101,59 +100,55 @@ SHRGB GatherContribution(in LPV lpv,
 
 	};
 
-	static const float2 sideProjDirection[4] = {
+	static const float2 sideReprojDirection[4] = {
 			{  1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 }
 	};
+
+	// Gather all the flux coming from the 6 main directions of the cube (the ones orthogonal to the faces)
 
 	[unroll]
 	for (int i = 0; i < 6; i++)
 	{
 
-		float3 fluxDirection     = mul(neighbors[i], float3(0, 0, 1));
-		float3 sourceDirection   = - fluxDirection;
-							    
-		float4 shOcclusion       = LPVOcclusion(lpv, cell, sourceDirection);
+		// For each main direction, read the intensity SH cofficients coming from it
+		// by reading the corresponding LPV cell, then reconstruct and reproject it.
 
-		float4 shFluxDirection   = SHCosineLobe(fluxDirection);
-		float4 shSourceDirection = SHCosineLobe(sourceDirection);
+		float3 mainDirection   = mul(neighbors[i], float3(0, 0, 1));
+		float4 mainDirectionSH = SHCosineLobe(mainDirection);
 
-		SHRGB  shAdjRadiance     = LPVLoadOffset(lpv, cell, sourceDirection);
-							     
-		float3 shIrradiance      = saturate(SHDot(shAdjRadiance, shFluxDirection));
-		//float  occlusion         = LPVVisibility(shSourceDirection, shOcclusion);
-		float  occlusion         = LPVVisibility(shFluxDirection, shOcclusion);
+		float3 neighbor        = cell + mainDirection;
+		SHRGB  neighborSH      = LPVLoadOffset(lpv, cell, mainDirection);
 
-		SHRGB  shFrontFlux       = SHScale(shFluxDirection, MYE_LPV_FRONT_SOLID_ANGLE * MYE_INV_PI * occlusion * shIrradiance);
+		float4 mainOcclusionSH = LPVOcclusion(lpv, cell, mainDirection);
+		float  mainVisibility  = LPVVisibility(mainOcclusionSH, - mainDirection);
 
-		sh = SHAdd(sh, shFrontFlux);
+		SHRGB  mainIntensitySH = SHScale(mainDirectionSH, mainVisibility * SHReconstruct(neighborSH, mainDirection) * MYE_LPV_FRONT_SOLID_ANGLE * MYE_INV_PI);
+
+		sh = SHAdd(sh, mainIntensitySH);
+
+		// Now we consider the light going through the remaining 4 faces the neighbor
+		// flux can traverse. We reproject using directions orthogonal to the
+		// cube faces as in Crytek paper.
 
 		[unroll]
 		for (int j = 0; j < 4; j++)
 		{
 
-			float3 sideFluxDirection   = mul(neighbors[i], sideDirection[j]);
-			float3 fluxProjDirection   = mul(neighbors[i], float3(sideProjDirection[j], 0));
+			float3 sideFluxDirection = mul(neighbors[i], sideDirection[j]);
+			float3 reprojDirection   = mul(neighbors[i], float3(sideReprojDirection[j], 0));
 
-			float4 shSideFluxDirection = SHCosineLobe(sideFluxDirection);
-			float4 shSideProjDirection = SHCosineLobe(fluxProjDirection);
+			float4 reprojDirectionSH = SHCosineLobe(reprojDirection);
 
-			float3 shSideIrradiance    = saturate(SHDot(shAdjRadiance, shSideProjDirection));
-			//float  sideOcclusion       = LPVVisibility(shSourceDirection, shOcclusion);
+			float  sideOcclusionSH   = LPVOcclusion(lpv, cell, sideFluxDirection);
+			float4 sideVisibility    = LPVVisibility(sideOcclusionSH, - sideFluxDirection);
 
-			//float  sideOcclusion       = LPVVisibility(SHCosineLobe(-sideFluxDirection), shOcclusion);
-			float  sideOcclusion       = LPVVisibility(SHCosineLobe(sideFluxDirection), shOcclusion);
+			SHRGB  sideIntensitySH   = SHScale(reprojDirectionSH, sideVisibility * SHReconstruct(neighborSH, sideFluxDirection) * MYE_LPV_SIDE_SOLID_ANGLE * MYE_INV_PI);
 
-			SHRGB  shSideFlux          = SHScale(shSideProjDirection, MYE_LPV_SIDE_SOLID_ANGLE * MYE_INV_PI * sideOcclusion * shSideIrradiance);
-
-			sh = SHAdd(sh, shSideFlux);
+			sh = SHAdd(sh, sideIntensitySH);
 
 		}
 
 	}
-
-	//return sh;
-
-	// Divide by pi when reprojecting (crytek paper section 3.3)
 
 	return SHScale(sh, MYE_INV_PI);
 
@@ -165,9 +160,10 @@ PSOutput main(PSInput input)
 
 	LPV lpv = { g_lightVolumeRed, g_lightVolumeGreen, g_lightVolumeBlue, g_geometryVolume, g_lpvSampler };
 
-	SHRGB sh = LPVLoadOffset(lpv, input.cell, int3(0, 0, 0));
+	SHRGB sh             = LPVLoadOffset(lpv, input.cell, int3(0, 0, 0));
+	SHRGB shContribution = GatherContribution(lpv, input.cell);
 
-	sh = SHAdd(sh, GatherContribution(lpv, input.cell));
+	sh = SHAdd(sh, shContribution);
 
 	PSOutput output;
 

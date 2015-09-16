@@ -22,17 +22,26 @@ using namespace mye::core;
 using namespace mye::win;
 using namespace mye::math;
 
+enum {
+	__MYE_SHADER_GEOMETRY_NONE = -1, __MYE_SHADER_GEOMETRY, __MYE_SHADER_GEOMETRY_NHMAP, __MYE_SHADER_GEOMETRY_SPEC, __MYE_SHADER_GEOMETRY_NHMAP_SPEC
+};
+
+enum {
+	__MYE_SHADER_FINAL_NONE = -1, __MYE_SHADER_FINAL, __MYE_SHADER_FINAL_DIFF, __MYE_SHADER_FINAL_SPEC, __MYE_SHADER_FINAL_DIFF_SPEC
+};
+
 DX11DeferredLightingRenderer::DX11DeferredLightingRenderer(void) :
 	m_initialized(false),
 	m_clearColor(0.f),
-	m_vsm(false)
+	m_vsm(true)
 {
 
 	Parameters params({ { "renderTarget", "true" } });
 
 	m_gbuffer0.SetParametersList(params);
 	m_gbuffer1.SetParametersList(params);
-	m_lbuffer.SetParametersList(params);
+	m_diffuseLight.SetParametersList(params);
+	m_specularLight.SetParametersList(params);
 
 	DX11DepthBufferConfiguration depthBufferConf;
 
@@ -51,91 +60,10 @@ DX11DeferredLightingRenderer::~DX11DeferredLightingRenderer(void)
 
 }
 
+
+
 bool DX11DeferredLightingRenderer::Init(void)
 {
-
-	m_deferredGeometry[0] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
-	                                                                                              "./shaders/deferred_lighting_geometry.msh",
-	                                                                                              nullptr,
-	                                                                                              { { "type", "program" } });
-
-	m_deferredGeometry[1] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
-	                                                                                              "./shaders/deferred_lighting_geometry_heightmap.msh",
-	                                                                                              nullptr,
-	                                                                                              { { "type", "program" } });
-
-	m_deferredLights = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
-	                                                                                         "./shaders/deferred_lighting_lights.msh",
-	                                                                                         nullptr,
-	                                                                                         { { "type", "program" } });
-
-	m_deferredLightsLPV = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
-	                                                                                            "./shaders/deferred_lighting_lights_lpv.msh",
-	                                                                                            nullptr,
-	                                                                                            { { "type", "program" } });
-
-	m_deferredFinal[0] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
-	                                                                                           "./shaders/deferred_lighting_final.msh",
-	                                                                                           nullptr,
-	                                                                                           { { "type", "program" } });
-
-	m_deferredFinal[1] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
-	                                                                                           "./shaders/deferred_lighting_final_diff.msh",
-	                                                                                           nullptr,
-	                                                                                           { { "type", "program" } });
-
-	m_deferredFinal[2] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
-	                                                                                           "./shaders/deferred_lighting_final_diff_spec.msh",
-	                                                                                           nullptr,
-	                                                                                           { { "type", "program" } });
-
-	m_vsmBoxBlur[0] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
-	                                                                                        "./shaders/vsm_blur_h.msh",
-	                                                                                        nullptr,
-	                                                                                        { { "type", "program" } });
-
-	m_vsmBoxBlur[1] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
-	                                                                                        "./shaders/vsm_blur_v.msh",
-	                                                                                        nullptr,
-	                                                                                        { { "type", "program" } });
-
-	m_vsmBoxBlurCSM[0] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
-	                                                                                        "./shaders/vsm_blur_csm_h.msh",
-	                                                                                        nullptr,
-	                                                                                        { { "type", "program" } });
-
-	m_vsmBoxBlurCSM[1] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
-	                                                                                        "./shaders/vsm_blur_csm_v.msh",
-	                                                                                        nullptr,
-	                                                                                        { { "type", "program" } });
-
-	bool vsmCompiled = true;
-
-	if (m_vsm)
-	{
-
-		int    smRes    = DX11Module::GetSingleton().GetRendererConfiguration()->GetShadowMapResolution();
-		String smResStr = ToString(smRes);
-		
-		m_deferredLights->AddMacroDefinition("MYE_SHADOW_MAP_VSM");
-
-		m_vsmBoxBlur[0]->AddMacroDefinition("MYE_BOX_BLUR_RESOLUTION", smResStr.CString());
-		m_vsmBoxBlur[1]->AddMacroDefinition("MYE_BOX_BLUR_RESOLUTION", smResStr.CString());
-
-		m_vsmBoxBlurCSM[0]->AddMacroDefinition("MYE_BOX_BLUR_RESOLUTION", smResStr.CString());
-		m_vsmBoxBlurCSM[1]->AddMacroDefinition("MYE_BOX_BLUR_RESOLUTION", smResStr.CString());
-
-		m_vsmDepth[0].SetParametersList({ { "renderTarget", "true" } });
-		m_vsmDepth[1].SetParametersList({ { "renderTarget", "true" }, { "generateMips", "true" } });
-
-		vsmCompiled = m_vsmDepth[0].Create(smRes, smRes, DataFormat::HALF2) &&
-		              m_vsmDepth[1].Create(smRes, smRes, DataFormat::HALF2) &&
-		              m_vsmBoxBlur[0]->Load() &&
-		              m_vsmBoxBlur[1]->Load() &&
-		              m_vsmBoxBlurCSM[0]->Load() &&
-		              m_vsmBoxBlurCSM[1]->Load();
-
-	}
 
 	auto configuration = static_cast<GraphicsModule *>(Game::GetSingleton().GetGraphicsModule())->GetRendererConfiguration();
 
@@ -144,18 +72,11 @@ bool DX11DeferredLightingRenderer::Init(void)
 	m_rsm.SetResolution(configuration->GetShadowMapResolution());
 	m_rsm.SetCSMSplits(configuration->GetCSMSplits());
 
-	if (vsmCompiled &&
-	    m_deferredGeometry[0]->Load() &&
-		m_deferredGeometry[1]->Load() &&
-	    m_deferredLights->Load() &&
-	    m_deferredLightsLPV->Load() &&
-	    m_deferredFinal[0]->Load() &&
-	    m_deferredFinal[1]->Load() &&
-		m_deferredFinal[2]->Load() &&
-	    m_depthBuffer.Create() &&
+	if (m_depthBuffer.Create() &&
 	    m_rsm.Create(m_vsm) &&
 	    m_lpv.Create(configuration->GetLPVResolution(), configuration->GetLPVRSMSamples()) &&
 		m_ssao.Create(resolution.x() * .5f, resolution.y() * .5f) &&
+	    __CreateShaders() &&
 	    __CreateConstantBuffers() &&
 	    __CreateContextStates())
 	{
@@ -185,19 +106,23 @@ void DX11DeferredLightingRenderer::Shutdown(void)
 
 		m_gbuffer0.Destroy();
 		m_gbuffer1.Destroy();
-		m_lbuffer.Destroy();
+		m_diffuseLight.Destroy();
 
 		m_rsm.Destroy();
 		m_lpv.Destroy();
 
 		m_deferredGeometry[0] = nullptr;
 		m_deferredGeometry[1] = nullptr;
+		m_deferredGeometry[2] = nullptr;
+		m_deferredGeometry[3] = nullptr;
 
 		m_deferredLights      = nullptr;
 		m_deferredLightsLPV   = nullptr;
 
 		m_deferredFinal[0]    = nullptr;
 		m_deferredFinal[1]    = nullptr;
+		m_deferredFinal[2]    = nullptr;
+		m_deferredFinal[3]    = nullptr;
 
 		auto configuration = static_cast<GraphicsModule *>(Game::GetSingleton().GetGraphicsModule())->GetRendererConfiguration();
 
@@ -304,7 +229,7 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 		backCull.Use();
 
-		int currentState = -1;
+		int currentState = __MYE_SHADER_GEOMETRY_NONE;
 
 		for (GameObject * object : sortedVisibleObjects)
 		{
@@ -326,7 +251,8 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 				m_transformBuffer.Bind(DX11PipelineStage::VERTEX_SHADER, 0);
 				m_materialBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_BUFFER_SLOT_MATERIAL);
 
-				TexturePointer heightMap = rc->GetNormalHeightMap();
+				TexturePointer heightMap   = rc->GetNormalHeightMap();
+				TexturePointer specularMap = rc->GetSpecularTexture();
 
 				if (heightMap)
 				{
@@ -336,17 +262,52 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 					heightMapDX11->Load();
 					heightMapDX11->Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_NORMALHEIGHTMAP);
 
-					if (currentState != 1)
+				}
+
+				if (specularMap)
+				{
+
+					DX11TexturePointer specularMapDX11 = Resource::StaticCast<DX11Texture>(specularMap);
+
+					specularMapDX11->Load();
+					specularMapDX11->Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_SPECULAR);
+
+				}
+
+				if (heightMap)
+				{
+
+					if (specularMap)
 					{
-						m_deferredGeometry[1]->Use();
-						currentState = 1;
+
+						if (currentState != __MYE_SHADER_GEOMETRY_NHMAP_SPEC)
+						{
+							m_deferredGeometry[__MYE_SHADER_GEOMETRY_NHMAP_SPEC]->Use();
+							currentState = __MYE_SHADER_GEOMETRY_NHMAP_SPEC;
+						}
+
+					}
+					else if (currentState != __MYE_SHADER_GEOMETRY_NHMAP)
+					{
+						m_deferredGeometry[__MYE_SHADER_GEOMETRY_NHMAP]->Use();
+						currentState = __MYE_SHADER_GEOMETRY_NHMAP;
 					}
 
 				}
-				else if (currentState != 0)
+				else if (specularMap)
 				{
-					m_deferredGeometry[0]->Use();
-					currentState = 0;
+
+					if (currentState != __MYE_SHADER_GEOMETRY_SPEC)
+					{
+						m_deferredGeometry[__MYE_SHADER_GEOMETRY_SPEC]->Use();
+						currentState = __MYE_SHADER_GEOMETRY_SPEC;
+					}
+
+				}
+				else if (currentState != __MYE_SHADER_GEOMETRY)
+				{
+					m_deferredGeometry[__MYE_SHADER_GEOMETRY]->Use();
+					currentState = __MYE_SHADER_GEOMETRY;
 				}
 				
 
@@ -364,8 +325,8 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 		DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(0, nullptr, nullptr);
 
-		m_gbuffer0.Bind(DX11PipelineStage::PIXEL_SHADER,    __MYE_DX11_TEXTURE_SLOT_GBUFFER0);
-		m_gbuffer1.Bind(DX11PipelineStage::PIXEL_SHADER,    __MYE_DX11_TEXTURE_SLOT_GBUFFER1);
+		m_gbuffer0.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_GBUFFER0);
+		m_gbuffer1.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_GBUFFER1);
 
 		// Only required for SSAO
 		
@@ -379,7 +340,7 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 		bool lpvEnabled = r->GetLPVEnabled();
 
-		//if (lpvEnabled)
+		if (lpvEnabled)
 		{
 			m_ssao.Render();
 		}
@@ -388,9 +349,10 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 		/* Second step (light buffer) */
 
-		m_lbuffer.ClearRenderTarget(Vector4(0.f));
+		m_diffuseLight.ClearRenderTarget(Vector4(0.f));
+		m_specularLight.ClearRenderTarget(Vector4(0.f));
 
-		ID3D11RenderTargetView * lbuffer = m_lbuffer.GetRenderTargetView();
+		ID3D11RenderTargetView * lightPassBuffers[2] = { m_diffuseLight.GetRenderTargetView(), m_specularLight.GetRenderTargetView() };
 
 		m_quadVertexBuffer->Load();
 
@@ -534,7 +496,7 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 			DX11Device::GetSingleton().SetDepthTest(DX11DepthTest::OFF);
 
-			DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(1, &lbuffer, nullptr);
+			DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(2, lightPassBuffers, nullptr);
 
 			DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_SHADOWMAP,     1, &m_shadowMapSamplerState);
 			DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_SHADOWMAP_CMP, 1, &m_shadowMapSamplerCmpState);
@@ -610,13 +572,9 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 			/* Render LPV */
 
-			/* TODO: SETUP THE SHADERS TO RENDER LPV TO LIGHTBUFFER AND THEIR CONSTANT BUFFERS */
-
-			//m_lbuffer.ClearRenderTarget(Vector4(0));
-
 			m_deferredLightsLPV->Use();
 
-			DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(1, &lbuffer, nullptr);
+			DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(1, lightPassBuffers, nullptr);
 
 			m_lpv.BindConfigurationBuffer(DX11PipelineStage::PIXEL_SHADER, 0);
 
@@ -655,16 +613,17 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 		DX11Device::GetSingleton().SetDepthTest(DX11DepthTest::LOOKUP);
 
-		DX11Device::GetSingleton().GetImmediateContext()->ClearRenderTargetView(target, m_clearColor.Data());
+		//DX11Device::GetSingleton().GetImmediateContext()->ClearRenderTargetView(target, m_clearColor.Data());
 		DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(1, &target, m_depthBuffer.GetDepthStencilView());
 
-		m_lbuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_LIGHTBUFFER);
+		m_diffuseLight.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_LIGHTDIFFUSE);
+		m_specularLight.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_LIGHTSPECULAR);
 
 		backCull.Use();
 
 		DX11Device::GetSingleton().GetImmediateContext()->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
 
-		currentState = -1;
+		currentState = __MYE_SHADER_FINAL_NONE;
 
 		for (GameObject * object : sortedVisibleObjects)
 		{
@@ -676,24 +635,44 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 			if (difftex && difftex->Load())
 			{
-
-				if (spectex && spectex->Load())
-				{
-					if (currentState != 2)
-					{
-						m_deferredFinal[2]->Use();
-					}
-				}
-				else if (currentState != 1)
-				{
-					m_deferredFinal[1]->Use();
-				}
-
 				difftex->Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_DIFFUSE);
 			}
-			else if (currentState != 0)
+
+			if (spectex && spectex->Load())
 			{
-				m_deferredFinal[0]->Use();
+				difftex->Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_SPECULAR);
+			}
+
+			if (difftex)
+			{
+
+				if (spectex)
+				{
+					if (currentState != __MYE_SHADER_FINAL_DIFF_SPEC)
+					{
+						m_deferredFinal[__MYE_SHADER_FINAL_DIFF_SPEC]->Use();
+						currentState = __MYE_SHADER_FINAL_DIFF_SPEC;
+					}
+				}
+				else if (currentState != __MYE_SHADER_FINAL_DIFF)
+				{
+					m_deferredFinal[__MYE_SHADER_FINAL_DIFF]->Use();
+					currentState = __MYE_SHADER_FINAL_DIFF;
+				}
+				
+			}
+			else if (spectex)
+			{
+				if (currentState != __MYE_SHADER_FINAL_SPEC)
+				{
+					m_deferredFinal[__MYE_SHADER_FINAL_SPEC]->Use();
+					currentState = __MYE_SHADER_FINAL_SPEC;
+				}
+			}
+			else if (currentState != __MYE_SHADER_FINAL)
+			{
+				m_deferredFinal[__MYE_SHADER_FINAL]->Use();
+				currentState = __MYE_SHADER_FINAL;
 			}
 
 			TransformComponent * tc = object->GetTransformComponent();
@@ -721,9 +700,8 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 		}
 
-		m_lbuffer.Unbind();
-
-		//DX11Module::GetSingleton().RenderShaderResource(m_lbuffer, Vector2i(300, 0), Vector2i(267, 150));
+		m_diffuseLight.Unbind();
+		m_specularLight.Unbind();
 
 	}
 
@@ -776,6 +754,8 @@ bool DX11DeferredLightingRenderer::__CreateContextStates(void)
 	accumulateBlendStateDesc.RenderTarget[0].DestBlendAlpha        = D3D11_BLEND_ONE;
 	accumulateBlendStateDesc.RenderTarget[0].BlendOpAlpha          = D3D11_BLEND_OP_ADD;
 	accumulateBlendStateDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	accumulateBlendStateDesc.IndependentBlendEnable = FALSE;
 
 	return m_pointSamplerState && m_bilinearSamplerState && m_trilinearSamplerState &&
 	       m_lpvSamplerState && m_shadowMapSamplerState && m_shadowMapSamplerCmpState &&
@@ -835,11 +815,11 @@ void DX11DeferredLightingRenderer::__UpdateRenderConfiguration(void)
 				m_vsmDepth[0].Destroy();
 				m_vsmDepth[1].Destroy();
 
-				m_vsmDepth[0].Create(shadowMapResolution, shadowMapResolution, DataFormat::HALF2);
-				m_vsmDepth[1].Create(shadowMapResolution, shadowMapResolution, DataFormat::HALF2);
+				m_vsmDepth[0].Create(shadowMapResolution, shadowMapResolution, DataFormat::FLOAT2);
+				m_vsmDepth[1].Create(shadowMapResolution, shadowMapResolution, DataFormat::FLOAT2);
 
-				m_vsmBoxBlur[0]->AddMacroDefinition("MYE_BOX_BLUR_RESOLUTION", smResStr.CString());
-				m_vsmBoxBlur[1]->AddMacroDefinition("MYE_BOX_BLUR_RESOLUTION", smResStr.CString());
+				m_vsmBoxBlur[0]->AddMacroDefinition("MYE_GAUSSIAN_BLUR_RESOLUTION", smResStr.CString());
+				m_vsmBoxBlur[1]->AddMacroDefinition("MYE_GAUSSIAN_BLUR_RESOLUTION", smResStr.CString());
 
 				m_vsmBoxBlurCSM[0]->AddMacroDefinition("MYE_BOX_BLUR_RESOLUTION", smResStr.CString());
 				m_vsmBoxBlurCSM[1]->AddMacroDefinition("MYE_BOX_BLUR_RESOLUTION", smResStr.CString());
@@ -891,8 +871,8 @@ void DX11DeferredLightingRenderer::__UpdateRenderConfiguration(void)
 
 				int shadowMapResolution = configuration->GetShadowMapResolution();
 
-				m_vsmDepth[0].Create(shadowMapResolution, shadowMapResolution, DataFormat::HALF2);
-				m_vsmDepth[1].Create(shadowMapResolution, shadowMapResolution, DataFormat::HALF2);
+				m_vsmDepth[0].Create(shadowMapResolution, shadowMapResolution, DataFormat::FLOAT2);
+				m_vsmDepth[1].Create(shadowMapResolution, shadowMapResolution, DataFormat::FLOAT2);
 
 				
 			}
@@ -908,6 +888,11 @@ void DX11DeferredLightingRenderer::__UpdateRenderConfiguration(void)
 
 			case RendererVariable::LPVRSMSAMPLES:
 				m_lpv.SetRSMSamples(configuration->GetLPVRSMSamples());;
+				break;
+
+			case RendererVariable::LPVRESOLUTION:
+				m_lpv.Destroy();
+				m_lpv.Create(configuration->GetLPVResolution());
 				break;
 
 			case RendererVariable::RESOLUTION:
@@ -957,6 +942,8 @@ void DX11DeferredLightingRenderer::__UpdateRenderConfiguration(void)
 		r.pcfKernel                 = configuration->GetPCFKernel();
 		r.pcfKernelInvSquare        = 1.f / (r.pcfKernel * r.pcfKernel);
 
+		r.lpvAttenuation            = configuration->GetLPVAttenuation();
+
 		m_configurationBuffer.SetData(&r);
 
 	}
@@ -968,12 +955,129 @@ void DX11DeferredLightingRenderer::__ResizeBuffers(const Vector2i & size)
 
 	m_gbuffer0.Destroy();
 	m_gbuffer1.Destroy();
-	m_lbuffer.Destroy();
+	m_diffuseLight.Destroy();
+	m_specularLight.Destroy();
 
-	m_gbuffer0.Create(size.x(), size.y(), DataFormat::FLOAT4);
-	m_gbuffer1.Create(size.x(), size.y(), DataFormat::FLOAT4);
-	m_lbuffer.Create(size.x(), size.y(), DataFormat::FLOAT4);
+	m_gbuffer0.Create(size.x(), size.y(), DataFormat::HALF4);
+	m_gbuffer1.Create(size.x(), size.y(), DataFormat::HALF4);
+	m_diffuseLight.Create(size.x(), size.y(), DataFormat::HALF4);
+	m_specularLight.Create(size.x(), size.y(), DataFormat::HALF4);
 
 	m_depthBuffer.Resize(size.x(), size.y());
+
+}
+
+bool DX11DeferredLightingRenderer::__CreateShaders(void)
+{
+
+	m_deferredGeometry[__MYE_SHADER_GEOMETRY] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
+	                                                                                                                  "./shaders/deferred_lighting_geometry.msh",
+	                                                                                                                  nullptr,
+	                                                                                                                  { { "type", "program" } });
+
+	m_deferredGeometry[__MYE_SHADER_GEOMETRY_NHMAP] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
+	                                                                                                                        "./shaders/deferred_lighting_geometry_nhmap.msh",
+	                                                                                                                        nullptr,
+	                                                                                                                        { { "type", "program" } });
+
+	m_deferredGeometry[__MYE_SHADER_GEOMETRY_SPEC] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
+	                                                                                                                       "./shaders/deferred_lighting_geometry_spec.msh",
+	                                                                                                                       nullptr,
+	                                                                                                                       { { "type", "program" } });
+
+	m_deferredGeometry[__MYE_SHADER_GEOMETRY_NHMAP_SPEC] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
+	                                                                                                                             "./shaders/deferred_lighting_geometry_nhmap_spec.msh",
+	                                                                                                                             nullptr,
+	                                                                                                                             { { "type", "program" } });
+
+	m_deferredLights = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
+	                                                                                         "./shaders/deferred_lighting_lights.msh",
+	                                                                                         nullptr,
+	                                                                                         { { "type", "program" } });
+
+	m_deferredLightsLPV = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
+	                                                                                            "./shaders/deferred_lighting_lights_lpv.msh",
+	                                                                                            nullptr,
+	                                                                                            { { "type", "program" } });
+
+	m_deferredFinal[__MYE_SHADER_FINAL] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
+	                                                                                                            "./shaders/deferred_lighting_final.msh",
+	                                                                                                            nullptr,
+	                                                                                                            { { "type", "program" } });
+
+	m_deferredFinal[__MYE_SHADER_FINAL_DIFF] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
+	                                                                                                                 "./shaders/deferred_lighting_final_diff.msh",
+	                                                                                                                 nullptr,
+	                                                                                                                 { { "type", "program" } });
+
+	m_deferredFinal[__MYE_SHADER_FINAL_SPEC] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
+	                                                                                                                 "./shaders/deferred_lighting_final_spec.msh",
+	                                                                                                                 nullptr,
+	                                                                                                                 { { "type", "program" } });
+
+	m_deferredFinal[__MYE_SHADER_FINAL_DIFF_SPEC] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
+	                                                                                                                      "./shaders/deferred_lighting_final_diff_spec.msh",
+	                                                                                                                      nullptr,
+	                                                                                                                      { { "type", "program" } });
+
+	m_vsmBoxBlur[0] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
+	                                                                                        "./shaders/vsm_blur_h.msh",
+	                                                                                        nullptr,
+	                                                                                        { { "type", "program" } });
+
+	m_vsmBoxBlur[1] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
+	                                                                                        "./shaders/vsm_blur_v.msh",
+	                                                                                        nullptr,
+	                                                                                        { { "type", "program" } });
+
+	m_vsmBoxBlurCSM[0] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
+	                                                                                        "./shaders/vsm_blur_csm_h.msh",
+	                                                                                        nullptr,
+	                                                                                        { { "type", "program" } });
+
+	m_vsmBoxBlurCSM[1] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
+	                                                                                        "./shaders/vsm_blur_csm_v.msh",
+	                                                                                        nullptr,
+	                                                                                        { { "type", "program" } });
+
+	bool vsmCompiled = true;
+
+	if (m_vsm)
+	{
+
+		int    smRes    = DX11Module::GetSingleton().GetRendererConfiguration()->GetShadowMapResolution();
+		String smResStr = ToString(smRes);
+		
+		m_deferredLights->AddMacroDefinition("MYE_SHADOW_MAP_VSM");
+
+		m_vsmBoxBlur[0]->AddMacroDefinition("MYE_GAUSSIAN_BLUR_RESOLUTION", smResStr.CString());
+		m_vsmBoxBlur[1]->AddMacroDefinition("MYE_GAUSSIAN_BLUR_RESOLUTION", smResStr.CString());
+
+		m_vsmBoxBlurCSM[0]->AddMacroDefinition("MYE_BOX_BLUR_RESOLUTION", smResStr.CString());
+		m_vsmBoxBlurCSM[1]->AddMacroDefinition("MYE_BOX_BLUR_RESOLUTION", smResStr.CString());
+
+		m_vsmDepth[0].SetParametersList({ { "renderTarget", "true" } });
+		m_vsmDepth[1].SetParametersList({ { "renderTarget", "true" }, { "generateMips", "true" } });
+
+		vsmCompiled = m_vsmDepth[0].Create(smRes, smRes, DataFormat::FLOAT2) &&
+		              m_vsmDepth[1].Create(smRes, smRes, DataFormat::FLOAT2) &&
+		              m_vsmBoxBlur[0]->Load() &&
+		              m_vsmBoxBlur[1]->Load() &&
+		              m_vsmBoxBlurCSM[0]->Load() &&
+		              m_vsmBoxBlurCSM[1]->Load();
+
+	}
+
+	return vsmCompiled &&
+	       m_deferredGeometry[0]->Load() &&
+	       m_deferredGeometry[1]->Load() &&
+	       m_deferredGeometry[2]->Load() &&
+	       m_deferredGeometry[3]->Load() &&
+	       m_deferredLights->Load() &&
+	       m_deferredLightsLPV->Load() &&
+	       m_deferredFinal[0]->Load() &&
+	       m_deferredFinal[1]->Load() &&
+	       m_deferredFinal[2]->Load() &&
+	       m_deferredFinal[3]->Load();
 
 }

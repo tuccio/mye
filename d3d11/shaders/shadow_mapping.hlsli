@@ -145,13 +145,7 @@ Texture2D<float2> g_randomCosSin : register(__MYE_DX11_TEXTURE_SLOT_RANDOM);
 
 float ShadowMapBiasedDepth(in float4 lightSpacePosition)
 {
-
-#ifndef MYE_SHADOW_MAP_VSM
 	return lightSpacePosition.z - r.shadowMapBias;
-#else
-	return lightSpacePosition.z;
-#endif
-
 }
 
 #ifdef __MYE_PCF_SHADOW_MAPPING
@@ -252,12 +246,6 @@ float4 ShadowMapCompareDepth(in float3 projectTexCoord, in float lightDepthValue
 
 /* VSM depth comparison */
 
-float smootherstep(in float edge0, float edge1, float x)
-{
-	float t = saturate((x - edge0) / (edge1 - edge0));
-	return t * t * t * (t * (t * 6 - 15) + 10);
-}
-
 float4 ShadowMapCompareDepth(in float3 projectTexCoord, in float lightDepthValue)
 {
 
@@ -268,7 +256,7 @@ float4 ShadowMapCompareDepth(in float3 projectTexCoord, in float lightDepthValue
 #endif
 
 	float pmax = VSMChebyshevUpperBound(moments, lightDepthValue, r.vsmMinVariance);
-	float p    = smootherstep(r.vsmMinBleeding, 1.f, pmax);
+	float p    = smoothstep(r.vsmMinBleeding, 1.f, pmax);
 
 	return float4(p, p, p, 1);
 

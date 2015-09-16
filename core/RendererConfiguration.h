@@ -38,7 +38,8 @@ namespace mye
 			LPVRESOLUTION,
 			LPVITERATIONS,
 			LPVGEOMETRYINJECTIONBIAS,
-			LPVFLUXINJECTIONBIAS
+			LPVFLUXINJECTIONBIAS,
+			LPVATTENUATION
 		};
 
 		class RendererConfiguration;
@@ -81,6 +82,7 @@ namespace mye
 			unsigned int        m_lpvIterations;
 			mye::math::Real     m_lpvGeometryInjectionBias;
 			mye::math::Real     m_lpvFluxInjectionBias;
+			mye::math::Real     m_lpvAttenuation;
 
 			unsigned int        m_csmSplits;
 			unsigned int        m_pcfKernel;
@@ -104,12 +106,13 @@ namespace mye
 				m_csmSplits(3),
 				m_pcfKernel(3),
 				m_lpvEnabled(false),
-				m_lpvAABB(mye::math::AABB::FromMinMax(-1, 1)),
+				m_lpvAABB(mye::math::AABB::FromMinMax(-1.f, 1.f)),
 				m_lpvRSMSamples(256),
 				m_lpvResolution(32),
 				m_lpvIterations(8),
 				m_lpvGeometryInjectionBias(0.f),
-				m_lpvFluxInjectionBias(.5f)
+				m_lpvFluxInjectionBias(.5f),
+				m_lpvAttenuation(1.f)
 			{
 			}
 																							 
@@ -137,6 +140,7 @@ namespace mye
 			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::LPVITERATIONS,             LPVIterations,             m_lpvIterations)
 			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::LPVGEOMETRYINJECTIONBIAS,  LPVGeometryInjectionBias,  m_lpvGeometryInjectionBias)
 			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::LPVFLUXINJECTIONBIAS,      LPVFluxInjectionBias,      m_lpvFluxInjectionBias)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::LPVATTENUATION,            LPVAttenuation,            m_lpvAttenuation)
 
 		};
 

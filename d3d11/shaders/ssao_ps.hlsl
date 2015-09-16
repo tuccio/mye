@@ -26,7 +26,6 @@ struct PSInput
 };
 
 Texture2D<float2> g_randomCosSin : register(__MYE_DX11_TEXTURE_SLOT_RANDOM);
-Texture2D<float>  g_depth        : register(__MYE_DX11_TEXTURE_SLOT_GBUFFER2);
 
 /* Main */
 
@@ -74,12 +73,12 @@ float main(PSInput input) : SV_Target0
 
 		GBufferData sampleData = GBufferSample(texcoord);
 
-		float3 sampleDirection = normalize(sampleData.position - data.position);
+		float3 sampleDirection = sampleData.position - data.position;
 
-		float  NdotS           = max(dot(data.normal, sampleDirection), 0);
+		float  NdotS           = max(dot(data.normal, normalize(sampleDirection)), 0);
 		float  distance        = length(sampleDirection);
 
-		occlusion += NdotS * smoothstep(1.f, 0.f, min(length(distance), MYE_SSAO_MAX_DISTANCE) * invMaxDistance);
+		occlusion += NdotS * smoothstep(1.f, 0.f, min(distance, MYE_SSAO_MAX_DISTANCE) * invMaxDistance);
 
 	}
 

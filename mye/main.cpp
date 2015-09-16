@@ -37,9 +37,9 @@ using namespace mye::lua;
 using namespace mye::win;
 
 int CALLBACK WinMain(HINSTANCE hInstance,
-					 HINSTANCE hPrevInstance,
-					 LPSTR lpCmdLine,
-					 int nCmdShow)
+                     HINSTANCE hPrevInstance,
+                     LPSTR lpCmdLine,
+                     int nCmdShow)
 {
 
 	mye::win::CreateConsole();

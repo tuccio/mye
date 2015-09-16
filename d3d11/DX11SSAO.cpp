@@ -135,5 +135,6 @@ void DX11SSAO::Render(void)
 	DX11Module::GetSingleton().RenderShaderResource(m_ssaoBuffer, Vector2i(0), Vector2i(640, 360));
 
 	DX11Device::GetSingleton().SetViewports(&viewports[0], viewports.size());
+	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(0, nullptr, nullptr);
 
 }

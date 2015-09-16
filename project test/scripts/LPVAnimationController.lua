@@ -8,14 +8,12 @@ function LPVAnimationController:Update()
 
 	local elapsed = self.elapsed + Time.delta
 	
-	local t  = 10 * elapsed * self.speed
+	local t  = 2 * elapsed * self.speed
 	local it = math.floor(t)
 	
-	--print(t)
+	print(it)
 	
 	if it < self.maxIterations then
-	
-		--print(it)
 		
 		self.elapsed    = elapsed
 		r.lpvIterations = it

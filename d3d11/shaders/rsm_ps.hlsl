@@ -79,18 +79,19 @@ PSOutput main(PSInput input)
 
 #endif
 
+	// TODO: fixme
+	float  area  = 0.001f;
+
 	float4 NdotL = saturate(dot(N, L));
 
-	//float  omega      = MYE_CONE90_SOLID_ANGLE / (r.shadowMapResolution * r.shadowMapResolution);
-	float  omegaInvPi = MYE_CONE90_SOLID_ANGLE_INV_PI / (r.shadowMapResolution * r.shadowMapResolution);
+	float  omegaInvPi = MYE_CONE90_SOLID_ANGLE_INV_PI;
 	float3 irradiance = LightIrradiance(g_light, input.positionWS);
 
 	PSOutput output;
 
 	output.position = float4(input.positionWS, 1);
 	output.normal   = float4(N, 1);
-	//output.flux     = float4(irradiance * MYE_INV_PI * g_material.diffuseColor * NdotL * omega, 1);
-	output.flux     = float4(irradiance * albedo * NdotL * omegaInvPi, 1);
+	output.flux     = float4(irradiance * albedo * NdotL * omegaInvPi * area, 1);
 
 #ifdef MYE_SHADOW_MAP_VSM
 

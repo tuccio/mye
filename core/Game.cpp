@@ -572,17 +572,38 @@ void Game::ImportScene(const String & file, std::list<GameObject*> * allocatedOb
 					if (materialNode)
 					{
 
-						rapidxml::xml_attribute<> * diffuse_color = materialNode->first_attribute("diffuse_color");
-						rapidxml::xml_attribute<> * roughness     = materialNode->first_attribute("roughness");
-						rapidxml::xml_attribute<> * specular      = materialNode->first_attribute("specular");
-						rapidxml::xml_attribute<> * metallic      = materialNode->first_attribute("metallic");
+						rapidxml::xml_attribute<> * diffuse_color  = materialNode->first_attribute("diffuse_color");
+						rapidxml::xml_attribute<> * specular_color = materialNode->first_attribute("specular_color");
+						rapidxml::xml_attribute<> * roughness      = materialNode->first_attribute("roughness");
+						rapidxml::xml_attribute<> * specular       = materialNode->first_attribute("specular");
+						rapidxml::xml_attribute<> * metallic       = materialNode->first_attribute("metallic");
 
 						MaterialPointer material(new Material(nullptr, "", nullptr));
 
-						material->SetDiffuseColor(ParseVector4<mye::math::Real>(diffuse_color->value()));
-						material->SetRoughness(ParseType<mye::math::Real>(roughness->value()));
-						material->SetSpecular(ParseType<mye::math::Real>(specular->value()));
-						material->SetMetallic(ParseType<mye::math::Real>(metallic->value()));
+						if (diffuse_color)
+						{
+							material->SetDiffuseColor(ParseVector4<mye::math::Real>(diffuse_color->value()));
+						}
+
+						if (specular_color)
+						{
+							material->SetSpecularColor(ParseVector4<mye::math::Real>(specular_color->value()));
+						}
+
+						if (roughness)
+						{
+							material->SetRoughness(ParseType<mye::math::Real>(roughness->value()));
+						}
+
+						if (specular)
+						{
+							material->SetSpecular(ParseType<mye::math::Real>(specular->value()));
+						}
+
+						if (metallic)
+						{
+							material->SetMetallic(ParseType<mye::math::Real>(metallic->value()));
+						}
 
 						gameObject->GetRenderComponent()->SetMaterial(material);
 
