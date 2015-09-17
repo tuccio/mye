@@ -28,6 +28,8 @@ namespace mye
 			SHADOWMAPNORMALOFFSETBIAS,
 			VSMMINVARIANCE,
 			VSMMINBLEEDING,
+			VSMENABLED,
+			VSMEXPONENTIAL,
 			PCFENABLED,
 			PCFKERNEL,
 			CSMSPLITS,
@@ -71,6 +73,8 @@ namespace mye
 			mye::math::Real     m_shadowMapSlopeScaledBias;
 			mye::math::Real     m_shadowMapNormalOffsetBias;
 
+			bool                m_vsmEnabled;
+			bool                m_vsmExponential;
 			mye::math::Real     m_vsmMinVariance;
 			mye::math::Real     m_vsmMinBleeding;
 
@@ -99,8 +103,10 @@ namespace mye
 				m_shadowMapBias(.0f),
 				m_shadowMapSlopeScaledBias(.0f),
 				m_shadowMapNormalOffsetBias(.0f),
-				m_vsmMinVariance(mye::math::Epsilon()),
-				m_vsmMinBleeding(.2f),
+				m_vsmEnabled(false),
+				m_vsmExponential(false),
+				m_vsmMinVariance(.00001f),
+				m_vsmMinBleeding(.5f),
 				m_pcfEnabled(false),
 				m_csmDebug(false),
 				m_csmSplits(3),
@@ -124,6 +130,8 @@ namespace mye
 			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::SHADOWMAPSLOPESCALEDBIAS,  ShadowMapSlopeScaledBias,  m_shadowMapSlopeScaledBias)
 			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::SHADOWMAPNORMALOFFSETBIAS, ShadowMapNormalOffsetBias, m_shadowMapNormalOffsetBias)
 
+			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::VSMENABLED,                VSMEnabled,                m_vsmEnabled)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::VSMEXPONENTIAL,            VSMExponential,            m_vsmExponential)
 			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::VSMMINVARIANCE,            VSMMinVariance,            m_vsmMinVariance)
 			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::VSMMINBLEEDING,            VSMMinBleeding,            m_vsmMinBleeding)
 																						      				             

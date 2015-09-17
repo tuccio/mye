@@ -1,10 +1,6 @@
 {
     "vertex": {
-		"name": "SSAO_BILATERAL_BLUR_VS",
-        "source": "../d3d11/shaders/bilateral_blur_vs.hlsl",
-        "input": [
-            { "position": "float4" }
-        ]
+        "source": "../d3d11/shaders/quad_vs.hlsl"
     },
     "pixel": {
 		"name": "SSAO_BILATERAL_BLUR_V_PS",

@@ -7,13 +7,9 @@
 #include "spherical_harmonics.hlsli"
 #include "common_samplers.hlsli"
 #include "renderer_configuration.hlsli"
+#include "quad_input.hlsli"
 
 /* Constant Buffers */
-
-struct PSInput
-{
-	float4 positionCS : SV_position;
-};
 
 Texture2D<float>  g_occlusion        : register(__MYE_DX11_TEXTURE_SLOT_OCCLUSION);
 
@@ -26,7 +22,7 @@ SamplerState      g_lpvSampler : register(__MYE_DX11_SAMPLER_SLOT_LPV);
 
 /* Main */
 
-float4 main(PSInput input) : SV_Target0
+float4 main(QuadInput input) : SV_Target0
 {
 
 	GBufferData data = GBufferRead(input.positionCS.xy);
@@ -53,7 +49,7 @@ float4 main(PSInput input) : SV_Target0
 	// cell size, and thus calculate the irradiance like I/r^2
 
 	float  falloff          = 4.f / (g_lpv.cellSize * g_lpv.cellSize);
-	float3 irradiance       = ambientOcclusion * saturate(r.lpvAttenuation * SHDot(sh, shNormal) * falloff);
+	float3 irradiance       = ambientOcclusion * r.lpvAttenuation * max(0, SHDot(sh, shNormal)) * falloff * MYE_INV_PI;
 	//float3 irradiance       = ambientOcclusion * saturate(r.lpvAttenuation * SHReconstruct(sh, shNormal) * falloff);
 
 	return float4(irradiance, 0.f);

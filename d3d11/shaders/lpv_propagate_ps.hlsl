@@ -7,7 +7,7 @@ struct PSInput
 {
 	float4 positionCS : SV_Position;
 	uint   depth      : SV_RenderTargetArrayIndex;
-	float3 cell       : CELL;
+	//float3 cell       : CELL;
 };
 
 struct PSOutput
@@ -111,24 +111,23 @@ SHRGB GatherContribution(in LPV lpv, in float3 cell)
 	{
 
 		// For each main direction, read the intensity SH cofficients coming from it
-		// by reading the corresponding LPV cell, then reconstruct and reproject it.
+		// by reading the corresponding neighbor LPV cell, then reconstruct the intensity
+		// and reproject it.
 
 		float3 mainDirection   = mul(neighbors[i], float3(0, 0, 1));
 		float4 mainDirectionSH = SHCosineLobe(mainDirection);
 
-		float3 neighbor        = cell + mainDirection;
-		SHRGB  neighborSH      = LPVLoadOffset(lpv, cell, mainDirection);
+		SHRGB  neighborSH      = LPVLoadOffset(lpv, cell, - mainDirection);
 
-		float4 mainOcclusionSH = LPVOcclusion(lpv, cell, mainDirection);
-		float  mainVisibility  = LPVVisibility(mainOcclusionSH, - mainDirection);
+		float4 mainOcclusionSH = LPVOcclusion(lpv, cell, - mainDirection);
+		float  mainVisibility  = LPVVisibility(mainOcclusionSH, mainDirection);
 
-		SHRGB  mainIntensitySH = SHScale(mainDirectionSH, mainVisibility * SHReconstruct(neighborSH, mainDirection) * MYE_LPV_FRONT_SOLID_ANGLE * MYE_INV_PI);
+		SHRGB  mainIntensitySH = SHScale(mainDirectionSH, mainVisibility * saturate(SHReconstruct(neighborSH, mainDirection)) * MYE_LPV_FRONT_SOLID_ANGLE * MYE_INV_PI);
 
 		sh = SHAdd(sh, mainIntensitySH);
 
 		// Now we consider the light going through the remaining 4 faces the neighbor
-		// flux can traverse. We reproject using directions orthogonal to the
-		// cube faces as in Crytek paper.
+		// flux can traverse and reproject in directions orthogonal to the cube faces.
 
 		[unroll]
 		for (int j = 0; j < 4; j++)
@@ -139,10 +138,10 @@ SHRGB GatherContribution(in LPV lpv, in float3 cell)
 
 			float4 reprojDirectionSH = SHCosineLobe(reprojDirection);
 
-			float  sideOcclusionSH   = LPVOcclusion(lpv, cell, sideFluxDirection);
-			float4 sideVisibility    = LPVVisibility(sideOcclusionSH, - sideFluxDirection);
+			float  sideOcclusionSH   = LPVOcclusion(lpv, cell, - sideFluxDirection);
+			float4 sideVisibility    = LPVVisibility(sideOcclusionSH, sideFluxDirection);
 
-			SHRGB  sideIntensitySH   = SHScale(reprojDirectionSH, sideVisibility * SHReconstruct(neighborSH, sideFluxDirection) * MYE_LPV_SIDE_SOLID_ANGLE * MYE_INV_PI);
+			SHRGB  sideIntensitySH   = SHScale(reprojDirectionSH, sideVisibility * saturate(SHReconstruct(neighborSH, sideFluxDirection)) * MYE_LPV_SIDE_SOLID_ANGLE * MYE_INV_PI);
 
 			sh = SHAdd(sh, sideIntensitySH);
 
@@ -158,10 +157,18 @@ SHRGB GatherContribution(in LPV lpv, in float3 cell)
 PSOutput main(PSInput input)
 {
 
+
+	float3 cell = { input.positionCS.xy, input.depth + .5f };
+
 	LPV lpv = { g_lightVolumeRed, g_lightVolumeGreen, g_lightVolumeBlue, g_geometryVolume, g_lpvSampler };
 
-	SHRGB sh             = LPVLoadOffset(lpv, input.cell, int3(0, 0, 0));
-	SHRGB shContribution = GatherContribution(lpv, input.cell);
+	SHRGB sh = (SHRGB) 0;
+	
+#ifndef MYE_PROPAGATE_SKIP_SELF
+	sh = SHAdd(sh, LPVLoadOffset(lpv, cell, int3(0, 0, 0)));
+#endif
+
+	SHRGB shContribution = GatherContribution(lpv, cell);
 
 	sh = SHAdd(sh, shContribution);
 

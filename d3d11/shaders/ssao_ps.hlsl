@@ -6,6 +6,7 @@
 #include "register_slots.hlsli"
 #include "common_samplers.hlsli"
 #include "camera_transform.hlsli"
+#include "quad_input.hlsli"
 
 #define __MYE_RANDOM_TEXTURE_SIZE 8
 
@@ -19,17 +20,11 @@
 
 /* Constant Buffers */
 
-struct PSInput
-{
-	float4 positionCS : SV_position;
-	float2 texcoord   : TEXCOORD;
-};
-
 Texture2D<float2> g_randomCosSin : register(__MYE_DX11_TEXTURE_SLOT_RANDOM);
 
 /* Main */
 
-float main(PSInput input) : SV_Target0
+float main(QuadInput input) : SV_Target0
 {
 
 	float2 rotationCosSin = g_randomCosSin.Sample(g_pointSampler, input.positionCS.xy / __MYE_RANDOM_TEXTURE_SIZE);

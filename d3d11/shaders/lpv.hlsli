@@ -78,13 +78,13 @@ SHRGB LPVLoadOffset(in LPV lpv, in float3 cell, in int3 offset)
 
 float4 LPVOcclusion(in LPV lpv, in float3 cell, in float3 sourceDirection)
 {
-	float3 coords       = cell - .5f + sourceDirection * .5f;
+	float3 coords       = cell - 1.f + sourceDirection * .5f;
 	float3 sampleCoords = LPVSampleCoords(coords);
 	return lpv.geometry.Sample(lpv.lpvSampler, sampleCoords);
 	//return lpv.geometry.Load(int4(coords, 0));
 }
 
-float LPVVisibility(in float4 shOcclusion, in float fluxDirection)
+float LPVVisibility(in float4 shOcclusion, in float3 fluxDirection)
 {
 	return 1.f - saturate(SHReconstruct(shOcclusion, fluxDirection));
 }

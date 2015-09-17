@@ -36,6 +36,7 @@ void main(triangle GSInput input[3],
 
 	element.target = input[0].slice;
 
+	[unroll]
 	for (int i = 0; i < 3; i++)
 	{
 

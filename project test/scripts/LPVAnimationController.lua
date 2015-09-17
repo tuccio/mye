@@ -11,8 +11,6 @@ function LPVAnimationController:Update()
 	local t  = 2 * elapsed * self.speed
 	local it = math.floor(t)
 	
-	print(it)
-	
 	if it < self.maxIterations then
 		
 		self.elapsed    = elapsed
@@ -24,6 +22,10 @@ function LPVAnimationController:Update()
 		
 	end
 
+end
+
+function LPVAnimationController:Restart()
+	self.elapsed = 0
 end
 
 return LPVAnimationController

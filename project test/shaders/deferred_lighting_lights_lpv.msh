@@ -1,9 +1,6 @@
 {
     "vertex": {
-        "source": "../d3d11/shaders/deferred_lighting_lights_vs.hlsl",
-        "input": [
-            { "position": "float4" }
-        ]
+        "source": "../d3d11/shaders/quad_vs.hlsl"
     },
     "pixel": {
         "source": "../d3d11/shaders/deferred_lighting_lpv_ps.hlsl"

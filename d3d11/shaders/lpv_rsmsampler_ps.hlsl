@@ -64,11 +64,11 @@ PSOutput main(PSInput input)
 
 	int samples = 0;
 
-	//[unroll]
+	[unroll]
 	for (int i = 0; i < 2; i++)
 	{
 
-		//[unroll]
+		[unroll]
 		for (int j = 0; j < 2; j++)
 		{
 
@@ -78,7 +78,7 @@ PSOutput main(PSInput input)
 			float3   cellPosition = LPVGetGridCell(texel.position);
 			float3   cellDistance = cellPosition - maxLuminanceCell;
 
-			//if (dot(cellDistance, cellDistance) < 3)
+			if (dot(cellDistance, cellDistance) < 3)
 			{
 				output.position += float4(texel.position, 1);
 				output.normal   += float4(texel.normal, 1);

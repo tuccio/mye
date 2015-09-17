@@ -10,6 +10,7 @@
 #include "vsm_moments.hlsli"
 #include "gbuffer_read.hlsli"
 #include "camera_transform.hlsli"
+#include "esm.hlsli"
 
 #if !defined(MYE_SHADOW_MAP_VSM) && defined(MYE_SHADOW_MAP_PCF)
 #define __MYE_PCF_SHADOW_MAPPING
@@ -19,11 +20,7 @@
 
 #include "pssm.hlsli"
 
-	#ifdef MYE_SHADOW_MAP_VSM
-		#define __MYE_SHADOW_MAP_TYPE Texture2DArray<float2>
-	#else
-		#define __MYE_SHADOW_MAP_TYPE Texture2DArray<float>
-	#endif
+	#define __MYE_SHADOW_MAP_TEXTURE_TYPE Texture2DArray
 
 cbuffer cbPSSM : register(__MYE_DX11_BUFFER_SLOT_PSSMBUFFER)
 {
@@ -39,20 +36,24 @@ cbuffer cbPSSM : register(__MYE_DX11_BUFFER_SLOT_PSSMBUFFER)
 
 #else
 
-	#ifdef MYE_SHADOW_MAP_VSM
-		#define __MYE_SHADOW_MAP_TYPE Texture2D<float2>
-	#else
-		#define __MYE_SHADOW_MAP_TYPE Texture2D<float>
-	#endif
+	#define __MYE_SHADOW_MAP_TEXTURE_TYPE Texture2D
 
+#endif
+
+#ifdef MYE_SHADOW_MAP_VSM
+	#ifdef MYE_SHADOW_MAP_EVSM
+		#define __MYE_SHADOW_MAP_DATA_TYPE float4
+	#else
+		#define __MYE_SHADOW_MAP_DATA_TYPE float2
+	#endif
+#else
+	#define __MYE_SHADOW_MAP_DATA_TYPE float
 #endif
 
 cbuffer cbLightSpace : register(__MYE_DX11_BUFFER_SLOT_LIGHTSPACETRANSFORM)
 {
 	float4x4 g_lightSpaceTransform;
 }
-
-
 
 //#define __MYE_POISSON_DISK_TAPS         10
 //#define __MYE_POISSON_DISK_INVERSE_TAPS .1f
@@ -132,7 +133,8 @@ cbuffer cbLight : register(__MYE_DX11_BUFFER_SLOT_LIGHT)
 
 #define __MYE_RANDOM_TEXTURE_SIZE 8
 
-__MYE_SHADOW_MAP_TYPE  g_shadowMap           : register(__MYE_DX11_TEXTURE_SLOT_SHADOWMAP);
+__MYE_SHADOW_MAP_TEXTURE_TYPE < __MYE_SHADOW_MAP_DATA_TYPE >  g_shadowMap : register(__MYE_DX11_TEXTURE_SLOT_SHADOWMAP);
+
 SamplerState           g_shadowMapSampler    : register(__MYE_DX11_SAMPLER_SLOT_SHADOWMAP);
 SamplerComparisonState g_shadowMapSamplerCmp : register(__MYE_DX11_SAMPLER_SLOT_SHADOWMAP_CMP);
 SamplerState           g_randomSampler       : register(__MYE_DX11_SAMPLER_SLOT_RANDOM);
@@ -215,8 +217,8 @@ float4 ShadowMapCompareDepthPCF(in GBufferData input, in float4 lightSpacePositi
 		float2 lightSpaceOffset = poissonOffset * texelScale;
 		float  slopeScaledBias  = dot(lightSpaceOffset, depthGradient) * r.shadowMapSlopeScaledBias;
 
-		shadowFactor += g_shadowMap.SampleCmpLevelZero(g_shadowMapSamplerCmp, projectTexCoord + float3(lightSpaceOffset, 0), lightDepthValue + slopeScaledBias);
-		//shadowFactor += g_shadowMap.SampleCmpLevelZero(g_shadowMapSamplerCmp, projectTexCoord, lightDepthValue);
+		//shadowFactor += g_shadowMap.SampleCmpLevelZero(g_shadowMapSamplerCmp, projectTexCoord + float3(lightSpaceOffset, 0), lightDepthValue + slopeScaledBias);
+		shadowFactor += g_shadowMap.SampleCmpLevelZero(g_shadowMapSamplerCmp, projectTexCoord, lightDepthValue);
 
 	}
 
@@ -244,23 +246,54 @@ float4 ShadowMapCompareDepth(in float3 projectTexCoord, in float lightDepthValue
 
 #else
 
+
+#ifndef MYE_SHADOW_MAP_EVSM
+
 /* VSM depth comparison */
 
 float4 ShadowMapCompareDepth(in float3 projectTexCoord, in float lightDepthValue)
 {
 
 #ifdef MYE_SHADOW_MAP_CSM
-	float2 moments = g_shadowMap.SampleLevel(g_anisotropicSampler, projectTexCoord, 0).xy;
+	float2 moments = g_shadowMap.SampleLevel(g_anisotropicSampler, projectTexCoord, 0);
 #else
-	float2 moments = g_shadowMap.SampleLevel(g_anisotropicSampler, projectTexCoord.xy, 0).xy;
+	float2 moments = g_shadowMap.SampleLevel(g_anisotropicSampler, projectTexCoord.xy, 0);
 #endif
 
-	float pmax = VSMChebyshevUpperBound(moments, lightDepthValue, r.vsmMinVariance);
-	float p    = smoothstep(r.vsmMinBleeding, 1.f, pmax);
+	float p = VSMChebyshevUpperBound(moments, lightDepthValue, r.vsmMinVariance, r.vsmMinBleeding);
 
 	return float4(p, p, p, 1);
 
 }
+
+#else
+
+/* EVSM depth comparison */
+
+float4 ShadowMapCompareDepth(in float3 projectTexCoord, in float lightDepthValue)
+{
+
+#ifdef MYE_SHADOW_MAP_CSM
+	float4 moments = g_shadowMap.SampleLevel(g_anisotropicSampler, projectTexCoord, 0);
+#else
+	float4 moments = g_shadowMap.SampleLevel(g_anisotropicSampler, projectTexCoord.xy, 0);
+#endif
+
+	float2 wDepth = ESMWarp(lightDepthValue);
+
+	float2 depthScale  = r.vsmMinVariance * ESMExponents() * wDepth;
+	float2 minVariance = depthScale * depthScale;
+		   
+	float  pPos = VSMChebyshevUpperBound(moments.xz, wDepth.x, minVariance.x, r.vsmMinBleeding);
+	float  pNeg = VSMChebyshevUpperBound(moments.yw, wDepth.y, minVariance.y, r.vsmMinBleeding);
+		   
+	float  p = min(pPos, pNeg);
+
+	return float4(p, p, p, 1);
+
+}
+
+#endif
 
 #endif
 

@@ -154,6 +154,8 @@ namespace mye
 					Property("shadowMapBias",             &RendererConfiguration::GetShadowMapBias,             &RendererConfiguration::SetShadowMapBias).
 					Property("shadowMapSlopeScaledBias",  &RendererConfiguration::GetShadowMapSlopeScaledBias,  &RendererConfiguration::SetShadowMapSlopeScaledBias).
 					Property("shadowMapNormalOffsetBias", &RendererConfiguration::GetShadowMapNormalOffsetBias, &RendererConfiguration::SetShadowMapNormalOffsetBias).
+					Property("vsmEnabled",                &RendererConfiguration::GetVSMEnabled,                &RendererConfiguration::SetVSMEnabled).
+					Property("vsmExponential",            &RendererConfiguration::GetVSMExponential,            &RendererConfiguration::SetVSMExponential).
 					Property("vsmMinVariance",            &RendererConfiguration::GetVSMMinVariance,            &RendererConfiguration::SetVSMMinVariance).
 					Property("vsmMinBleeding",            &RendererConfiguration::GetVSMMinBleeding,            &RendererConfiguration::SetVSMMinBleeding).
 					Property("csmSplits",                 &RendererConfiguration::GetCSMSplits,                 &RendererConfiguration::SetCSMSplits).

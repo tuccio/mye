@@ -33,14 +33,16 @@ VSOutput main(VSInput input)
 	// should not contribute to the cell flux, but rather be injected
 	// to the cell it is pointing to
 
-	float3 cell = (texel.position - g_lpv.minCorner) / g_lpv.cellSize + g_lpv.fluxInjectionBias * texel.normal + .5f;
+	float3 cell = (texel.position - g_lpv.minCorner) / g_lpv.cellSize + g_lpv.fluxInjectionBias * texel.normal;
 	VSOutput output;
 
 	output.normal = texel.normal;
-	output.flux   = texel.flux /** (1024 / g_lpv.rsmSamples)*/;
+	output.flux   = texel.flux;
 	output.cell   = int3(cell);
 
-	float3 cellCS     = 2.f * cell / g_lpv.lpvResolution - 1.f;
+	float3 cellCS = (output.cell + .5f) / g_lpv.lpvResolution;
+	cellCS.xy     = 2.f * cellCS.xy - 1.f;
+
 	output.positionCS = float4(cellCS.x, - cellCS.y, cellCS.z, 1.f);
 
 	return output;

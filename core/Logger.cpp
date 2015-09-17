@@ -71,7 +71,7 @@ const char * Logger::GetTimestamp(void)
 {
 
 	time_t t = time(nullptr);
-	tm *timeinfo = localtime(&t);
+	tm * timeinfo = localtime(&t);
 
 	static char output[20];
 	strftime(output, 20, "[%d/%m/%y %H:%M:%S]", timeinfo);
@@ -93,7 +93,7 @@ String Logger::GetLastError(void)
 bool Logger::LogEventOptional(const String & tag, const String & message)
 {
 
-	Logger *logger = GetSingletonPointer();
+	Logger * logger = GetSingletonPointer();
 
 	if (logger)
 	{

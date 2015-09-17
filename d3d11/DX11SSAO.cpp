@@ -97,16 +97,10 @@ void DX11SSAO::Render(void)
 	DX11Device::GetSingleton().SetDepthTest(DX11DepthTest::OFF);
 	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(1, &ssaoBuffer, nullptr);
 
-	DX11VertexBufferPointer quad = ResourceTypeManager::GetSingleton().GetResource<DX11VertexBuffer>("GPUBuffer", "MYE_QUAD");
-
 	m_ssao->Use();
 
-	quad->Load();
-
-	quad->Bind();
-
-	DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	DX11Device::GetSingleton().GetImmediateContext()->Draw(quad->GetVerticesCount(), 0);
+	DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	DX11Device::GetSingleton().GetImmediateContext()->Draw(4, 0);
 
 	// Horizontal blur pass
 
@@ -115,7 +109,7 @@ void DX11SSAO::Render(void)
 	m_ssaoBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_OCCLUSION);
 
 	m_ssaoBlur[0]->Use();
-	DX11Device::GetSingleton().GetImmediateContext()->Draw(quad->GetVerticesCount(), 0);
+	DX11Device::GetSingleton().GetImmediateContext()->Draw(4, 0);
 
 	// Vertical blur pass
 
@@ -126,11 +120,9 @@ void DX11SSAO::Render(void)
 	m_blurBuffer.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_OCCLUSION);
 
 	m_ssaoBlur[1]->Use();
-	DX11Device::GetSingleton().GetImmediateContext()->Draw(quad->GetVerticesCount(), 0);
+	DX11Device::GetSingleton().GetImmediateContext()->Draw(4, 0);
 
 	m_blurBuffer.Unbind();
-
-	quad->Unbind();
 
 	DX11Module::GetSingleton().RenderShaderResource(m_ssaoBuffer, Vector2i(0), Vector2i(640, 360));
 

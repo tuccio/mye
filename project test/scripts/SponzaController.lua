@@ -4,18 +4,25 @@ function SponzaController:Init()
 	
 	Graphics.window.caption = 'Sponza test'
 	
-	r.shadowMapResolution       = 1024
+	r.shadowMapResolution       = 2048
+	
+	r.vsmEnabled                = true
+	r.vsmExponential            = true
+	r.vsmMinBleeding            = 0.55
+	r.vsmMinVariance            = 0.0001
+	
+	r.pcfEnabled                = false
 	r.shadowMapBias             = 0
 	r.shadowMapNormalOffsetBias = 0
 	r.csmSplits                 = 1
-		
+	
 	r.lpvEnabled    = false
-	r.lpvIterations = 16
-	r.lpvResolution = 16
-	r.lpvAABB       = AABB.FromMinMax(vec3(-30), vec3(20))
+	r.lpvIterations = 32
+	r.lpvResolution = 32
+	r.lpvAABB       = AABB.FromMinMax(vec3(-40), vec3(40))
 		
 	r.lpvFluxInjectionBias     = 0.5
-	r.lpvGeometryInjectionBias = 0
+	r.lpvGeometryInjectionBias = 8
 	
 	local hCam = GameObjects:CreateEntity('Camera', 'camera')
 	
@@ -104,13 +111,15 @@ function SponzaController:OnKeyboardKeyPress(key)
 		
 		print('Iterations: ' .. newIt)
 		
-	elseif key == KeyboardVK.J then
+	elseif key == KeyboardVK.H then
 	
 		local hLPVAnim = GameObjects:Find('lpvAnim')
 		
 		if not hLPVAnim:Exists() then
 			hLPVAnim = GameObjects:CreateEntity('LPVAnimationController', 'lpvAnim')
 			hLPVAnim.maxIterations = 32
+		else
+			hLPVAnim:Restart()
 		end
 		
 	end

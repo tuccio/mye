@@ -20,7 +20,9 @@ struct PSOutput
 PSOutput main(PSInput input)
 {
 
-	if (length(input.normal) < 0.01)
+	float len = length(input.normal);
+
+	if (len < 0.1)
 	{
 		discard;
 	}
@@ -28,13 +30,13 @@ PSOutput main(PSInput input)
 	float3 N  = normalize(input.normal);
 	float4 sh = SHCosineLobe(N);
 	
-	float3 intensity = input.flux;
+	float3 intensity = len * .25f * MYE_INV_PI * input.flux;
 
 	PSOutput output;
 
-	output.red      = SHScale(sh, intensity.r);
-	output.green    = SHScale(sh, intensity.g);
-	output.blue     = SHScale(sh, intensity.b);
+	output.red   = SHScale(sh, intensity.r);
+	output.green = SHScale(sh, intensity.g);
+	output.blue  = SHScale(sh, intensity.b);
 
 	return output;
 

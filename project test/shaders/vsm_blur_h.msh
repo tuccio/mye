@@ -1,18 +1,20 @@
 {
     "vertex": {
-		"name": "VSM_BLUR_VS",
-        "source": "../d3d11/shaders/gaussian_blur_vs.hlsl",
-        "input": [
-            { "position": "float4" }
-        ]
+        "source": "../d3d11/shaders/quad_vs.hlsl"
     },
     "pixel": {
 		"name": "VSM_BLUR_H_PS",
         "source": "../d3d11/shaders/gaussian_blur_ps.hlsl",
+		
 		"defines": {
+			
 			"MYE_GAUSSIAN_BLUR_TYPE": "float2",
 			"MYE_GAUSSIAN_BLUR_TEXTURE_SLOT" : "t32",
+			"MYE_GAUSSIAN_BLUR_KERNEL_SIZE": "13",
+			"MYE_GAUSSIAN_BLUR_SIGMA": "2",
+			
 			"MYE_SEPARABLE_CONVOLUTION_HORIZONTAL": ""
+			
 		}
     }
 }

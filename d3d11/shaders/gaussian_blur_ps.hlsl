@@ -1,15 +1,18 @@
 #include "register_slots.hlsli"
 #include "common_samplers.hlsli"
+#include "gauss.hlsli"
+#include "quad_input.hlsli"
 
-struct PSInput
-{
-	float4 positionCS : SV_position;
-	float2 texcoord   : TEXCOORD;
-};
+#ifndef MYE_GAUSSIAN_BLUR_SIGMA
+#define MYE_GAUSSIAN_BLUR_SIGMA 1
+#endif
 
-#define __MYE_GAUSSIAN_BLUR_KERNEL_SIZE  13
-#define __MYE_GAUSSIAN_BLUR_KERNEL_START -6
-#define __MYE_GAUSSIAN_BLUR_KERNEL_END   6
+#ifndef MYE_GAUSSIAN_BLUR_KERNEL_SIZE
+#define MYE_GAUSSIAN_BLUR_KERNEL_SIZE 7
+#endif
+
+#define __MYE_GAUSSIAN_BLUR_KERNEL_END   (MYE_GAUSSIAN_BLUR_KERNEL_SIZE >> 1)
+#define __MYE_GAUSSIAN_BLUR_KERNEL_START (- __MYE_GAUSSIAN_BLUR_KERNEL_END)
 
 #define __MYE_GAUSSIAN_BLUR_TEXTURE_TYPE Texture2D
 
@@ -17,13 +20,8 @@ __MYE_GAUSSIAN_BLUR_TEXTURE_TYPE < MYE_GAUSSIAN_BLUR_TYPE > g_texture : register
 
 SamplerState g_blurSampler : register(__MYE_DX11_SAMPLER_SLOT_BLUR);
 
-MYE_GAUSSIAN_BLUR_TYPE main(PSInput input) : SV_Target0
+MYE_GAUSSIAN_BLUR_TYPE main(QuadInput input) : SV_Target0
 {
-
-	static const float G[__MYE_GAUSSIAN_BLUR_KERNEL_SIZE] = {
-		0.00311688, 0.01168831, 0.03272727, 0.07090909, 0.12155844,
-		0.16714286, 0.18571429, 0.16714286, 0.12155844, 0.07090909,
-		0.03272727, 0.01168831, 0.00311688 };
 
 	MYE_GAUSSIAN_BLUR_TYPE output = (MYE_GAUSSIAN_BLUR_TYPE) 0;
 
@@ -38,8 +36,9 @@ MYE_GAUSSIAN_BLUR_TYPE main(PSInput input) : SV_Target0
 	[unroll]
 	for (int i = __MYE_GAUSSIAN_BLUR_KERNEL_START; i <= __MYE_GAUSSIAN_BLUR_KERNEL_END; i++)
 	{
-
-		output += G[i - __MYE_GAUSSIAN_BLUR_KERNEL_START] * g_texture.SampleLevel(g_blurSampler, input.texcoord + i * offset, 0);
+	
+		float gaussian = GaussianWeight(MYE_GAUSSIAN_BLUR_SIGMA, i);
+		output += gaussian * g_texture.SampleLevel(g_blurSampler, input.texcoord + i * offset, 0);
 
 	}
 

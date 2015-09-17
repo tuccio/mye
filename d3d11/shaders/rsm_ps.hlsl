@@ -14,7 +14,6 @@
 #endif
 
 #define MYE_CONE90_SOLID_ANGLE        2.09439510f
-#define MYE_CONE90_SOLID_ANGLE_INV_PI .666666667f
 
 /* Constant buffers */
 
@@ -52,12 +51,36 @@ struct PSOutput
 	float4 position : SV_Target0;
 	float4 normal   : SV_Target1;
 	float4 flux     : SV_Target2;
-
-#ifdef MYE_SHADOW_MAP_VSM
-	float2 moments  : SV_Target3;
-#endif
+	float4 depth    : SV_Target3;
 
 };
+
+// Evaluates the pixel surface area using a linear approximation
+// obtained calculating the Jacobian matrix for the position
+// in screen space
+
+float EstimatePixelSize(in float3 position)
+{
+
+	float3 pdx = ddx(position);
+	float3 pdy = ddy(position);
+
+	float3x2 J = {
+		pdx.x, pdy.x,
+		pdx.y, pdy.y,
+		pdx.z, pdy.z
+	};
+
+	float3 deltaMin = mul(J, float2(-.5f, -.5f));
+	float3 deltaMax = mul(J, float2(.5f, .5f));
+
+	// Get the rectangle area
+
+	float3 delta = deltaMax - deltaMin;
+
+	return length(cross(float3(delta.xy, 0), float3(0, delta.yz)));
+
+}
 
 /* Main */
 
@@ -80,25 +103,18 @@ PSOutput main(PSInput input)
 #endif
 
 	// TODO: fixme
-	float  area  = 0.001f;
+	float  area  = EstimatePixelSize(input.positionWS);
 
 	float4 NdotL = saturate(dot(N, L));
 
-	float  omegaInvPi = MYE_CONE90_SOLID_ANGLE_INV_PI;
 	float3 irradiance = LightIrradiance(g_light, input.positionWS);
 
 	PSOutput output;
 
-	output.position = float4(input.positionWS, 1);
+	output.position = float4(input.positionWS, area);
 	output.normal   = float4(N, 1);
-	output.flux     = float4(irradiance * albedo * NdotL * omegaInvPi * area, 1);
-
-#ifdef MYE_SHADOW_MAP_VSM
-
-	float depth    = LightSpaceLinearDepth(g_light, input.positionCS, input.positionWS);
-	output.moments = VSMComputeMoments(depth);
-
-#endif
+	output.flux     = float4(saturate(irradiance * NdotL) * albedo * MYE_CONE90_SOLID_ANGLE * MYE_INV_PI, 1);
+	output.depth    = float4(LightSpaceLinearDepth(g_light, input.positionCS, input.positionWS), 0, 0, 1);
 
 	return output;
 

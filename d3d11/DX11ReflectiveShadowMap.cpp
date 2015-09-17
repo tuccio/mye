@@ -50,12 +50,12 @@ DX11ReflectiveShadowMap::DX11ReflectiveShadowMap(void) :
 	m_csmLogWeight(__MYE_RSM_DEFAULT_CSM_LOG_WEIGHT),
 	m_light(nullptr),
 	m_volumeConstraint(AABB::FromMinMax(0, 0)),
-	m_vsm(false)
+	m_antiFlickeringDelta(0.f)
 {
 	SetResolution(__MYE_RSM_DEFAULT_RESOLUTION);
 }
 
-bool DX11ReflectiveShadowMap::Create(bool vsm)
+bool DX11ReflectiveShadowMap::Create(void)
 {
 
 	m_rsmZPrepass = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
@@ -65,72 +65,33 @@ bool DX11ReflectiveShadowMap::Create(bool vsm)
 		{ { "type", "program" } }
 	);
 
-	m_vsm = vsm;
+	m_rsm[0] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
+		"DX11Shader",
+		"./shaders/rsm.msh",
+		nullptr,
+		{ { "type", "program" } }
+	);
 
-	if (vsm)
-	{
+	m_rsm[1] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
+		"DX11Shader",
+		"./shaders/rsm_difftex.msh",
+		nullptr,
+		{ { "type", "program" } }
+	);
 
-		m_rsm[0] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
-			"DX11Shader",
-			"./shaders/rsm_vsm.msh",
-			nullptr,
-			{ { "type", "program" } }
-		);
+	m_rsmPSSM[0] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
+		"DX11Shader",
+		"./shaders/rsm_pssm.msh",
+		nullptr,
+		{ { "type", "program" } }
+	);
 
-		m_rsm[1] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
-			"DX11Shader",
-			"./shaders/rsm_difftex_vsm.msh",
-			nullptr,
-			{ { "type", "program" } }
-		);
-
-		m_rsmPSSM[0] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
-			"DX11Shader",
-			"./shaders/rsm_pssm_vsm.msh",
-			nullptr,
-			{ { "type", "program" } }
-		);
-
-		m_rsmPSSM[1] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
-			"DX11Shader",
-			"./shaders/rsm_pssm_difftex_vsm.msh",
-			nullptr,
-			{ { "type", "program" } }
-		);
-
-	}
-	else
-	{
-
-		m_rsm[0] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
-			"DX11Shader",
-			"./shaders/rsm.msh",
-			nullptr,
-			{ { "type", "program" } }
-		);
-
-		m_rsm[1] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
-			"DX11Shader",
-			"./shaders/rsm_difftex.msh",
-			nullptr,
-			{ { "type", "program" } }
-		);
-
-		m_rsmPSSM[0] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
-			"DX11Shader",
-			"./shaders/rsm_pssm.msh",
-			nullptr,
-			{ { "type", "program" } }
-		);
-
-		m_rsmPSSM[1] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
-			"DX11Shader",
-			"./shaders/rsm_pssm_difftex.msh",
-			nullptr,
-			{ { "type", "program" } }
-		);
-
-	}
+	m_rsmPSSM[1] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>(
+		"DX11Shader",
+		"./shaders/rsm_pssm_difftex.msh",
+		nullptr,
+		{ { "type", "program" } }
+	);
 	
 	if (m_rsm[0]->Load() &&
 	    m_rsm[1]->Load() &&
@@ -244,11 +205,6 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 	m_normal.ClearRenderTarget(Vector4(0));
 	m_flux.ClearRenderTarget(Vector4(0));
 
-	if (m_vsm)
-	{
-		m_vsmMoments.ClearRenderTarget(Vector4(0));
-	}
-
 	m_depth.Clear();
 
 	/* Find the tight frustum around the scene */
@@ -300,12 +256,11 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 
 	m_cropMatrixCBuffer.SetSubData(&m_cropMatrix[0], 0, sizeof(Matrix4) * m_csmSplits);
 
-	ID3D11RenderTargetView * renderTargets[4] =
+	ID3D11RenderTargetView * renderTargets[3] =
 	{
 		m_position.GetRenderTargetView(),
 		m_normal.GetRenderTargetView(),
-		m_flux.GetRenderTargetView(),
-		m_vsmMoments.GetRenderTargetView()
+		m_flux.GetRenderTargetView()
 	};
 
 	MakeLightBuffer(m_lightCBuffer, light);
@@ -339,7 +294,6 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(0,
 	                                                                     nullptr,
 	                                                                     m_depth.GetDepthStencilView());
-
 
 	for (GameObject * object : casters)
 	{
@@ -380,7 +334,7 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 
 	DX11Device::GetSingleton().SetDepthTest(DX11DepthTest::LOOKUP);
 
-	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets((m_vsm ? 4 : 3),
+	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(3,
 	                                                                     renderTargets,
 	                                                                     m_depth.GetDepthStencilView());
 
@@ -509,6 +463,17 @@ Matrix4 DX11ReflectiveShadowMap::__CSMCropMatrix(const Matrix4 & shadowViewProjM
 	Real minZ = Min(hCastersAABB.GetMinimum().z(),   hFrustumAABB.GetMinimum().z()) - padding;
 	Real maxZ = Min(hReceiversAABB.GetMaximum().z(), hFrustumAABB.GetMaximum().z()) + padding;
 
+	if (m_antiFlickeringDelta > 0.f)
+	{
+
+		minXY = minXY - Mod(minXY, Vector2(m_antiFlickeringDelta));
+		maxXY = maxXY + m_antiFlickeringDelta - Mod(maxXY, Vector2(m_antiFlickeringDelta));
+
+		minZ  = minZ - Mod(minZ, m_antiFlickeringDelta);
+		maxZ  = maxZ + m_antiFlickeringDelta - Mod(maxZ, m_antiFlickeringDelta);
+
+	}
+
 	Vector2 S = 2.f / (maxXY - minXY);
 	Vector2 O = - .5f * S * (maxXY + minXY);
 
@@ -619,27 +584,17 @@ bool DX11ReflectiveShadowMap::__CreateRenderTargets(void)
 	m_normal.SetParametersList(arrayParams);
 	m_flux.SetParametersList(arrayParams);
 
-	m_vsmMoments.SetParametersList(arrayParams);
-
 	return (m_position.Create(m_resolution, m_resolution, DataFormat::HALF4) &&
 	        m_normal.Create(m_resolution,   m_resolution, DataFormat::HALF4) &&
-	        m_flux.Create(m_resolution,     m_resolution, DataFormat::HALF4) &&
-			(!m_vsm || m_vsmMoments.Create(m_resolution, m_resolution, DataFormat::FLOAT2)));
+	        m_flux.Create(m_resolution,     m_resolution, DataFormat::HALF4));
 
 }
 
 void DX11ReflectiveShadowMap::__DestroyRenderTargets(void)
 {
-
 	m_position.Destroy();
 	m_flux.Destroy();
 	m_normal.Destroy();
-
-	if (m_vsm)
-	{
-		m_vsmMoments.Destroy();
-	}
-
 }
 
 bool DX11ReflectiveShadowMap::__CreateDepthBuffers(void)

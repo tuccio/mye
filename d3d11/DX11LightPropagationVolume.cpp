@@ -237,7 +237,8 @@ void DX11LightPropagationVolume::Propagate(unsigned int iterations)
 
 	m_lpvPropagateFirst->Use();
 
-	unsigned int verticesCount = m_volumeResolution * m_volumeResolution * m_volumeResolution;
+	//unsigned int verticesCount = m_volumeResolution * m_volumeResolution * m_volumeResolution;
+	unsigned int verticesCount = m_volumeResolution * m_volumeResolution;
 
 	m_geometryVolume.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_LPVGEOMETRY);
 	BindConfigurationBuffer(DX11PipelineStage::VERTEX_SHADER, 0);
@@ -281,8 +282,8 @@ void DX11LightPropagationVolume::Propagate(unsigned int iterations)
 		                                    __MYE_DX11_TEXTURE_SLOT_LPVLIGHT_GREEN,
 											__MYE_DX11_TEXTURE_SLOT_LPVLIGHT_BLUE);		
 
-		DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
-		DX11Device::GetSingleton().GetImmediateContext()->Draw(verticesCount, 0);
+		DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+		DX11Device::GetSingleton().GetImmediateContext()->DrawInstanced(4, m_volumeResolution, 0, 0);
 
 		m_lightVolume[m_currentVolume].Unbind();
 
@@ -328,6 +329,11 @@ size_t DX11LightPropagationVolume::GetRSMSamples(void) const
 void DX11LightPropagationVolume::SetRSMSamples(size_t samples)
 {
 	m_rsmSamples = samples;
+}
+
+float DX11LightPropagationVolume::GetCellSize(void) const
+{
+	return m_volumeCellSize;
 }
 
 bool DX11LightPropagationVolume::__CreateShaders(void)

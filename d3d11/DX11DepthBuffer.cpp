@@ -32,7 +32,7 @@ bool DX11DepthBuffer::Create(void)
 	depthStencilDesc.Height             = (m_depthBufferConfiguration.height ? m_depthBufferConfiguration.height : 1);
 	depthStencilDesc.MipLevels          = 1;
 	depthStencilDesc.ArraySize          = m_depthBufferConfiguration.arraySize;
-	depthStencilDesc.Format             = DXGI_FORMAT_R24G8_TYPELESS;
+	depthStencilDesc.Format             = DXGI_FORMAT_R32_TYPELESS;
 
 	depthStencilDesc.Usage              = D3D11_USAGE_DEFAULT;
 	depthStencilDesc.BindFlags          = D3D11_BIND_DEPTH_STENCIL;
@@ -50,11 +50,11 @@ bool DX11DepthBuffer::Create(void)
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
 
 	depthStencilViewDesc.Flags  = 0;
-	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthStencilViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
 
-	shaderResourceViewDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+	shaderResourceViewDesc.Format = DXGI_FORMAT_R32_FLOAT;
 	
 	
 	if (m_depthBufferConfiguration.arraySize > 1)

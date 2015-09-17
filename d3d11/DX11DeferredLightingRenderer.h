@@ -9,11 +9,10 @@
 #include "DX11RenderTarget.h"
 #include "DX11ReflectiveShadowMap.h"
 #include "DX11LightPropagationVolume.h"
+#include "DX11VarianceShadowMap.h"
 #include "DX11VertexBuffer.h"
 #include "DX11SSAO.h"
 
-#include "DX11PixelShader.h"
-#include "DX11VertexShader.h"
 #include "DX11ShaderProgram.h"
 
 #include <mye/core/EventManager.h>
@@ -52,8 +51,6 @@ namespace mye
 
 			bool                         m_initialized;
 
-			bool                         m_vsm;
-
 			DX11ShaderProgramPointer     m_deferredGeometry[4];
 
 			DX11ShaderProgramPointer     m_deferredLights;
@@ -61,15 +58,16 @@ namespace mye
 			DX11ShaderProgramPointer     m_deferredLightsLPV;
 			DX11ShaderProgramPointer     m_deferredFinal[4];
 
-			DX11ShaderProgramPointer     m_vsmBoxBlur[2];
-			DX11ShaderProgramPointer     m_vsmBoxBlurCSM[2];
+
+			DX11ShaderProgramPointer     m_tonemapping;
 								         
 			DX11Texture                  m_gbuffer0;
 			DX11Texture                  m_gbuffer1;
 			DX11Texture                  m_diffuseLight;
 			DX11Texture                  m_specularLight;
+			DX11Texture                  m_deferredOutput;
 
-			DX11Texture                  m_vsmDepth[2];
+			DX11Texture                  m_ppBuffer;
 								         
 			DX11ReflectiveShadowMap      m_rsm;
 			DX11LightPropagationVolume   m_lpv;
@@ -81,8 +79,6 @@ namespace mye
 			DX11ConstantBuffer           m_cameraTransformBuffer;
 			DX11ConstantBuffer           m_matrixBuffer;
 			DX11ConstantBuffer           m_pssmSliceBuffer;
-
-			DX11VertexBufferPointer      m_quadVertexBuffer;
 								         
 			DX11DepthBuffer              m_depthBuffer;
 			
@@ -101,6 +97,9 @@ namespace mye
 			DX11TexturePointer           m_randomCosSin;
 
 			DX11SSAO                     m_ssao;
+			DX11VarianceShadowMap        m_vsm;
+
+			bool                         m_vsmEnabled;
 								       
 			mye::math::Vector4f          m_clearColor;
 

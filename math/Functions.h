@@ -88,6 +88,18 @@ namespace mye
 		}
 
 		template <typename T>
+		__MYE_MATH_INLINE detail::SFINAEScalar<T> Mod(T x, T y)
+		{
+			return detail::MathFunctions<T>::Mod(x, y);
+		}
+
+		template <typename T>
+		__MYE_MATH_INLINE detail::SFINAEVector<T> Mod(const T & x, const T & y)
+		{
+			return detail::MathFunctions<T>::Mod(x, y);
+		}
+
+		template <typename T>
 		__MYE_MATH_INLINE detail::SFINAEScalar<T> Abs(T x)
 		{
 			return detail::MathFunctions<T>::Abs(x);

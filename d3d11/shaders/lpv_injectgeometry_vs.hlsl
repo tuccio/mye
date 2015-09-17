@@ -27,25 +27,27 @@ VSOutput main(VSInput input)
 
 	int3 texcoords = int3(i, j, 0);
 
-	float3 position = g_position.Load(texcoords).xyz;
+	float4 hPos     = g_position.Load(texcoords);
+	float3 position = hPos.xyz;
 	float3 normal   = g_normal.Load(texcoords).xyz;
-	float4 viewZ    = abs(mul(g_camera.view, float4(position, 1)).z);
 
 	// Geometry volume is shifted by half a cell as in crytek paper, so that
 	// the edges of LPV cell are placed in the center of the geometry volume,
 	// achieving better interpolation during the propagation
 
-	float3 cell = (position - g_lpv.minCorner) / g_lpv.cellSize + g_lpv.geometryInjectionBias * normal;
+	float3 cell = (position - g_lpv.minCorner) / g_lpv.cellSize /*- g_lpv.geometryInjectionBias * normal*/ - .5f;
 
 	VSOutput output;
 
 	output.normal = normal;
 	output.cell   = int3(cell);
 
-	float3 cellCS     = 2.f * cell / g_lpv.lpvResolution - 1.f;
+	float3 cellCS = (output.cell + .5f) / g_lpv.lpvResolution;
+	cellCS.xy     = 2.f * cellCS.xy - 1.f;
+
 	output.positionCS = float4(cellCS.x, - cellCS.y, cellCS.z, 1.f);
 
-	output.surfelArea = 4.f * viewZ * viewZ / (g_lpv.rsmSamples * g_lpv.rsmSamples);
+	output.surfelArea =  g_lpv.geometryInjectionBias * hPos.w;
 
 	return output;
 

@@ -6,13 +6,9 @@
 #include "gamma.hlsli"
 #include "gbuffer_read.hlsli"
 #include "camera_transform.hlsli"
+#include "quad_input.hlsli"
 
 /* Constant Buffers */
-
-struct PSInput
-{
-	float4 positionCS : SV_position;
-};
 
 struct PSOutput
 {
@@ -22,7 +18,7 @@ struct PSOutput
 
 /* Main */
 
-PSOutput main(PSInput input)
+PSOutput main(QuadInput input)
 {
 
 	GBufferData data = GBufferRead(input.positionCS.xy);

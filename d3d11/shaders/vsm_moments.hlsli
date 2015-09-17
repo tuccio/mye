@@ -3,6 +3,11 @@
 
 /* Source: http://http.developer.nvidia.com/GPUGems3/gpugems3_ch08.html */
 
+float linstep(in float min, in float max, in float alpha)
+{
+	return saturate((alpha - min) / (max - min));
+}
+
 float2 VSMComputeMoments(in float depth)
 {
 
@@ -19,7 +24,7 @@ float2 VSMComputeMoments(in float depth)
 
 }
 
-float VSMChebyshevUpperBound(in float2 moments, in float t, in float minVariance)
+float VSMChebyshevUpperBound(in float2 moments, in float t, in float minVariance, in float minBleeding)
 {
 
 	float p = (t <= moments.x);
@@ -31,7 +36,7 @@ float VSMChebyshevUpperBound(in float2 moments, in float t, in float minVariance
 
 	float pmax = variance / (variance + d * d);
 
-	return max(p, pmax);
+	return max(p, linstep(minBleeding, 1.f, pmax));
 
 }
 

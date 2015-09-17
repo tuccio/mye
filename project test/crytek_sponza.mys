@@ -7,8 +7,8 @@
 	<gameobject name="sun">
 		<light type="directional">
 			<direction>0.255551 -0.958315 -0.127775</direction>
-			<color>0.85 0.8 0.7</color>
-			<intensity>45</intensity>
+			<color>0.85 0.7 0.7</color>
+			<intensity>25</intensity>
 		</light>
 	</gameobject>
 	<gameobject name="sponza_366">

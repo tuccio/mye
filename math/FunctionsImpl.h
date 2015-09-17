@@ -80,6 +80,11 @@ namespace mye
 
 				}
 
+				__MYE_MATH_INLINE static T Mod(T x, T y)
+				{
+					return x - y * Floor(x / y);
+				}
+
 			};
 
 			template <typename T>
@@ -149,6 +154,12 @@ namespace mye
 #endif
 				}
 
+				template <typename Enable = void>
+				__MYE_MATH_INLINE static VectorType Mod(const VectorType & x, const VectorType & y, std::enable_if_t<std::is_floating_point<T>::value> * = nullptr)
+				{
+					return x - y * Floor(x / y);
+				}
+
 			};
 
 			template <typename T>
@@ -207,6 +218,12 @@ namespace mye
 #endif
 				}
 
+				template <typename Enable = void>
+				__MYE_MATH_INLINE static VectorType Mod(const VectorType & x, const VectorType & y, std::enable_if_t<std::is_floating_point<T>::value> * = nullptr)
+				{
+					return x - y * Floor(x / y);
+				}
+
 			};
 
 			template <typename T>
@@ -263,6 +280,12 @@ namespace mye
 #else
 					return VectorType(InverseSqrt(v.x()), InverseSqrt(v.y()), InverseSqrt(v.z()), InverseSqrt(v.w()));
 #endif
+				}
+
+				template <typename Enable = void>
+				__MYE_MATH_INLINE static VectorType Mod(const VectorType & x, const VectorType & y, std::enable_if_t<std::is_floating_point<T>::value> * = nullptr)
+				{
+					return x - y * Floor(x / y);
 				}
 
 			};

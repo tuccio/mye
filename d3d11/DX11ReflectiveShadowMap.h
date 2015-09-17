@@ -34,7 +34,7 @@ namespace mye
 
 			DX11ReflectiveShadowMap(void);
 
-			bool Create(bool vsm = false);
+			bool Create(void);
 			void Destroy(void);
 
 			void Render(mye::core::Light * light);
@@ -86,11 +86,6 @@ namespace mye
 				return m_depth;
 			}
 
-			inline DX11ShaderResource & GetVSMMoments(void)
-			{
-				return m_vsmMoments;
-			}
-
 			inline const mye::math::Matrix4 & GetLightSpaceTransformMatrix(void)
 			{
 				return m_lightSpaceTransform;
@@ -116,44 +111,47 @@ namespace mye
 				m_volumeConstraint = aabb;
 			}
 
+			void SetAntiFlickeringDelta(float delta)
+			{
+				m_antiFlickeringDelta = delta;
+			}
+
 		private:
 
-			bool                        m_initialized;
-
-			DX11Texture                 m_position;
-			DX11Texture                 m_normal;
-			DX11Texture                 m_flux;
-			DX11Texture                 m_vsmMoments;
-
-			DX11Texture                 m_positionArray;
-
-			DX11DepthBuffer             m_depth;
-
-			int                         m_resolution;
-			bool                        m_varianceShadowMapping;
-
-			int                         m_csmSplits;
-			mye::math::Real             m_csmLogWeight;
-
-			DX11ShaderProgramPointer    m_rsm[2];
-			DX11ShaderProgramPointer    m_rsmPSSM[2];
-			DX11ShaderProgramPointer    m_rsmZPrepass;
-
-			std::vector<PSSMSlice>      m_pssmSlices;
-
-			mye::math::Matrix4          m_lightSpaceTransform;
-			mye::math::Matrix4          m_cropMatrix[__MYE_RSM_MAX_CSM_COUNT];
-
-			mye::core::Light          * m_light;
-
-			DX11ConstantBuffer          m_transformCBuffer;
-			DX11ConstantBuffer          m_cropMatrixCBuffer;
-			DX11ConstantBuffer          m_materialCBuffer;
-			DX11ConstantBuffer          m_lightCBuffer;
-
-			mye::math::AABB             m_volumeConstraint;
-
-			bool                        m_vsm;
+			bool                       m_initialized;
+									 
+			DX11Texture                m_position;
+			DX11Texture                m_normal;
+			DX11Texture                m_flux;
+									 
+			DX11Texture                m_positionArray;
+									 
+			DX11DepthBuffer            m_depth;
+									 
+			int                        m_resolution;
+			bool                       m_varianceShadowMapping;
+									 
+			int                        m_csmSplits;
+			mye::math::Real            m_csmLogWeight;
+									 
+			DX11ShaderProgramPointer   m_rsm[2];
+			DX11ShaderProgramPointer   m_rsmPSSM[2];
+			DX11ShaderProgramPointer   m_rsmZPrepass;
+									 
+			std::vector<PSSMSlice>     m_pssmSlices;
+									 
+			mye::math::Matrix4         m_lightSpaceTransform;
+			mye::math::Matrix4         m_cropMatrix[__MYE_RSM_MAX_CSM_COUNT];
+									 
+			mye::core::Light         * m_light;
+									 
+			DX11ConstantBuffer         m_transformCBuffer;
+			DX11ConstantBuffer         m_cropMatrixCBuffer;
+			DX11ConstantBuffer         m_materialCBuffer;
+			DX11ConstantBuffer         m_lightCBuffer;
+									 
+			mye::math::AABB            m_volumeConstraint;
+			mye::math::Real            m_antiFlickeringDelta;
 
 			/* Private functions */
 

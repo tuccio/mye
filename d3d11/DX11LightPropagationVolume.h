@@ -99,6 +99,8 @@ namespace mye
 			void   SetRSMSamples(size_t samples);
 			size_t GetRSMSamples(void) const;
 
+			float  GetCellSize(void) const;
+
 		private:
 
 			DX11ShaderProgramPointer    m_lpvRSMSampling;

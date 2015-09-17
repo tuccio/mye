@@ -65,6 +65,8 @@ float4 main(PSInput input) : SV_TARGET
 	float3 diffuse  = diffuseAlbedo  * MYE_INV_PI * diffuseLighting;
 	float3 specular = specularAlbedo * specularLighting;
 
-	return float4(saturate(diffuse + specular), 1.f);
+	float3 color = (diffuse + specular);
+
+	return float4(color / (1 + color), 1);
 
 }
