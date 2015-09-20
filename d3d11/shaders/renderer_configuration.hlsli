@@ -12,25 +12,31 @@ cbuffer cbRendererConfiguration : register(__MYE_DX11_BUFFER_SLOT_RENDERINFO)
 
         int2  resolution;
 			  
-        float gamma;
-			  
-        int   shadowMapResolution;
-		float shadowMapInvResolution;
-		float shadowMapBias;
-		float shadowMapSlopeScaledBias;
-		float shadowMapNormalOffsetBias;
-			  
-		float vsmMinVariance;
-		float vsmMinBleeding;
-			  
-		uint  csmSplits;			  
-		bool  csmDebug;
+        float        gamma;
 
-		bool  pcfEnabled;
-		uint  pcfKernel;
-		float pcfKernelInvSquare;
+		int          shadowMapResolution;
+		float        shadowMapInvResolution;
+		float        shadowMapBias;
+		float        shadowMapSlopeScaledBias;
+		float        shadowMapNormalOffsetBias;
 
-		float lpvAttenuation;
+		float        vsmMinVariance;
+		float        vsmMinBleeding;
+
+		float        esmPositiveExponent;
+		float        esmNegativeExponent;
+
+		uint         csmSplits;
+		int          csmDebug;
+		
+		int          pcfEnabled;
+		uint         pcfKernel;
+		float        pcfKernelInvSquare;
+
+		float        lpvAttenuation;
+
+		float        ppBloomThreshold;
+		float        ppBloomPower;
 
     } r;
 

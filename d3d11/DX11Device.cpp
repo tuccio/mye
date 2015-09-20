@@ -95,13 +95,13 @@ bool DX11Device::Create(void)
 
 		__MYE_DX11_HR_DEBUG(m_device->CreateDepthStencilState(&depthStencilStateDescription, &m_depthTestOn));
 
-		depthStencilStateDescription.DepthEnable                  = FALSE;
+		depthStencilStateDescription.DepthEnable = FALSE;
 
 		__MYE_DX11_HR_DEBUG(m_device->CreateDepthStencilState(&depthStencilStateDescription, &m_depthTestOff));
 
-		depthStencilStateDescription.DepthEnable                  = TRUE;
-		depthStencilStateDescription.DepthWriteMask               = D3D11_DEPTH_WRITE_MASK_ZERO;
-		depthStencilStateDescription.DepthFunc                    = D3D11_COMPARISON_EQUAL;
+		depthStencilStateDescription.DepthEnable    = TRUE;
+		depthStencilStateDescription.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+		depthStencilStateDescription.DepthFunc      = D3D11_COMPARISON_EQUAL;
 
 		__MYE_DX11_HR_DEBUG(m_device->CreateDepthStencilState(&depthStencilStateDescription, &m_depthTestLookup));
 
@@ -170,16 +170,28 @@ DXGI_SAMPLE_DESC DX11Device::GetMSAASampleDesc(MSAA msaa, DXGI_FORMAT format)
 	switch (msaa)
 	{
 
+	case MSAA::MSAA_2X:
+
+	{
+
+		UINT msaa2xQuality;
+
+		m_device->CheckMultisampleQualityLevels(format, 2, &msaa2xQuality);
+
+		sampleDesc.Count   = 2;
+		sampleDesc.Quality = msaa2xQuality - 1;
+
+	}
+
+		break;
+
 	case MSAA::MSAA_4X:
 
 	{
 
 		UINT msaa4xQuality;
 
-		m_device->CheckMultisampleQualityLevels(
-			format,
-			4,
-			&msaa4xQuality);
+		m_device->CheckMultisampleQualityLevels(format, 4, &msaa4xQuality);
 
 		sampleDesc.Count   = 4;
 		sampleDesc.Quality = msaa4xQuality - 1;
@@ -194,10 +206,7 @@ DXGI_SAMPLE_DESC DX11Device::GetMSAASampleDesc(MSAA msaa, DXGI_FORMAT format)
 
 		UINT msaa8xQuality;
 
-		m_device->CheckMultisampleQualityLevels(
-			format,
-			8,
-			&msaa8xQuality);
+		m_device->CheckMultisampleQualityLevels(format,	8, &msaa8xQuality);
 
 		sampleDesc.Count   = 8;
 		sampleDesc.Quality = msaa8xQuality - 1;
@@ -212,10 +221,7 @@ DXGI_SAMPLE_DESC DX11Device::GetMSAASampleDesc(MSAA msaa, DXGI_FORMAT format)
 
 		UINT msaa16xQuality;
 
-		m_device->CheckMultisampleQualityLevels(
-			format,
-			8,
-			&msaa16xQuality);
+		m_device->CheckMultisampleQualityLevels(format,	16,	&msaa16xQuality);
 
 		sampleDesc.Count   = 16;
 		sampleDesc.Quality = msaa16xQuality - 1;

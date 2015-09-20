@@ -150,6 +150,7 @@ namespace mye
 
 					Property("gamma",                     &RendererConfiguration::GetGamma,                     &RendererConfiguration::SetGamma).
 					Property("screenResolution",          &RendererConfiguration::GetScreenResolution,          &RendererConfiguration::SetScreenResolution).
+					Property("msaa",                      &RendererConfiguration::GetMSAA,                      &RendererConfiguration::SetMSAA).
 					Property("shadowMapResolution",       &RendererConfiguration::GetShadowMapResolution,       &RendererConfiguration::SetShadowMapResolution).
 					Property("shadowMapBias",             &RendererConfiguration::GetShadowMapBias,             &RendererConfiguration::SetShadowMapBias).
 					Property("shadowMapSlopeScaledBias",  &RendererConfiguration::GetShadowMapSlopeScaledBias,  &RendererConfiguration::SetShadowMapSlopeScaledBias).
@@ -158,6 +159,8 @@ namespace mye
 					Property("vsmExponential",            &RendererConfiguration::GetVSMExponential,            &RendererConfiguration::SetVSMExponential).
 					Property("vsmMinVariance",            &RendererConfiguration::GetVSMMinVariance,            &RendererConfiguration::SetVSMMinVariance).
 					Property("vsmMinBleeding",            &RendererConfiguration::GetVSMMinBleeding,            &RendererConfiguration::SetVSMMinBleeding).
+					Property("esmPositiveExponent",       &RendererConfiguration::GetESMPositiveExponent,       &RendererConfiguration::SetESMPositiveExponent).
+					Property("esmNegativeExponent",       &RendererConfiguration::GetESMNegativeExponent,       &RendererConfiguration::SetESMNegativeExponent).
 					Property("csmSplits",                 &RendererConfiguration::GetCSMSplits,                 &RendererConfiguration::SetCSMSplits).
 					Property("csmDebug",                  &RendererConfiguration::GetCSMDebug,                  &RendererConfiguration::SetCSMDebug).
 					Property("pcfEnabled",                &RendererConfiguration::GetPCFEnabled,                &RendererConfiguration::SetPCFEnabled).
@@ -169,7 +172,9 @@ namespace mye
 					Property("lpvIterations",             &RendererConfiguration::GetLPVIterations,             &RendererConfiguration::SetLPVIterations).
 					Property("lpvGeometryInjectionBias",  &RendererConfiguration::GetLPVGeometryInjectionBias,  &RendererConfiguration::SetLPVGeometryInjectionBias).
 					Property("lpvFluxInjectionBias",      &RendererConfiguration::GetLPVFluxInjectionBias,      &RendererConfiguration::SetLPVFluxInjectionBias).
-					Property("lpvAttenuation",            &RendererConfiguration::GetLPVAttenuation,            &RendererConfiguration::SetLPVAttenuation),
+					Property("lpvAttenuation",            &RendererConfiguration::GetLPVAttenuation,            &RendererConfiguration::SetLPVAttenuation).
+					Property("ppBloomThreshold",          &RendererConfiguration::GetPPBloomThreshold,          &RendererConfiguration::SetPPBloomThreshold).
+					Property("ppBloomPower",              &RendererConfiguration::GetPPBloomPower,              &RendererConfiguration::SetPPBloomPower),
 
 				Class<Component>(MYE_LUA_COMPONENT),
 
@@ -192,10 +197,10 @@ namespace mye
 					Function("ApplyForce", &RigidBodyComponent::ApplyForce).
 					Function("ApplyImpulse", &RigidBodyComponent::ApplyImpulse).
 					
-					Property("velocity", &RigidBodyComponent::GetVelocity, &RigidBodyComponent::SetVelocity).
-					Property("position", &RigidBodyComponent::GetPosition, &RigidBodyComponent::SetPosition).
-					Property("mass", &RigidBodyComponent::GetMass, &RigidBodyComponent::SetMass).
-					Property("shape", &RigidBodyComponent::GetCollisionShape, &RigidBodyComponent::SetCollisionShape),
+					Property("velocity", &RigidBodyComponent::GetVelocity,       &RigidBodyComponent::SetVelocity).
+					Property("position", &RigidBodyComponent::GetPosition,       &RigidBodyComponent::SetPosition).
+					Property("mass",     &RigidBodyComponent::GetMass,           &RigidBodyComponent::SetMass).
+					Property("shape",    &RigidBodyComponent::GetCollisionShape, &RigidBodyComponent::SetCollisionShape),
 					
 				Class<Text2DComponent, Component>(MYE_LUA_TEXT2D_COMPONENT).
 					
@@ -203,19 +208,19 @@ namespace mye
 					Constructor<const mye::math::Vector2i &, FontPointer, const mye::core::String &>().
 					//Constructor<const mye::math::Vector2i &, const mye::math::Vector4 &, FontPointer, const mye::core::String &>().
 					
-					Property("text", &Text2DComponent::GetText, &Text2DComponent::SetText).
-					Property("position", &Text2DComponent::GetPosition, &Text2DComponent::SetPosition).
-					Property("font", &Text2DComponent::GetFont, &Text2DComponent::SetFont).
+					Property("text",      &Text2DComponent::GetText,      &Text2DComponent::SetText).
+					Property("position",  &Text2DComponent::GetPosition,  &Text2DComponent::SetPosition).
+					Property("font",      &Text2DComponent::GetFont,      &Text2DComponent::SetFont).
 					Property("pointsize", &Text2DComponent::GetPointSize, &Text2DComponent::SetPointSize).
-					Property("color", &Text2DComponent::GetColor, &Text2DComponent::SetColor),
+					Property("color",     &Text2DComponent::GetColor,     &Text2DComponent::SetColor),
 					
 				Class<RenderComponent, Component>(MYE_LUA_RENDER_COMPONENT).
 					
 					Constructor<>().
 					
-					Property("mesh", &RenderComponent::GetMesh, &RenderComponent::SetMesh).
-					Property("matrix", &RenderComponent::GetModelMatrix, &RenderComponent::SetModelMatrix).
-					Property("material", &RenderComponent::GetMaterial, &RenderComponent::SetMaterial),
+					Property("mesh",     &RenderComponent::GetMesh,        &RenderComponent::SetMesh).
+					Property("matrix",   &RenderComponent::GetModelMatrix, &RenderComponent::SetModelMatrix).
+					Property("material", &RenderComponent::GetMaterial,    &RenderComponent::SetMaterial),
 					
 				Class<LightComponent, Component, Light>(MYE_LUA_LIGHT_COMPONENT).
 					

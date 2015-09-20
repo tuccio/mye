@@ -58,8 +58,11 @@ namespace mye
 			DX11ShaderProgramPointer     m_deferredLightsLPV;
 			DX11ShaderProgramPointer     m_deferredFinal[4];
 
-
 			DX11ShaderProgramPointer     m_tonemapping;
+
+			DX11ShaderProgramPointer     m_ppBloomThreshold;
+			DX11ShaderProgramPointer     m_ppBloomBlur[2];
+			DX11ShaderProgramPointer     m_ppBloomCombine;
 								         
 			DX11Texture                  m_gbuffer0;
 			DX11Texture                  m_gbuffer1;
@@ -67,7 +70,9 @@ namespace mye
 			DX11Texture                  m_specularLight;
 			DX11Texture                  m_deferredOutput;
 
-			DX11Texture                  m_ppBuffer;
+			DX11Texture                  m_msaaResolveAux[2];
+
+			DX11Texture                  m_ppBuffers[2];
 								         
 			DX11ReflectiveShadowMap      m_rsm;
 			DX11LightPropagationVolume   m_lpv;
@@ -100,6 +105,7 @@ namespace mye
 			DX11VarianceShadowMap        m_vsm;
 
 			bool                         m_vsmEnabled;
+			MSAA                         m_msaa;
 								       
 			mye::math::Vector4f          m_clearColor;
 

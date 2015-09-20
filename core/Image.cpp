@@ -91,9 +91,7 @@ bool Image::LoadImpl(void)
 
 void Image::UnloadImpl(void)
 {
-
 	Destroy();
-
 }
 
 size_t Image::CalculateSizeImpl(void)

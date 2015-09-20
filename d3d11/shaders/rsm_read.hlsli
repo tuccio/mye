@@ -4,6 +4,7 @@
 #include "register_slots.hlsli"
 #include "light.hlsli"
 #include "common_samplers.hlsli"
+#include "luminance.hlsli"
 
 struct RSMTexel
 {
@@ -43,7 +44,7 @@ RSMTexel RSMRead(in float2 texcoord)
 float RSMTexelLuminance(in RSMTexel texel)
 {
 
-	float  luminance = 0.2126 * texel.flux.r + 0.7152 * texel.flux.g + 0.0722 * texel.flux.b;
+	float  luminance = Luminance(texel.flux);
 	float  NdotL     = dot(texel.normal, - g_light.direction);
 
 	return luminance * NdotL;

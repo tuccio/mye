@@ -39,8 +39,6 @@ bool DX11LightPropagationVolume::Create(size_t dimensions, size_t resolution)
 	m_flux.SetParametersList(textureParams);
 	m_depth.SetParametersList(textureParams);
 
-	m_quadVertexBuffer = ResourceTypeManager::GetSingleton().GetResource<DX11VertexBuffer>("GPUBuffer", "MYE_QUAD");
-
 	return	m_position.Create(resolution, resolution, DataFormat::HALF4) &&
 	        m_normal.Create(resolution, resolution,   DataFormat::HALF4) &&
 	        m_flux.Create(resolution, resolution,     DataFormat::HALF4) &&
@@ -127,8 +125,6 @@ void DX11LightPropagationVolume::Inject(DX11ReflectiveShadowMap & rsm)
 
 	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(4, rsmRenderTargets, nullptr);
 
-	m_quadVertexBuffer->Load();
-
 	m_lpvRSMSampling->Use();
 
 	Light * light = rsm.GetLight();
@@ -142,12 +138,8 @@ void DX11LightPropagationVolume::Inject(DX11ReflectiveShadowMap & rsm)
 	rsm.GetFluxShaderResource().Bind(DX11PipelineStage::PIXEL_SHADER,     __MYE_DX11_TEXTURE_SLOT_RSMFLUX);
 	rsm.GetDepthShaderResource().Bind(DX11PipelineStage::PIXEL_SHADER,    __MYE_DX11_TEXTURE_SLOT_SHADOWMAP);
 
-	m_quadVertexBuffer->Bind();
-
-	DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	DX11Device::GetSingleton().GetImmediateContext()->Draw(6, 0);
-
-	m_quadVertexBuffer->Unbind();
+	DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	DX11Device::GetSingleton().GetImmediateContext()->Draw(4, 0);
 
 	rsm.GetPositionShaderResource().Unbind();
 	rsm.GetNormalShaderResource().Unbind();
@@ -215,7 +207,9 @@ void DX11LightPropagationVolume::BindConfigurationBuffer(DX11PipelineStage stage
 void DX11LightPropagationVolume::Propagate(unsigned int iterations)
 {
 
-	DX11Device::GetSingleton().GetImmediateContext()->OMSetBlendState(m_additiveBlend, nullptr, 0xFFFFFFFF);
+	//DX11Device::GetSingleton().GetImmediateContext()->OMSetBlendState(m_additiveBlend, nullptr, 0xFFFFFFFF);
+
+	DX11Device::GetSingleton().SetBlending(false);
 
 	m_currentVolume = 0;
 
@@ -237,28 +231,10 @@ void DX11LightPropagationVolume::Propagate(unsigned int iterations)
 
 	m_lpvPropagateFirst->Use();
 
-	//unsigned int verticesCount = m_volumeResolution * m_volumeResolution * m_volumeResolution;
 	unsigned int verticesCount = m_volumeResolution * m_volumeResolution;
 
 	m_geometryVolume.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_LPVGEOMETRY);
 	BindConfigurationBuffer(DX11PipelineStage::VERTEX_SHADER, 0);
-
-	
-
-	//m_lightVolume[1].Clear();
-	/*m_lightVolume[1].SetRenderTarget();
-
-	m_lightVolume[0].Bind(DX11PipelineStage::PIXEL_SHADER,
-	                      __MYE_DX11_TEXTURE_SLOT_LPVLIGHT_RED,
-	                      __MYE_DX11_TEXTURE_SLOT_LPVLIGHT_GREEN,
-	                      __MYE_DX11_TEXTURE_SLOT_LPVLIGHT_BLUE);
-
-	DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
-	DX11Device::GetSingleton().GetImmediateContext()->Draw(verticesCount, 0);
-
-	m_lightVolume[0].Unbind();
-
-	m_currentVolume = 1;*/
 
 	/* First propagation pass with no occlusion */
 

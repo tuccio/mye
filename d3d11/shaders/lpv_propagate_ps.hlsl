@@ -7,7 +7,6 @@ struct PSInput
 {
 	float4 positionCS : SV_Position;
 	uint   depth      : SV_RenderTargetArrayIndex;
-	//float3 cell       : CELL;
 };
 
 struct PSOutput
@@ -122,7 +121,7 @@ SHRGB GatherContribution(in LPV lpv, in float3 cell)
 		float4 mainOcclusionSH = LPVOcclusion(lpv, cell, - mainDirection);
 		float  mainVisibility  = LPVVisibility(mainOcclusionSH, mainDirection);
 
-		SHRGB  mainIntensitySH = SHScale(mainDirectionSH, mainVisibility * saturate(SHReconstruct(neighborSH, mainDirection)) * MYE_LPV_FRONT_SOLID_ANGLE * MYE_INV_PI);
+		SHRGB  mainIntensitySH = SHScale(mainDirectionSH, mainVisibility * max(0, SHReconstruct(neighborSH, mainDirection)) * MYE_LPV_FRONT_SOLID_ANGLE * MYE_INV_PI);
 
 		sh = SHAdd(sh, mainIntensitySH);
 
@@ -141,7 +140,7 @@ SHRGB GatherContribution(in LPV lpv, in float3 cell)
 			float  sideOcclusionSH   = LPVOcclusion(lpv, cell, - sideFluxDirection);
 			float4 sideVisibility    = LPVVisibility(sideOcclusionSH, sideFluxDirection);
 
-			SHRGB  sideIntensitySH   = SHScale(reprojDirectionSH, sideVisibility * saturate(SHReconstruct(neighborSH, sideFluxDirection)) * MYE_LPV_SIDE_SOLID_ANGLE * MYE_INV_PI);
+			SHRGB  sideIntensitySH   = SHScale(reprojDirectionSH, sideVisibility * max(0, SHReconstruct(neighborSH, sideFluxDirection)) * MYE_LPV_SIDE_SOLID_ANGLE * MYE_INV_PI);
 
 			sh = SHAdd(sh, sideIntensitySH);
 
@@ -149,7 +148,7 @@ SHRGB GatherContribution(in LPV lpv, in float3 cell)
 
 	}
 
-	return SHScale(sh, MYE_INV_PI);
+	return sh;
 
 }
 

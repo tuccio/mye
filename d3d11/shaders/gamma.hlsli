@@ -9,4 +9,9 @@ float3 Gamma(float3 color)
 	return pow(color, r.gamma);
 }
 
+float3 InverseGamma(float3 color)
+{
+	return pow(color, 1.f / r.gamma);
+}
+
 #endif

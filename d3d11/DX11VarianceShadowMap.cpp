@@ -52,6 +52,8 @@ void DX11VarianceShadowMap::Render(void)
 
 	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(1, &vsmDepthRt[1], nullptr);
 
+	// Load in case some parameter was changed
+	m_vsmGeneration->Load();
 	m_vsmGeneration->Use();
 
 	DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
@@ -167,12 +169,13 @@ bool DX11VarianceShadowMap::__CreateShaders(void)
 	                                                                                  nullptr,
 	                                                                                  { { "type", "program" } });
 
-	m_blur[0]->AddMacroDefinition("MYE_GAUSSIAN_BLUR_RESOLUTION", resolution.CString());
-	m_blur[1]->AddMacroDefinition("MYE_GAUSSIAN_BLUR_RESOLUTION", resolution.CString());
-
 	if (m_exponentialTest)
 	{
+
 		m_vsmGeneration->AddMacroDefinition("MYE_SHADOW_MAP_EVSM");
+
+		m_blur[0]->AddMacroDefinition("MYE_BOX_BLUR_TYPE", "float4");
+		m_blur[1]->AddMacroDefinition("MYE_BOX_BLUR_TYPE", "float4");
 
 		m_blur[0]->AddMacroDefinition("MYE_GAUSSIAN_BLUR_TYPE", "float4");
 		m_blur[1]->AddMacroDefinition("MYE_GAUSSIAN_BLUR_TYPE", "float4");
@@ -182,6 +185,9 @@ bool DX11VarianceShadowMap::__CreateShaders(void)
 	{
 
 		m_vsmGeneration->RemoveMacroDefinition("MYE_SHADOW_MAP_EVSM");
+
+		m_blur[0]->AddMacroDefinition("MYE_BOX_BLUR_TYPE", "float2");
+		m_blur[1]->AddMacroDefinition("MYE_BOX_BLUR_TYPE", "float2");
 
 		m_blur[0]->AddMacroDefinition("MYE_GAUSSIAN_BLUR_TYPE", "float2");
 		m_blur[1]->AddMacroDefinition("MYE_GAUSSIAN_BLUR_TYPE", "float2");

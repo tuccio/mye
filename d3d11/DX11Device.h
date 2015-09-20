@@ -30,8 +30,9 @@ namespace mye
 		enum class MSAA
 		{
 			MSAA_OFF = 0,
-			MSAA_4X = 4,
-			MSAA_8X = 8,
+			MSAA_2X  = 2,
+			MSAA_4X  = 4,
+			MSAA_8X  = 8,
 			MSAA_16X = 16
 		};
 

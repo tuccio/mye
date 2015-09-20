@@ -18,6 +18,8 @@ namespace mye
 			bool shaderResource;
 			int  arraySize;
 
+			MSAA msaa;
+
 		};
 
 		class DX11DepthBuffer :
@@ -38,6 +40,9 @@ namespace mye
 			bool ResizeArray(int size);
 
 			void Clear(float depth = 1.0f);
+
+			bool SetMSAA(MSAA msaa);
+			MSAA GetMSAA(void) const;
 
 			inline ID3D11DepthStencilView * GetDepthStencilView(void)
 			{

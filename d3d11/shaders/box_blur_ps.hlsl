@@ -40,12 +40,13 @@ MYE_BOX_BLUR_TYPE main(PSInput input) : SV_Target0
 
 	MYE_BOX_BLUR_TYPE output = (MYE_BOX_BLUR_TYPE) 0;
 	
-	float texsize = 1.f / MYE_BOX_BLUR_RESOLUTION;
+	int w, h;
+	g_texture.GetDimensions(w, h);
 
 #ifdef MYE_SEPARABLE_CONVOLUTION_VERTICAL
-	const float2 offset = { 0.f, texsize };
+	const float2 offset = { 0.f, 1.f / h };
 #elif defined(MYE_SEPARABLE_CONVOLUTION_HORIZONTAL)
-	const float2 offset = { texsize, 0.f };
+	const float2 offset = { 1.f / w, 0.f };
 #endif
 
 	[unroll]

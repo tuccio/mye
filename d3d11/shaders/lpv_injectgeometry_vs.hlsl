@@ -47,7 +47,7 @@ VSOutput main(VSInput input)
 
 	output.positionCS = float4(cellCS.x, - cellCS.y, cellCS.z, 1.f);
 
-	output.surfelArea =  g_lpv.geometryInjectionBias * hPos.w;
+	output.surfelArea = hPos.w;
 
 	return output;
 

@@ -57,16 +57,16 @@ float4 main(PSInput input) : SV_TARGET
 #endif
 
 #ifdef MYE_USE_SPECULAR_TEXTURE
-	specularAlbedo = Gamma(g_specularTexture.Sample(g_anisotropicSampler, input.texcoord).rgb);
+	specularAlbedo = g_specularTexture.Sample(g_anisotropicSampler, input.texcoord).rgb;
 #else
 	specularAlbedo = Gamma(g_material.specularColor);
 #endif
 
 	float3 diffuse  = diffuseAlbedo  * MYE_INV_PI * diffuseLighting;
-	float3 specular = specularAlbedo * specularLighting;
+	float3 specular = diffuseAlbedo * specularLighting;
 
 	float3 color = (diffuse + specular);
 
-	return float4(color / (1 + color), 1);
+	return float4(color, 1);
 
 }

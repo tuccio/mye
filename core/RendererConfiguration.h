@@ -8,9 +8,10 @@
 
 #include "EventManager.h"
 
-#define __MYE_RENDERERCONFIGURATION_PROPERTY(Variable, Property, Member) \
-	inline void Set ## Property (const decltype(Member) & value) { Member = value; MYE_EVENT_MANAGER_TRIGGER(RenderVariableChange, Variable, this); }\
-	inline auto Get ## Property (void) -> decltype(Member) const { return Member; }
+#define __MYE_RENDERERCONFIGURATION_PROPERTY(MemberType, Variable, Property, DefaultValue) \
+	private: MemberType m_p ## Property = DefaultValue; public: \
+	inline void Set ## Property (const MemberType & value) { m_p ## Property = value; MYE_EVENT_MANAGER_TRIGGER(RenderVariableChange, Variable, this); }\
+	inline MemberType Get ## Property (void) const { return m_p ## Property; }
 
 namespace mye
 {
@@ -22,6 +23,7 @@ namespace mye
 		{
 			RESOLUTION,
 			GAMMA,
+			MSAA,
 			SHADOWMAPRESOLUTION,
 			SHADOWMAPBIAS,
 			SHADOWMAPSLOPESCALEDBIAS,
@@ -30,6 +32,8 @@ namespace mye
 			VSMMINBLEEDING,
 			VSMENABLED,
 			VSMEXPONENTIAL,
+			ESMPOSITIVEEXPONENT,
+			ESMNEGATIVEEXPONENT,
 			PCFENABLED,
 			PCFKERNEL,
 			CSMSPLITS,
@@ -41,7 +45,9 @@ namespace mye
 			LPVITERATIONS,
 			LPVGEOMETRYINJECTIONBIAS,
 			LPVFLUXINJECTIONBIAS,
-			LPVATTENUATION
+			LPVATTENUATION,
+			PPBLOOMTHRESHOLD,
+			PPBLOOMPOWER
 		};
 
 		class RendererConfiguration;
@@ -62,93 +68,42 @@ namespace mye
 
 		class RendererConfiguration
 		{
-
-		protected:
-
-			mye::math::Vector2i m_resolution;
-			mye::math::Real     m_gamma;
-
-			int                 m_shadowMapResolution;
-			mye::math::Real     m_shadowMapBias;
-			mye::math::Real     m_shadowMapSlopeScaledBias;
-			mye::math::Real     m_shadowMapNormalOffsetBias;
-
-			bool                m_vsmEnabled;
-			bool                m_vsmExponential;
-			mye::math::Real     m_vsmMinVariance;
-			mye::math::Real     m_vsmMinBleeding;
-
-			bool                m_lpvEnabled;
-			mye::math::AABB     m_lpvAABB;
-
-			mye::math::Real     m_lpvRSMSamples;
-			mye::math::Real     m_lpvResolution;
-			unsigned int        m_lpvIterations;
-			mye::math::Real     m_lpvGeometryInjectionBias;
-			mye::math::Real     m_lpvFluxInjectionBias;
-			mye::math::Real     m_lpvAttenuation;
-
-			unsigned int        m_csmSplits;
-			unsigned int        m_pcfKernel;
-
-			bool                m_csmDebug;
-			bool                m_pcfEnabled;
-
-		public:
-
-			RendererConfiguration(void) :
-				m_resolution(mye::math::Vector2i(1280, 720)),
-				m_gamma(1.8f),
-				m_shadowMapResolution(1024),
-				m_shadowMapBias(.0f),
-				m_shadowMapSlopeScaledBias(.0f),
-				m_shadowMapNormalOffsetBias(.0f),
-				m_vsmEnabled(false),
-				m_vsmExponential(false),
-				m_vsmMinVariance(.00001f),
-				m_vsmMinBleeding(.5f),
-				m_pcfEnabled(false),
-				m_csmDebug(false),
-				m_csmSplits(3),
-				m_pcfKernel(3),
-				m_lpvEnabled(false),
-				m_lpvAABB(mye::math::AABB::FromMinMax(-1.f, 1.f)),
-				m_lpvRSMSamples(256),
-				m_lpvResolution(32),
-				m_lpvIterations(8),
-				m_lpvGeometryInjectionBias(0.f),
-				m_lpvFluxInjectionBias(.5f),
-				m_lpvAttenuation(1.f)
-			{
-			}
 																							 
-			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::RESOLUTION,                ScreenResolution,          m_resolution)
-			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::GAMMA,                     Gamma,                     m_gamma)
-																							 				      	     
-			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::SHADOWMAPRESOLUTION,       ShadowMapResolution,       m_shadowMapResolution)
-			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::SHADOWMAPBIAS,             ShadowMapBias,             m_shadowMapBias)
-			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::SHADOWMAPSLOPESCALEDBIAS,  ShadowMapSlopeScaledBias,  m_shadowMapSlopeScaledBias)
-			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::SHADOWMAPNORMALOFFSETBIAS, ShadowMapNormalOffsetBias, m_shadowMapNormalOffsetBias)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(mye::math::Vector2i, RendererVariable::RESOLUTION,                ScreenResolution,          mye::math::Vector2i(1280, 720))
+			__MYE_RENDERERCONFIGURATION_PROPERTY(float,               RendererVariable::GAMMA,                     Gamma,                     2.2f)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(int,                 RendererVariable::MSAA,                      MSAA,                      0)
 
-			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::VSMENABLED,                VSMEnabled,                m_vsmEnabled)
-			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::VSMEXPONENTIAL,            VSMExponential,            m_vsmExponential)
-			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::VSMMINVARIANCE,            VSMMinVariance,            m_vsmMinVariance)
-			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::VSMMINBLEEDING,            VSMMinBleeding,            m_vsmMinBleeding)
-																						      				             
-			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::CSMSPLITS,                 CSMSplits,                 m_csmSplits)
-			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::CSMDEBUG,                  CSMDebug,                  m_csmDebug)
-																						      				             
-			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::PCFENABLED,                PCFEnabled,                m_pcfEnabled)
-			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::PCFKERNEL,                 PCFKernel,                 m_pcfKernel)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(int,                 RendererVariable::SHADOWMAPRESOLUTION,       ShadowMapResolution,       1024)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(float,               RendererVariable::SHADOWMAPBIAS,             ShadowMapBias,             0.f)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(float,               RendererVariable::SHADOWMAPSLOPESCALEDBIAS,  ShadowMapSlopeScaledBias,  0.f)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(float,               RendererVariable::SHADOWMAPNORMALOFFSETBIAS, ShadowMapNormalOffsetBias, 0.f)
+													                 
+			__MYE_RENDERERCONFIGURATION_PROPERTY(bool,                RendererVariable::VSMENABLED,                VSMEnabled,                false)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(bool,                RendererVariable::VSMEXPONENTIAL,            VSMExponential,            false)
 
-			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::LPVENABLED,                LPVEnabled,                m_lpvEnabled)
-			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::LPVAABB,                   LPVAABB,                   m_lpvAABB)
-			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::LPVRSMSAMPLES,             LPVRSMSamples,             m_lpvRSMSamples)
-			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::LPVRESOLUTION,             LPVResolution,             m_lpvResolution)
-			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::LPVITERATIONS,             LPVIterations,             m_lpvIterations)
-			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::LPVGEOMETRYINJECTIONBIAS,  LPVGeometryInjectionBias,  m_lpvGeometryInjectionBias)
-			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::LPVFLUXINJECTIONBIAS,      LPVFluxInjectionBias,      m_lpvFluxInjectionBias)
-			__MYE_RENDERERCONFIGURATION_PROPERTY(RendererVariable::LPVATTENUATION,            LPVAttenuation,            m_lpvAttenuation)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(float,               RendererVariable::VSMMINVARIANCE,            VSMMinVariance,            .00001f)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(float,               RendererVariable::VSMMINBLEEDING,            VSMMinBleeding,            .5f)
+
+			__MYE_RENDERERCONFIGURATION_PROPERTY(float,               RendererVariable::ESMPOSITIVEEXPONENT,       ESMPositiveExponent,       30.f)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(float,               RendererVariable::ESMNEGATIVEEXPONENT,       ESMNegativeExponent,       5.f)
+													                 
+			__MYE_RENDERERCONFIGURATION_PROPERTY(int,                 RendererVariable::CSMSPLITS,                 CSMSplits,                 1)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(float,               RendererVariable::CSMDEBUG,                  CSMDebug,                  false)
+													                 
+			__MYE_RENDERERCONFIGURATION_PROPERTY(bool,                RendererVariable::PCFENABLED,                PCFEnabled,                false)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(float,               RendererVariable::PCFKERNEL,                 PCFKernel,                 2)
+
+			__MYE_RENDERERCONFIGURATION_PROPERTY(bool,                RendererVariable::LPVENABLED,                LPVEnabled,                false)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(mye::math::AABB,     RendererVariable::LPVAABB,                   LPVAABB,                   mye::math::AABB::FromMinMax(-1.f, 1.f))
+			__MYE_RENDERERCONFIGURATION_PROPERTY(int,                 RendererVariable::LPVRSMSAMPLES,             LPVRSMSamples,             256)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(int,                 RendererVariable::LPVRESOLUTION,             LPVResolution,             32)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(int,                 RendererVariable::LPVITERATIONS,             LPVIterations,             12)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(float,               RendererVariable::LPVGEOMETRYINJECTIONBIAS,  LPVGeometryInjectionBias,  1.f)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(float,               RendererVariable::LPVFLUXINJECTIONBIAS,      LPVFluxInjectionBias,      .5f)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(float,               RendererVariable::LPVATTENUATION,            LPVAttenuation,            1.f)
+
+			__MYE_RENDERERCONFIGURATION_PROPERTY(float,               RendererVariable::PPBLOOMTHRESHOLD,          PPBloomThreshold,          5.f)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(float,               RendererVariable::PPBLOOMPOWER,              PPBloomPower,              1.f)
 
 		};
 

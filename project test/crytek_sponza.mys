@@ -6,7 +6,7 @@
 	</gameobject>
 	<gameobject name="sun">
 		<light type="directional">
-			<direction>0.255551 -0.958315 -0.127775</direction>
+			<direction>0.327903 -0.908745 -0.25819</direction>
 			<color>0.85 0.7 0.7</color>
 			<intensity>25</intensity>
 		</light>
@@ -14,7 +14,7 @@
 	<gameobject name="sponza_366">
 		<render>
 			<mesh name="models\crytek_sponza_mesh0.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.2398 0.027611 2.05594</min>
 				<max>-9.70093 0.61161 2.59424</max>
@@ -27,7 +27,7 @@
 	<gameobject name="defaultobject">
 		<render>
 			<mesh name="models\crytek_sponza_mesh1.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.2629 0.506729 1.9927</min>
 				<max>-9.59991 0.787039 2.6999</max>
@@ -39,7 +39,7 @@
 	<gameobject name="sponza_26">
 		<render>
 			<mesh name="models\crytek_sponza_mesh2.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>4.74154 5.28592 -2.53671</min>
 				<max>5.51454 7.23656 -1.76382</max>
@@ -52,7 +52,7 @@
 	<gameobject name="sponza_233">
 		<render>
 			<mesh name="models\crytek_sponza_mesh3.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.62253 7.15227 -2.44781</min>
 				<max>-8.00274 7.24012 -1.82911</max>
@@ -65,7 +65,7 @@
 	<gameobject name="sponza_293">
 		<render>
 			<mesh name="models\crytek_sponza_mesh4.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>0.780912 2.87921 2.77461</min>
 				<max>0.913322 3.07776 2.98876</max>
@@ -77,7 +77,7 @@
 	<gameobject name="sponza_192">
 		<render>
 			<mesh name="models\crytek_sponza_mesh5.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>7.00583 7.01682 -2.43493</min>
 				<max>7.10145 7.15256 -2.27944</max>
@@ -90,7 +90,7 @@
 	<gameobject name="sponza_322">
 		<render>
 			<mesh name="models\crytek_sponza_mesh6.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-9.77854 0.030415 -2.22711</min>
 				<max>-6.80051 2.96271 -1.97231</max>
@@ -101,7 +101,7 @@
 	<gameobject name="sponza_280">
 		<render>
 			<mesh name="models\crytek_sponza_mesh7.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>4.47443 -0.26169 2.2631</min>
 				<max>5.7437 2.33767 3.52189</max>
@@ -114,7 +114,7 @@
 	<gameobject name="sponza_05">
 		<render>
 			<mesh name="models\crytek_sponza_mesh8.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.81 4.31954 -2.4883</min>
 				<max>9.5124 5.15026 3.20054</max>
@@ -127,7 +127,7 @@
 	<gameobject name="sponza_241">
 		<render>
 			<mesh name="models\crytek_sponza_mesh9.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.49688 6.88207 -2.01482</min>
 				<max>-4.42561 7.01715 -1.8682</max>
@@ -140,7 +140,7 @@
 	<gameobject name="sponza_281">
 		<render>
 			<mesh name="models\crytek_sponza_mesh10.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>0.676777 1.1685 -2.64484</min>
 				<max>1.85147 2.3624 -1.51251</max>
@@ -153,7 +153,7 @@
 	<gameobject name="sponza_76">
 		<render>
 			<mesh name="models\crytek_sponza_mesh11.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>13.4016 6.87418 6.50781</min>
 				<max>13.5374 7.23656 6.67464</max>
@@ -166,7 +166,7 @@
 	<gameobject name="sponza_210">
 		<render>
 			<mesh name="models\crytek_sponza_mesh12.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>3.31826 6.88207 -2.17172</min>
 				<max>3.46487 7.01715 -2.10044</max>
@@ -179,7 +179,7 @@
 	<gameobject name="sponza_327">
 		<render>
 			<mesh name="models\crytek_sponza_mesh13.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-2.09445 0.030416 2.72933</min>
 				<max>0.883579 2.96271 2.98413</max>
@@ -190,7 +190,7 @@
 	<gameobject name="sponza_202">
 		<render>
 			<mesh name="models\crytek_sponza_mesh14.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>2.92885 5.39044 -2.40623</min>
 				<max>3.47318 7.15465 -1.86232</max>
@@ -203,7 +203,7 @@
 	<gameobject name="sponza_277">
 		<render>
 			<mesh name="models\crytek_sponza_mesh15.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.74101 1.30954 2.52185</min>
 				<max>-6.06448 2.33767 3.08965</max>
@@ -216,7 +216,7 @@
 	<gameobject name="sponza_208">
 		<render>
 			<mesh name="models\crytek_sponza_mesh16.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>3.16024 6.88207 -2.01482</min>
 				<max>3.23152 7.01715 -1.8682</max>
@@ -229,7 +229,7 @@
 	<gameobject name="sponza_10">
 		<render>
 			<mesh name="models\crytek_sponza_mesh17.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-2.92003 0.003555 -2.54547</min>
 				<max>-2.12314 2.31985 -1.74987</max>
@@ -242,7 +242,7 @@
 	<gameobject name="sponza_29">
 		<render>
 			<mesh name="models\crytek_sponza_mesh18.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.76602 5.28592 2.48273</min>
 				<max>-5.99302 7.23656 3.25561</max>
@@ -255,7 +255,7 @@
 	<gameobject name="sponza_284">
 		<render>
 			<mesh name="models\crytek_sponza_mesh19.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-0.45299 3.54762 -2.62933</min>
 				<max>2.96698 5.42538 -1.64333</max>
@@ -267,7 +267,7 @@
 	<gameobject name="sponza_82">
 		<render>
 			<mesh name="models\crytek_sponza_mesh20.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-2.8585 6.87418 -5.97955</min>
 				<max>-2.22927 7.23656 -5.81768</max>
@@ -280,7 +280,7 @@
 	<gameobject name="sponza_206">
 		<render>
 			<mesh name="models\crytek_sponza_mesh21.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>2.92698 6.88207 -2.17151</min>
 				<max>3.07359 7.01715 -2.10023</max>
@@ -293,7 +293,7 @@
 	<gameobject name="sponza_268">
 		<render>
 			<mesh name="models\crytek_sponza_mesh22.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>5.03171 8.62026 -1.94581</min>
 				<max>5.24586 8.83441 -1.86913</max>
@@ -305,7 +305,7 @@
 	<gameobject name="sponza_264">
 		<render>
 			<mesh name="models\crytek_sponza_mesh23.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-2.57844 8.64974 0.80713</min>
 				<max>-2.49832 9.2145 2.79312</max>
@@ -317,7 +317,7 @@
 	<gameobject name="sponza_339">
 		<render>
 			<mesh name="models\crytek_sponza_mesh24.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.3935 1.41969 2.24461</min>
 				<max>-6.13736 2.24418 2.28165</max>
@@ -329,7 +329,7 @@
 	<gameobject name="sponza_118">
 		<render>
 			<mesh name="models\crytek_sponza_mesh25.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.929 0.003555 -2.57055</min>
 				<max>-9.79635 2.31985 -1.43795</max>
@@ -342,7 +342,7 @@
 	<gameobject name="sponza_270">
 		<render>
 			<mesh name="models\crytek_sponza_mesh26.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>1.25448 8.64974 -2.08104</min>
 				<max>1.3346 9.2145 -0.095046</max>
@@ -354,7 +354,7 @@
 	<gameobject name="sponza_246">
 		<render>
 			<mesh name="models\crytek_sponza_mesh27.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>8.92705 5.38162 0.110443</min>
 				<max>9.39842 7.20701 0.581441</max>
@@ -367,7 +367,7 @@
 	<gameobject name="sponza_104">
 		<render>
 			<mesh name="models\crytek_sponza_mesh28.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>4.8257 1.92238 -5.97955</min>
 				<max>5.45493 2.28476 -5.81768</max>
@@ -380,7 +380,7 @@
 	<gameobject name="sponza_196">
 		<render>
 			<mesh name="models\crytek_sponza_mesh29.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>7.00481 7.01682 -1.99251</min>
 				<max>7.10044 7.15256 -1.83702</max>
@@ -393,7 +393,7 @@
 	<gameobject name="sponza_184">
 		<render>
 			<mesh name="models\crytek_sponza_mesh30.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.33896 6.88207 2.85369</min>
 				<max>-4.19235 7.01715 2.92497</max>
@@ -406,7 +406,7 @@
 	<gameobject name="sponza_291">
 		<render>
 			<mesh name="models\crytek_sponza_mesh31.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.07434 2.93022 2.85604</min>
 				<max>-2.86225 2.97692 2.90273</max>
@@ -418,7 +418,7 @@
 	<gameobject name="sponza_317">
 		<render>
 			<mesh name="models\crytek_sponza_mesh32.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>8.42886 2.87921 -2.18184</min>
 				<max>8.56128 3.07776 -1.96768</max>
@@ -430,7 +430,7 @@
 	<gameobject name="sponza_32">
 		<render>
 			<mesh name="models\crytek_sponza_mesh33.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>4.74154 5.28592 2.48273</min>
 				<max>5.51454 7.23656 3.25561</max>
@@ -443,7 +443,7 @@
 	<gameobject name="sponza_167">
 		<render>
 			<mesh name="models\crytek_sponza_mesh34.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-0.937423 7.15228 2.57739</min>
 				<max>-0.317629 7.24012 3.19609</max>
@@ -456,7 +456,7 @@
 	<gameobject name="sponza_245">
 		<render>
 			<mesh name="models\crytek_sponza_mesh35.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.74742 5.28066 -2.42171</min>
 				<max>-4.17793 5.39228 -1.8521</max>
@@ -469,7 +469,7 @@
 	<gameobject name="sponza_294">
 		<render>
 			<mesh name="models\crytek_sponza_mesh36.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-2.22361 2.93022 2.85604</min>
 				<max>0.988479 2.97692 2.90273</max>
@@ -481,7 +481,7 @@
 	<gameobject name="sponza_315">
 		<render>
 			<mesh name="models\crytek_sponza_mesh37.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>1.61087 2.93022 -2.10041</min>
 				<max>4.82296 2.97692 -2.05371</max>
@@ -493,7 +493,7 @@
 	<gameobject name="sponza_70">
 		<render>
 			<mesh name="models\crytek_sponza_mesh38.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-1.73256 0.006932 -6.2856</min>
 				<max>0.456008 2.55377 -5.75961</max>
@@ -505,7 +505,7 @@
 	<gameobject name="sponza_191">
 		<render>
 			<mesh name="models\crytek_sponza_mesh39.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>6.77588 5.39044 -2.40623</min>
 				<max>7.32021 7.15465 -1.86232</max>
@@ -518,7 +518,7 @@
 	<gameobject name="sponza_239">
 		<render>
 			<mesh name="models\crytek_sponza_mesh40.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.33896 6.88207 -2.17151</min>
 				<max>-4.19235 7.01715 -2.10023</max>
@@ -531,7 +531,7 @@
 	<gameobject name="sponza_177">
 		<render>
 			<mesh name="models\crytek_sponza_mesh41.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.58189 6.88207 2.84872</min>
 				<max>-8.43527 7.01715 2.92</max>
@@ -544,7 +544,7 @@
 	<gameobject name="sponza_330">
 		<render>
 			<mesh name="models\crytek_sponza_mesh42.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>5.07962 1.41969 2.24461</min>
 				<max>5.33576 2.24418 2.28165</max>
@@ -556,7 +556,7 @@
 	<gameobject name="sponza_328">
 		<render>
 			<mesh name="models\crytek_sponza_mesh43.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>1.69864 0.025861 2.78396</min>
 				<max>4.67404 2.96961 3.0463</max>
@@ -567,7 +567,7 @@
 	<gameobject name="sponza_95">
 		<render>
 			<mesh name="models\crytek_sponza_mesh44.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-14.7946 6.87418 -5.98201</min>
 				<max>-14.6588 7.23656 -5.81518</max>
@@ -580,7 +580,7 @@
 	<gameobject name="sponza_148">
 		<render>
 			<mesh name="models\crytek_sponza_mesh45.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>3.14761 7.01682 2.59027</min>
 				<max>3.24323 7.15256 2.74576</max>
@@ -593,7 +593,7 @@
 	<gameobject name="sponza_370">
 		<render>
 			<mesh name="models\crytek_sponza_mesh46.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>8.39815 -0.007 -1.8729</min>
 				<max>8.93705 0.576999 -1.3346</max>
@@ -606,7 +606,7 @@
 	<gameobject name="defaultobject">
 		<render>
 			<mesh name="models\crytek_sponza_mesh47.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>8.38832 0.489548 -1.91464</min>
 				<max>8.9639 0.729984 -1.32189</max>
@@ -618,7 +618,7 @@
 	<gameobject name="sponza_89">
 		<render>
 			<mesh name="models\crytek_sponza_mesh48.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>0.985621 6.87418 6.53018</min>
 				<max>1.61485 7.23656 6.69205</max>
@@ -631,7 +631,7 @@
 	<gameobject name="sponza_351">
 		<render>
 			<mesh name="models\crytek_sponza_mesh49.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.39941 1.42233 -1.51857</min>
 				<max>-6.13158 2.24415 -1.48153</max>
@@ -643,7 +643,7 @@
 	<gameobject name="sponza_106">
 		<render>
 			<mesh name="models\crytek_sponza_mesh50.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.70495 1.92238 6.53018</min>
 				<max>-6.07572 2.28476 6.69205</max>
@@ -656,7 +656,7 @@
 	<gameobject name="sponza_197">
 		<render>
 			<mesh name="models\crytek_sponza_mesh51.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>7.01754 6.88207 -2.01482</min>
 				<max>7.08882 7.01715 -1.8682</max>
@@ -669,7 +669,7 @@
 	<gameobject name="sponza_320">
 		<render>
 			<mesh name="models\crytek_sponza_mesh52.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-2.09445 0.030415 -2.22711</min>
 				<max>0.883579 2.96271 -1.97231</max>>
@@ -680,7 +680,7 @@
 	<gameobject name="sponza_198">
 		<render>
 			<mesh name="models\crytek_sponza_mesh53.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>6.753 7.01682 -2.18445</min>
 				<max>6.90849 7.15256 -2.08882</max>
@@ -693,7 +693,7 @@
 	<gameobject name="sponza_308">
 		<render>
 			<mesh name="models\crytek_sponza_mesh54.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.90318 2.87921 -2.18184</min>
 				<max>-6.77077 3.07776 -1.96768</max>
@@ -705,7 +705,7 @@
 	<gameobject name="sponza_149">
 		<render>
 			<mesh name="models\crytek_sponza_mesh55.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>3.16034 6.88207 2.62145</min>
 				<max>3.23162 7.01715 2.76807</max>
@@ -718,7 +718,7 @@
 	<gameobject name="sponza_305">
 		<render>
 			<mesh name="models\crytek_sponza_mesh56.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-3.06982 2.87921 -2.18184</min>
 				<max>-2.93741 3.07776 -1.96768</max>
@@ -730,7 +730,7 @@
 	<gameobject name="sponza_175">
 		<render>
 			<mesh name="models\crytek_sponza_mesh57.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.34853 6.88207 2.61649</min>
 				<max>-8.27725 7.01715 2.7631</max>
@@ -743,7 +743,7 @@
 	<gameobject name="sponza_250">
 		<render>
 			<mesh name="models\crytek_sponza_mesh58.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>9.27308 6.97097 0.316455</min>
 				<max>9.40004 7.08794 0.378179</max>
@@ -756,7 +756,7 @@
 	<gameobject name="sponza_207">
 		<render>
 			<mesh name="models\crytek_sponza_mesh59.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>3.14862 7.01682 -1.99251</min>
 				<max>3.24425 7.15256 -1.83702</max>
@@ -769,7 +769,7 @@
 	<gameobject name="sponza_81">
 		<render>
 			<mesh name="models\crytek_sponza_mesh60.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.8443 6.87418 -5.97955</min>
 				<max>-9.94965 7.23656 -5.81768</max>
@@ -782,7 +782,7 @@
 	<gameobject name="sponza_13">
 		<render>
 			<mesh name="models\crytek_sponza_mesh61.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.79433 0.003556 2.47369</min>
 				<max>-5.99743 2.31985 3.26929</max>
@@ -795,7 +795,7 @@
 	<gameobject name="sponza_79">
 		<render>
 			<mesh name="models\crytek_sponza_mesh62.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>13.3773 6.87418 -2.509</min>
 				<max>13.5392 7.23656 -1.59148</max>
@@ -808,7 +808,7 @@
 	<gameobject name="sponza_46">
 		<render>
 			<mesh name="models\crytek_sponza_mesh63.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.5478 12.7634 0.16509</min>
 				<max>-10.3871 13.1305 0.531482</max>
@@ -820,7 +820,7 @@
 	<gameobject name="sponza_00">
 		<render>
 			<mesh name="models\crytek_sponza_mesh64.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>4.68989 0.913996 -2.55275</min>
 				<max>5.63766 2.21564 -1.59074</max>
@@ -833,7 +833,7 @@
 	<gameobject name="sponza_257">
 		<render>
 			<mesh name="models\crytek_sponza_mesh65.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-1.20788 2.69025 -5.97973</min>
 				<max>-0.055788 3.63837 -5.90875</max>
@@ -843,7 +843,7 @@
 	<gameobject name="sponza_295">
 		<render>
 			<mesh name="models\crytek_sponza_mesh66.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-2.14845 2.87921 2.77461</min>
 				<max>-2.01604 3.07776 2.98876</max>
@@ -855,7 +855,7 @@
 	<gameobject name="sponza_368">
 		<render>
 			<mesh name="models\crytek_sponza_mesh67.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-2.78188 -0.01139 -1.86041</min>
 				<max>-2.24358 0.572609 -1.32151</max>
@@ -868,7 +868,7 @@
 	<gameobject name="defaultobject">
 		<render>
 			<mesh name="models\crytek_sponza_mesh68.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-2.84512 0.467729 -1.96143</min>
 				<max>-2.13792 0.748039 -1.29848</max>
@@ -880,7 +880,7 @@
 	<gameobject name="sponza_78">
 		<render>
 			<mesh name="models\crytek_sponza_mesh69.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>13.3773 6.87418 2.28224</min>
 				<max>13.5392 7.23656 3.19976</max>
@@ -893,7 +893,7 @@
 	<gameobject name="sponza_234">
 		<render>
 			<mesh name="models\crytek_sponza_mesh70.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.59906 5.28066 -2.42481</min>
 				<max>-8.02957 5.39228 -1.85521</max>
@@ -906,7 +906,7 @@
 	<gameobject name="sponza_258">
 		<render>
 			<mesh name="models\crytek_sponza_mesh71.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-11.2317 9.43845 -3.31985</min>
 				<max>10.3706 13.8234 4.2165</max>
@@ -919,7 +919,7 @@
 	<gameobject name="sponza_228">
 		<render>
 			<mesh name="models\crytek_sponza_mesh72.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.1906 6.88207 -2.17668</min>
 				<max>-8.04399 7.01715 -2.1054</max>
@@ -932,7 +932,7 @@
 	<gameobject name="sponza_126">
 		<render>
 			<mesh name="models\crytek_sponza_mesh73.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.499 7.08765 0.471641</min>
 				<max>-10.4162 7.2052 0.606288</max>
@@ -945,7 +945,7 @@
 	<gameobject name="sponza_18">
 		<render>
 			<mesh name="models\crytek_sponza_mesh74.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-14.8161 4.33632 -5.96604</min>
 				<max>13.5283 4.33632 6.67612</max>
@@ -957,7 +957,7 @@
 	<gameobject name="sponza_67">
 		<render>
 			<mesh name="models\crytek_sponza_mesh75.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.8366 9.51835 -2.53887</min>
 				<max>9.54229 9.67191 3.28317</max>
@@ -969,7 +969,7 @@
 	<gameobject name="sponza_338">
 		<render>
 			<mesh name="models\crytek_sponza_mesh76.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>5.06474 2.17946 2.17917</min>
 				<max>5.09971 2.27791 2.54439</max>
@@ -980,7 +980,7 @@
 	<gameobject name="sponza_01">
 		<render>
 			<mesh name="models\crytek_sponza_mesh77.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-2.78188 0.027611 2.04636</min>
 				<max>-2.24358 0.61161 2.58526</max>
@@ -993,7 +993,7 @@
 	<gameobject name="defaultobject">
 		<render>
 			<mesh name="models\crytek_sponza_mesh78.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-2.84512 0.506729 1.94534</min>
 				<max>-2.13792 0.78704 2.60829</max>
@@ -1005,7 +1005,7 @@
 	<gameobject name="sponza_365">
 		<render>
 			<mesh name="models\crytek_sponza_mesh79.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>5.0693 2.17946 -1.78131</min>
 				<max>5.10427 2.27791 -1.41609</max>
@@ -1016,7 +1016,7 @@
 	<gameobject name="sponza_318">
 		<render>
 			<mesh name="models\crytek_sponza_mesh80.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>5.42434 2.93022 -2.10041</min>
 				<max>8.63643 2.97692 -2.05371</max>
@@ -1028,7 +1028,7 @@
 	<gameobject name="sponza_144">
 		<render>
 			<mesh name="models\crytek_sponza_mesh81.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>6.78418 6.88207 2.85348</min>
 				<max>6.9308 7.01715 2.92476</max>
@@ -1041,7 +1041,7 @@
 	<gameobject name="sponza_374">
 		<render>
 			<mesh name="models\crytek_sponza_mesh82.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-13.2037 0.021876 3.86823</min>
 				<max>-11.6597 1.40787 5.41222</max>
@@ -1053,7 +1053,7 @@
 	<gameobject name="sponza_190">
 		<render>
 			<mesh name="models\crytek_sponza_mesh83.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.74742 5.28066 2.60349</min>
 				<max>-4.17793 5.39229 3.1731</max>
@@ -1066,7 +1066,7 @@
 	<gameobject name="sponza_155">
 		<render>
 			<mesh name="models\crytek_sponza_mesh84.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>3.31826 6.88207 2.85348</min>
 				<max>3.46487 7.01715 2.92476</max>
@@ -1079,7 +1079,7 @@
 	<gameobject name="sponza_283">
 		<render>
 			<mesh name="models\crytek_sponza_mesh85.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.27385 3.54762 -2.62933</min>
 				<max>-0.853874 5.42538 -1.64333</max>
@@ -1091,7 +1091,7 @@
 	<gameobject name="sponza_376">
 		<render>
 			<mesh name="models\crytek_sponza_mesh86.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>10.8643 0.021874 -4.97173</min>
 				<max>12.4083 1.40787 -3.42774</max>
@@ -1103,7 +1103,7 @@
 	<gameobject name="sponza_232">
 		<render>
 			<mesh name="models\crytek_sponza_mesh87.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.58189 6.88207 -2.17647</min>
 				<max>-8.43527 7.01715 -2.1052</max>
@@ -1116,7 +1116,7 @@
 	<gameobject name="sponza_97">
 		<render>
 			<mesh name="models\crytek_sponza_mesh88.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>13.4016 1.92238 -5.98201</min>
 				<max>13.5374 2.28476 -5.81518</max>
@@ -1129,7 +1129,7 @@
 	<gameobject name="sponza_261">
 		<render>
 			<mesh name="models\crytek_sponza_mesh89.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>1.18517 8.62026 2.58121</min>
 				<max>1.39932 8.83441 2.65789</max>
@@ -1141,7 +1141,7 @@
 	<gameobject name="sponza_321">
 		<render>
 			<mesh name="models\crytek_sponza_mesh90.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-5.95757 0.02586 -2.17248</min>
 				<max>-2.98217 2.96961 -1.91015</max>
@@ -1152,7 +1152,7 @@
 	<gameobject name="sponza_139">
 		<render>
 			<mesh name="models\crytek_sponza_mesh91.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>7.19777 7.01682 2.84207</min>
 				<max>7.35326 7.15256 2.9377</max>
@@ -1165,7 +1165,7 @@
 	<gameobject name="sponza_34">
 		<render>
 			<mesh name="models\crytek_sponza_mesh92.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.3603 7.22043 -1.9419</min>
 				<max>9.03399 9.58341 2.67387</max>
@@ -1178,7 +1178,7 @@
 	<gameobject name="sponza_215">
 		<render>
 			<mesh name="models\crytek_sponza_mesh93.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-0.662812 6.88207 -2.01978</min>
 				<max>-0.591532 7.01715 -1.87317</max>
@@ -1191,7 +1191,7 @@
 	<gameobject name="sponza_172">
 		<render>
 			<mesh name="models\crytek_sponza_mesh94.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.1683 7.01682 2.83578</min>
 				<max>-8.01281 7.15256 2.93141</max>
@@ -1204,7 +1204,7 @@
 	<gameobject name="sponza_275">
 		<render>
 			<mesh name="models\crytek_sponza_mesh95.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-3.15233 -0.261691 -2.68397</min>
 				<max>-1.91749 2.21564 -1.64932</max>
@@ -1217,7 +1217,7 @@
 	<gameobject name="sponza_173">
 		<render>
 			<mesh name="models\crytek_sponza_mesh96.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.1906 6.88207 2.84852</min>
 				<max>-8.04399 7.01715 2.91979</max>
@@ -1230,7 +1230,7 @@
 	<gameobject name="sponza_90">
 		<render>
 			<mesh name="models\crytek_sponza_mesh97.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>4.8257 6.87418 6.53018</min>
 				<max>5.45493 7.23656 6.69205</max>
@@ -1243,7 +1243,7 @@
 	<gameobject name="sponza_224">
 		<render>
 			<mesh name="models\crytek_sponza_mesh98.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.59019 5.39044 -2.41459</min>
 				<max>-8.04586 7.15465 -1.87068</max>
@@ -1256,7 +1256,7 @@
 	<gameobject name="sponza_164">
 		<render>
 			<mesh name="models\crytek_sponza_mesh99.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-0.662911 6.88207 2.61649</min>
 				<max>-0.591632 7.01715 2.7631</max>
@@ -1269,7 +1269,7 @@
 	<gameobject name="sponza_07">
 		<render>
 			<mesh name="models\crytek_sponza_mesh100.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.8366 5.13923 -2.53887</min>
 				<max>9.54229 5.29279 3.28317</max>
@@ -1281,7 +1281,7 @@
 	<gameobject name="sponza_12">
 		<render>
 			<mesh name="models\crytek_sponza_mesh101.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>4.71428 0.003555 -2.54935</min>
 				<max>5.50989 2.31985 -1.75246</max>
@@ -1294,7 +1294,7 @@
 	<gameobject name="sponza_171">
 		<render>
 			<mesh name="models\crytek_sponza_mesh102.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.34863 6.88207 3.00542</min>
 				<max>-8.27735 7.01715 3.15203</max>
@@ -1307,7 +1307,7 @@
 	<gameobject name="sponza_115">
 		<render>
 			<mesh name="models\crytek_sponza_mesh103.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-14.7946 1.92238 -5.98201</min>
 				<max>-14.6588 2.28476 -5.81518</max>
@@ -1320,7 +1320,7 @@
 	<gameobject name="sponza_290">
 		<render>
 			<mesh name="models\crytek_sponza_mesh104.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-3.06982 2.87921 2.77461</min>
 				<max>-2.93741 3.07776 2.98876</max>
@@ -1332,7 +1332,7 @@
 	<gameobject name="sponza_75">
 		<render>
 			<mesh name="models\crytek_sponza_mesh105.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-14.8128 4.33561 -5.9776</min>
 				<max>13.528 4.42895 6.63643</max>
@@ -1345,7 +1345,7 @@
 	<gameobject name="sponza_135">
 		<render>
 			<mesh name="models\crytek_sponza_mesh106.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.7058 5.28656 0.101586</min>
 				<max>-10.2126 5.38322 0.59484</max>
@@ -1358,7 +1358,7 @@
 	<gameobject name="sponza_128">
 		<render>
 			<mesh name="models\crytek_sponza_mesh107.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.3328 7.08765 0.305432</min>
 				<max>-10.1981 7.2052 0.388238</max>
@@ -1371,7 +1371,7 @@
 	<gameobject name="sponza_278">
 		<render>
 			<mesh name="models\crytek_sponza_mesh108.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-2.97752 1.03179 2.35712</min>
 				<max>-2.01954 2.21564 3.30658</max>
@@ -1384,7 +1384,7 @@
 	<gameobject name="sponza_287">
 		<render>
 			<mesh name="models\crytek_sponza_mesh109.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-0.485171 3.54762 2.36372</min>
 				<max>2.9348 5.42538 3.34972</max>
@@ -1396,7 +1396,7 @@
 	<gameobject name="sponza_162">
 		<render>
 			<mesh name="models\crytek_sponza_mesh110.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-0.896169 6.88207 2.84852</min>
 				<max>-0.749556 7.01715 2.91979</max>
@@ -1409,7 +1409,7 @@
 	<gameobject name="sponza_127">
 		<render>
 			<mesh name="models\crytek_sponza_mesh111.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.4889 6.97097 0.452325</min>
 				<max>-10.4272 7.08794 0.579285</max>
@@ -1422,7 +1422,7 @@
 	<gameobject name="sponza_248">
 		<render>
 			<mesh name="models\crytek_sponza_mesh112.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>9.13624 6.97097 0.452325</min>
 				<max>9.19796 7.08794 0.579285</max>
@@ -1435,7 +1435,7 @@
 	<gameobject name="sponza_331">
 		<render>
 			<mesh name="models\crytek_sponza_mesh113.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>4.81781 1.41549 2.26313</min>
 				<max>5.09943 2.251 2.26313</max>
@@ -1447,7 +1447,7 @@
 	<gameobject name="sponza_174">
 		<render>
 			<mesh name="models\crytek_sponza_mesh114.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.36126 7.01682 2.5853</min>
 				<max>-8.26563 7.15256 2.7408</max>
@@ -1460,7 +1460,7 @@
 	<gameobject name="sponza_20">
 		<render>
 			<mesh name="models\crytek_sponza_mesh115.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.6383 7.24086 -1.79146</min>
 				<max>-10.2519 8.5303 2.48515</max>
@@ -1472,7 +1472,7 @@
 	<gameobject name="sponza_160">
 		<render>
 			<mesh name="models\crytek_sponza_mesh116.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-0.662812 6.88207 3.00542</min>
 				<max>-0.591532 7.01715 3.15203</max>
@@ -1485,7 +1485,7 @@
 	<gameobject name="sponza_220">
 		<render>
 			<mesh name="models\crytek_sponza_mesh117.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-0.482581 7.01682 -2.18809</min>
 				<max>-0.32709 7.15256 -2.09246</max>
@@ -1498,7 +1498,7 @@
 	<gameobject name="sponza_216">
 		<render>
 			<mesh name="models\crytek_sponza_mesh118.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-0.927353 7.01682 -2.18941</min>
 				<max>-0.771862 7.15256 -2.09379</max>
@@ -1511,7 +1511,7 @@
 	<gameobject name="sponza_272">
 		<render>
 			<mesh name="models\crytek_sponza_mesh119.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-2.57844 8.64974 -2.08104</min>
 				<max>-2.49832 9.2145 -0.095046</max>
@@ -1523,7 +1523,7 @@
 	<gameobject name="sponza_242">
 		<render>
 			<mesh name="models\crytek_sponza_mesh120.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.76143 7.01682 -2.18445</min>
 				<max>-4.60594 7.15256 -2.08882</max>
@@ -1536,7 +1536,7 @@
 	<gameobject name="sponza_43">
 		<render>
 			<mesh name="models\crytek_sponza_mesh121.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.84837 12.6327 2.50602</min>
 				<max>-6.25269 13.2296 2.71843</max>
@@ -1548,7 +1548,7 @@
 	<gameobject name="sponza_157">
 		<render>
 			<mesh name="models\crytek_sponza_mesh122.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>2.91256 5.28066 2.60349</min>
 				<max>3.48205 5.39229 3.1731</max>
@@ -1561,7 +1561,7 @@
 	<gameobject name="sponza_195">
 		<render>
 			<mesh name="models\crytek_sponza_mesh123.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>7.17547 6.88207 -2.17151</min>
 				<max>7.32208 7.01715 -2.10023</max>
@@ -1574,7 +1574,7 @@
 	<gameobject name="sponza_269">
 		<render>
 			<mesh name="models\crytek_sponza_mesh124.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>1.18517 8.62026 -1.94581</min>
 				<max>1.39932 8.83441 -1.86913</max>
@@ -1586,7 +1586,7 @@
 	<gameobject name="sponza_153">
 		<render>
 			<mesh name="models\crytek_sponza_mesh125.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>3.16024 6.88207 3.01038</min>
 				<max>3.23152 7.01715 3.157</max>
@@ -1599,7 +1599,7 @@
 	<gameobject name="sponza_73">
 		<render>
 			<mesh name="models\crytek_sponza_mesh126.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-1.42597 0.006098 6.54348</min>
 				<max>0.164862 3.14277 6.73943</max>
@@ -1611,7 +1611,7 @@
 	<gameobject name="sponza_122">
 		<render>
 			<mesh name="models\crytek_sponza_mesh127.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.8839 4.31954 -2.56225</min>
 				<max>9.58636 4.40589 3.2745</max>
@@ -1623,7 +1623,7 @@
 	<gameobject name="sponza_274">
 		<render>
 			<mesh name="models\crytek_sponza_mesh128.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.41725 8.64974 -2.08104</min>
 				<max>-6.33713 9.2145 -0.095046</max>
@@ -1635,7 +1635,7 @@
 	<gameobject name="sponza_102">
 		<render>
 			<mesh name="models\crytek_sponza_mesh129.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-2.8585 1.92238 -5.97955</min>
 				<max>-2.22927 2.28476 -5.81768</max>
@@ -1648,7 +1648,7 @@
 	<gameobject name="sponza_199">
 		<render>
 			<mesh name="models\crytek_sponza_mesh130.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>6.78418 6.88207 -2.17172</min>
 				<max>6.9308 7.01715 -2.10044</max>
@@ -1661,7 +1661,7 @@
 	<gameobject name="sponza_238">
 		<render>
 			<mesh name="models\crytek_sponza_mesh131.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.31666 7.01682 -2.18312</min>
 				<max>-4.16116 7.15256 -2.0875</max>
@@ -1674,7 +1674,7 @@
 	<gameobject name="sponza_303">
 		<render>
 			<mesh name="models\crytek_sponza_mesh132.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-9.9077 2.93022 2.85604</min>
 				<max>-6.69561 2.97692 2.90273</max>
@@ -1686,7 +1686,7 @@
 	<gameobject name="sponza_88">
 		<render>
 			<mesh name="models\crytek_sponza_mesh133.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-2.8585 6.87418 6.53018</min>
 				<max>-2.22927 7.23656 6.69205</max>
@@ -1699,7 +1699,7 @@
 	<gameobject name="sponza_273">
 		<render>
 			<mesh name="models\crytek_sponza_mesh134.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.48657 8.62026 -1.94581</min>
 				<max>-6.27241 8.83441 -1.86913</max>
@@ -1711,7 +1711,7 @@
 	<gameobject name="sponza_336">
 		<render>
 			<mesh name="models\crytek_sponza_mesh135.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>5.28984 1.18896 2.2411</min>
 				<max>5.44709 1.45111 2.28516</max>
@@ -1722,7 +1722,7 @@
 	<gameobject name="sponza_145">
 		<render>
 			<mesh name="models\crytek_sponza_mesh136.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>6.74354 7.15228 2.57739</min>
 				<max>7.36333 7.24012 3.19609</max>
@@ -1735,7 +1735,7 @@
 	<gameobject name="sponza_247">
 		<render>
 			<mesh name="models\crytek_sponza_mesh137.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>9.12618 7.08765 0.471641</min>
 				<max>9.20898 7.2052 0.606288</max>
@@ -1748,7 +1748,7 @@
 	<gameobject name="sponza_143">
 		<render>
 			<mesh name="models\crytek_sponza_mesh138.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>6.753 7.01682 2.84075</min>
 				<max>6.90849 7.15256 2.93638</max>
@@ -1761,7 +1761,7 @@
 	<gameobject name="sponza_99">
 		<render>
 			<mesh name="models\crytek_sponza_mesh139.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>13.3773 1.92238 -2.509</min>
 				<max>13.5392 2.28476 -1.59148</max>
@@ -1774,7 +1774,7 @@
 	<gameobject name="sponza_117">
 		<render>
 			<mesh name="models\crytek_sponza_mesh140.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-14.7777 0.003083 -5.96443</min>
 				<max>13.528 0.003085 6.66452</max>
@@ -1786,7 +1786,7 @@
 	<gameobject name="sponza_77">
 		<render>
 			<mesh name="models\crytek_sponza_mesh141.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>13.4016 6.87418 -5.98201</min>
 				<max>13.5374 7.23656 -5.81518</max>
@@ -1799,7 +1799,7 @@
 	<gameobject name="sponza_27">
 		<render>
 			<mesh name="models\crytek_sponza_mesh142.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>8.52259 5.28592 -2.53671</min>
 				<max>9.54041 7.23656 -1.51889</max>
@@ -1812,7 +1812,7 @@
 	<gameobject name="sponza_345">
 		<render>
 			<mesh name="models\crytek_sponza_mesh143.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.18328 1.18896 2.2411</min>
 				<max>-6.02603 1.45111 2.28516</max>
@@ -1823,7 +1823,7 @@
 	<gameobject name="sponza_334">
 		<render>
 			<mesh name="models\crytek_sponza_mesh144.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>4.81888 1.11541 2.00009</min>
 				<max>5.34557 1.35739 2.52619</max>
@@ -1834,7 +1834,7 @@
 	<gameobject name="sponza_329">
 		<render>
 			<mesh name="models\crytek_sponza_mesh145.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>5.5535 0.030416 2.72933</min>
 				<max>8.53153 2.96271 2.98413</max>
@@ -1845,7 +1845,7 @@
 	<gameobject name="sponza_372">
 		<render>
 			<mesh name="models\crytek_sponza_mesh146.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>0.991334 0.027611 2.03387</min>
 				<max>1.53024 0.61161 2.57217</max>
@@ -1858,7 +1858,7 @@
 	<gameobject name="defaultobject">
 		<render>
 			<mesh name="models\crytek_sponza_mesh147.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>0.981506 0.524158 1.99213</min>
 				<max>1.55709 0.764594 2.58488</max>
@@ -1870,7 +1870,7 @@
 	<gameobject name="sponza_193">
 		<render>
 			<mesh name="models\crytek_sponza_mesh148.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>7.01744 6.88207 -2.40374</min>
 				<max>7.08872 7.01715 -2.25713</max>
@@ -1883,7 +1883,7 @@
 	<gameobject name="sponza_120">
 		<render>
 			<mesh name="models\crytek_sponza_mesh149.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>8.49178 0.003556 2.13775</min>
 				<max>9.62438 2.31985 3.27035</max>
@@ -1896,7 +1896,7 @@
 	<gameobject name="sponza_42">
 		<render>
 			<mesh name="models\crytek_sponza_mesh150.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-2.89608 12.7476 2.63906</min>
 				<max>-2.52969 13.1148 2.79969</max>
@@ -1908,7 +1908,7 @@
 	<gameobject name="sponza_296">
 		<render>
 			<mesh name="models\crytek_sponza_mesh151.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>4.61539 2.87921 2.77461</min>
 				<max>4.7478 3.07776 2.98876</max>
@@ -1920,7 +1920,7 @@
 	<gameobject name="sponza_349">
 		<render>
 			<mesh name="models\crytek_sponza_mesh152.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.40354 1.41549 -1.50005</min>
 				<max>-6.12192 2.251 -1.50005</max>
@@ -1932,7 +1932,7 @@
 	<gameobject name="sponza_185">
 		<render>
 			<mesh name="models\crytek_sponza_mesh153.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.50961 7.01682 3.03269</min>
 				<max>-4.41399 7.15256 3.18818</max>
@@ -1945,7 +1945,7 @@
 	<gameobject name="sponza_94">
 		<render>
 			<mesh name="models\crytek_sponza_mesh154.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-14.7946 6.87418 6.50781</min>
 				<max>-14.6588 7.23656 6.67464</max>
@@ -1958,7 +1958,7 @@
 	<gameobject name="sponza_279">
 		<render>
 			<mesh name="models\crytek_sponza_mesh155.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>0.636531 1.1685 2.20702</min>
 				<max>1.8613 2.3624 3.44139</max>
@@ -1971,7 +1971,7 @@
 	<gameobject name="sponza_45">
 		<render>
 			<mesh name="models\crytek_sponza_mesh156.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.4665 12.6485 0.050443</min>
 				<max>-10.2541 13.2454 0.646127</max>
@@ -1983,7 +1983,7 @@
 	<gameobject name="sponza_335">
 		<render>
 			<mesh name="models\crytek_sponza_mesh157.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>5.04765 1.05188 2.22912</min>
 				<max>5.11688 1.11541 2.29827</max>
@@ -1994,7 +1994,7 @@
 	<gameobject name="sponza_169">
 		<render>
 			<mesh name="models\crytek_sponza_mesh158.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.59019 5.39044 2.61061</min>
 				<max>-8.04586 7.15465 3.15452</max>
@@ -2007,7 +2007,7 @@
 	<gameobject name="sponza_134">
 		<render>
 			<mesh name="models\crytek_sponza_mesh159.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.7261 7.20495 0.081676</min>
 				<max>-10.1894 7.28102 0.61744</max>
@@ -2020,7 +2020,7 @@
 	<gameobject name="sponza_103">
 		<render>
 			<mesh name="models\crytek_sponza_mesh160.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>0.985621 1.92238 -5.97955</min>
 				<max>1.61485 2.28476 -5.81768</max>
@@ -2033,7 +2033,7 @@
 	<gameobject name="sponza_288">
 		<render>
 			<mesh name="models\crytek_sponza_mesh161.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.30603 3.54762 2.36372</min>
 				<max>-0.886054 5.42538 3.34972</max>
@@ -2045,7 +2045,7 @@
 	<gameobject name="sponza_244">
 		<render>
 			<mesh name="models\crytek_sponza_mesh162.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.77089 7.15227 -2.4478</min>
 				<max>-4.15109 7.24012 -1.82911</max>
@@ -2058,7 +2058,7 @@
 	<gameobject name="sponza_301">
 		<render>
 			<mesh name="models\crytek_sponza_mesh163.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>5.4995 2.87921 2.77461</min>
 				<max>5.63191 3.07776 2.98876</max>
@@ -2070,7 +2070,7 @@
 	<gameobject name="sponza_298">
 		<render>
 			<mesh name="models\crytek_sponza_mesh164.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>1.68603 2.87921 2.77461</min>
 				<max>1.81843 3.07776 2.98876</max>
@@ -2082,7 +2082,7 @@
 	<gameobject name="sponza_240">
 		<render>
 			<mesh name="models\crytek_sponza_mesh165.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.50961 7.01682 -1.99251</min>
 				<max>-4.41399 7.15256 -1.83702</max>
@@ -2095,7 +2095,7 @@
 	<gameobject name="sponza_92">
 		<render>
 			<mesh name="models\crytek_sponza_mesh166.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-14.7962 6.87418 2.28224</min>
 				<max>-14.6344 7.23656 3.19976</max>
@@ -2109,7 +2109,7 @@
 	<gameobject name="sponza_130">
 		<render>
 			<mesh name="models\crytek_sponza_mesh167.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.4999 7.08765 0.088527</min>
 				<max>-10.4171 7.2052 0.223175</max>
@@ -2122,7 +2122,7 @@
 	<gameobject name="sponza_116">
 		<render>
 			<mesh name="models\crytek_sponza_mesh168.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-14.7777 -0.005968 -5.96443</min>
 				<max>13.528 0.087372 6.66452</max>
@@ -2135,7 +2135,7 @@
 	<gameobject name="sponza_152">
 		<render>
 			<mesh name="models\crytek_sponza_mesh169.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>3.14862 7.01682 3.03269</min>
 				<max>3.24425 7.15256 3.18818</max>
@@ -2148,7 +2148,7 @@
 	<gameobject name="sponza_166">
 		<render>
 			<mesh name="models\crytek_sponza_mesh170.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-0.504888 6.88207 2.84872</min>
 				<max>-0.358274 7.01715 2.92</max>
@@ -2161,7 +2161,7 @@
 	<gameobject name="sponza_369">
 		<render>
 			<mesh name="models\crytek_sponza_mesh171.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>0.991334 -0.012719 -1.8729</min>
 				<max>1.53024 0.57128 -1.3346</max>
@@ -2174,7 +2174,7 @@
 	<gameobject name="defaultobject">
 		<render>
 			<mesh name="models\crytek_sponza_mesh172.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>0.981506 0.483829 -1.91464</min>
 				<max>1.55709 0.724265 -1.32189</max>
@@ -2186,7 +2186,7 @@
 	<gameobject name="sponza_98">
 		<render>
 			<mesh name="models\crytek_sponza_mesh173.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>13.3773 1.92238 2.28224</min>
 				<max>13.5392 2.28476 3.19976</max>
@@ -2199,7 +2199,7 @@
 	<gameobject name="sponza_364">
 		<render>
 			<mesh name="models\crytek_sponza_mesh174.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>5.28984 1.18896 -1.52208</min>
 				<max>5.44709 1.45111 -1.47802</max>
@@ -2210,7 +2210,7 @@
 	<gameobject name="sponza_111">
 		<render>
 			<mesh name="models\crytek_sponza_mesh175.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>8.68746 1.92238 6.53018</min>
 				<max>9.60498 2.28476 6.69205</max>
@@ -2223,7 +2223,7 @@
 	<gameobject name="sponza_375">
 		<render>
 			<mesh name="models\crytek_sponza_mesh176.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>10.8643 0.021876 3.86823</min>
 				<max>12.4083 1.40787 5.41222</max>
@@ -2235,7 +2235,7 @@
 	<gameobject name="sponza_179">
 		<render>
 			<mesh name="models\crytek_sponza_mesh177.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.59906 5.28066 2.60038</min>
 				<max>-8.02957 5.39229 3.16999</max>
@@ -2248,7 +2248,7 @@
 	<gameobject name="sponza_23">
 		<render>
 			<mesh name="models\crytek_sponza_mesh178.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.76602 5.28592 -2.53671</min>
 				<max>-5.99302 7.23656 -1.76382</max>
@@ -2261,7 +2261,7 @@
 	<gameobject name="sponza_343">
 		<render>
 			<mesh name="models\crytek_sponza_mesh179.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.65424 1.11541 2.00009</min>
 				<max>-6.12755 1.35739 2.52619</max>
@@ -2272,7 +2272,7 @@
 	<gameobject name="sponza_31">
 		<render>
 			<mesh name="models\crytek_sponza_mesh180.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>0.886709 5.28592 2.48273</min>
 				<max>1.6597 7.23656 3.25561</max>
@@ -2285,7 +2285,7 @@
 	<gameobject name="sponza_168">
 		<render>
 			<mesh name="models\crytek_sponza_mesh181.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-0.910587 5.28066 2.60038</min>
 				<max>-0.341096 5.39229 3.16999</max>
@@ -2298,7 +2298,7 @@
 	<gameobject name="sponza_59">
 		<render>
 			<mesh name="models\crytek_sponza_mesh182.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>6.57569 9.64182 -2.11624</min>
 				<max>7.51202 10.5448 -1.76933</max>
@@ -2310,7 +2310,7 @@
 	<gameobject name="sponza_159">
 		<render>
 			<mesh name="models\crytek_sponza_mesh183.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-0.675541 7.01682 3.02772</min>
 				<max>-0.579917 7.15256 3.18321</max>
@@ -2323,7 +2323,7 @@
 	<gameobject name="sponza_24">
 		<render>
 			<mesh name="models\crytek_sponza_mesh184.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-2.93549 5.28592 -2.53671</min>
 				<max>-2.16249 7.23656 -1.76382</max>
@@ -2336,7 +2336,7 @@
 	<gameobject name="sponza_156">
 		<render>
 			<mesh name="models\crytek_sponza_mesh185.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>2.88573 7.15228 2.57739</min>
 				<max>3.50552 7.24012 3.19609</max>
@@ -2349,7 +2349,7 @@
 	<gameobject name="sponza_133">
 		<render>
 			<mesh name="models\crytek_sponza_mesh186.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.6909 6.97097 0.316636</min>
 				<max>-10.564 7.08794 0.37836</max>
@@ -2362,7 +2362,7 @@
 	<gameobject name="sponza_312">
 		<render>
 			<mesh name="models\crytek_sponza_mesh187.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-2.22361 2.93022 -2.10041</min>
 				<max>0.988479 2.97692 -2.05371</max>
@@ -2374,7 +2374,7 @@
 	<gameobject name="sponza_57">
 		<render>
 			<mesh name="models\crytek_sponza_mesh188.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-1.07767 9.64182 -2.11624</min>
 				<max>-0.14134 10.5448 -1.76933</max>
@@ -2386,7 +2386,7 @@
 	<gameobject name="sponza_101">
 		<render>
 			<mesh name="models\crytek_sponza_mesh189.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.8443 1.92238 -5.97955</min>
 				<max>-9.94965 2.28476 -5.81768</max>
@@ -2399,7 +2399,7 @@
 	<gameobject name="sponza_33">
 		<render>
 			<mesh name="models\crytek_sponza_mesh190.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>8.52259 5.28592 2.23779</min>
 				<max>9.54041 7.23656 3.25561</max>
@@ -2412,7 +2412,7 @@
 	<gameobject name="sponza_225">
 		<render>
 			<mesh name="models\crytek_sponza_mesh191.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.36024 7.01682 -1.99747</min>
 				<max>-8.26462 7.15256 -1.84198</max>
@@ -2425,7 +2425,7 @@
 	<gameobject name="sponza_209">
 		<render>
 			<mesh name="models\crytek_sponza_mesh192.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>3.34057 7.01682 -2.18445</min>
 				<max>3.49606 7.15256 -2.08882</max>
@@ -2438,7 +2438,7 @@
 	<gameobject name="sponza_363">
 		<render>
 			<mesh name="models\crytek_sponza_mesh193.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>4.72192 1.18896 -1.52208</min>
 				<max>4.87917 1.45111 -1.47803</max>
@@ -2449,7 +2449,7 @@
 	<gameobject name="sponza_86">
 		<render>
 			<mesh name="models\crytek_sponza_mesh194.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.70495 6.87418 6.53018</min>
 				<max>-6.07572 7.23656 6.69205</max>
@@ -2462,7 +2462,7 @@
 	<gameobject name="sponza_176">
 		<render>
 			<mesh name="models\crytek_sponza_mesh195.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.61307 7.01682 2.83711</min>
 				<max>-8.45758 7.15256 2.93273</max>
@@ -2475,7 +2475,7 @@
 	<gameobject name="sponza_252">
 		<render>
 			<mesh name="models\crytek_sponza_mesh196.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>9.13632 6.97097 0.11553</min>
 				<max>9.19805 7.08794 0.242491</max>
@@ -2488,7 +2488,7 @@
 	<gameobject name="sponza_96">
 		<render>
 			<mesh name="models\crytek_sponza_mesh197.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>13.4016 1.92238 6.50781</min>
 				<max>13.5374 2.28476 6.67464</max>
@@ -2501,7 +2501,7 @@
 	<gameobject name="sponza_142">
 		<render>
 			<mesh name="models\crytek_sponza_mesh198.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>7.01754 6.88207 3.01038</min>
 				<max>7.08882 7.01715 3.157</max>
@@ -2514,7 +2514,7 @@
 	<gameobject name="sponza_367">
 		<render>
 			<mesh name="models\crytek_sponza_mesh199.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.2398 -0.01139 -1.85083</min>
 				<max>-9.70093 0.572609 -1.31253</max>
@@ -2527,7 +2527,7 @@
 	<gameobject name="defaultobject">
 		<render>
 			<mesh name="models\crytek_sponza_mesh200.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.2629 0.467729 -1.91407</min>
 				<max>-9.59991 0.748039 -1.20687</max>
@@ -2539,7 +2539,7 @@
 	<gameobject name="sponza_180">
 		<render>
 			<mesh name="models\crytek_sponza_mesh201.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.73855 5.39044 2.61896</min>
 				<max>-4.19422 7.15465 3.16287</max>
@@ -2552,7 +2552,7 @@
 	<gameobject name="sponza_348">
 		<render>
 			<mesh name="models\crytek_sponza_mesh202.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.63987 1.41969 -1.51857</min>
 				<max>-6.38373 2.24418 -1.48153</max>
@@ -2564,7 +2564,7 @@
 	<gameobject name="sponza_377">
 		<render>
 			<mesh name="models\crytek_sponza_mesh203.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>13.2671 0.452176 -0.932893</min>
 				<max>13.5039 3.20433 1.64911</max>
@@ -2576,7 +2576,7 @@
 	<gameobject name="defaultobject">
 		<render>
 			<mesh name="models\crytek_sponza_mesh204.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>12.718 0.857331 -0.444058</min>
 				<max>13.4952 2.77349 1.17464</max>
@@ -2588,7 +2588,7 @@
 	<gameobject name="sponza_373">
 		<render>
 			<mesh name="models\crytek_sponza_mesh205.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-13.2037 0.021874 -4.97173</min>
 				<max>-11.6597 1.40787 -3.42774</max>
@@ -2600,7 +2600,7 @@
 	<gameobject name="sponza_265">
 		<render>
 			<mesh name="models\crytek_sponza_mesh206.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.48657 8.62026 2.58121</min>
 				<max>-6.27241 8.83441 2.65789</max>
@@ -2612,7 +2612,7 @@
 	<gameobject name="sponza_337">
 		<render>
 			<mesh name="models\crytek_sponza_mesh207.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>4.72192 1.18896 2.2411</min>
 				<max>4.87916 1.45111 2.28515</max>
@@ -2623,7 +2623,7 @@
 	<gameobject name="sponza_289">
 		<render>
 			<mesh name="models\crytek_sponza_mesh208.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.12688 3.54762 2.36372</min>
 				<max>-4.70691 5.42538 3.34972</max>
@@ -2635,7 +2635,7 @@
 	<gameobject name="sponza_119">
 		<render>
 			<mesh name="models\crytek_sponza_mesh209.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.929 0.003556 2.13775</min>
 				<max>-9.79635 2.31985 3.27035</max>
@@ -2648,7 +2648,7 @@
 	<gameobject name="sponza_121">
 		<render>
 			<mesh name="models\crytek_sponza_mesh210.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>8.49178 0.003555 -2.57055</min>
 				<max>9.62438 2.31985 -1.43795</max>
@@ -2661,7 +2661,7 @@
 	<gameobject name="sponza_309">
 		<render>
 			<mesh name="models\crytek_sponza_mesh211.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-9.9077 2.93022 -2.10041</min>
 				<max>-6.69561 2.97692 -2.05371</max>
@@ -2673,7 +2673,7 @@
 	<gameobject name="sponza_371">
 		<render>
 			<mesh name="models\crytek_sponza_mesh212.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>8.39815 0.027611 2.03387</min>
 				<max>8.93705 0.61161 2.57217</max>
@@ -2686,7 +2686,7 @@
 	<gameobject name="defaultobject">
 		<render>
 			<mesh name="models\crytek_sponza_mesh213.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>8.38832 0.524158 1.99213</min>
 				<max>8.9639 0.764594 2.58488</max>
@@ -2698,7 +2698,7 @@
 	<gameobject name="sponza_354">
 		<render>
 			<mesh name="models\crytek_sponza_mesh214.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.7512 1.18896 -1.52208</min>
 				<max>-6.59395 1.45111 -1.47803</max>
@@ -2709,7 +2709,7 @@
 	<gameobject name="sponza_113">
 		<render>
 			<mesh name="models\crytek_sponza_mesh215.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-14.7962 1.92238 -2.509</min>
 				<max>-14.6344 2.28476 -1.59148</max>
@@ -2722,7 +2722,7 @@
 	<gameobject name="sponza_251">
 		<render>
 			<mesh name="models\crytek_sponza_mesh216.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>9.1253 7.08765 0.088527</min>
 				<max>9.20811 7.2052 0.223175</max>
@@ -2735,7 +2735,7 @@
 	<gameobject name="sponza_267">
 		<render>
 			<mesh name="models\crytek_sponza_mesh217.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>5.10103 8.64974 -2.08104</min>
 				<max>5.18115 9.2145 -0.095046</max>
@@ -2747,7 +2747,7 @@
 	<gameobject name="sponza_260">
 		<render>
 			<mesh name="models\crytek_sponza_mesh218.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>5.03171 8.62026 2.58121</min>
 				<max>5.24586 8.83441 2.65789</max>
@@ -2759,7 +2759,7 @@
 	<gameobject name="sponza_382">
 		<render>
 			<mesh name="models\crytek_sponza_mesh219.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-15.565 -1.17314 -7.00854</min>
 				<max>14.3408 13.2042 8.09715</max>
@@ -2772,7 +2772,7 @@
 	<gameobject name="sponza_194">
 		<render>
 			<mesh name="models\crytek_sponza_mesh220.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>7.19777 7.01682 -2.18312</min>
 				<max>7.35326 7.15256 -2.0875</max>
@@ -2785,7 +2785,7 @@
 	<gameobject name="sponza_222">
 		<render>
 			<mesh name="models\crytek_sponza_mesh221.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-0.937423 7.15227 -2.4478</min>
 				<max>-0.317629 7.24012 -1.82911</max>
@@ -2798,7 +2798,7 @@
 	<gameobject name="sponza_219">
 		<render>
 			<mesh name="models\crytek_sponza_mesh222.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-0.662911 6.88207 -2.40871</min>
 				<max>-0.591632 7.01715 -2.2621</max>
@@ -2811,7 +2811,7 @@
 	<gameobject name="sponza_201">
 		<render>
 			<mesh name="models\crytek_sponza_mesh223.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>6.76701 5.28066 -2.42171</min>
 				<max>7.3365 5.39228 -1.8521</max>
@@ -2824,7 +2824,7 @@
 	<gameobject name="sponza_347">
 		<render>
 			<mesh name="models\crytek_sponza_mesh224.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.40838 2.17946 2.17917</min>
 				<max>-6.37341 2.27791 2.54439</max>
@@ -2835,7 +2835,7 @@
 	<gameobject name="sponza_165">
 		<render>
 			<mesh name="models\crytek_sponza_mesh225.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-0.482581 7.01682 2.83711</min>
 				<max>-0.32709 7.15256 2.93273</max>
@@ -2848,7 +2848,7 @@
 	<gameobject name="sponza_211">
 		<render>
 			<mesh name="models\crytek_sponza_mesh226.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>2.88573 7.15227 -2.44781</min>
 				<max>3.50552 7.24012 -1.82911</max>
@@ -2861,7 +2861,7 @@
 	<gameobject name="sponza_125">
 		<render>
 			<mesh name="models\crytek_sponza_mesh227.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.6981 5.38162 0.110443</min>
 				<max>-10.2267 7.20701 0.581441</max>
@@ -2874,7 +2874,7 @@
 	<gameobject name="sponza_357">
 		<render>
 			<mesh name="models\crytek_sponza_mesh228.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>4.83325 1.41969 -1.51857</min>
 				<max>5.08939 2.24418 -1.48153</max>
@@ -2886,7 +2886,7 @@
 	<gameobject name="sponza_379">
 		<render>
 			<mesh name="models\crytek_sponza_mesh229.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-19.3227 -1.2816 -10.7915</min>
 				<max>18.1355 13.9937 11.7926</max>
@@ -2899,7 +2899,7 @@
 	<gameobject name="sponza_182">
 		<render>
 			<mesh name="models\crytek_sponza_mesh230.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.49698 6.88207 2.62145</min>
 				<max>-4.4257 7.01715 2.76807</max>
@@ -2912,7 +2912,7 @@
 	<gameobject name="sponza_352">
 		<render>
 			<mesh name="models\crytek_sponza_mesh231.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.64968 1.11541 -1.76312</min>
 				<max>-6.12299 1.35739 -1.23702</max>
@@ -2923,7 +2923,7 @@
 	<gameobject name="sponza_229">
 		<render>
 			<mesh name="models\crytek_sponza_mesh232.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.36126 7.01682 -2.43989</min>
 				<max>-8.26563 7.15256 -2.2844</max>
@@ -2936,7 +2936,7 @@
 	<gameobject name="sponza_03">
 		<render>
 			<mesh name="models\crytek_sponza_mesh233.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-14.7378 5.13984 -0.902611</min>
 				<max>-14.4995 7.89199 1.67939</max>
@@ -2948,7 +2948,7 @@
 	<gameobject name="sponza_217">
 		<render>
 			<mesh name="models\crytek_sponza_mesh234.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-0.896169 6.88207 -2.17668</min>
 				<max>-0.749556 7.01715 -2.1054</max>
@@ -2961,7 +2961,7 @@
 	<gameobject name="sponza_53">
 		<render>
 			<mesh name="models\crytek_sponza_mesh235.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.84837 12.6327 -1.98296</min>
 				<max>-6.25269 13.2296 -1.77055</max>
@@ -2973,7 +2973,7 @@
 	<gameobject name="sponza_64">
 		<render>
 			<mesh name="models\crytek_sponza_mesh236.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>2.7313 9.64182 2.48713</min>
 				<max>3.66763 10.5448 2.83404</max>
@@ -2985,7 +2985,7 @@
 	<gameobject name="sponza_124">
 		<render>
 			<mesh name="models\crytek_sponza_mesh237.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.2367 7.19094 -2.4132</min>
 				<max>8.96965 8.56359 -1.81634</max>
@@ -2997,7 +2997,7 @@
 	<gameobject name="sponza_235">
 		<render>
 			<mesh name="models\crytek_sponza_mesh238.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.73855 5.39044 -2.40623</min>
 				<max>-4.19422 7.15465 -1.86232</max>
@@ -3010,7 +3010,7 @@
 	<gameobject name="sponza_56">
 		<render>
 			<mesh name="models\crytek_sponza_mesh239.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.93562 9.64182 -2.11625</min>
 				<max>-3.99929 10.5448 -1.76933</max>
@@ -3022,7 +3022,7 @@
 	<gameobject name="sponza_25">
 		<render>
 			<mesh name="models\crytek_sponza_mesh240.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>0.886709 5.28592 -2.53671</min>
 				<max>1.6597 7.23656 -1.76382</max>
@@ -3035,7 +3035,7 @@
 	<gameobject name="sponza_313">
 		<render>
 			<mesh name="models\crytek_sponza_mesh241.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-2.14845 2.87921 -2.18184</min>
 				<max>-2.01604 3.07776 -1.96768</max>
@@ -3047,7 +3047,7 @@
 	<gameobject name="sponza_87">
 		<render>
 			<mesh name="models\crytek_sponza_mesh242.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.8443 6.87418 6.53018</min>
 				<max>-9.94965 7.23656 6.69205</max>
@@ -3060,7 +3060,7 @@
 	<gameobject name="sponza_214">
 		<render>
 			<mesh name="models\crytek_sponza_mesh243.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-0.675541 7.01682 -1.99747</min>
 				<max>-0.579917 7.15256 -1.84198</max>
@@ -3073,7 +3073,7 @@
 	<gameobject name="sponza_114">
 		<render>
 			<mesh name="models\crytek_sponza_mesh244.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-14.7946 1.92238 6.50781</min>
 				<max>-14.6588 2.28476 6.67464</max>
@@ -3086,7 +3086,7 @@
 	<gameobject name="sponza_189">
 		<render>
 			<mesh name="models\crytek_sponza_mesh245.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.77089 7.15228 2.57739</min>
 				<max>-4.15109 7.24012 3.19609</max>
@@ -3099,7 +3099,7 @@
 	<gameobject name="sponza_223">
 		<render>
 			<mesh name="models\crytek_sponza_mesh246.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-0.910587 5.28066 -2.42481</min>
 				<max>-0.341096 5.39228 -1.85521</max>
@@ -3112,7 +3112,7 @@
 	<gameobject name="sponza_170">
 		<render>
 			<mesh name="models\crytek_sponza_mesh247.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.36024 7.01682 3.02772</min>
 				<max>-8.26462 7.15256 3.18321</max>
@@ -3125,7 +3125,7 @@
 	<gameobject name="sponza_346">
 		<render>
 			<mesh name="models\crytek_sponza_mesh248.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.7512 1.18896 2.2411</min>
 				<max>-6.59396 1.45111 2.28515</max>
@@ -3136,7 +3136,7 @@
 	<gameobject name="sponza_06">
 		<render>
 			<mesh name="models\crytek_sponza_mesh249.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.3205 2.32493 -1.88139</min>
 				<max>9.04129 5.16723 2.58568</max>
@@ -3149,7 +3149,7 @@
 	<gameobject name="sponza_259">
 		<render>
 			<mesh name="models\crytek_sponza_mesh250.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>5.10103 8.64974 0.80713</min>
 				<max>5.18115 9.2145 2.79312</max>
@@ -3161,7 +3161,7 @@
 	<gameobject name="sponza_19">
 		<render>
 			<mesh name="models\crytek_sponza_mesh251.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-14.7874 7.22769 -5.97348</min>
 				<max>13.5281 8.97104 6.67319</max>
@@ -3173,7 +3173,7 @@
 	<gameobject name="sponza_183">
 		<render>
 			<mesh name="models\crytek_sponza_mesh252.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.31666 7.01682 2.84207</min>
 				<max>-4.16116 7.15256 2.9377</max>
@@ -3186,7 +3186,7 @@
 	<gameobject name="sponza_359">
 		<render>
 			<mesh name="models\crytek_sponza_mesh253.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>4.81838 1.41518 -1.50005</min>
 				<max>5.10426 2.2487 -1.50005</max>
@@ -3198,7 +3198,7 @@
 	<gameobject name="sponza_60">
 		<render>
 			<mesh name="models\crytek_sponza_mesh254.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.6474 9.58341 -0.128001</min>
 				<max>-10.3004 10.4863 0.808327</max>
@@ -3210,7 +3210,7 @@
 	<gameobject name="sponza_255">
 		<render>
 			<mesh name="models\crytek_sponza_mesh255.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>8.89905 7.20495 0.081676</min>
 				<max>9.43576 7.28102 0.61744</max>
@@ -3223,7 +3223,7 @@
 	<gameobject name="sponza_212">
 		<render>
 			<mesh name="models\crytek_sponza_mesh256.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>2.91256 5.28066 -2.42171</min>
 				<max>3.48205 5.39228 -1.8521</max>
@@ -3236,7 +3236,7 @@
 	<gameobject name="sponza_378">
 		<render>
 			<mesh name="models\crytek_sponza_mesh257.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-14.7752 0.452176 -0.932896</min>
 				<max>-14.5384 3.20433 1.64911</max>
@@ -3248,7 +3248,7 @@
 	<gameobject name="defaultobject">
 		<render>
 			<mesh name="models\crytek_sponza_mesh258.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-14.7665 0.857331 -0.458422</min>
 				<max>-13.9893 2.77349 1.16027</max>
@@ -3260,7 +3260,7 @@
 	<gameobject name="sponza_110">
 		<render>
 			<mesh name="models\crytek_sponza_mesh259.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>4.8257 1.92238 6.53018</min>
 				<max>5.45493 2.28476 6.69205</max>
@@ -3273,7 +3273,7 @@
 	<gameobject name="sponza_54">
 		<render>
 			<mesh name="models\crytek_sponza_mesh260.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.73373 12.7476 -2.06422</min>
 				<max>-6.36734 13.1148 -1.90358</max>
@@ -3285,7 +3285,7 @@
 	<gameobject name="sponza_271">
 		<render>
 			<mesh name="models\crytek_sponza_mesh261.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-2.64775 8.62026 -1.94581</min>
 				<max>-2.4336 8.83441 -1.86913</max>
@@ -3297,7 +3297,7 @@
 	<gameobject name="sponza_342">
 		<render>
 			<mesh name="models\crytek_sponza_mesh262.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.64565 1.42233 2.24461</min>
 				<max>-6.37782 2.24416 2.28165</max>
@@ -3309,7 +3309,7 @@
 	<gameobject name="sponza_285">
 		<render>
 			<mesh name="models\crytek_sponza_mesh263.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>3.36787 3.54762 -2.62933</min>
 				<max>6.78784 5.42538 -1.64333</max>
@@ -3321,7 +3321,7 @@
 	<gameobject name="sponza_237">
 		<render>
 			<mesh name="models\crytek_sponza_mesh264.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.49698 6.88207 -2.40374</min>
 				<max>-4.4257 7.01715 -2.25713</max>
@@ -3334,7 +3334,7 @@
 	<gameobject name="sponza_131">
 		<render>
 			<mesh name="models\crytek_sponza_mesh265.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.4888 6.97097 0.11553</min>
 				<max>-10.4271 7.08794 0.242491</max>
@@ -3347,7 +3347,7 @@
 	<gameobject name="sponza_107">
 		<render>
 			<mesh name="models\crytek_sponza_mesh266.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.8443 1.92238 6.53018</min>
 				<max>-9.94965 2.28476 6.69205</max>
@@ -3360,7 +3360,7 @@
 	<gameobject name="sponza_324">
 		<render>
 			<mesh name="models\crytek_sponza_mesh267.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>1.69864 0.02586 -2.17248</min>
 				<max>4.67404 2.96961 -1.91015</max>
@@ -3371,7 +3371,7 @@
 	<gameobject name="sponza_355">
 		<render>
 			<mesh name="models\crytek_sponza_mesh268.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.18327 1.18896 -1.52208</min>
 				<max>-6.02602 1.45111 -1.47803</max>
@@ -3382,7 +3382,7 @@
 	<gameobject name="sponza_141">
 		<render>
 			<mesh name="models\crytek_sponza_mesh269.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>7.00481 7.01682 3.03269</min>
 				<max>7.10044 7.15256 3.18818</max>
@@ -3395,7 +3395,7 @@
 	<gameobject name="sponza_17">
 		<render>
 			<mesh name="models\crytek_sponza_mesh270.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.7632 2.22032 -2.43281</min>
 				<max>9.49216 4.2832 3.15289</max>
@@ -3407,7 +3407,7 @@
 	<gameobject name="sponza_297">
 		<render>
 			<mesh name="models\crytek_sponza_mesh271.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>1.61087 2.93022 2.85604</min>
 				<max>4.82296 2.97692 2.90273</max>
@@ -3419,7 +3419,7 @@
 	<gameobject name="sponza_39">
 		<render>
 			<mesh name="models\crytek_sponza_mesh272.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>1.15317 12.6327 2.50602</min>
 				<max>1.74886 13.2296 2.71843</max>
@@ -3431,7 +3431,7 @@
 	<gameobject name="sponza_69">
 		<render>
 			<mesh name="models\crytek_sponza_mesh273.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-14.7777 0.001903 -5.96443</min>
 				<max>13.528 4.21108 6.66452</max>
@@ -3444,7 +3444,7 @@
 	<gameobject name="sponza_63">
 		<render>
 			<mesh name="models\crytek_sponza_mesh274.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-1.07767 9.64182 2.48713</min>
 				<max>-0.14134 10.5448 2.83404</max>
@@ -3456,7 +3456,7 @@
 	<gameobject name="sponza_311">
 		<render>
 			<mesh name="models\crytek_sponza_mesh275.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>0.780912 2.87921 -2.18184</min>
 				<max>0.913322 3.07776 -1.96768</max>
@@ -3468,7 +3468,7 @@
 	<gameobject name="sponza_276">
 		<render>
 			<mesh name="models\crytek_sponza_mesh276.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-7.02154 -0.261691 -2.77607</min>
 				<max>-5.65022 2.33767 -0.962691</max>
@@ -3481,7 +3481,7 @@
 	<gameobject name="sponza_306">
 		<render>
 			<mesh name="models\crytek_sponza_mesh277.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.07434 2.93022 -2.10041</min>
 				<max>-2.86225 2.97692 -2.05371</max>
@@ -3493,7 +3493,7 @@
 	<gameobject name="sponza_11">
 		<render>
 			<mesh name="models\crytek_sponza_mesh278.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>0.895767 0.003555 -2.54829</min>
 				<max>1.69266 2.31985 -1.75269</max>
@@ -3506,7 +3506,7 @@
 	<gameobject name="sponza_187">
 		<render>
 			<mesh name="models\crytek_sponza_mesh279.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.76143 7.01682 2.84075</min>
 				<max>-4.60594 7.15256 2.93638</max>
@@ -3519,7 +3519,7 @@
 	<gameobject name="sponza_178">
 		<render>
 			<mesh name="models\crytek_sponza_mesh280.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.62253 7.15228 2.57739</min>
 				<max>-8.00274 7.24012 3.19609</max>
@@ -3532,7 +3532,7 @@
 	<gameobject name="sponza_181">
 		<render>
 			<mesh name="models\crytek_sponza_mesh281.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.5086 7.01682 2.59027</min>
 				<max>-4.41298 7.15256 2.74576</max>
@@ -3545,7 +3545,7 @@
 	<gameobject name="sponza_147">
 		<render>
 			<mesh name="models\crytek_sponza_mesh282.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>2.92885 5.39044 2.61896</min>
 				<max>3.47318 7.15465 3.16287</max>
@@ -3558,7 +3558,7 @@
 	<gameobject name="sponza_227">
 		<render>
 			<mesh name="models\crytek_sponza_mesh283.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.1683 7.01682 -2.18941</min>
 				<max>-8.01281 7.15256 -2.09379</max>
@@ -3571,7 +3571,7 @@
 	<gameobject name="sponza_49">
 		<render>
 			<mesh name="models\crytek_sponza_mesh284.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>1.15317 12.6327 -1.98296</min>
 				<max>1.74886 13.2296 -1.77055</max>
@@ -3583,7 +3583,7 @@
 	<gameobject name="sponza_362">
 		<render>
 			<mesh name="models\crytek_sponza_mesh285.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>5.05213 1.05187 -1.53519</min>
 				<max>5.12136 1.11541 -1.46605</max>
@@ -3594,7 +3594,7 @@
 	<gameobject name="sponza_74">
 		<render>
 			<mesh name="models\crytek_sponza_mesh286.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>13.4702 4.32304 -0.455714</min>
 				<max>13.6662 7.45971 1.13512</max>
@@ -3606,7 +3606,7 @@
 	<gameobject name="sponza_150">
 		<render>
 			<mesh name="models\crytek_sponza_mesh287.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>2.8958 7.01682 2.84207</min>
 				<max>3.05129 7.15256 2.9377</max>
@@ -3619,7 +3619,7 @@
 	<gameobject name="sponza_58">
 		<render>
 			<mesh name="models\crytek_sponza_mesh288.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>2.7313 9.64182 -2.11624</min>
 				<max>3.66763 10.5448 -1.76933</max>
@@ -3631,7 +3631,7 @@
 	<gameobject name="sponza_326">
 		<render>
 			<mesh name="models\crytek_sponza_mesh289.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-5.95757 0.025861 2.78396</min>
 				<max>-2.98217 2.96961 3.0463</max>
@@ -3642,7 +3642,7 @@
 	<gameobject name="sponza_91">
 		<render>
 			<mesh name="models\crytek_sponza_mesh290.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>8.68746 6.87418 6.53018</min>
 				<max>9.60498 7.23656 6.69205</max>
@@ -3655,7 +3655,7 @@
 	<gameobject name="sponza_138">
 		<render>
 			<mesh name="models\crytek_sponza_mesh291.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>7.01744 6.88207 2.62145</min>
 				<max>7.08872 7.01715 2.76807</max>
@@ -3668,7 +3668,7 @@
 	<gameobject name="sponza_380">
 		<render>
 			<mesh name="models\crytek_sponza_mesh292.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-19.8821 13.8158 -11.4727</min>
 				<max>18.6872 14.7713 12.2464</max>
@@ -3679,7 +3679,7 @@
 	<gameobject name="sponza_188">
 		<render>
 			<mesh name="models\crytek_sponza_mesh293.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.73024 6.88207 2.85348</min>
 				<max>-4.58363 7.01715 2.92476</max>
@@ -3692,7 +3692,7 @@
 	<gameobject name="sponza_314">
 		<render>
 			<mesh name="models\crytek_sponza_mesh294.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>4.61539 2.87921 -2.18184</min>
 				<max>4.7478 3.07776 -1.96768</max>
@@ -3704,7 +3704,7 @@
 	<gameobject name="sponza_213">
 		<render>
 			<mesh name="models\crytek_sponza_mesh295.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-0.894295 5.39044 -2.41459</min>
 				<max>-0.349966 7.15465 -1.87068</max>
@@ -3716,7 +3716,7 @@
 	<gameobject name="sponza_358">
 		<render>
 			<mesh name="models\crytek_sponza_mesh296.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>5.06958 1.41549 -1.50005</min>
 				<max>5.3512 2.251 -1.50005</max>
@@ -3728,7 +3728,7 @@
 	<gameobject name="sponza_304">
 		<render>
 			<mesh name="models\crytek_sponza_mesh297.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-9.83254 2.87921 2.77461</min>
 				<max>-9.70013 3.07776 2.98876</max>
@@ -3740,7 +3740,7 @@
 	<gameobject name="sponza_47">
 		<render>
 			<mesh name="models\crytek_sponza_mesh298.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>4.98979 12.6327 -1.98296</min>
 				<max>5.58547 13.2296 -1.77055</max>
@@ -3752,7 +3752,7 @@
 	<gameobject name="sponza_85">
 		<render>
 			<mesh name="models\crytek_sponza_mesh299.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>8.68746 6.87418 -5.97955</min>
 				<max>9.60498 7.23656 -5.81768</max>
@@ -3765,7 +3765,7 @@
 	<gameobject name="sponza_48">
 		<render>
 			<mesh name="models\crytek_sponza_mesh300.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>5.10443 12.7476 -2.06422</min>
 				<max>5.47083 13.1148 -1.90358</max>
@@ -3777,7 +3777,7 @@
 	<gameobject name="sponza_299">
 		<render>
 			<mesh name="models\crytek_sponza_mesh301.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>8.42886 2.87921 2.77461</min>
 				<max>8.56128 3.07776 2.98876</max>
@@ -3789,7 +3789,7 @@
 	<gameobject name="sponza_333">
 		<render>
 			<mesh name="models\crytek_sponza_mesh302.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>4.82747 1.42233 2.24461</min>
 				<max>5.09529 2.24416 2.28165</max>
@@ -3801,7 +3801,7 @@
 	<gameobject name="sponza_203">
 		<render>
 			<mesh name="models\crytek_sponza_mesh303.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>3.14761 7.01682 -2.43493</min>
 				<max>3.24323 7.15256 -2.27944</max>
@@ -3814,7 +3814,7 @@
 	<gameobject name="sponza_72">
 		<render>
 			<mesh name="models\crytek_sponza_mesh304.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>2.4302 1.27092 -6.06438</min>
 				<max>4.01155 3.02804 -5.95483</max>
@@ -3827,7 +3827,7 @@
 	<gameobject name="defaultobject">
 		<render>
 			<mesh name="models\crytek_sponza_mesh305.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>2.4302 1.27092 -6.12741</min>
 				<max>4.01154 3.02804 -5.95483</max>
@@ -3839,7 +3839,7 @@
 	<gameobject name="sponza_361">
 		<render>
 			<mesh name="models\crytek_sponza_mesh306.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>4.82344 1.11541 -1.76312</min>
 				<max>5.35013 1.35739 -1.23702</max>
@@ -3850,7 +3850,7 @@
 	<gameobject name="sponza_65">
 		<render>
 			<mesh name="models\crytek_sponza_mesh307.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>6.57569 9.64182 2.48713</min>
 				<max>7.51202 10.5448 2.83404</max>
@@ -3862,7 +3862,7 @@
 	<gameobject name="sponza_236">
 		<render>
 			<mesh name="models\crytek_sponza_mesh308.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.5086 7.01682 -2.43493</min>
 				<max>-4.41298 7.15256 -2.27944</max>
@@ -3875,7 +3875,7 @@
 	<gameobject name="sponza_71">
 		<render>
 			<mesh name="models\crytek_sponza_mesh309.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-5.25336 1.27092 -6.06438</min>
 				<max>-3.67201 3.02804 -5.95483</max>
@@ -3888,7 +3888,7 @@
 	<gameobject name="defaultobject">
 		<render>
 			<mesh name="models\crytek_sponza_mesh310.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-5.25336 1.27092 -6.12741</min>
 				<max>-3.67201 3.02804 -5.95483</max>
@@ -3900,7 +3900,7 @@
 	<gameobject name="sponza_140">
 		<render>
 			<mesh name="models\crytek_sponza_mesh311.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>7.17547 6.88207 2.85369</min>
 				<max>7.32208 7.01715 2.92497</max>
@@ -3913,7 +3913,7 @@
 	<gameobject name="sponza_332">
 		<render>
 			<mesh name="models\crytek_sponza_mesh312.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>5.06475 1.41518 2.26313</min>
 				<max>5.35063 2.2487 2.26313</max>
@@ -3925,7 +3925,7 @@
 	<gameobject name="sponza_323">
 		<render>
 			<mesh name="models\crytek_sponza_mesh313.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-9.77854 0.030416 2.72933</min>
 				<max>-6.80051 2.96271 2.98413</max>
@@ -3936,7 +3936,7 @@
 	<gameobject name="sponza_204">
 		<render>
 			<mesh name="models\crytek_sponza_mesh314.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>3.16034 6.88207 -2.40374</min>
 				<max>3.23162 7.01715 -2.25713</max>
@@ -3949,7 +3949,7 @@
 	<gameobject name="sponza_109">
 		<render>
 			<mesh name="models\crytek_sponza_mesh315.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>0.985621 1.92238 6.53018</min>
 				<max>1.61485 2.28476 6.69205</max>
@@ -3962,7 +3962,7 @@
 	<gameobject name="sponza_08">
 		<render>
 			<mesh name="models\crytek_sponza_mesh316.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-14.7874 2.26602 -5.97348</min>
 				<max>13.5281 4.00936 6.67319</max>
@@ -3974,7 +3974,7 @@
 	<gameobject name="sponza_221">
 		<render>
 			<mesh name="models\crytek_sponza_mesh317.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-0.504888 6.88207 -2.17647</min>
 				<max>-0.358274 7.01715 -2.1052</max>
@@ -3987,7 +3987,7 @@
 	<gameobject name="sponza_231">
 		<render>
 			<mesh name="models\crytek_sponza_mesh318.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.61307 7.01682 -2.18809</min>
 				<max>-8.45758 7.15256 -2.09246</max>
@@ -4000,7 +4000,7 @@
 	<gameobject name="sponza_226">
 		<render>
 			<mesh name="models\crytek_sponza_mesh319.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.34863 6.88207 -2.01978</min>
 				<max>-8.27735 7.01715 -1.87317</max>
@@ -4013,7 +4013,7 @@
 	<gameobject name="sponza_254">
 		<render>
 			<mesh name="models\crytek_sponza_mesh320.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>8.93425 6.97097 0.316636</min>
 				<max>9.06121 7.08794 0.37836</max>
@@ -4026,7 +4026,7 @@
 	<gameobject name="sponza_282">
 		<render>
 			<mesh name="models\crytek_sponza_mesh321.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.0947 3.54762 -2.62933</min>
 				<max>-4.67473 5.42538 -1.64333</max>
@@ -4038,7 +4038,7 @@
 	<gameobject name="sponza_132">
 		<render>
 			<mesh name="models\crytek_sponza_mesh322.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.7179 7.08765 0.306578</min>
 				<max>-10.5833 7.2052 0.389383</max>
@@ -4051,7 +4051,7 @@
 	<gameobject name="sponza_353">
 		<render>
 			<mesh name="models\crytek_sponza_mesh323.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.42099 1.05187 -1.53519</min>
 				<max>-6.35176 1.11541 -1.46605</max>
@@ -4062,7 +4062,7 @@
 	<gameobject name="sponza_319">
 		<render>
 			<mesh name="models\crytek_sponza_mesh324.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>5.4995 2.87921 -2.18184</min>
 				<max>5.63191 3.07776 -1.96768</max>
@@ -4074,7 +4074,7 @@
 	<gameobject name="sponza_302">
 		<render>
 			<mesh name="models\crytek_sponza_mesh325.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.90318 2.87921 2.77461</min>
 				<max>-6.77077 3.07776 2.98876</max>
@@ -4086,7 +4086,7 @@
 	<gameobject name="sponza_263">
 		<render>
 			<mesh name="models\crytek_sponza_mesh326.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-2.64775 8.62026 2.58121</min>
 				<max>-2.4336 8.83441 2.65789</max>
@@ -4098,7 +4098,7 @@
 	<gameobject name="sponza_341">
 		<render>
 			<mesh name="models\crytek_sponza_mesh327.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.40837 1.41518 2.26313</min>
 				<max>-6.12249 2.2487 2.26313</max>
@@ -4110,7 +4110,7 @@
 	<gameobject name="sponza_186">
 		<render>
 			<mesh name="models\crytek_sponza_mesh328.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.49688 6.88207 3.01038</min>
 				<max>-4.42561 7.01715 3.157</max>
@@ -4123,7 +4123,7 @@
 	<gameobject name="sponza_360">
 		<render>
 			<mesh name="models\crytek_sponza_mesh329.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>5.07371 1.42233 -1.51857</min>
 				<max>5.34154 2.24415 -1.48153</max>
@@ -4135,7 +4135,7 @@
 	<gameobject name="sponza_15">
 		<render>
 			<mesh name="models\crytek_sponza_mesh330.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>0.893173 0.003556 2.47346</min>
 				<max>1.68878 2.31985 3.27035</max>
@@ -4148,7 +4148,7 @@
 	<gameobject name="sponza_266">
 		<render>
 			<mesh name="models\crytek_sponza_mesh331.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.41725 8.64974 0.80713</min>
 				<max>-6.33713 9.2145 2.79312</max>
@@ -4160,7 +4160,7 @@
 	<gameobject name="sponza_44">
 		<render>
 			<mesh name="models\crytek_sponza_mesh332.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.73373 12.7476 2.63906</min>
 				<max>-6.36734 13.1148 2.79969</max>
@@ -4172,7 +4172,7 @@
 	<gameobject name="sponza_105">
 		<render>
 			<mesh name="models\crytek_sponza_mesh333.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>8.68746 1.92238 -5.97955</min>
 				<max>9.60498 2.28476 -5.81768</max>
@@ -4185,7 +4185,7 @@
 	<gameobject name="sponza_356">
 		<render>
 			<mesh name="models\crytek_sponza_mesh334.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.40382 2.17946 -1.78132</min>
 				<max>-6.36885 2.27791 -1.4161</max>
@@ -4196,7 +4196,7 @@
 	<gameobject name="sponza_68">
 		<render>
 			<mesh name="models\crytek_sponza_mesh335.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-14.8055 4.33632 -5.97145</min>
 				<max>13.5283 9.02013 6.62639</max>
@@ -4209,7 +4209,7 @@
 	<gameobject name="sponza_36">
 		<render>
 			<mesh name="models\crytek_sponza_mesh336.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.3605 9.58341 -1.8935</min>
 				<max>9.03344 13.4704 2.61399</max>
@@ -4222,7 +4222,7 @@
 	<gameobject name="sponza_230">
 		<render>
 			<mesh name="models\crytek_sponza_mesh337.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.34853 6.88207 -2.40871</min>
 				<max>-8.27725 7.01715 -2.2621</max>
@@ -4235,7 +4235,7 @@
 	<gameobject name="sponza_151">
 		<render>
 			<mesh name="models\crytek_sponza_mesh338.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>2.92698 6.88207 2.85369</min>
 				<max>3.07359 7.01715 2.92497</max>
@@ -4248,7 +4248,7 @@
 	<gameobject name="sponza_62">
 		<render>
 			<mesh name="models\crytek_sponza_mesh339.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.93562 9.64182 2.48713</min>
 				<max>-3.99929 10.5448 2.83404</max>
@@ -4260,7 +4260,7 @@
 	<gameobject name="sponza_300">
 		<render>
 			<mesh name="models\crytek_sponza_mesh340.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>5.42434 2.93022 2.85604</min>
 				<max>8.63643 2.97692 2.90273</max>
@@ -4272,7 +4272,7 @@
 	<gameobject name="sponza_52">
 		<render>
 			<mesh name="models\crytek_sponza_mesh341.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-2.89608 12.7476 -2.06422</min>
 				<max>-2.52969 13.1148 -1.90358</max>
@@ -4284,7 +4284,7 @@
 	<gameobject name="sponza_100">
 		<render>
 			<mesh name="models\crytek_sponza_mesh342.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.70495 1.92238 -5.97955</min>
 				<max>-6.07572 2.28476 -5.81768</max>
@@ -4297,7 +4297,7 @@
 	<gameobject name="sponza_316">
 		<render>
 			<mesh name="models\crytek_sponza_mesh343.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>1.68603 2.87921 -2.18184</min>
 				<max>1.81843 3.07776 -1.96768</max>
@@ -4309,7 +4309,7 @@
 	<gameobject name="sponza_83">
 		<render>
 			<mesh name="models\crytek_sponza_mesh344.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>0.985621 6.87418 -5.97955</min>
 				<max>1.61485 7.23656 -5.81768</max>
@@ -4322,7 +4322,7 @@
 	<gameobject name="sponza_146">
 		<render>
 			<mesh name="models\crytek_sponza_mesh345.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>6.76701 5.28066 2.60349</min>
 				<max>7.3365 5.39229 3.1731</max>
@@ -4335,7 +4335,7 @@
 	<gameobject name="sponza_136">
 		<render>
 			<mesh name="models\crytek_sponza_mesh346.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>6.77588 5.39044 2.61896</min>
 				<max>7.32021 7.15465 3.16287</max>
@@ -4348,7 +4348,7 @@
 	<gameobject name="sponza_84">
 		<render>
 			<mesh name="models\crytek_sponza_mesh347.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>4.8257 6.87418 -5.97955</min>
 				<max>5.45493 7.23656 -5.81768</max>
@@ -4361,7 +4361,7 @@
 	<gameobject name="sponza_205">
 		<render>
 			<mesh name="models\crytek_sponza_mesh348.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>2.8958 7.01682 -2.18312</min>
 				<max>3.05129 7.15256 -2.0875</max>
@@ -4374,7 +4374,7 @@
 	<gameobject name="sponza_344">
 		<render>
 			<mesh name="models\crytek_sponza_mesh349.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.42547 1.05188 2.22912</min>
 				<max>-6.35624 1.11541 2.29827</max>
@@ -4385,7 +4385,7 @@
 	<gameobject name="sponza_16">
 		<render>
 			<mesh name="models\crytek_sponza_mesh350.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>4.71709 0.003556 2.4698</min>
 				<max>5.5127 2.31985 3.2667</max>
@@ -4398,7 +4398,7 @@
 	<gameobject name="sponza_21">
 		<render>
 			<mesh name="models\crytek_sponza_mesh351.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>8.94409 7.24086 -1.79146</min>
 				<max>9.33048 8.5303 2.48515</max>
@@ -4410,7 +4410,7 @@
 	<gameobject name="sponza_340">
 		<render>
 			<mesh name="models\crytek_sponza_mesh352.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.65531 1.41549 2.26313</min>
 				<max>-6.37369 2.251 2.26313</max>
@@ -4422,7 +4422,7 @@
 	<gameobject name="sponza_262">
 		<render>
 			<mesh name="models\crytek_sponza_mesh353.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>1.25448 8.64974 0.80713</min>
 				<max>1.3346 9.2145 2.79312</max>
@@ -4434,7 +4434,7 @@
 	<gameobject name="sponza_80">
 		<render>
 			<mesh name="models\crytek_sponza_mesh354.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.70495 6.87418 -5.97955</min>
 				<max>-6.07572 7.23656 -5.81768</max>
@@ -4447,7 +4447,7 @@
 	<gameobject name="sponza_41">
 		<render>
 			<mesh name="models\crytek_sponza_mesh355.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-3.01073 12.6327 2.50602</min>
 				<max>-2.41504 13.2296 2.71843</max>
@@ -4459,7 +4459,7 @@
 	<gameobject name="sponza_129">
 		<render>
 			<mesh name="models\crytek_sponza_mesh356.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.3521 6.97097 0.316455</min>
 				<max>-10.2251 7.08794 0.378179</max>
@@ -4472,7 +4472,7 @@
 	<gameobject name="sponza_112">
 		<render>
 			<mesh name="models\crytek_sponza_mesh357.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-14.7962 1.92238 2.28224</min>
 				<max>-14.6344 2.28476 3.19976</max>
@@ -4485,7 +4485,7 @@
 	<gameobject name="sponza_37">
 		<render>
 			<mesh name="models\crytek_sponza_mesh358.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>4.98979 12.6327 2.50602</min>
 				<max>5.58547 13.2296 2.71843</max>
@@ -4497,7 +4497,7 @@
 	<gameobject name="sponza_22">
 		<render>
 			<mesh name="models\crytek_sponza_mesh359.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.8157 5.28592 -2.53671</min>
 				<max>-9.79785 7.23656 -1.51889</max>
@@ -4510,7 +4510,7 @@
 	<gameobject name="sponza_30">
 		<render>
 			<mesh name="models\crytek_sponza_mesh360.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-2.93549 5.28592 2.48273</min>
 				<max>-2.16249 7.23656 3.25561</max>
@@ -4523,7 +4523,7 @@
 	<gameobject name="sponza_249">
 		<render>
 			<mesh name="models\crytek_sponza_mesh361.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>9.29239 7.08765 0.305432</min>
 				<max>9.42704 7.2052 0.388238</max>
@@ -4536,7 +4536,7 @@
 	<gameobject name="sponza_14">
 		<render>
 			<mesh name="models\crytek_sponza_mesh362.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-2.92003 0.003556 2.47086</min>
 				<max>-2.12314 2.31985 3.26647</max>
@@ -4549,7 +4549,7 @@
 	<gameobject name="sponza_137">
 		<render>
 			<mesh name="models\crytek_sponza_mesh363.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>7.00583 7.01682 2.59027</min>
 				<max>7.10145 7.15256 2.74576</max>
@@ -4562,7 +4562,7 @@
 	<gameobject name="sponza_154">
 		<render>
 			<mesh name="models\crytek_sponza_mesh364.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>3.34057 7.01682 2.84075</min>
 				<max>3.49606 7.15256 2.93638</max>
@@ -4575,7 +4575,7 @@
 	<gameobject name="sponza_50">
 		<render>
 			<mesh name="models\crytek_sponza_mesh365.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>1.26782 12.7476 -2.06422</min>
 				<max>1.63421 13.1148 -1.90358</max>
@@ -4587,7 +4587,7 @@
 	<gameobject name="sponza_350">
 		<render>
 			<mesh name="models\crytek_sponza_mesh366.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.65474 1.41518 -1.50005</min>
 				<max>-6.36886 2.2487 -1.50005</max>
@@ -4599,7 +4599,7 @@
 	<gameobject name="sponza_123">
 		<render>
 			<mesh name="models\crytek_sponza_mesh367.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.2367 7.19094 2.52302</min>
 				<max>8.96964 8.56359 3.11988</max>
@@ -4611,7 +4611,7 @@
 	<gameobject name="sponza_218">
 		<render>
 			<mesh name="models\crytek_sponza_mesh368.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-0.674526 7.01682 -2.43989</min>
 				<max>-0.578902 7.15256 -2.2844</max>
@@ -4624,7 +4624,7 @@
 	<gameobject name="sponza_200">
 		<render>
 			<mesh name="models\crytek_sponza_mesh369.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>6.74354 7.15227 -2.4478</min>
 				<max>7.36333 7.24012 -1.82911</max>
@@ -4637,7 +4637,7 @@
 	<gameobject name="sponza_325">
 		<render>
 			<mesh name="models\crytek_sponza_mesh370.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>5.5535 0.030415 -2.22711</min>
 				<max>8.53153 2.96271 -1.97231</max>
@@ -4648,7 +4648,7 @@
 	<gameobject name="sponza_108">
 		<render>
 			<mesh name="models\crytek_sponza_mesh371.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-2.8585 1.92238 6.53018</min>
 				<max>-2.22927 2.28476 6.69205</max>
@@ -4661,7 +4661,7 @@
 	<gameobject name="sponza_286">
 		<render>
 			<mesh name="models\crytek_sponza_mesh372.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>3.33569 3.54762 2.36372</min>
 				<max>6.75566 5.42538 3.34972</max>
@@ -4673,7 +4673,7 @@
 	<gameobject name="sponza_51">
 		<render>
 			<mesh name="models\crytek_sponza_mesh373.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-3.01073 12.6327 -1.98296</min>
 				<max>-2.41504 13.2296 -1.77055</max>
@@ -4685,7 +4685,7 @@
 	<gameobject name="sponza_38">
 		<render>
 			<mesh name="models\crytek_sponza_mesh374.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>5.10443 12.7476 2.63906</min>
 				<max>5.47083 13.1148 2.79969</max>
@@ -4697,7 +4697,7 @@
 	<gameobject name="sponza_66">
 		<render>
 			<mesh name="models\crytek_sponza_mesh375.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-11.2317 9.43845 -3.31985</min>
 				<max>10.3706 13.6547 4.2165</max>
@@ -4710,7 +4710,7 @@
 	<gameobject name="sponza_163">
 		<render>
 			<mesh name="models\crytek_sponza_mesh376.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-0.674526 7.01682 2.5853</min>
 				<max>-0.578902 7.15256 2.7408</max>
@@ -4723,7 +4723,7 @@
 	<gameobject name="sponza_55">
 		<render>
 			<mesh name="models\crytek_sponza_mesh377.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.78157 9.64182 -2.11625</min>
 				<max>-7.84524 10.5448 -1.76933</max>
@@ -4735,7 +4735,7 @@
 	<gameobject name="sponza_61">
 		<render>
 			<mesh name="models\crytek_sponza_mesh378.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-8.78157 9.64182 2.48713</min>
 				<max>-7.84524 10.5448 2.83404</max>
@@ -4747,7 +4747,7 @@
 	<gameobject name="sponza_93">
 		<render>
 			<mesh name="models\crytek_sponza_mesh379.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-14.7962 6.87418 -2.509</min>
 				<max>-14.6344 7.23656 -1.59148</max>
@@ -4760,7 +4760,7 @@
 	<gameobject name="sponza_381">
 		<render>
 			<mesh name="models\crytek_sponza_mesh380.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-14.9194 13.3025 -6.5027</min>
 				<max>13.7052 14.8461 7.25929</max>
@@ -4771,7 +4771,7 @@
 	<gameobject name="sponza_253">
 		<render>
 			<mesh name="models\crytek_sponza_mesh381.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>8.90724 7.08765 0.306578</min>
 				<max>9.04189 7.2052 0.389383</max>
@@ -4784,7 +4784,7 @@
 	<gameobject name="sponza_28">
 		<render>
 			<mesh name="models\crytek_sponza_mesh382.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.8157 5.28592 2.23779</min>
 				<max>-9.79785 7.23656 3.25561</max>
@@ -4797,7 +4797,7 @@
 	<gameobject name="sponza_307">
 		<render>
 			<mesh name="models\crytek_sponza_mesh383.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-5.99919 2.87921 -2.18184</min>
 				<max>-5.86678 3.07776 -1.96768</max>
@@ -4809,7 +4809,7 @@
 	<gameobject name="sponza_292">
 		<render>
 			<mesh name="models\crytek_sponza_mesh384.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-5.99919 2.87921 2.77461</min>
 				<max>-5.86678 3.07776 2.98876</max>
@@ -4821,7 +4821,7 @@
 	<gameobject name="sponza_161">
 		<render>
 			<mesh name="models\crytek_sponza_mesh385.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-0.927353 7.01682 2.83578</min>
 				<max>-0.771862 7.15256 2.93141</max>
@@ -4834,7 +4834,7 @@
 	<gameobject name="sponza_158">
 		<render>
 			<mesh name="models\crytek_sponza_mesh386.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-0.894295 5.39044 2.61061</min>
 				<max>-0.349966 7.15465 3.15452</max>
@@ -4847,7 +4847,7 @@
 	<gameobject name="sponza_09">
 		<render>
 			<mesh name="models\crytek_sponza_mesh387.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-6.79693 0.003555 -2.54936</min>
 				<max>-6.00132 2.31985 -1.75246</max>
@@ -4860,7 +4860,7 @@
 	<gameobject name="sponza_256">
 		<render>
 			<mesh name="models\crytek_sponza_mesh388.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>8.91937 5.28656 0.101586</min>
 				<max>9.41252 5.38322 0.59484</max>
@@ -4873,7 +4873,7 @@
 	<gameobject name="sponza_243">
 		<render>
 			<mesh name="models\crytek_sponza_mesh389.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-4.73024 6.88207 -2.17172</min>
 				<max>-4.58363 7.01715 -2.10044</max>
@@ -4886,7 +4886,7 @@
 	<gameobject name="sponza_35">
 		<render>
 			<mesh name="models\crytek_sponza_mesh390.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-10.5697 7.22043 -2.34956</min>
 				<max>9.28287 9.58341 3.04878</max>
@@ -4898,7 +4898,7 @@
 	<gameobject name="sponza_310">
 		<render>
 			<mesh name="models\crytek_sponza_mesh391.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>-9.83254 2.87921 -2.18184</min>
 				<max>-9.70013 3.07776 -1.96768</max>
@@ -4910,7 +4910,7 @@
 	<gameobject name="sponza_40">
 		<render>
 			<mesh name="models\crytek_sponza_mesh392.obj"/>
-			<material diffuse_color="0.4704 0.4704 0.47041" specular="20" specular_color="0 0 0" roughness="0" metallic="0"/>
+			<material diffuse_color="0.4704 0.4704 0.47041" specular="1" specular_color="0 0 0" roughness="0" metallic="0"/>
 			<aabb>
 				<min>1.26782 12.7476 2.63906</min>
 				<max>1.63421 13.1148 2.79969</max>

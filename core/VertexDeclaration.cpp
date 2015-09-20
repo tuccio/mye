@@ -9,14 +9,42 @@ using namespace mye::core;
 static const size_t __dataTypeSize[static_cast<unsigned int>(DataFormat::COUNT)] =
 {
 
+	// FLOAT .. FLOAT4
+
 	sizeof(float),
 	2 * sizeof(float),
 	3 * sizeof(float),
 	4 * sizeof(float),
+
+	// HALF ... HALF4
+
+	sizeof(float) / 2,
+	sizeof(float),
+	3 * sizeof(float) / 2,
+	2 * sizeof(float),
+
+	// INT ... INT4
+
 	sizeof(int),
 	2 * sizeof(int),
 	3 * sizeof(int),
-	4 * sizeof(int)
+	4 * sizeof(int),
+
+	// BYTE ... BYTE4
+
+	sizeof(char),
+	2 * sizeof(char),
+	3 * sizeof(char),
+	4 * sizeof(char),
+
+	// FIXED SIZE TYPES
+
+	24,  // RGB24
+	32,  // RGBA32
+	96,  // RGB96
+	128, // RGBA128
+	24,  // SRGB24
+	32   // SRGBA32
 
 };
 

@@ -129,8 +129,6 @@ namespace mye
 			DX11ConstantBuffer          m_lightBuffer;
 			DX11ConstantBuffer          m_lpvConfig;
 
-			DX11VertexBufferPointer     m_quadVertexBuffer;;
-
 			uint8_t                     m_currentVolume;
 
 			mye::math::Real             m_geometryInjectionBias;

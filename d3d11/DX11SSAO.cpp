@@ -48,9 +48,6 @@ bool DX11SSAO::Create(int width, int height)
 		{ { "type", "program" } }
 	);
 
-	m_ssaoBlur[0]->AddMacroDefinition("MYE_BILATERAL_BLUR_RESOLUTION", wResolution.CString());
-	m_ssaoBlur[1]->AddMacroDefinition("MYE_BILATERAL_BLUR_RESOLUTION", hResolution.CString());
-
 	return m_ssao->Load() &&
 	       m_ssaoBlur[0]->Load() &&
 	       m_ssaoBlur[1]->Load() &&
@@ -129,4 +126,10 @@ void DX11SSAO::Render(void)
 	DX11Device::GetSingleton().SetViewports(&viewports[0], viewports.size());
 	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(0, nullptr, nullptr);
 
+}
+
+void DX11SSAO::Destroy(void)
+{
+	m_ssaoBuffer.Destroy();
+	m_blurBuffer.Destroy();
 }

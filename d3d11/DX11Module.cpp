@@ -52,6 +52,7 @@ bool DX11Module::Init(void)
 		(m_swapChain.Exists() || m_swapChain.Create()))
 	{
 
+		m_changeMSAA = false;
 		OnResize(m_window, m_window->GetSize());
 
 		DX11RasterizerState rasterizeState({ false, CullMode::NONE });
@@ -92,32 +93,7 @@ void DX11Module::Shutdown(void)
 void DX11Module::Render(void)
 {
 
-	if (m_resizeSwapChain)
-	{
-
-		auto size = GetRendererConfiguration()->GetScreenResolution();
-
-		m_swapChain.Resize(size.x(), size.y());
-
-		if (m_device.Exists())
-		{
-
-			D3D11_VIEWPORT viewPort;
-
-			viewPort.MinDepth = 0.f;
-			viewPort.MaxDepth = 1.f;
-			viewPort.TopLeftX = 0.f;
-			viewPort.TopLeftY = 0.f;
-			viewPort.Width    = (float) size.x();
-			viewPort.Height   = (float) size.y();
-
-			m_device.GetImmediateContext()->RSSetViewports(1, &viewPort);
-
-		}
-
-		m_resizeSwapChain = false;
-
-	}
+	__ApplyConfigurationChanges();
 
 	auto backBuffer = m_swapChain.GetBackBufferRenderTargetView();
 
@@ -144,7 +120,7 @@ void DX11Module::SetWindow(Window * window)
 	{
 
 		m_window = window;
-		m_mainWindowPointer = static_cast<IWindow*>(m_window);
+		m_mainWindowPointer = static_cast<IWindow *>(m_window);
 
 		m_window->AddListener(static_cast<IWindow::Listener*>(this));
 
@@ -306,5 +282,83 @@ void DX11Module::__CreateSharedResources(void)
 	                                                                     "MYE_QUAD",
 	                                                                     &quadBufferLoader,
 	                                                                     { { "type", "vertex" } });
+
+}
+
+void DX11Module::__ApplyConfigurationChanges(void)
+{
+
+	if (m_resizeSwapChain)
+	{
+
+		auto size = GetRendererConfiguration()->GetScreenResolution();
+
+		m_swapChain.Resize(size.x(), size.y());
+
+		if (m_device.Exists())
+		{
+
+			D3D11_VIEWPORT viewPort;
+
+			viewPort.MinDepth = 0.f;
+			viewPort.MaxDepth = 1.f;
+			viewPort.TopLeftX = 0.f;
+			viewPort.TopLeftY = 0.f;
+			viewPort.Width    = (float) size.x();
+			viewPort.Height   = (float) size.y();
+
+			m_device.GetImmediateContext()->RSSetViewports(1, &viewPort);
+
+		}
+
+		m_resizeSwapChain = false;
+
+	}
+
+	if (m_changeMSAA)
+	{
+
+		auto config = m_swapChain.GetConfiguration();
+
+		int msaa = GetRendererConfiguration()->GetMSAA();
+
+		switch (msaa)
+		{
+
+		case 0:
+			config.msaa = MSAA::MSAA_OFF;
+			break;
+
+		case 2:
+			config.msaa = MSAA::MSAA_2X;
+			break;
+
+		case 4:
+			config.msaa = MSAA::MSAA_4X;
+			break;
+
+		case 8:
+			config.msaa = MSAA::MSAA_8X;
+			break;
+
+		case 16:
+			config.msaa = MSAA::MSAA_16X;
+			break;
+
+		}
+
+		m_swapChain.Destroy();
+
+		m_swapChain = DX11SwapChain(config);
+		m_swapChain.Create();
+
+		m_changeMSAA = false;
+
+	}
+
+}
+
+void DX11Module::OnEvent(const IEvent * event)
+{
 
 }

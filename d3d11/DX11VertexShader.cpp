@@ -51,7 +51,7 @@ ID3D11VertexShader * DX11VertexShader::GetVertexShader(void)
 	return m_shader;
 }
 
-mye::core::String DX11VertexShader::GetCompileError(void)
+const String & DX11VertexShader::GetCompileError(void)
 {
 	return m_compileError;
 }

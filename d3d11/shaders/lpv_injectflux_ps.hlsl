@@ -22,15 +22,15 @@ PSOutput main(PSInput input)
 
 	float len = length(input.normal);
 
-	if (len < 0.1)
+	if (len < .01f)
 	{
 		discard;
 	}
 
-	float3 N  = normalize(input.normal);
+	float3 N  = input.normal / len;
 	float4 sh = SHCosineLobe(N);
 	
-	float3 intensity = len * .25f * MYE_INV_PI * input.flux;
+	float3 intensity = len * MYE_INV_PI * input.flux / (g_lpv.rsmSamples * g_lpv.rsmSamples);
 
 	PSOutput output;
 

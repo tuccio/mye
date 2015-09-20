@@ -63,21 +63,17 @@ bool DX11SwapChain::CreateSwapChain(void)
 
 	bool success = (
 		!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton()->
-			QueryInterface(__uuidof(IDXGIDevice),
-			               (void **) &dxgiDevice)) &&
+			QueryInterface(__uuidof(IDXGIDevice), (void **) &dxgiDevice)) &&
 
 		!__MYE_DX11_HR_TEST_FAILED(dxgiDevice->
-			GetParent(__uuidof(IDXGIAdapter),
-			          ((void **) &dxgiAdapter))) &&
+			GetParent(__uuidof(IDXGIAdapter), ((void **) &dxgiAdapter))) &&
 
 		!__MYE_DX11_HR_TEST_FAILED(dxgiAdapter->
-			GetParent(__uuidof(IDXGIFactory),
-			         ((void **) &dxgiFactory))) &&
+			GetParent(__uuidof(IDXGIFactory), ((void **) &dxgiFactory))) &&
 
 		!__MYE_DX11_HR_TEST_FAILED(dxgiFactory->
 			CreateSwapChain(DX11Device::GetSingleton().GetDevice(),
-			                &swapDesc,
-			                &m_swapChain))
+			                &swapDesc, &m_swapChain))
 		);
 
 	__MYE_DX11_RELEASE_COM(dxgiDevice);
@@ -141,4 +137,9 @@ void DX11SwapChain::ClearBackBuffer(const mye::math::Vector4f & color)
 		ClearRenderTargetView(m_backBufferTargetView,
 		                      color.Data());
 
+}
+
+const DX11SwapChainConfiguration & DX11SwapChain::GetConfiguration(void) const
+{
+	return m_swapChainConfiguration;
 }

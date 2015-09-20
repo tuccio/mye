@@ -33,7 +33,8 @@ namespace mye
 		class DX11Module :
 			public mye::core::GraphicsModule,
 			public mye::core::IWindow::Listener,
-			public mye::core::Singleton<DX11Module>
+			public mye::core::Singleton<DX11Module>,
+			public mye::core::IEventListener
 		{
 
 		public:
@@ -50,11 +51,6 @@ namespace mye
 
 			float GetFPS(void) const;
 
-			inline DX11Device * GetDevice(void)
-			{
-				return &m_device;
-			}
-
 			void RenderShaderResource(DX11ShaderResource & resource, const mye::math::Vector2i & position, const mye::math::Vector2i & size, int slice = 0);
 			void RenderFrustum(const mye::math::Frustum & frustum, const mye::math::Vector4 & color);
 
@@ -70,13 +66,17 @@ namespace mye
 				return m_deferredLightingRenderer.GetDepthBuffer();
 			}
 
+			void OnEvent(const mye::core::IEvent * event);
+
 		private:
 
 			DX11Device                     m_device;
 			mye::win::Window             * m_window;
 							             
 			DX11SwapChain                  m_swapChain;
+
 			bool                           m_resizeSwapChain;
+			bool                           m_changeMSAA;
 
 			// Renderers
 
@@ -91,6 +91,7 @@ namespace mye
 			int                            m_stopWatchBufferHead;
 
 			void __CreateSharedResources(void);
+			void __ApplyConfigurationChanges(void);
 
 		};
 

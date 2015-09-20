@@ -3,6 +3,6 @@
         "source": "../d3d11/shaders/quad_vs.hlsl"
     },
     "pixel": {
-        "source": "../d3d11/shaders/lpv_rsmsampler_ps.hlsl"
+        "source": "../d3d11/shaders/pp_bloom_threshold_ps.hlsl"
     }
 }

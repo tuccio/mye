@@ -93,52 +93,16 @@ bool DX11Texture::LoadImpl(void)
 			tex2dDesc.BindFlags |= D3D11_BIND_RENDER_TARGET;
 
 			if (!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton().GetDevice()->CreateTexture2D(&tex2dDesc, nullptr, &m_texture2d)) &&
-				CreateViews())
+				__CreateViews())
 			{
-				DX11Device::GetSingleton().GetImmediateContext()->UpdateSubresource(m_texture2d, 0, nullptr, image->GetData(), m_width * GetDataTypeSize(DataFormat::FLOAT4), 0);
+
+				unsigned int   rowPitch = m_width * GetDataTypeSize(m_format);
+				const void   * data     = image->GetData();
+
+				DX11Device::GetSingleton().GetImmediateContext()->UpdateSubresource(m_texture2d, 0, nullptr, data, rowPitch, 0);
 				GenerateMips();
 				loaded = true;
 			}
-
-			/*ID3D11Texture2D * mipmappedTexture = __CreateMipmappedTexture(image);
-
-			std::vector<D3D11_SUBRESOURCE_DATA> dataDescriptions;
-
-			int size = std::max(m_width, m_height);
-
-			int subresourceIndex = 0;
-
-			while (size != 0)
-			{
-
-				D3D11_MAPPED_SUBRESOURCE mappedResource;
-
-				DX11Device::GetSingleton().GetImmediateContext()->Map(mipmappedTexture, subresourceIndex++, D3D11_MAP_READ, 0, &mappedResource);
-
-				D3D11_SUBRESOURCE_DATA dataDesc;
-
-				dataDesc.pSysMem          = mappedResource.pData;
-				dataDesc.SysMemPitch      = mappedResource.RowPitch;
-				dataDesc.SysMemSlicePitch = 0;
-
-				dataDescriptions.push_back(dataDesc);
-
-				size >>= 1;
-
-			}
-
-			if (!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton().GetDevice()->CreateTexture2D(&tex2dDesc, &dataDescriptions[0], &m_texture2d)) &&
-				CreateViews())
-			{
-				loaded = true;
-			}
-
-			for (int i = 0; i < dataDescriptions.size(); i++)
-			{
-				DX11Device::GetSingleton().GetImmediateContext()->Unmap(mipmappedTexture, i);
-			}
-
-			__MYE_DX11_RELEASE_COM(mipmappedTexture);*/
 
 		}
 		else
@@ -151,7 +115,7 @@ bool DX11Texture::LoadImpl(void)
 			dataDesc.SysMemSlicePitch = 0;
 
 			if (!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton().GetDevice()->CreateTexture2D(&tex2dDesc, &dataDesc, &m_texture2d)) &&
-				CreateViews())
+				__CreateViews())
 			{
 				loaded = true;
 			}
@@ -277,21 +241,24 @@ bool DX11Texture::Create(int width, int height, DataFormat format, void * data)
 
 	}
 
-	return textureCreated && CreateViews();
+	return textureCreated && __CreateViews();
 
 }
 
-bool DX11Texture::CreateViews(void)
+bool DX11Texture::__CreateViews(void)
 {
 
-	bool renderTarget = m_params.Contains("renderTarget") && m_params.GetBool("renderTarget");
+	bool renderTarget        = m_params.Contains("renderTarget") && m_params.GetBool("renderTarget");
+	bool unorderedAccessView = m_params.Contains("unorderedAccessView") && m_params.GetBool("unorderedAccessView");
 
 	int  slices       = m_params.Contains("slices") ? m_params.GetInteger("slices") : 1;
 	String type       = m_params.Contains("type")   ? m_params.GetString("type")    : "2d";
 
-	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+	D3D11_SHADER_RESOURCE_VIEW_DESC  shaderResourceViewDesc;
 	
-	shaderResourceViewDesc.Format = GetDXGIFormat(m_format);
+	DXGI_FORMAT format = GetDXGIFormat(m_format);
+
+	shaderResourceViewDesc.Format  = format;
 
 	ID3D11Resource * resource = nullptr;
 
@@ -349,7 +316,13 @@ bool DX11Texture::CreateViews(void)
 		!__MYE_DX11_HR_TEST_FAILED(
 		DX11Device::GetSingleton()->CreateRenderTargetView(resource,
 			                                               nullptr,
-			                                               &m_renderTargetView)));
+			                                               &m_renderTargetView))) &&
+
+		(!unorderedAccessView ||
+		!__MYE_DX11_HR_TEST_FAILED(
+		DX11Device::GetSingleton()->CreateUnorderedAccessView(resource,
+			                                                  nullptr,
+			                                                  &m_unorderedAccessView)));
 
 }
 
@@ -382,6 +355,10 @@ void DX11Texture::SetMSAA(void)
 
 	switch (msaaSamples)
 	{
+
+	case 2:
+		m_msaa = MSAA::MSAA_2X;
+		break;
 
 	case 4:
 		m_msaa = MSAA::MSAA_4X;
@@ -420,53 +397,28 @@ ID3D11Texture3D * DX11Texture::GetTexture3D(void) const
 	return m_texture3d;
 }
 
-//static ID3D11Texture2D * __CreateMipmappedTexture(ImagePointer image)
-//{
-//
-//	ID3D11Texture2D * t2d;
-//
-//	int w = image->GetWidth();
-//	int h = image->GetHeight();
-//
-//	D3D11_TEXTURE2D_DESC tex2dDesc;
-//
-//	tex2dDesc.Width          = w;
-//	tex2dDesc.Height         = h;
-//
-//	tex2dDesc.MipLevels      = 0;
-//	tex2dDesc.ArraySize      = 1;
-//	tex2dDesc.Format         = DXGI_FORMAT_R32G32B32A32_FLOAT;
-//
-//	tex2dDesc.BindFlags      = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
-//	tex2dDesc.MiscFlags      = 0;
-//	tex2dDesc.Usage          = D3D11_USAGE_DEFAULT;
-//	tex2dDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
-//	tex2dDesc.SampleDesc     = DX11Device::GetSingleton().GetMSAASampleDesc(MSAA::MSAA_OFF, DXGI_FORMAT_R32G32B32A32_FLOAT);
-//
-//	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
-//
-//	shaderResourceViewDesc.Format                    = DXGI_FORMAT_R32G32B32A32_FLOAT;
-//	shaderResourceViewDesc.ViewDimension             = D3D11_SRV_DIMENSION_TEXTURE2D;
-//
-//	shaderResourceViewDesc.Texture2D.MostDetailedMip =  0;
-//	shaderResourceViewDesc.Texture2D.MipLevels       = -1;
-//
-//	ID3D11ShaderResourceView * srv;
-//
-//	if (!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton().GetDevice()->CreateTexture2D(&tex2dDesc, nullptr, &t2d)) &&
-//	    !__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton().GetDevice()->CreateShaderResourceView(t2d, &shaderResourceViewDesc, &srv)))
-//	{
-//
-//		DX11Device::GetSingleton().GetImmediateContext()->UpdateSubresource(t2d, 0, nullptr, image->GetData(), w * GetDataTypeSize(DataFormat::FLOAT4), 0);
-//
-//		DX11Device::GetSingleton().GetImmediateContext()->GenerateMips(srv);
-//
-//		__MYE_DX11_RELEASE_COM(srv);
-//
-//		return t2d;
-//
-//	}
-//
-//	return nullptr;
-//
-//}
+bool DX11Texture::Resolve(DX11Texture & destination)
+{
+
+	if (destination.m_width != m_width ||
+		destination.m_height != m_height ||
+		destination.m_format != m_format)
+	{
+
+		Parameters params = GetParametersList();
+		params.Remove("msaa");
+
+		destination.SetParametersList(params);
+
+		if (!destination.Create(m_width, m_height, m_format))
+		{
+			return false;
+		}
+
+	}
+
+	DX11Device::GetSingleton().GetImmediateContext()->ResolveSubresource(destination.m_texture2d, 0, m_texture2d, 0, GetDXGIFormat(m_format));
+
+	return true;
+
+}

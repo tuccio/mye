@@ -26,8 +26,8 @@ namespace mye
 
 			void Destroy(void);
 
-			ID3D11VertexShader * GetVertexShader(void);
-			mye::core::String    GetCompileError(void);
+			ID3D11VertexShader      * GetVertexShader(void);
+			const mye::core::String & GetCompileError(void);
 
 		protected:
 

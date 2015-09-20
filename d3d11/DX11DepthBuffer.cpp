@@ -28,19 +28,18 @@ bool DX11DepthBuffer::Create(void)
 
 	D3D11_TEXTURE2D_DESC depthStencilDesc;
 
-	depthStencilDesc.Width              = (m_depthBufferConfiguration.width ? m_depthBufferConfiguration.width : 1);
-	depthStencilDesc.Height             = (m_depthBufferConfiguration.height ? m_depthBufferConfiguration.height : 1);
-	depthStencilDesc.MipLevels          = 1;
-	depthStencilDesc.ArraySize          = m_depthBufferConfiguration.arraySize;
-	depthStencilDesc.Format             = DXGI_FORMAT_R32_TYPELESS;
+	depthStencilDesc.Width          = (m_depthBufferConfiguration.width ? m_depthBufferConfiguration.width : 1);
+	depthStencilDesc.Height         = (m_depthBufferConfiguration.height ? m_depthBufferConfiguration.height : 1);
+	depthStencilDesc.MipLevels      = 1;
+	depthStencilDesc.ArraySize      = m_depthBufferConfiguration.arraySize;
+	depthStencilDesc.Format         = DXGI_FORMAT_R32_TYPELESS;
+								    
+	depthStencilDesc.Usage          = D3D11_USAGE_DEFAULT;
+	depthStencilDesc.BindFlags      = D3D11_BIND_DEPTH_STENCIL;
+	depthStencilDesc.CPUAccessFlags = 0;
+	depthStencilDesc.MiscFlags      = 0;
 
-	depthStencilDesc.Usage              = D3D11_USAGE_DEFAULT;
-	depthStencilDesc.BindFlags          = D3D11_BIND_DEPTH_STENCIL;
-	depthStencilDesc.CPUAccessFlags     = 0;
-	depthStencilDesc.MiscFlags          = 0;
-
-	depthStencilDesc.SampleDesc.Count   = 1;
-	depthStencilDesc.SampleDesc.Quality = 0;
+	depthStencilDesc.SampleDesc     = DX11Device::GetSingleton().GetMSAASampleDesc(m_depthBufferConfiguration.msaa, DXGI_FORMAT_R32_TYPELESS);
 
 	if (m_depthBufferConfiguration.shaderResource)
 	{
@@ -60,27 +59,54 @@ bool DX11DepthBuffer::Create(void)
 	if (m_depthBufferConfiguration.arraySize > 1)
 	{
 
-		depthStencilViewDesc.ViewDimension                    = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
-		depthStencilViewDesc.Texture2DArray.ArraySize         = m_depthBufferConfiguration.arraySize;
-		depthStencilViewDesc.Texture2DArray.FirstArraySlice   = 0;
-		depthStencilViewDesc.Texture2DArray.MipSlice          = 0;
+		if (m_depthBufferConfiguration.msaa == MSAA::MSAA_OFF)
+		{
 
-		shaderResourceViewDesc.ViewDimension                  = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
-		shaderResourceViewDesc.Texture2DArray.ArraySize       = m_depthBufferConfiguration.arraySize;
-		shaderResourceViewDesc.Texture2DArray.FirstArraySlice = 0;
-		shaderResourceViewDesc.Texture2DArray.MostDetailedMip = 0;
-		shaderResourceViewDesc.Texture2DArray.MipLevels       = 1;
+			depthStencilViewDesc.ViewDimension                    = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
+			depthStencilViewDesc.Texture2DArray.ArraySize         = m_depthBufferConfiguration.arraySize;
+			depthStencilViewDesc.Texture2DArray.FirstArraySlice   = 0;
+			depthStencilViewDesc.Texture2DArray.MipSlice          = 0;
+
+			shaderResourceViewDesc.ViewDimension                  = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+			shaderResourceViewDesc.Texture2DArray.ArraySize       = m_depthBufferConfiguration.arraySize;
+			shaderResourceViewDesc.Texture2DArray.FirstArraySlice = 0;
+			shaderResourceViewDesc.Texture2DArray.MostDetailedMip = 0;
+			shaderResourceViewDesc.Texture2DArray.MipLevels       = 1;
+
+		}
+		else
+		{
+			
+			depthStencilViewDesc.ViewDimension                      = D3D11_DSV_DIMENSION_TEXTURE2DMSARRAY;
+			depthStencilViewDesc.Texture2DMSArray.ArraySize         = m_depthBufferConfiguration.arraySize;
+			depthStencilViewDesc.Texture2DMSArray.FirstArraySlice   = 0;
+
+			shaderResourceViewDesc.ViewDimension                    = D3D11_SRV_DIMENSION_TEXTURE2DMSARRAY;
+			shaderResourceViewDesc.Texture2DMSArray.ArraySize       = m_depthBufferConfiguration.arraySize;
+			shaderResourceViewDesc.Texture2DMSArray.FirstArraySlice = 0;
+
+		}
 
 	}
 	else
 	{
 
-		depthStencilViewDesc.ViewDimension               = D3D11_DSV_DIMENSION_TEXTURE2D;
-		depthStencilViewDesc.Texture2D.MipSlice          = 0;
+		if (m_depthBufferConfiguration.msaa == MSAA::MSAA_OFF)
+		{
 
-		shaderResourceViewDesc.ViewDimension             = D3D11_SRV_DIMENSION_TEXTURE2D;
-		shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
-		shaderResourceViewDesc.Texture2D.MipLevels       = 1;
+			depthStencilViewDesc.ViewDimension               = D3D11_DSV_DIMENSION_TEXTURE2D;
+			depthStencilViewDesc.Texture2D.MipSlice          = 0;
+
+			shaderResourceViewDesc.ViewDimension             = D3D11_SRV_DIMENSION_TEXTURE2D;
+			shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+			shaderResourceViewDesc.Texture2D.MipLevels       = 1;
+
+		}
+		else
+		{
+			depthStencilViewDesc.ViewDimension               = D3D11_DSV_DIMENSION_TEXTURE2DMS;
+			shaderResourceViewDesc.ViewDimension             = D3D11_SRV_DIMENSION_TEXTURE2DMS;
+		}
 
 	}	
 
@@ -140,6 +166,18 @@ bool DX11DepthBuffer::ResizeArray(int size)
 	m_depthBufferConfiguration.arraySize = size;
 	Destroy();
 	return Create();
+}
+
+bool DX11DepthBuffer::SetMSAA(MSAA msaa)
+{
+	m_depthBufferConfiguration.msaa = msaa;
+	Destroy();
+	return Create();
+}
+
+MSAA DX11DepthBuffer::GetMSAA(void) const
+{
+	return m_depthBufferConfiguration.msaa;
 }
 
 void DX11DepthBuffer::Clear(float depth)

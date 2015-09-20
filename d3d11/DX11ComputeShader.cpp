@@ -1,4 +1,4 @@
-#include "DX11PixelShader.h"
+#include "DX11ComputeShader.h"
 #include "DX11Utils.h"
 
 #include <d3dcompiler.h>
@@ -10,43 +10,43 @@
 using namespace mye::dx11;
 using namespace mye::core;
 
-DX11PixelShader::DX11PixelShader(ResourceManager      * owner,
-								 const String         & name,
-								 ManualResourceLoader * manual,
-								 bool precompiled) :
-	DX11Shader(owner, name, manual, precompiled)
+DX11ComputeShader::DX11ComputeShader(ResourceManager      * owner,
+                                     const String         & name,
+                                     ManualResourceLoader * manual,
+                                     bool precompiled) :
+                                     DX11Shader(owner, name, manual, precompiled)
 {
 	m_shader = nullptr;
 }
 
 
-DX11PixelShader::~DX11PixelShader(void)
+DX11ComputeShader::~DX11ComputeShader(void)
 {
 }
 
-void DX11PixelShader::Use(void)
+void DX11ComputeShader::Use(void)
 {
-	DX11Device::GetSingleton().GetImmediateContext()->PSSetShader(m_shader, nullptr, 0);
+	DX11Device::GetSingleton().GetImmediateContext()->CSSetShader(m_shader, nullptr, 0);
 }
 
-void DX11PixelShader::Dispose(void)
+void DX11ComputeShader::Dispose(void)
 {
 	DX11Device::GetSingleton().GetImmediateContext()->PSSetShader(nullptr, nullptr, 0);
 }
 
 
-ID3D11PixelShader * DX11PixelShader::GetPixelShader(void)
+ID3D11ComputeShader * DX11ComputeShader::GetComputeShader(void)
 {
 	return m_shader;
 }
 
-const String & DX11PixelShader::GetCompileError(void)
+const String & DX11ComputeShader::GetCompileError(void)
 {
 	return m_compileError;
 }
 
 
-bool DX11PixelShader::LoadImpl(void)
+bool DX11ComputeShader::LoadImpl(void)
 {
 
 	bool success = false;
@@ -85,22 +85,22 @@ bool DX11PixelShader::LoadImpl(void)
 
 		auto defines = CreateDefinesVector();
 
-		defines.insert(defines.begin(), { "MYE_PIXEL_SHADER", "" });
+		defines.insert(defines.begin(), { "MYE_COMPUTE_SHADER", "" });
 
 		String sourceCode = LoadSourceCode();
 
 		if (__MYE_DX11_HR_TEST_FAILED(D3DCompile(
-				sourceCode.CString(),
-				sourceCode.Length(),
-				sourceFile.CString(),
-				&defines[0],
-				D3D_COMPILE_STANDARD_FILE_INCLUDE,
-				"main",
-				"ps_5_0",
-				compileFlags,
-				0x0,
-				&code,
-				&error)))
+			sourceCode.CString(),
+			sourceCode.Length(),
+			sourceFile.CString(),
+			&defines[0],
+			D3D_COMPILE_STANDARD_FILE_INCLUDE,
+			"main",
+			"cs_5_0",
+			compileFlags,
+			0x0,
+			&code,
+			&error)))
 		{
 			m_compileError = (LPCSTR) error->GetBufferPointer();
 			Logger::LogErrorOptional("DX11 Shader Compilation", m_compileError);
@@ -115,16 +115,16 @@ bool DX11PixelShader::LoadImpl(void)
 
 	if (code &&
 		!__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton()->
-			CreatePixelShader(code->GetBufferPointer(),
-			                  code->GetBufferSize(),
-			                  nullptr,
-			                  &m_shader)))
+		CreateComputeShader(code->GetBufferPointer(),
+		code->GetBufferSize(),
+		nullptr,
+		&m_shader)))
 	{
 		success = true;
 	}
 	else
 	{
-		Logger::LogErrorOptional("DX11 Shader Compilation", sourceFile + " does not appear to be a valid compiled pixel shader.");
+		Logger::LogErrorOptional("DX11 Shader Compilation", sourceFile + " does not appear to be a valid compiled compute shader.");
 	}
 
 	if (!success)
@@ -136,26 +136,26 @@ bool DX11PixelShader::LoadImpl(void)
 
 }
 
-void DX11PixelShader::UnloadImpl(void)
+void DX11ComputeShader::UnloadImpl(void)
 {
 
 	Destroy();
 
 }
 
-size_t DX11PixelShader::CalculateSizeImpl(void)
+size_t DX11ComputeShader::CalculateSizeImpl(void)
 {
 	return 0;
 }
 
-void DX11PixelShader::Destroy(void)
+void DX11ComputeShader::Destroy(void)
 {
-	
+
 	if (m_shader)
 	{
 		__MYE_DX11_RELEASE_COM(m_shader);
 	}
-	
+
 	m_compileError.Clear();
 
 }

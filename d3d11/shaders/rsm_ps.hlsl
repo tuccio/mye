@@ -51,7 +51,6 @@ struct PSOutput
 	float4 position : SV_Target0;
 	float4 normal   : SV_Target1;
 	float4 flux     : SV_Target2;
-	float4 depth    : SV_Target3;
 
 };
 
@@ -113,8 +112,7 @@ PSOutput main(PSInput input)
 
 	output.position = float4(input.positionWS, area);
 	output.normal   = float4(N, 1);
-	output.flux     = float4(saturate(irradiance * NdotL) * albedo * MYE_CONE90_SOLID_ANGLE * MYE_INV_PI, 1);
-	output.depth    = float4(LightSpaceLinearDepth(g_light, input.positionCS, input.positionWS), 0, 0, 1);
+	output.flux     = float4(irradiance * NdotL * albedo * MYE_CONE90_SOLID_ANGLE * MYE_INV_PI, 1);
 
 	return output;
 

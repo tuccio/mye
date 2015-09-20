@@ -27,11 +27,6 @@ float4 main(QuadInput input) : SV_Target0
 
 	GBufferData data = GBufferRead(input.positionCS.xy);
 
-	float4 shNormal = SHCosineLobe(- data.normal);
-
-	//int3   cellCoords = LPVGetGridCell(data.position);
-	//float3 texCoords  = float3(cellCoords.xyz) / g_lpv.lpvResolution;
-	//float3 texCoords  = (data.position - g_lpv.minCorner) / g_lpv.cellSize / g_lpv.lpvResolution;
 
 	float3 cell         = (data.position - g_lpv.minCorner + .5f) / g_lpv.cellSize;
 	float3 sampleCoords = cell / g_lpv.lpvResolution;
@@ -48,9 +43,12 @@ float4 main(QuadInput input) : SV_Target0
 	// As in the crytek paper, approximate the distance r from the surfel as half the
 	// cell size, and thus calculate the irradiance like I/r^2
 
-	float  falloff          = 4.f / (g_lpv.cellSize * g_lpv.cellSize);
-	float3 irradiance       = ambientOcclusion * r.lpvAttenuation * max(0, SHDot(sh, shNormal)) * falloff * MYE_INV_PI;
-	//float3 irradiance       = ambientOcclusion * saturate(r.lpvAttenuation * SHReconstruct(sh, shNormal) * falloff);
+	float  falloff    = 4.f / (g_lpv.cellSize * g_lpv.cellSize);
+
+	float4 shNormal   = SHCosineLobe(- data.normal);
+	float3 irradiance = ambientOcclusion * max(0, r.lpvAttenuation * SHDot(sh, shNormal)) * falloff * MYE_INV_PI;
+
+	//float3 irradiance   = ambientOcclusion * max(0, r.lpvAttenuation * SHReconstruct(sh, - data.normal)) * falloff * MYE_INV_PI;
 
 	return float4(irradiance, 0.f);
 

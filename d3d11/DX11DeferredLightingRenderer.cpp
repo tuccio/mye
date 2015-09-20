@@ -30,10 +30,15 @@ enum {
 	__MYE_SHADER_FINAL_NONE = -1, __MYE_SHADER_FINAL, __MYE_SHADER_FINAL_DIFF, __MYE_SHADER_FINAL_SPEC, __MYE_SHADER_FINAL_DIFF_SPEC
 };
 
+#define __MYE_DX11_SSAO_RATIO              .5f
+#define __MYE_DX11_PP_RATIO                .5f
+#define __MYE_DX11_PP_LUMINANCE_RESOLUTION 1024
+
 DX11DeferredLightingRenderer::DX11DeferredLightingRenderer(void) :
 	m_initialized(false),
 	m_clearColor(0.f),
-	m_vsmEnabled(false)
+	m_vsmEnabled(false),
+	m_msaa(MSAA::MSAA_OFF)
 {
 
 	Parameters params({ { "renderTarget", "true" } });
@@ -44,12 +49,18 @@ DX11DeferredLightingRenderer::DX11DeferredLightingRenderer(void) :
 	m_specularLight.SetParametersList(params);
 	m_deferredOutput.SetParametersList(params);
 
+	m_ppBuffers[0].SetParametersList(params);
+	m_ppBuffers[1].SetParametersList(params);
+
+	params.Add("generateMips", "true");
+
 	DX11DepthBufferConfiguration depthBufferConf;
 
 	depthBufferConf.height         = 0;
 	depthBufferConf.width          = 0;
 	depthBufferConf.shaderResource = true;
 	depthBufferConf.arraySize      = 1;
+	depthBufferConf.msaa           = MSAA::MSAA_OFF;
 
 	m_depthBuffer = DX11DepthBuffer(depthBufferConf);
 
@@ -74,7 +85,7 @@ bool DX11DeferredLightingRenderer::Init(void)
 	if (m_depthBuffer.Create() &&
 	    m_rsm.Create() &&
 	    m_lpv.Create(configuration->GetLPVResolution(), configuration->GetLPVRSMSamples()) &&
-		m_ssao.Create(resolution.x() * .5f, resolution.y() * .5f) &&
+	    m_ssao.Create(resolution.x() * __MYE_DX11_SSAO_RATIO, resolution.y() * __MYE_DX11_SSAO_RATIO) &&
 	    __CreateShaders() &&
 	    __CreateConstantBuffers() &&
 	    __CreateContextStates())
@@ -104,7 +115,12 @@ void DX11DeferredLightingRenderer::Shutdown(void)
 
 		m_gbuffer0.Destroy();
 		m_gbuffer1.Destroy();
+
 		m_diffuseLight.Destroy();
+		m_specularLight.Destroy();
+
+		m_ssao.Destroy();
+		m_vsm.Destroy();
 
 		m_rsm.Destroy();
 		m_lpv.Destroy();
@@ -139,6 +155,17 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 {
 
 	__UpdateRenderConfiguration();
+
+	D3D11_VIEWPORT fullscreenViewport;
+
+	fullscreenViewport.TopLeftX = 0.f;
+	fullscreenViewport.TopLeftY = 0.f;
+	fullscreenViewport.Width    = m_gbuffer0.GetWidth();
+	fullscreenViewport.Height   = m_gbuffer0.GetHeight();
+	fullscreenViewport.MinDepth = 0.f;
+	fullscreenViewport.MaxDepth = 1.f;
+
+	DX11Device::GetSingleton().SetViewports(&fullscreenViewport, 1);
 
 	/* Common samplers */
 	
@@ -183,7 +210,7 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 		/* First step (geometry buffer) */
 
-		ID3D11RenderTargetView * gbuffer[] = {
+		ID3D11RenderTargetView * gbufferRT[] = {
 			m_gbuffer0.GetRenderTargetView(),
 			m_gbuffer1.GetRenderTargetView()
 		};
@@ -193,7 +220,7 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 		m_depthBuffer.Clear();
 
-		DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(2, gbuffer, m_depthBuffer.GetDepthStencilView());
+		DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(2, gbufferRT, m_depthBuffer.GetDepthStencilView());
 
 		DX11Device::GetSingleton().SetBlending(false);
 		DX11Device::GetSingleton().SetDepthTest(DX11DepthTest::ON);
@@ -324,8 +351,26 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 		DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(0, nullptr, nullptr);
 
-		m_gbuffer0.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_GBUFFER0);
-		m_gbuffer1.Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_GBUFFER1);
+		DX11ShaderResource * gbufferSRV[2];
+
+		if (m_msaa != MSAA::MSAA_OFF)
+		{
+
+			m_gbuffer0.Resolve(m_msaaResolveAux[0]);
+			m_gbuffer1.Resolve(m_msaaResolveAux[1]);
+
+			gbufferSRV[0] = &m_msaaResolveAux[0];
+			gbufferSRV[1] = &m_msaaResolveAux[1];
+
+		}
+		else
+		{
+			gbufferSRV[0] = &m_gbuffer0;
+			gbufferSRV[1] = &m_gbuffer1;
+		}
+
+		gbufferSRV[0]->Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_GBUFFER0);
+		gbufferSRV[1]->Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_GBUFFER1);
 
 		m_randomCosSin->Load();
 		m_randomCosSin->Bind(DX11PipelineStage::PIXEL_SHADER, __MYE_DX11_TEXTURE_SLOT_RANDOM);
@@ -521,15 +566,15 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 		}
 
-		m_gbuffer0.Unbind();
-		m_gbuffer1.Unbind();
+		gbufferSRV[0]->Unbind();
+		gbufferSRV[1]->Unbind();
 
 		/* Final pass (shading) */
 
 		DX11Device::GetSingleton().SetDepthTest(DX11DepthTest::LOOKUP);
 		DX11Device::GetSingleton().SetBlending(false);
 
-		m_deferredOutput.ClearRenderTarget(Vector4(0.f));
+		m_deferredOutput.ClearRenderTarget(0);
 
 		ID3D11RenderTargetView * deferredOutput = m_deferredOutput.GetRenderTargetView();
 
@@ -540,7 +585,7 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 		backCull.Use();
 
-		DX11Device::GetSingleton().GetImmediateContext()->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
+		DX11Device::GetSingleton().SetBlending(false);
 
 		currentState = __MYE_SHADER_FINAL_NONE;
 
@@ -622,17 +667,95 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 		m_diffuseLight.Unbind();
 		m_specularLight.Unbind();
 
-		m_tonemapping->Use();
-
+		DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(0, nullptr, nullptr);
 		DX11Device::GetSingleton().SetDepthTest(DX11DepthTest::OFF);
-		DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(1, &target, nullptr);
 
-		m_deferredOutput.Bind(DX11PipelineStage::PIXEL_SHADER, 0);
+		DX11Texture * frame;
+
+		if (m_msaa == MSAA::MSAA_OFF)
+		{
+			frame = &m_deferredOutput;
+		}
+		else
+		{
+			m_deferredOutput.Resolve(m_msaaResolveAux[0]);
+			frame = &m_msaaResolveAux[0];
+		}
+
+		frame->Bind(DX11PipelineStage::PIXEL_SHADER, 0);
 
 		DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+		/* Bloom */
+
+		ID3D11RenderTargetView * ppBuffersRTV[] = { m_ppBuffers[0].GetRenderTargetView(), m_ppBuffers[1].GetRenderTargetView() };
+
+		D3D11_VIEWPORT ppViewport;
+
+		ppViewport.TopLeftX = 0.f;
+		ppViewport.TopLeftY = 0.f;
+		ppViewport.Width    = m_ppBuffers[0].GetWidth();
+		ppViewport.Height   = m_ppBuffers[0].GetHeight();
+		ppViewport.MinDepth = 0.f;
+		ppViewport.MaxDepth = 1.f;
+
+		DX11Device::GetSingleton().SetViewports(&ppViewport, 1);
+
+		m_ppBloomThreshold->Use();
+
+		DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(1, &ppBuffersRTV[0], nullptr);
+
 		DX11Device::GetSingleton().GetImmediateContext()->Draw(4, 0);
 
-		m_deferredOutput.Unbind();
+		m_ppBloomBlur[0]->Use();
+
+		DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(1, &ppBuffersRTV[1], nullptr);
+		m_ppBuffers[0].Bind(DX11PipelineStage::PIXEL_SHADER, 1);
+
+		DX11Device::GetSingleton().GetImmediateContext()->Draw(4, 0);
+
+		m_ppBuffers[0].Unbind();
+
+		m_ppBloomBlur[1]->Use();
+
+		DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(1, &ppBuffersRTV[0], nullptr);
+		m_ppBuffers[1].Bind(DX11PipelineStage::PIXEL_SHADER, 1);
+
+		DX11Device::GetSingleton().GetImmediateContext()->Draw(4, 0);
+
+		m_ppBuffers[1].Unbind();
+
+		DX11Texture * bloomedFrame = &m_specularLight;
+		ID3D11RenderTargetView * bloomedFrameRTV = bloomedFrame->GetRenderTargetView();
+
+		DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(1, &bloomedFrameRTV, nullptr);
+
+		m_ppBuffers[0].Bind(DX11PipelineStage::PIXEL_SHADER, 1);
+
+		/* Render bloom on full screen */
+
+		DX11Device::GetSingleton().SetViewports(&fullscreenViewport, 1);
+
+		m_ppBloomCombine->Use();
+		
+		DX11Device::GetSingleton().GetImmediateContext()->Draw(4, 0);
+
+		m_ppBuffers[0].Unbind();
+
+		frame->Unbind();
+
+		/* Tonemap */
+
+
+		m_tonemapping->Use();
+		
+		DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(1, &target, nullptr);
+
+		bloomedFrame->Bind(DX11PipelineStage::PIXEL_SHADER, 0);
+
+		DX11Device::GetSingleton().GetImmediateContext()->Draw(4, 0);
+
+		bloomedFrame->Unbind();
 
 	}
 
@@ -788,7 +911,9 @@ void DX11DeferredLightingRenderer::__UpdateRenderConfiguration(void)
 				break;
 
 			case RendererVariable::RESOLUTION:
+
 				__ResizeBuffers(configuration->GetScreenResolution());
+
 				break;
 
 			case RendererVariable::PCFENABLED:
@@ -833,8 +958,13 @@ void DX11DeferredLightingRenderer::__UpdateRenderConfiguration(void)
 
 				if (configuration->GetVSMExponential())
 				{
+
+					
+
 					m_deferredLights->AddMacroDefinition("MYE_SHADOW_MAP_EVSM");
+
 					m_vsm.SetExponentialTest(true);
+
 				}
 				else
 				{
@@ -845,6 +975,48 @@ void DX11DeferredLightingRenderer::__UpdateRenderConfiguration(void)
 				m_deferredLights->Load();
 
 				break;
+
+			case RendererVariable::MSAA:
+
+			{
+
+				Parameters gbParams = m_gbuffer0.GetParametersList();
+				Parameters doParams = m_deferredOutput.GetParametersList();
+
+				int    msaaSamples = configuration->GetMSAA();
+				String msaa        = ToString(msaaSamples);
+
+				gbParams.Add("msaa", msaa);
+				doParams.Add("msaa", msaa);
+
+				m_gbuffer0.SetParametersList(gbParams);
+				m_gbuffer1.SetParametersList(gbParams);
+
+				m_deferredOutput.SetParametersList(doParams);
+
+				m_gbuffer0.Destroy();
+				m_gbuffer1.Destroy();
+				m_deferredOutput.Destroy();
+
+				auto size = configuration->GetScreenResolution();
+
+				m_gbuffer0.Create(size.x(), size.y(), DataFormat::HALF4);
+				m_gbuffer1.Create(size.x(), size.y(), DataFormat::HALF4);
+				m_deferredOutput.Create(size.x(), size.y(), DataFormat::HALF4);
+
+				m_depthBuffer.SetMSAA(static_cast<MSAA>(msaaSamples));
+
+				if (msaaSamples == 0)
+				{
+					m_msaaResolveAux[0].Destroy();
+					m_msaaResolveAux[1].Destroy();
+				}
+
+				m_msaa = static_cast<MSAA>(msaaSamples);
+
+				break;
+
+			}
 
 			}
 
@@ -869,6 +1041,9 @@ void DX11DeferredLightingRenderer::__UpdateRenderConfiguration(void)
 		r.vsmMinVariance            = configuration->GetVSMMinVariance();
 		r.vsmMinBleeding            = configuration->GetVSMMinBleeding();
 
+		r.esmPositiveExponent       = configuration->GetESMPositiveExponent();
+		r.esmNegativeExponent       = configuration->GetESMNegativeExponent();
+
 		r.csmSplits                 = configuration->GetCSMSplits();
 		r.csmDebug                  = configuration->GetCSMDebug();
 
@@ -877,6 +1052,9 @@ void DX11DeferredLightingRenderer::__UpdateRenderConfiguration(void)
 		r.pcfKernelInvSquare        = 1.f / (r.pcfKernel * r.pcfKernel);
 
 		r.lpvAttenuation            = configuration->GetLPVAttenuation();
+
+		r.ppBloomThreshold          = configuration->GetPPBloomThreshold();
+		r.ppBloomPower              = configuration->GetPPBloomPower();
 
 		m_configurationBuffer.SetData(&r);
 
@@ -889,14 +1067,26 @@ void DX11DeferredLightingRenderer::__ResizeBuffers(const Vector2i & size)
 
 	m_gbuffer0.Destroy();
 	m_gbuffer1.Destroy();
+
 	m_diffuseLight.Destroy();
 	m_specularLight.Destroy();
+	
+	m_deferredOutput.Destroy();
+
+	m_ssao.Destroy();
 
 	m_gbuffer0.Create(size.x(), size.y(), DataFormat::HALF4);
 	m_gbuffer1.Create(size.x(), size.y(), DataFormat::HALF4);
+
 	m_diffuseLight.Create(size.x(), size.y(), DataFormat::HALF4);
 	m_specularLight.Create(size.x(), size.y(), DataFormat::HALF4);
+
 	m_deferredOutput.Create(size.x(), size.y(), DataFormat::HALF4);
+
+	m_ppBuffers[0].Create(size.x() * __MYE_DX11_PP_RATIO, size.y() * __MYE_DX11_PP_RATIO, DataFormat::HALF4);
+	m_ppBuffers[1].Create(size.x() * __MYE_DX11_PP_RATIO, size.y() * __MYE_DX11_PP_RATIO, DataFormat::HALF4);
+
+	m_ssao.Create(size.x() * __MYE_DX11_SSAO_RATIO, size.y() * __MYE_DX11_SSAO_RATIO);
 
 	m_depthBuffer.Resize(size.x(), size.y());
 
@@ -955,6 +1145,26 @@ bool DX11DeferredLightingRenderer::__CreateShaders(void)
 	                                                                                                                      nullptr,
 	                                                                                                                      { { "type", "program" } });
 
+	m_ppBloomThreshold = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
+	                                                                                           "./shaders/pp_bloom_threshold.msh",
+	                                                                                           nullptr,
+	                                                                                           { { "type", "program" } });
+
+	m_ppBloomBlur[0] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
+	                                                                                         "./shaders/pp_bloom_blur_h.msh",
+	                                                                                         nullptr,
+	                                                                                         { { "type", "program" } });
+
+	m_ppBloomBlur[1] = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
+	                                                                                         "./shaders/pp_bloom_blur_v.msh",
+	                                                                                         nullptr,
+	                                                                                         { { "type", "program" } });
+
+	m_ppBloomCombine = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
+	                                                                                         "./shaders/pp_bloom_combine.msh",
+	                                                                                         nullptr,
+	                                                                                         { { "type", "program" } });
+	                                                                                      
 	m_tonemapping = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
 	                                                                                      "./shaders/tonemapping.msh",
 	                                                                                      nullptr,
@@ -970,7 +1180,10 @@ bool DX11DeferredLightingRenderer::__CreateShaders(void)
 	       m_deferredFinal[1]->Load() &&
 	       m_deferredFinal[2]->Load() &&
 	       m_deferredFinal[3]->Load() &&
+	       m_ppBloomThreshold->Load() &&
+	       m_ppBloomBlur[0]->Load() &&
+	       m_ppBloomBlur[1]->Load() &&
+	       m_ppBloomCombine->Load() &&
 	       m_tonemapping->Load();
-	       
 
 }

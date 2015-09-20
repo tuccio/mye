@@ -9,6 +9,7 @@
 #include "DX11Device.h"
 #include "DX11RenderTarget.h"
 #include "DX11ShaderResource.h"
+#include "DX11UnorderedAccessView.h"
 
 namespace mye
 {
@@ -31,7 +32,8 @@ namespace mye
 		class DX11Texture :
 			public mye::core::Texture,
 			public DX11RenderTarget,
-			public DX11ShaderResource
+			public DX11ShaderResource,
+			public DX11UnorderedAccessView
 		{
 
 		public:
@@ -52,6 +54,8 @@ namespace mye
 			ID3D11Texture2D * GetTexture2D(void) const;
 			ID3D11Texture3D * GetTexture3D(void) const;
 
+			bool Resolve(DX11Texture & destination);
+
 		protected:
 
 			bool LoadImpl(void);
@@ -59,7 +63,7 @@ namespace mye
 
 			size_t CalculateSizeImpl(void);
 
-			bool CreateViews(void);
+			bool __CreateViews(void);
 
 			union
 			{
@@ -67,10 +71,10 @@ namespace mye
 				ID3D11Texture3D * m_texture3d;
 			};
 
-			D3D11_SRV_DIMENSION   m_textureType;
-
-			mye::core::DataFormat m_format;
-			MSAA                  m_msaa;
+			D3D11_SRV_DIMENSION         m_textureType;
+								        
+			mye::core::DataFormat       m_format;
+			MSAA                        m_msaa;
 
 		private:
 

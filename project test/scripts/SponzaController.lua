@@ -55,7 +55,7 @@ end
 function SponzaController:OnKeyboardKeyHold(key, t)
 
 	local angle = 10 * Time.delta
-	local v     = vec3(0.25, 0.3, -0.8):Normalize()
+	local v     = vec3(1, 0.3, -1):Normalize()
 
 	if key == KeyboardVK.R then
 	
@@ -117,7 +117,7 @@ function SponzaController:OnKeyboardKeyPress(key)
 		
 		if not hLPVAnim:Exists() then
 			hLPVAnim = GameObjects:CreateEntity('LPVAnimationController', 'lpvAnim')
-			hLPVAnim.maxIterations = 32
+			hLPVAnim.maxIterations = 22
 		else
 			hLPVAnim:Restart()
 		end

@@ -4,7 +4,7 @@ struct VSInput
 {
 	uint vertexID : SV_VertexID;
 	uint instance : SV_InstanceID;
-};
+}; 
 
 QuadInput main(VSInput input)
 {

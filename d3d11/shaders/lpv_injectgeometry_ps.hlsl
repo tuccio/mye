@@ -13,14 +13,17 @@ struct PSInput
 float4 main(PSInput input) : SV_Target0
 {
 
-	if (length(input.normal) < 0.01)
+	float len = length(input.normal);
+
+	if (len < .01f)
 	{
 		discard;
 	}
 
-	float4 shOccluder = SHCosineLobe(normalize(input.normal));
+	float3 N          = input.normal / len;
+	float4 shOccluder = SHCosineLobe(N);
 
-	float  areaRatio = saturate(input.surfelArea / (g_lpv.cellSize * g_lpv.cellSize));
+	float  areaRatio = saturate(len * input.surfelArea / (g_lpv.cellSize * g_lpv.cellSize));
 
 	return SHScale(shOccluder, areaRatio);
 

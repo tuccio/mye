@@ -53,6 +53,8 @@ namespace mye
 
 			void ClearBackBuffer(const mye::math::Vector4f & color);
 
+			const DX11SwapChainConfiguration & GetConfiguration(void) const;			
+
 		private:
 
 			bool CreateSwapChain(void);

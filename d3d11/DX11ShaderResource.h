@@ -83,10 +83,10 @@ namespace mye
 
 			ID3D11ShaderResourceView * m_shaderResourceView;
 
+		private:
+
 			int                        m_lastBoundSlot;
 			DX11PipelineStage          m_lastBoundStage;
-
-		private:
 
 			inline auto GetBindFunction(DX11PipelineStage stage) -> decltype(&ID3D11DeviceContext::PSSetShaderResources)
 			{

@@ -82,6 +82,9 @@ namespace mye
 				float        vsmMinVariance;
 				float        vsmMinBleeding;
 
+				float        esmPositiveExponent;
+				float        esmNegativeExponent;
+
 				unsigned int csmSplits;
 				int          csmDebug;
 				
@@ -90,6 +93,9 @@ namespace mye
 				float        pcfKernelInvSquare;
 
 				float        lpvAttenuation;
+
+				float        ppBloomThreshold;
+				float        ppBloomPower;
 
 			};
 
