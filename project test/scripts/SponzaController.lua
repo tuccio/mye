@@ -2,7 +2,8 @@ local SponzaController = { }
 
 function SponzaController:Init()
 	
-	Graphics.window.caption = 'Sponza test'
+	Graphics.window.caption = 'Sponza'
+	Graphics.vsync          = true
 	
 	r.shadowMapResolution       = 2048
 	
@@ -11,18 +12,21 @@ function SponzaController:Init()
 	r.vsmMinBleeding            = 0.55
 	r.vsmMinVariance            = 0.0001
 	
+	r.esmPositiveExponent       = 30
+	r.esmNegativeExponent       = -1
+	
 	r.pcfEnabled                = false
-	r.shadowMapBias             = 0
+	r.shadowMapBias             = 0.0035
 	r.shadowMapNormalOffsetBias = 0
 	r.csmSplits                 = 1
 	
 	r.lpvEnabled    = false
-	r.lpvIterations = 32
+	r.lpvIterations = 24
 	r.lpvResolution = 32
 	r.lpvAABB       = AABB.FromMinMax(vec3(-40), vec3(40))
 		
 	r.lpvFluxInjectionBias     = 0.5
-	r.lpvGeometryInjectionBias = 8
+	r.lpvGeometryInjectionBias = 0
 	
 	local hCam = GameObjects:CreateEntity('Camera', 'camera')
 	
@@ -43,8 +47,6 @@ function SponzaController:Init()
 		System.PopupMessage('Cannot create camera')
 		Game:Quit()
 	end
-	
-	local hShadowDebug = GameObjects:CreateEntity('ShadowDebug', 'shadowDebug')
 	
 end
 

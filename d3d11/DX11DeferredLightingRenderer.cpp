@@ -49,10 +49,11 @@ DX11DeferredLightingRenderer::DX11DeferredLightingRenderer(void) :
 	m_specularLight.SetParametersList(params);
 	m_deferredOutput.SetParametersList(params);
 
-	m_ppBuffers[0].SetParametersList(params);
-	m_ppBuffers[1].SetParametersList(params);
+	Parameters ppParams({ { "renderTarget", "true" } });
 
-	params.Add("generateMips", "true");
+	m_ppBuffers[0].SetParametersList(ppParams);
+	m_ppBuffers[1].SetParametersList(ppParams);
+
 
 	DX11DepthBufferConfiguration depthBufferConf;
 
@@ -745,7 +746,6 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 		frame->Unbind();
 
 		/* Tonemap */
-
 
 		m_tonemapping->Use();
 		

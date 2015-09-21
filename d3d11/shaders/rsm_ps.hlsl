@@ -13,7 +13,7 @@
 #include "vsm_moments.hlsli"
 #endif
 
-#define MYE_CONE90_SOLID_ANGLE        2.09439510f
+#define MYE_CONE90_SOLID_ANGLE 2.09439510f
 
 /* Constant buffers */
 
@@ -108,11 +108,13 @@ PSOutput main(PSInput input)
 
 	float3 irradiance = LightIrradiance(g_light, input.positionWS);
 
+	float ratio = MYE_CONE90_SOLID_ANGLE * MYE_INV_PI / (r.shadowMapResolution * r.shadowMapResolution);
+
 	PSOutput output;
 
 	output.position = float4(input.positionWS, area);
 	output.normal   = float4(N, 1);
-	output.flux     = float4(irradiance * NdotL * albedo * MYE_CONE90_SOLID_ANGLE * MYE_INV_PI, 1);
+	output.flux     = float4(irradiance * NdotL * albedo * ratio, 1);
 
 	return output;
 

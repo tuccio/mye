@@ -116,6 +116,11 @@ namespace mye
 				m_antiFlickeringDelta = delta;
 			}
 
+			void SetZPrepass(bool zPrepass)
+			{
+				m_useZPrepass = zPrepass;
+			}
+
 		private:
 
 			bool                       m_initialized;
@@ -129,7 +134,7 @@ namespace mye
 			DX11DepthBuffer            m_depth;
 									 
 			int                        m_resolution;
-			bool                       m_varianceShadowMapping;
+			bool                       m_useZPrepass;
 									 
 			int                        m_csmSplits;
 			mye::math::Real            m_csmLogWeight;

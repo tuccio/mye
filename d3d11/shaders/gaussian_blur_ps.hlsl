@@ -14,6 +14,14 @@
 #define __MYE_GAUSSIAN_BLUR_KERNEL_END   (MYE_GAUSSIAN_BLUR_KERNEL_SIZE >> 1)
 #define __MYE_GAUSSIAN_BLUR_KERNEL_START (- __MYE_GAUSSIAN_BLUR_KERNEL_END)
 
+/* Define MYE_GAUSSIAN_BLUR_KERNEL as the gaussian kernel (comma separated values) to avoid runtime computations */
+#ifdef MYE_GAUSSIAN_BLUR_KERNEL
+static float g_gaussianKernel[] = { MYE_GAUSSIAN_BLUR_KERNEL };
+#define __MYE_GAUSSIAN_WEIGHT(sigma, offset) g_gaussianKernel[offset + __MYE_GAUSSIAN_BLUR_KERNEL_END]
+#else
+#define __MYE_GAUSSIAN_WEIGHT(sigma, offset) GaussianWeight(sigma, offset)
+#endif
+
 #define __MYE_GAUSSIAN_BLUR_TEXTURE_TYPE Texture2D
 
 __MYE_GAUSSIAN_BLUR_TEXTURE_TYPE < MYE_GAUSSIAN_BLUR_TYPE > g_texture : register(MYE_GAUSSIAN_BLUR_TEXTURE_SLOT);
@@ -38,7 +46,7 @@ MYE_GAUSSIAN_BLUR_TYPE main(QuadInput input) : SV_Target0
 	for (int i = __MYE_GAUSSIAN_BLUR_KERNEL_START; i <= __MYE_GAUSSIAN_BLUR_KERNEL_END; i++)
 	{
 	
-		float gaussian = GaussianWeight(MYE_GAUSSIAN_BLUR_SIGMA, i);
+		float gaussian = __MYE_GAUSSIAN_WEIGHT(MYE_GAUSSIAN_BLUR_SIGMA, i);
 		output += gaussian * g_texture.SampleLevel(g_blurSampler, input.texcoord + i * offset, 0);
 
 	}

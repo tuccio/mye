@@ -1,5 +1,6 @@
 #include "register_slots.hlsli"
 #include "common_samplers.hlsli"
+#include "quad_input.hlsli"
 
 /*
  *
@@ -35,7 +36,7 @@ __MYE_BOX_BLUR_TEXTURE_TYPE < MYE_BOX_BLUR_TYPE > g_texture : register(MYE_BOX_B
 
 SamplerState g_blurSampler : register(__MYE_DX11_SAMPLER_SLOT_BLUR);
 
-MYE_BOX_BLUR_TYPE main(PSInput input) : SV_Target0
+MYE_BOX_BLUR_TYPE main(QuadInput input) : SV_Target0
 {
 
 	MYE_BOX_BLUR_TYPE output = (MYE_BOX_BLUR_TYPE) 0;

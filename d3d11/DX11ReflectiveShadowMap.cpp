@@ -50,7 +50,8 @@ DX11ReflectiveShadowMap::DX11ReflectiveShadowMap(void) :
 	m_csmLogWeight(__MYE_RSM_DEFAULT_CSM_LOG_WEIGHT),
 	m_light(nullptr),
 	m_volumeConstraint(AABB::FromMinMax(0, 0)),
-	m_antiFlickeringDelta(0.f)
+	m_antiFlickeringDelta(0.f),
+	m_useZPrepass(false)
 {
 	SetResolution(__MYE_RSM_DEFAULT_RESOLUTION);
 }
@@ -287,56 +288,70 @@ void DX11ReflectiveShadowMap::__RenderDirectionalLight(Light * light)
 		rsmShader = m_rsm;
 	}
 
-	m_rsmZPrepass->Use();
-
-	DX11Device::GetSingleton().SetDepthTest(DX11DepthTest::ON);
-
-	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(0,
-	                                                                     nullptr,
-	                                                                     m_depth.GetDepthStencilView());
-
-	for (GameObject * object : casters)
+	if (m_useZPrepass)
 	{
 
-		RenderComponent    * rc = object->GetRenderComponent();
-		TransformComponent * tc = object->GetTransformComponent();
+		m_rsmZPrepass->Use();
 
+		DX11Device::GetSingleton().SetDepthTest(DX11DepthTest::ON);
 
-		GPUBufferPointer gpuBuffer = rc->GetGPUBuffer();
+		DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(0,
+																			 nullptr,
+																			 m_depth.GetDepthStencilView());
 
-		if (gpuBuffer && gpuBuffer->Load())
+		for (GameObject * object : casters)
 		{
 
-			MakeTransformBuffer(m_transformCBuffer, tc->GetWorldMatrix() * rc->GetModelMatrix(), shadowViewMatrix, shadowProjMatrix);
+			RenderComponent    * rc = object->GetRenderComponent();
+			TransformComponent * tc = object->GetTransformComponent();
 
-			m_transformCBuffer.Bind(DX11PipelineStage::VERTEX_SHADER, 0);
 
-			DX11VertexBufferPointer vertexBuffer = Resource::StaticCast<DX11VertexBuffer>(gpuBuffer);
+			GPUBufferPointer gpuBuffer = rc->GetGPUBuffer();
 
-			vertexBuffer->Bind();
-
-			DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-			if (cascaded)
+			if (gpuBuffer && gpuBuffer->Load())
 			{
-				DX11Device::GetSingleton().GetImmediateContext()->DrawInstanced(vertexBuffer->GetVerticesCount(), m_csmSplits, 0, 0);
-			}
-			else
-			{
-				DX11Device::GetSingleton().GetImmediateContext()->Draw(vertexBuffer->GetVerticesCount(), 0);
-			}
 
-			vertexBuffer->Unbind();
+				MakeTransformBuffer(m_transformCBuffer, tc->GetWorldMatrix() * rc->GetModelMatrix(), shadowViewMatrix, shadowProjMatrix);
+
+				m_transformCBuffer.Bind(DX11PipelineStage::VERTEX_SHADER, 0);
+
+				DX11VertexBufferPointer vertexBuffer = Resource::StaticCast<DX11VertexBuffer>(gpuBuffer);
+
+				vertexBuffer->Bind();
+
+				DX11Device::GetSingleton().GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+				if (cascaded)
+				{
+					DX11Device::GetSingleton().GetImmediateContext()->DrawInstanced(vertexBuffer->GetVerticesCount(), m_csmSplits, 0, 0);
+				}
+				else
+				{
+					DX11Device::GetSingleton().GetImmediateContext()->Draw(vertexBuffer->GetVerticesCount(), 0);
+				}
+
+				vertexBuffer->Unbind();
+
+			}
 
 		}
 
+		DX11Device::GetSingleton().SetDepthTest(DX11DepthTest::LOOKUP);
+
+		DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(3,
+		                                                                     renderTargets,
+		                                                                     m_depth.GetDepthStencilView());
+
 	}
+	else
+	{
 
-	DX11Device::GetSingleton().SetDepthTest(DX11DepthTest::LOOKUP);
+		DX11Device::GetSingleton().SetDepthTest(DX11DepthTest::ON);
 
-	DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(3,
-	                                                                     renderTargets,
-	                                                                     m_depth.GetDepthStencilView());
+		DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(3,
+		                                                                     renderTargets,
+		                                                                     m_depth.GetDepthStencilView());
+	}
 
 	int currentState = -1;
 

@@ -2,6 +2,7 @@
 #include "common_samplers.hlsli"
 #include "constants.hlsli"
 #include "gauss.hlsli"
+#include "quad_input.hlsli"
 
 /*
 *
@@ -33,13 +34,21 @@ struct PSInput
 #define __MYE_BILATERAL_BLUR_KERNEL_END   (MYE_BILATERAL_BLUR_KERNEL_SIZE >> 1)
 #define __MYE_BILATERAL_BLUR_KERNEL_START (- __MYE_BILATERAL_BLUR_KERNEL_END)
 
+/* Define MYE_BILATERAL_GAUSSIAN_KERNEL as the gaussian kernel (comma separated values) to avoid runtime computations */
+#ifdef MYE_BILATERAL_GAUSSIAN_KERNEL
+static float g_gaussianKernel[] = { MYE_GAUSSIAN_BLUR_KERNEL };
+#define __MYE_GAUSSIAN_WEIGHT(sigma, offset) g_gaussianKernel[offset + __MYE_GAUSSIAN_BLUR_KERNEL_END]
+#else
+#define __MYE_GAUSSIAN_WEIGHT(sigma, offset) GaussianWeight(sigma, offset)
+#endif
+
 #define __MYE_BILATERAL_BLUR_TEXTURE_TYPE Texture2D
 
 __MYE_BILATERAL_BLUR_TEXTURE_TYPE < MYE_BILATERAL_BLUR_TYPE > g_texture : register(MYE_BILATERAL_BLUR_TEXTURE_SLOT);
 
 SamplerState g_blurSampler : register(__MYE_DX11_SAMPLER_SLOT_BLUR);
 
-MYE_BILATERAL_BLUR_TYPE main(PSInput input) : SV_Target0
+MYE_BILATERAL_BLUR_TYPE main(QuadInput input) : SV_Target0
 {
 
 	int w, h;
@@ -66,7 +75,7 @@ MYE_BILATERAL_BLUR_TYPE main(PSInput input) : SV_Target0
 		MYE_BILATERAL_BLUR_TYPE sampleColor = g_texture.SampleLevel(g_blurSampler, input.texcoord + i * offset, 0);
 
 		float closeness = length(sampleColor - centerColor) / distanceNormalizationFactor;
-		float gaussian  = GaussianWeight(MYE_BILATERAL_BLUR_GAUSS_SIGMA, i);
+		float gaussian  = __MYE_GAUSSIAN_WEIGHT(MYE_BILATERAL_BLUR_GAUSS_SIGMA, i);
 
 		float sampleWeight = closeness * gaussian;
 

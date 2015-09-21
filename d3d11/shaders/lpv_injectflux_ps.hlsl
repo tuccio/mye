@@ -30,7 +30,7 @@ PSOutput main(PSInput input)
 	float3 N  = input.normal / len;
 	float4 sh = SHCosineLobe(N);
 	
-	float3 intensity = len * MYE_INV_PI * input.flux / (g_lpv.rsmSamples * g_lpv.rsmSamples);
+	float3 intensity = len * MYE_INV_PI * input.flux;
 
 	PSOutput output;
 
