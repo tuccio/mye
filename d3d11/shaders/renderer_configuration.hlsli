@@ -37,6 +37,10 @@ cbuffer cbRendererConfiguration : register(__MYE_DX11_BUFFER_SLOT_RENDERINFO)
 
 		float        ppBloomThreshold;
 		float        ppBloomPower;
+		
+		float        ppTonemapMiddleGrey;
+		float        ppTonemapWhite;
+		float        ppTonemapLogAverage;
 
     } r;
 

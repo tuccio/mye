@@ -51,6 +51,8 @@ namespace mye
 			inline ID3D11RenderTargetView   * GetBackBufferRenderTargetView(void);
 			inline ID3D11ShaderResourceView * GetBackBufferShaderResourceView(void);
 
+			void SetFullscreen(bool fullscreen);
+
 			void ClearBackBuffer(const mye::math::Vector4f & color);
 
 			const DX11SwapChainConfiguration & GetConfiguration(void) const;			

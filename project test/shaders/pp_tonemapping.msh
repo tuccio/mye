@@ -3,6 +3,6 @@
         "source": "../d3d11/shaders/quad_vs.hlsl"
     },
     "pixel": {
-        "source": "../d3d11/shaders/tonemapping_ps.hlsl"
+        "source": "../d3d11/shaders/pp_tonemapping_ps.hlsl"
     }
 }

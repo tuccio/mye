@@ -146,8 +146,6 @@ void DX11LightPropagationVolume::Inject(DX11ReflectiveShadowMap & rsm)
 	rsm.GetFluxShaderResource().Unbind();
 	rsm.GetDepthShaderResource().Unbind();
 
-	//DX11Module::GetSingleton().RenderShaderResource(m_flux, Vector2i(150, 0), Vector2i(150));
-
 	/* Injection */
 
 	m_lightVolume[0].SetRenderTarget();
@@ -160,10 +158,6 @@ void DX11LightPropagationVolume::Inject(DX11ReflectiveShadowMap & rsm)
 
 	viewport.Height   = m_volumeResolution;
 	viewport.Width    = m_volumeResolution;
-
-	/*rsm.GetPositionShaderResource().Bind(DX11PipelineStage::VERTEX_SHADER, __MYE_DX11_TEXTURE_SLOT_RSMPOSITION);
-	rsm.GetNormalShaderResource().Bind(DX11PipelineStage::VERTEX_SHADER,   __MYE_DX11_TEXTURE_SLOT_RSMNORMAL);
-	rsm.GetFluxShaderResource().Bind(DX11PipelineStage::VERTEX_SHADER,     __MYE_DX11_TEXTURE_SLOT_RSMFLUX);*/
 
 	DX11Device::GetSingleton().SetViewports(&viewport, 1);
 
@@ -186,10 +180,6 @@ void DX11LightPropagationVolume::Inject(DX11ReflectiveShadowMap & rsm)
 
 	DX11Device::GetSingleton().GetImmediateContext()->Draw(numSamples, 0);
 
-	/*rsm.GetPositionShaderResource().Unbind();
-	rsm.GetNormalShaderResource().Unbind();
-	rsm.GetFluxShaderResource().Unbind();*/
-
 	m_position.Unbind();
 	m_normal.Unbind();
 	m_flux.Unbind();
@@ -206,10 +196,6 @@ void DX11LightPropagationVolume::BindConfigurationBuffer(DX11PipelineStage stage
 
 void DX11LightPropagationVolume::Propagate(unsigned int iterations)
 {
-
-	//DX11Device::GetSingleton().GetImmediateContext()->OMSetBlendState(m_additiveBlend, nullptr, 0xFFFFFFFF);
-
-	DX11Device::GetSingleton().SetBlending(false);
 
 	m_currentVolume = 0;
 
@@ -250,7 +236,6 @@ void DX11LightPropagationVolume::Propagate(unsigned int iterations)
 
 		uint8_t nextVolume = (i + 1) % 2;
 
-		//m_lightVolume[nextVolume].Clear();
 		m_lightVolume[nextVolume].SetRenderTarget();
 
 		m_lightVolume[m_currentVolume].Bind(DX11PipelineStage::PIXEL_SHADER,
@@ -350,7 +335,7 @@ bool DX11LightPropagationVolume::__CreateShaders(void)
 		nullptr,
 		{ { "type", "program" } }
 	);
-	
+
 	return m_lpvRSMSampling->Load() &&
 	       m_lpvInjectFlux->Load() &&
 	       m_lpvInjectGeometry->Load() &&
@@ -415,7 +400,8 @@ bool DX11LightVolume::Create(size_t resolution)
 	Parameters volumeParams = {
 		{ "type", "3d" },
 		{ "depth", ToString(resolution) },
-		{ "renderTarget", "true" }
+		{ "renderTarget", "true" },
+		{ "unorderedAccessView", "true" }
 	};
 
 	m_shR.SetParametersList(volumeParams);
@@ -488,7 +474,8 @@ bool DX11GeometryVolume::Create(size_t resolution)
 	Parameters volumeParams = {
 			{ "type", "3d" },
 			{ "depth", ToString(resolution) },
-			{ "renderTarget", "true" }
+			{ "renderTarget", "true" },
+			{ "unorderedAccessView", "true" }
 	};
 
 	m_geometryVolume.SetParametersList(volumeParams);

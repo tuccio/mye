@@ -12,9 +12,10 @@ struct PSInput
 
 struct PSOutput
 {
-	float4 red      : SV_Target0;
-	float4 green    : SV_Target1;
-	float4 blue     : SV_Target2;
+	float4 red       : SV_Target0;
+	float4 green     : SV_Target1;
+	float4 blue      : SV_Target2;
+	float4 occlusion : SV_Target3;
 };
 
 PSOutput main(PSInput input)

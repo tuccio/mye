@@ -1,7 +1,5 @@
 #pragma once
 
-#define MYE_DX11_SHADERS_DEBUG
-
 #include <d3d11.h>
 
 #include <type_traits>

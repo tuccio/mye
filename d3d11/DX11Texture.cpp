@@ -151,8 +151,9 @@ bool DX11Texture::Create(int width, int height, DataFormat format, void * data)
 
 	DXGI_FORMAT dxgiFormat = GetDXGIFormat(m_format);
 
-	bool renderTarget = m_params.Contains("renderTarget") && m_params.GetBool("renderTarget");
-	bool generateMips = m_params.Contains("generateMips") && m_params.GetBool("generateMips");
+	bool renderTarget        = m_params.Contains("renderTarget") && m_params.GetBool("renderTarget");
+	bool generateMips        = m_params.Contains("generateMips") && m_params.GetBool("generateMips");
+	bool unorderedAccessView = m_params.Contains("unorderedAccessView") && m_params.GetBool("unorderedAccessView");
 
 	int mipmaps = m_params.Contains("mipmaps") ? m_params.GetInteger("mipmaps") : 1;
 	int slices  = m_params.Contains("slices")  ? m_params.GetInteger("slices")  : 1;
@@ -186,6 +187,11 @@ bool DX11Texture::Create(int width, int height, DataFormat format, void * data)
 		tex2dDesc.Usage          = D3D11_USAGE_DEFAULT;
 		tex2dDesc.CPUAccessFlags = 0;
 		tex2dDesc.SampleDesc     = DX11Device::GetSingleton().GetMSAASampleDesc(m_msaa, dxgiFormat);
+
+		if (unorderedAccessView)
+		{
+			tex2dDesc.BindFlags |= D3D11_BIND_UNORDERED_ACCESS;
+		}
 
 		if (renderTarget)
 		{
@@ -223,6 +229,11 @@ bool DX11Texture::Create(int width, int height, DataFormat format, void * data)
 		tex3dDesc.MiscFlags      = 0;
 		tex3dDesc.Usage          = D3D11_USAGE_DEFAULT;
 		tex3dDesc.CPUAccessFlags = 0;
+
+		if (unorderedAccessView)
+		{
+			tex3dDesc.BindFlags |= D3D11_BIND_UNORDERED_ACCESS;
+		}
 
 		if (renderTarget)
 		{
@@ -331,6 +342,7 @@ void DX11Texture::Destroy(void)
 
 	__MYE_DX11_RELEASE_COM_OPTIONAL(m_shaderResourceView);
 	__MYE_DX11_RELEASE_COM_OPTIONAL(m_renderTargetView);
+	__MYE_DX11_RELEASE_COM_OPTIONAL(m_unorderedAccessView);
 
 	switch (m_textureType)
 	{

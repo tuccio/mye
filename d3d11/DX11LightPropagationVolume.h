@@ -9,6 +9,7 @@
 #include "DX11ConstantBuffer.h"
 #include "DX11ShaderProgram.h"
 #include "DX11VertexBuffer.h"
+#include "DX11ComputeShader.h"
 
 #include <mye/math/Math.h>
 #include <array>

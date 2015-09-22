@@ -26,8 +26,6 @@ static float g_gaussianKernel[] = { MYE_GAUSSIAN_BLUR_KERNEL };
 
 __MYE_GAUSSIAN_BLUR_TEXTURE_TYPE < MYE_GAUSSIAN_BLUR_TYPE > g_texture : register(MYE_GAUSSIAN_BLUR_TEXTURE_SLOT);
 
-SamplerState g_blurSampler : register(__MYE_DX11_SAMPLER_SLOT_BLUR);
-
 MYE_GAUSSIAN_BLUR_TYPE main(QuadInput input) : SV_Target0
 {
 
@@ -47,7 +45,7 @@ MYE_GAUSSIAN_BLUR_TYPE main(QuadInput input) : SV_Target0
 	{
 	
 		float gaussian = __MYE_GAUSSIAN_WEIGHT(MYE_GAUSSIAN_BLUR_SIGMA, i);
-		output += gaussian * g_texture.SampleLevel(g_blurSampler, input.texcoord + i * offset, 0);
+		output += gaussian * g_texture.SampleLevel(g_pointClampedSampler, input.texcoord + i * offset, 0);
 
 	}
 

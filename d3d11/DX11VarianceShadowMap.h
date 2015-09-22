@@ -32,6 +32,9 @@ namespace mye
 			void SetExponentialTest(bool exponentialTest);
 			bool GetExponentialTest(void) const;
 
+			void SetBlurKernelSize(int blur);
+			int  GetBlurKernelSize(void) const;
+
 		private:
 
 			bool                     m_initialized;
@@ -39,6 +42,7 @@ namespace mye
 			int                      m_resolution;
 			int                      m_splits;
 			bool                     m_exponentialTest;
+			int                      m_blurKernelSize;
 
 			DX11ShaderProgramPointer m_vsmGeneration;
 			DX11ShaderProgramPointer m_blur[2];

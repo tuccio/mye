@@ -1,8 +1,10 @@
 #include "DX11ShaderManager.h"
-#include "DX11VertexShader.h"
+
+#include "DX11ComputeShader.h"
 #include "DX11GeometryShader.h"
 #include "DX11PixelShader.h"
 #include "DX11ShaderProgram.h"
+#include "DX11VertexShader.h"
 
 #include <mye/core/Debug.h>
 #include <mye/core/Utils.h>
@@ -49,11 +51,15 @@ DX11Shader* DX11ShaderManager::CreateImpl(const String & name,
 		{
 			return new DX11GeometryShader(this, name, manual, precompiled);
 		}
+		else if (type == "compute")
+		{
+			return new DX11ComputeShader(this, name, manual, precompiled);
+		}
 		else if (type == "program")
 		{
 			return new DX11ShaderProgram(this, name, manual);
 		}
-
+		
 	}
 
 	return nullptr;

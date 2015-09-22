@@ -17,9 +17,6 @@ Texture3D<float4> g_lightVolumeRed   : register(__MYE_DX11_TEXTURE_SLOT_LPVLIGHT
 Texture3D<float4> g_lightVolumeGreen : register(__MYE_DX11_TEXTURE_SLOT_LPVLIGHT_GREEN);
 Texture3D<float4> g_lightVolumeBlue  : register(__MYE_DX11_TEXTURE_SLOT_LPVLIGHT_BLUE);
 
-SamplerState      g_lpvSampler : register(__MYE_DX11_SAMPLER_SLOT_LPV);
-
-
 /* Main */
 
 float4 main(QuadInput input) : SV_Target0
@@ -33,12 +30,12 @@ float4 main(QuadInput input) : SV_Target0
 
 	SHRGB sh;
 
-	sh.red   = g_lightVolumeRed.Sample(g_lpvSampler,   sampleCoords);
-	sh.green = g_lightVolumeGreen.Sample(g_lpvSampler, sampleCoords);
-	sh.blue  = g_lightVolumeBlue.Sample(g_lpvSampler,  sampleCoords);
+	sh.red   = g_lightVolumeRed.Sample(g_bilinearClampedSampler,   sampleCoords);
+	sh.green = g_lightVolumeGreen.Sample(g_bilinearClampedSampler, sampleCoords);
+	sh.blue  = g_lightVolumeBlue.Sample(g_bilinearClampedSampler,  sampleCoords);
 
 	float2 texcoord         = input.positionCS.xy / r.resolution;
-	float  ambientOcclusion = g_occlusion.Sample(g_bilinearSampler, texcoord);
+	float  ambientOcclusion = g_occlusion.Sample(g_bilinearClampedSampler, texcoord);
 
 	// As in the crytek paper, approximate the distance r from the surfel as half the
 	// cell size, and thus calculate the irradiance like I/r^2

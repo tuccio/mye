@@ -34,8 +34,6 @@ struct PSInput
 
 __MYE_BOX_BLUR_TEXTURE_TYPE < MYE_BOX_BLUR_TYPE > g_texture : register(MYE_BOX_BLUR_TEXTURE_SLOT);
 
-SamplerState g_blurSampler : register(__MYE_DX11_SAMPLER_SLOT_BLUR);
-
 MYE_BOX_BLUR_TYPE main(QuadInput input) : SV_Target0
 {
 
@@ -55,14 +53,14 @@ MYE_BOX_BLUR_TYPE main(QuadInput input) : SV_Target0
 	{
 
 #ifdef MYE_BOX_BLUR_ARRAY
-		output += g_texture.SampleLevel(g_blurSampler, float3(input.texcoord + i * offset, input.target), 0);
+		output += g_texture.SampleLevel(g_pointClampedSampler, float3(input.texcoord + i * offset, input.target), 0);
 #else
-		output += g_texture.SampleLevel(g_blurSampler, input.texcoord + i * offset, 0);
+		output += g_texture.SampleLevel(g_pointClampedSampler, input.texcoord + i * offset, 0);
 #endif
 
 	}
 
-	output *= (1.f / MYE_BOX_BLUR_KERNEL_SIZE);
+	output /= MYE_BOX_BLUR_KERNEL_SIZE;
 
 	return output;
 

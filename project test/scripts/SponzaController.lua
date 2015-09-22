@@ -5,35 +5,45 @@ function SponzaController:Init()
 	Graphics.window.caption = 'Sponza'
 	Graphics.vsync          = true
 	
-	r.shadowMapResolution       = 2048
+	self:SetupCamera()
+	self:SetupShadowMapping()
+	self:SetupLPV()
+	self:SetupPostProcessing()
+	
+end
+
+function SponzaController:Update()
+
+end
+
+function SponzaController:SetupShadowMapping()
+
+	r.shadowMapResolution       = 1024
 	
 	r.vsmEnabled                = true
 	r.vsmExponential            = true
-	r.vsmMinBleeding            = 0.55
+	r.vsmMinBleeding            = 0.25
 	r.vsmMinVariance            = 0.0001
+	r.vsmBlur                   = 21
 	
 	r.esmPositiveExponent       = 30
 	r.esmNegativeExponent       = -1
 	
 	r.pcfEnabled                = false
-	r.shadowMapBias             = 0.0035
+	r.shadowMapBias             = 0
 	r.shadowMapNormalOffsetBias = 0
 	r.csmSplits                 = 1
 	
-	r.lpvEnabled    = false
-	r.lpvIterations = 24
-	r.lpvResolution = 32
-	r.lpvAABB       = AABB.FromMinMax(vec3(-40), vec3(40))
-		
-	r.lpvFluxInjectionBias     = 0.5
-	r.lpvGeometryInjectionBias = 0
-	
+end
+
+function SponzaController:SetupCamera()
+
 	local hCam = GameObjects:CreateEntity('Camera', 'camera')
 	
 	if hCam and hCam:Exists() then
 	
-		hCam.transform.position    = vec3(-8.47068, 4.23661, -0.0175723)
-		hCam.transform.orientation = quaternion(0.730156, 0.0297107, 0.68207, -0.0277546)
+		hCam.transform.position    = vec3(-8.67944, 3.60177, 0.410704)
+		hCam.transform.orientation = quaternion(0.693654, 0.0710503, 0.713065, -0.0730392)
 	
 		hCam.speed       = 3
 	
@@ -47,11 +57,27 @@ function SponzaController:Init()
 		System.PopupMessage('Cannot create camera')
 		Game:Quit()
 	end
+
+end
+
+function SponzaController:SetupLPV()
+
+	r.lpvEnabled    = true
+	r.lpvIterations = 24
+	r.lpvResolution = 32
+	r.lpvAABB       = AABB.FromMinMax(vec3(-40), vec3(40))
+		
+	r.lpvFluxInjectionBias     = 0.5
+	r.lpvGeometryInjectionBias = 0
 	
 end
 
-function SponzaController:Update()
+function SponzaController:SetupPostProcessing()
 
+	r.ppTonemapMiddleGrey = 0.18
+	r.ppTonemapLogAverage = 0.25
+	r.ppTonemapWhite      = 2
+	
 end
 
 function SponzaController:OnKeyboardKeyHold(key, t)
@@ -119,10 +145,15 @@ function SponzaController:OnKeyboardKeyPress(key)
 		
 		if not hLPVAnim:Exists() then
 			hLPVAnim = GameObjects:CreateEntity('LPVAnimationController', 'lpvAnim')
-			hLPVAnim.maxIterations = 22
+			hLPVAnim.maxIterations = 24
 		else
 			hLPVAnim:Restart()
 		end
+		
+	elseif key == KeyboardVK.K then
+
+		r.lpvAttenuation = 10000
+		r.lpvIterations  = 7
 		
 	end
 

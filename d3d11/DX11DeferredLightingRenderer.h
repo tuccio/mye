@@ -58,7 +58,7 @@ namespace mye
 			DX11ShaderProgramPointer     m_deferredLightsLPV;
 			DX11ShaderProgramPointer     m_deferredFinal[4];
 
-			DX11ShaderProgramPointer     m_tonemapping;
+			DX11ShaderProgramPointer     m_ppTonemapping;
 
 			DX11ShaderProgramPointer     m_ppBloomThreshold;
 			DX11ShaderProgramPointer     m_ppBloomBlur[2];
@@ -91,11 +91,11 @@ namespace mye
 			ID3D11SamplerState         * m_bilinearSamplerState;
 			ID3D11SamplerState         * m_trilinearSamplerState;
 			ID3D11SamplerState         * m_anisotropicSampler;
-			ID3D11SamplerState         * m_lpvSamplerState;
+			ID3D11SamplerState         * m_bilinearClampedSamplerState;
 			ID3D11SamplerState         * m_randomSamplerState;
 			ID3D11SamplerState         * m_shadowMapSamplerState;
 			ID3D11SamplerState         * m_shadowMapSamplerCmpState;
-			ID3D11SamplerState         * m_blurSamplerState;
+			ID3D11SamplerState         * m_pointClampedSamplerState;
 
 			ID3D11BlendState           * m_accumulateBlendState;
 									   

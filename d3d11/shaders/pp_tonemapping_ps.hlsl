@@ -1,22 +1,16 @@
 #include "common_samplers.hlsli"
 #include "gamma.hlsli"
 #include "quad_input.hlsli"
+#include "renderer_configuration.hlsli"
 
 /* Source http://filmicgames.com/archives/75 */
 
 Texture2D g_frame : register(t0);
 
-#define MYE_TONEMAPPING_REINHARD_LWHITE 2.f
-#define MYE_TONEMAPPING_REINHARD_LWHITE_SQUARED (MYE_TONEMAPPING_REINHARD_LWHITE * MYE_TONEMAPPING_REINHARD_LWHITE)
-
-
 float3 Reinhard(in float3 color)
 {
-
-	// http://content.gpwiki.org/D3DBook:High-Dynamic_Range_Rendering
-	
-	return color * (1 + color / MYE_TONEMAPPING_REINHARD_LWHITE_SQUARED) / (1 + color);
-	
+	float3 colorScaled = color * r.ppTonemapMiddleGrey / r.ppTonemapLogAverage;
+	return colorScaled * (1 + colorScaled / (r.ppTonemapWhite * r.ppTonemapWhite)) / (1 + colorScaled);
 }
 
 float4 main(QuadInput input): SV_Target0

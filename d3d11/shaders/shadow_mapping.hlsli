@@ -137,7 +137,6 @@ __MYE_SHADOW_MAP_TEXTURE_TYPE < __MYE_SHADOW_MAP_DATA_TYPE >  g_shadowMap : regi
 
 SamplerState           g_shadowMapSampler    : register(__MYE_DX11_SAMPLER_SLOT_SHADOWMAP);
 SamplerComparisonState g_shadowMapSamplerCmp : register(__MYE_DX11_SAMPLER_SLOT_SHADOWMAP_CMP);
-SamplerState           g_randomSampler       : register(__MYE_DX11_SAMPLER_SLOT_RANDOM);
 
 /* Random cos/sin */
 

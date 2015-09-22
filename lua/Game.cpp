@@ -124,10 +124,10 @@ namespace mye
 				Class<GameObjectsModule, GameObjectsManager>(MYE_LUA_GAMEOBJECTSMODULE).
 
 					Function("Create", (GameObjectHandle(GameObjectsModule::*) (void)) &GameObjectsModule::Create).
-					Function("Create", (GameObjectHandle(GameObjectsModule::*) (const mye::core::String&)) &GameObjectsModule::Create).
+					Function("Create", (GameObjectHandle(GameObjectsModule::*) (const mye::core::String &)) &GameObjectsModule::Create).
 
-					Function("CreateEntity", (GameObjectHandle(GameObjectsModule::*) (const mye::core::String&)) &GameObjectsModule::CreateEntity).
-					Function("CreateEntity", (GameObjectHandle(GameObjectsModule::*) (const mye::core::String&, const mye::core::String&)) &GameObjectsModule::CreateEntity).
+					Function("CreateEntity", (GameObjectHandle(GameObjectsModule::*) (const mye::core::String &)) &GameObjectsModule::CreateEntity).
+					Function("CreateEntity", (GameObjectHandle(GameObjectsModule::*) (const mye::core::String &, const mye::core::String &)) &GameObjectsModule::CreateEntity).
 
 					Function("Find", &GameObjectsModule::Find),
 
@@ -138,7 +138,7 @@ namespace mye
 
 					Function("RenderFrustum", &GraphicsModule::RenderFrustum).
 
-					Property("window", (IWindow* (GraphicsModule::*) (void)) &GraphicsModule::GetWindow).
+					Property("window", (IWindow * (GraphicsModule::*) (void)) &GraphicsModule::GetWindow).
 
 					Property("clearColor", &GraphicsModule::GetClearColor, &GraphicsModule::SetClearColor).
 					Property("vsync",      &GraphicsModule::GetVSync, &GraphicsModule::SetVSync).
@@ -159,6 +159,7 @@ namespace mye
 					Property("vsmExponential",            &RendererConfiguration::GetVSMExponential,            &RendererConfiguration::SetVSMExponential).
 					Property("vsmMinVariance",            &RendererConfiguration::GetVSMMinVariance,            &RendererConfiguration::SetVSMMinVariance).
 					Property("vsmMinBleeding",            &RendererConfiguration::GetVSMMinBleeding,            &RendererConfiguration::SetVSMMinBleeding).
+					Property("vsmBlur",                   &RendererConfiguration::GetVSMBlur,                   &RendererConfiguration::SetVSMBlur).
 					Property("esmPositiveExponent",       &RendererConfiguration::GetESMPositiveExponent,       &RendererConfiguration::SetESMPositiveExponent).
 					Property("esmNegativeExponent",       &RendererConfiguration::GetESMNegativeExponent,       &RendererConfiguration::SetESMNegativeExponent).
 					Property("csmSplits",                 &RendererConfiguration::GetCSMSplits,                 &RendererConfiguration::SetCSMSplits).
@@ -174,7 +175,10 @@ namespace mye
 					Property("lpvFluxInjectionBias",      &RendererConfiguration::GetLPVFluxInjectionBias,      &RendererConfiguration::SetLPVFluxInjectionBias).
 					Property("lpvAttenuation",            &RendererConfiguration::GetLPVAttenuation,            &RendererConfiguration::SetLPVAttenuation).
 					Property("ppBloomThreshold",          &RendererConfiguration::GetPPBloomThreshold,          &RendererConfiguration::SetPPBloomThreshold).
-					Property("ppBloomPower",              &RendererConfiguration::GetPPBloomPower,              &RendererConfiguration::SetPPBloomPower),
+					Property("ppBloomPower",              &RendererConfiguration::GetPPBloomPower,              &RendererConfiguration::SetPPBloomPower).
+					Property("ppTonemapMiddleGrey",       &RendererConfiguration::GetPPTonemapMiddleGrey,       &RendererConfiguration::SetPPTonemapMiddleGrey).
+					Property("ppTonemapWhite",            &RendererConfiguration::GetPPTonemapWhite,            &RendererConfiguration::SetPPTonemapWhite).
+					Property("ppTonemapLogAverage",       &RendererConfiguration::GetPPTonemapLogAverage,       &RendererConfiguration::SetPPTonemapLogAverage),
 
 				Class<Component>(MYE_LUA_COMPONENT),
 
@@ -225,7 +229,7 @@ namespace mye
 				Class<LightComponent, Component, Light>(MYE_LUA_LIGHT_COMPONENT).
 					
 					Constructor<>().
-					Constructor<const Light&>(),
+					Constructor<const Light &>(),
 					
 				Class<CameraComponent, Component, Camera>(MYE_LUA_CAMERA_COMPONENT).
 					

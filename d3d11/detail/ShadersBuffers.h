@@ -97,6 +97,10 @@ namespace mye
 				float        ppBloomThreshold;
 				float        ppBloomPower;
 
+				float        ppTonemapMiddleGrey;
+				float        ppTonemapWhite;
+				float        ppTonemapLogAverage;
+
 			};
 
 			struct PSSMSlice

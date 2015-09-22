@@ -48,6 +48,7 @@ bool DX11ShaderProgram::LoadImpl(void)
 	auto vertexShader   = pt.get_child_optional("vertex");
 	auto pixelShader    = pt.get_child_optional("pixel");
 	auto geometryShader = pt.get_child_optional("geometry");
+	auto computeShader  = pt.get_child_optional("compute");
 
 	if (vertexShader)
 	{
@@ -217,6 +218,57 @@ bool DX11ShaderProgram::LoadImpl(void)
 
 	}
 
+	if (computeShader)
+	{
+
+		auto name        = computeShader->get_optional<std::string>("name");
+		auto source      = computeShader->get_optional<std::string>("source");
+		auto precompiled = computeShader->get_optional<bool>("precompiled");
+		auto defines     = computeShader->get_child_optional("defines");
+
+		ptree ptDefines = ptCommonDefines;
+
+		if (defines)
+		{
+			for (auto & d : *defines)
+			{
+				ptDefines.insert(ptDefines.begin(), d);
+			}
+		}
+
+		if (source)
+		{
+
+			Parameters params;
+
+			params.Add("type", "compute");
+			params.Add("source", source->c_str());
+
+			{
+				std::stringstream ss;
+				json_parser::write_json(ss, ptDefines);
+				params.Add("defines", ss.str().c_str());
+			}
+
+			if (precompiled && *precompiled)
+			{
+				params.Add("precompiled", "true");
+			}
+
+			String resourceName = (name ? name->c_str() : source->c_str());
+
+			m_computeShader = ResourceTypeManager::GetSingleton().CreateResource<DX11ComputeShader>("DX11Shader", resourceName, nullptr, params);
+
+			if (!m_computeShader->Load())
+			{
+				return false;
+			}
+
+		}
+
+
+	}
+
 	return true;
 
 }
@@ -282,6 +334,11 @@ void DX11ShaderProgram::Use(void)
 	else
 	{
 		DX11Device::GetSingleton().GetImmediateContext()->GSSetShader(nullptr, nullptr, 0);
+	}
+
+	if (m_computeShader)
+	{
+		m_computeShader->Use();
 	}
 
 }

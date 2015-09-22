@@ -32,6 +32,7 @@ namespace mye
 			VSMMINBLEEDING,
 			VSMENABLED,
 			VSMEXPONENTIAL,
+			VSMBLUR,
 			ESMPOSITIVEEXPONENT,
 			ESMNEGATIVEEXPONENT,
 			PCFENABLED,
@@ -47,7 +48,10 @@ namespace mye
 			LPVFLUXINJECTIONBIAS,
 			LPVATTENUATION,
 			PPBLOOMTHRESHOLD,
-			PPBLOOMPOWER
+			PPBLOOMPOWER,
+			PPTONEMAPMIDDLEGREY,
+			PPTONEMAPWHITE,
+			PPTONEMAPLOGAVERAGE
 		};
 
 		class RendererConfiguration;
@@ -84,6 +88,8 @@ namespace mye
 			__MYE_RENDERERCONFIGURATION_PROPERTY(float,               RendererVariable::VSMMINVARIANCE,            VSMMinVariance,            .00001f)
 			__MYE_RENDERERCONFIGURATION_PROPERTY(float,               RendererVariable::VSMMINBLEEDING,            VSMMinBleeding,            .5f)
 
+			__MYE_RENDERERCONFIGURATION_PROPERTY(int,                 RendererVariable::VSMBLUR,                   VSMBlur,                   13)
+
 			__MYE_RENDERERCONFIGURATION_PROPERTY(float,               RendererVariable::ESMPOSITIVEEXPONENT,       ESMPositiveExponent,       30.f)
 			__MYE_RENDERERCONFIGURATION_PROPERTY(float,               RendererVariable::ESMNEGATIVEEXPONENT,       ESMNegativeExponent,       5.f)
 													                 
@@ -104,6 +110,10 @@ namespace mye
 
 			__MYE_RENDERERCONFIGURATION_PROPERTY(float,               RendererVariable::PPBLOOMTHRESHOLD,          PPBloomThreshold,          5.f)
 			__MYE_RENDERERCONFIGURATION_PROPERTY(float,               RendererVariable::PPBLOOMPOWER,              PPBloomPower,              1.f)
+
+			__MYE_RENDERERCONFIGURATION_PROPERTY(float,               RendererVariable::PPTONEMAPMIDDLEGREY,       PPTonemapMiddleGrey,       .18f)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(float,               RendererVariable::PPTONEMAPWHITE,            PPTonemapWhite,            3.f)
+			__MYE_RENDERERCONFIGURATION_PROPERTY(float,               RendererVariable::PPTONEMAPLOGAVERAGE,       PPTonemapLogAverage,       1.f)
 
 		};
 

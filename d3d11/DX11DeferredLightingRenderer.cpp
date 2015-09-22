@@ -30,9 +30,10 @@ enum {
 	__MYE_SHADER_FINAL_NONE = -1, __MYE_SHADER_FINAL, __MYE_SHADER_FINAL_DIFF, __MYE_SHADER_FINAL_SPEC, __MYE_SHADER_FINAL_DIFF_SPEC
 };
 
-#define __MYE_DX11_SSAO_RATIO              .5f
-#define __MYE_DX11_PP_RATIO                .5f
-#define __MYE_DX11_PP_LUMINANCE_RESOLUTION 1024
+#define __MYE_DX11_SSAO_RATIO               .5f
+#define __MYE_DX11_PP_RATIO                 .5f
+#define __MYE_DX11_PP_LUMINANCE_RESOLUTION  1024
+#define __MYE_DX11_PP_BLOOM_BLUR_ITERATIONS 4
 
 DX11DeferredLightingRenderer::DX11DeferredLightingRenderer(void) :
 	m_initialized(false),
@@ -172,12 +173,16 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 	
 	DX11Device::GetSingleton().GetImmediateContext()->VSSetSamplers(__MYE_DX11_SAMPLER_SLOT_BILINEAR,    1, &m_bilinearSamplerState);
 
-	DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_POINT   ,    1, &m_pointSamplerState);
+	DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_POINT,       1, &m_pointSamplerState);
 	DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_BILINEAR,    1, &m_bilinearSamplerState);
 	DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_TRILINEAR,   1, &m_trilinearSamplerState);
 	DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_ANISOTROPIC, 1, &m_anisotropicSampler);
 
-	DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_BLUR,        1, &m_blurSamplerState);
+	DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_POINT_CLAMPED,    1, &m_pointClampedSamplerState);
+	DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_BILINEAR_CLAMPED, 1, &m_bilinearClampedSamplerState);
+
+	DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_SHADOWMAP,     1, &m_shadowMapSamplerState);
+	DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_SHADOWMAP_CMP, 1, &m_shadowMapSamplerCmpState);
 
 	RendererConfiguration * r = DX11Module::GetSingleton().GetRendererConfiguration();
 
@@ -203,7 +208,6 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 		m_cameraTransformBuffer.Bind(DX11PipelineStage::PIXEL_SHADER,  __MYE_DX11_BUFFER_SLOT_CAMERATRANSFORM);
 
 		auto visibleObjects = scene->GetVisibleObjects(*camera);
-		//auto visibleObjects = scene->GetObjectsList();
 
 		DX11RasterizerState backCull({ false, CullMode::BACK });
 
@@ -479,11 +483,7 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 			DX11Device::GetSingleton().SetDepthTest(DX11DepthTest::OFF);
 
-			DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(2, lightPassBuffers, nullptr);
-
-			DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_SHADOWMAP,     1, &m_shadowMapSamplerState);
-			DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_SHADOWMAP_CMP, 1, &m_shadowMapSamplerCmpState);
-			DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_RANDOM,        1, &m_randomSamplerState);			
+			DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(2, lightPassBuffers, nullptr);			
 
 			/* Setup constant buffers */
 
@@ -533,8 +533,6 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 		if (lpvEnabled)
 		{
-
-			DX11Device::GetSingleton().GetImmediateContext()->PSSetSamplers(__MYE_DX11_SAMPLER_SLOT_LPV, 1, &m_lpvSamplerState);
 
 			m_lpv.Propagate(DX11Module::GetSingleton().GetRendererConfiguration()->GetLPVIterations());
 
@@ -708,23 +706,28 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 		DX11Device::GetSingleton().GetImmediateContext()->Draw(4, 0);
 
-		m_ppBloomBlur[0]->Use();
+		for (int i = 0; i < __MYE_DX11_PP_BLOOM_BLUR_ITERATIONS; i++)
+		{
 
-		DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(1, &ppBuffersRTV[1], nullptr);
-		m_ppBuffers[0].Bind(DX11PipelineStage::PIXEL_SHADER, 1);
+			m_ppBloomBlur[0]->Use();
 
-		DX11Device::GetSingleton().GetImmediateContext()->Draw(4, 0);
+			DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(1, &ppBuffersRTV[1], nullptr);
+			m_ppBuffers[0].Bind(DX11PipelineStage::PIXEL_SHADER, 1);
 
-		m_ppBuffers[0].Unbind();
+			DX11Device::GetSingleton().GetImmediateContext()->Draw(4, 0);
 
-		m_ppBloomBlur[1]->Use();
+			m_ppBuffers[0].Unbind();
 
-		DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(1, &ppBuffersRTV[0], nullptr);
-		m_ppBuffers[1].Bind(DX11PipelineStage::PIXEL_SHADER, 1);
+			m_ppBloomBlur[1]->Use();
 
-		DX11Device::GetSingleton().GetImmediateContext()->Draw(4, 0);
+			DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(1, &ppBuffersRTV[0], nullptr);
+			m_ppBuffers[1].Bind(DX11PipelineStage::PIXEL_SHADER, 1);
 
-		m_ppBuffers[1].Unbind();
+			DX11Device::GetSingleton().GetImmediateContext()->Draw(4, 0);
+
+			m_ppBuffers[1].Unbind();
+
+		}
 
 		DX11Texture * bloomedFrame = &m_specularLight;
 		ID3D11RenderTargetView * bloomedFrameRTV = bloomedFrame->GetRenderTargetView();
@@ -747,7 +750,7 @@ void DX11DeferredLightingRenderer::Render(ID3D11RenderTargetView * target)
 
 		/* Tonemap */
 
-		m_tonemapping->Use();
+		m_ppTonemapping->Use();
 		
 		DX11Device::GetSingleton().GetImmediateContext()->OMSetRenderTargets(1, &target, nullptr);
 
@@ -785,17 +788,16 @@ void DX11DeferredLightingRenderer::__DestroyConstantBuffers(void)
 bool DX11DeferredLightingRenderer::__CreateContextStates(void)
 {
 
-	m_pointSamplerState        = CreateSamplerState(D3D11_FILTER_MIN_MAG_MIP_POINT, D3D11_TEXTURE_ADDRESS_WRAP);
-	m_bilinearSamplerState     = CreateSamplerState(D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT, D3D11_TEXTURE_ADDRESS_WRAP);
-	m_trilinearSamplerState    = CreateSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP);
-	m_anisotropicSampler       = CreateSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 8);
+	m_pointSamplerState           = CreateSamplerState(D3D11_FILTER_MIN_MAG_MIP_POINT, D3D11_TEXTURE_ADDRESS_WRAP);
+	m_bilinearSamplerState        = CreateSamplerState(D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT, D3D11_TEXTURE_ADDRESS_WRAP);
+	m_trilinearSamplerState       = CreateSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP);
+	m_anisotropicSampler          = CreateSamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, 8);
 
-	m_lpvSamplerState          = CreateSamplerState(D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT, D3D11_TEXTURE_ADDRESS_CLAMP);
-	m_blurSamplerState         = CreateSamplerState(D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT, D3D11_TEXTURE_ADDRESS_CLAMP);
-	m_randomSamplerState       = CreateSamplerState(D3D11_FILTER_MIN_MAG_MIP_POINT, D3D11_TEXTURE_ADDRESS_WRAP);
-
-	m_shadowMapSamplerState    = CreateSamplerState(D3D11_FILTER_MIN_MAG_MIP_POINT, D3D11_TEXTURE_ADDRESS_BORDER);
-	m_shadowMapSamplerCmpState = CreateSamplerState(D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_BORDER, 0, D3D11_COMPARISON_LESS);
+	m_pointClampedSamplerState    = CreateSamplerState(D3D11_FILTER_MIN_MAG_MIP_POINT, D3D11_TEXTURE_ADDRESS_CLAMP);
+	m_bilinearClampedSamplerState = CreateSamplerState(D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT, D3D11_TEXTURE_ADDRESS_CLAMP);
+							      
+	m_shadowMapSamplerState       = CreateSamplerState(D3D11_FILTER_MIN_MAG_MIP_POINT, D3D11_TEXTURE_ADDRESS_BORDER);
+	m_shadowMapSamplerCmpState    = CreateSamplerState(D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_BORDER, 0, D3D11_COMPARISON_LESS);
 
 	D3D11_BLEND_DESC accumulateBlendStateDesc;
 	ZeroMemory(&accumulateBlendStateDesc, sizeof(D3D11_BLEND_DESC));
@@ -812,8 +814,8 @@ bool DX11DeferredLightingRenderer::__CreateContextStates(void)
 	accumulateBlendStateDesc.IndependentBlendEnable = FALSE;
 
 	return m_pointSamplerState && m_bilinearSamplerState && m_trilinearSamplerState &&
-	       m_lpvSamplerState && m_shadowMapSamplerState && m_shadowMapSamplerCmpState &&
-	       m_blurSamplerState && 
+	       m_bilinearClampedSamplerState && m_shadowMapSamplerState && m_shadowMapSamplerCmpState &&
+	       m_pointClampedSamplerState && 
 	       !__MYE_DX11_HR_TEST_FAILED(DX11Device::GetSingleton()->CreateBlendState(&accumulateBlendStateDesc, &m_accumulateBlendState));
 
 }
@@ -826,8 +828,8 @@ void DX11DeferredLightingRenderer::__DestroyContextStates(void)
 	__MYE_DX11_RELEASE_COM_OPTIONAL(m_anisotropicSampler);
 	__MYE_DX11_RELEASE_COM_OPTIONAL(m_shadowMapSamplerCmpState);
 	__MYE_DX11_RELEASE_COM_OPTIONAL(m_shadowMapSamplerState);
-	__MYE_DX11_RELEASE_COM_OPTIONAL(m_lpvSamplerState);
-	__MYE_DX11_RELEASE_COM_OPTIONAL(m_blurSamplerState);
+	__MYE_DX11_RELEASE_COM_OPTIONAL(m_bilinearClampedSamplerState);
+	__MYE_DX11_RELEASE_COM_OPTIONAL(m_pointClampedSamplerState);
 	__MYE_DX11_RELEASE_COM_OPTIONAL(m_randomSamplerState);
 }
 
@@ -976,6 +978,11 @@ void DX11DeferredLightingRenderer::__UpdateRenderConfiguration(void)
 
 				break;
 
+			case RendererVariable::VSMBLUR:
+
+				m_vsm.SetBlurKernelSize(configuration->GetVSMBlur());
+				break;
+
 			case RendererVariable::MSAA:
 
 			{
@@ -1055,6 +1062,10 @@ void DX11DeferredLightingRenderer::__UpdateRenderConfiguration(void)
 
 		r.ppBloomThreshold          = configuration->GetPPBloomThreshold();
 		r.ppBloomPower              = configuration->GetPPBloomPower();
+
+		r.ppTonemapMiddleGrey       = configuration->GetPPTonemapMiddleGrey();
+		r.ppTonemapWhite            = configuration->GetPPTonemapWhite();
+		r.ppTonemapLogAverage       = configuration->GetPPTonemapLogAverage();
 
 		m_configurationBuffer.SetData(&r);
 
@@ -1165,8 +1176,8 @@ bool DX11DeferredLightingRenderer::__CreateShaders(void)
 	                                                                                         nullptr,
 	                                                                                         { { "type", "program" } });
 	                                                                                      
-	m_tonemapping = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
-	                                                                                      "./shaders/tonemapping.msh",
+	m_ppTonemapping = ResourceTypeManager::GetSingleton().CreateResource<DX11ShaderProgram>("DX11Shader",
+	                                                                                      "./shaders/pp_tonemapping.msh",
 	                                                                                      nullptr,
 	                                                                                      { { "type", "program" } });
 
@@ -1184,6 +1195,6 @@ bool DX11DeferredLightingRenderer::__CreateShaders(void)
 	       m_ppBloomBlur[0]->Load() &&
 	       m_ppBloomBlur[1]->Load() &&
 	       m_ppBloomCombine->Load() &&
-	       m_tonemapping->Load();
+	       m_ppTonemapping->Load();
 
 }

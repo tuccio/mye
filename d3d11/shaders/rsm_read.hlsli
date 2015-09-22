@@ -30,12 +30,12 @@ RSMTexel RSMRead(in float2 texcoord)
 
 	RSMTexel texel;
 
-	float4 posArea = g_position.SampleLevel(g_bilinearSampler, texcoord, 0);
+	float4 posArea = g_position.SampleLevel(g_pointClampedSampler, texcoord, 0);
 
 	texel.position = posArea.xyz;
 	texel.area     = posArea.w;
-	texel.normal   = g_normal.SampleLevel(g_bilinearSampler, texcoord, 0).xyz;
-	texel.flux     = g_flux.SampleLevel(g_bilinearSampler, texcoord, 0).rgb;
+	texel.normal   = g_normal.SampleLevel(g_pointClampedSampler, texcoord, 0).xyz;
+	texel.flux     = g_flux.SampleLevel(g_pointClampedSampler, texcoord, 0).rgb;
 
 	return texel;
 

@@ -9,7 +9,8 @@ DX11VarianceShadowMap::DX11VarianceShadowMap(void) :
 	m_initialized(false),
 	m_splits(1),
 	m_resolution(1024),
-	m_exponentialTest(false) { }
+	m_exponentialTest(false),
+	m_blurKernelSize(0) { }
 
 bool DX11VarianceShadowMap::Create(void)
 {
@@ -144,6 +145,17 @@ bool DX11VarianceShadowMap::GetExponentialTest(void) const
 	return m_exponentialTest;
 }
 
+void DX11VarianceShadowMap::SetBlurKernelSize(int blur)
+{
+	m_blurKernelSize = blur;
+	__CreateShaders();
+}
+
+int DX11VarianceShadowMap::GetBlurKernelSize(void) const
+{
+	return m_blurKernelSize;
+}
+
 DX11ShaderResource & DX11VarianceShadowMap::GetVSM(void)
 {
 	return m_vsmDepth[1];
@@ -177,9 +189,6 @@ bool DX11VarianceShadowMap::__CreateShaders(void)
 		m_blur[0]->AddMacroDefinition("MYE_BOX_BLUR_TYPE", "float4");
 		m_blur[1]->AddMacroDefinition("MYE_BOX_BLUR_TYPE", "float4");
 
-		m_blur[0]->AddMacroDefinition("MYE_GAUSSIAN_BLUR_TYPE", "float4");
-		m_blur[1]->AddMacroDefinition("MYE_GAUSSIAN_BLUR_TYPE", "float4");
-
 	}
 	else
 	{
@@ -189,9 +198,13 @@ bool DX11VarianceShadowMap::__CreateShaders(void)
 		m_blur[0]->AddMacroDefinition("MYE_BOX_BLUR_TYPE", "float2");
 		m_blur[1]->AddMacroDefinition("MYE_BOX_BLUR_TYPE", "float2");
 
-		m_blur[0]->AddMacroDefinition("MYE_GAUSSIAN_BLUR_TYPE", "float2");
-		m_blur[1]->AddMacroDefinition("MYE_GAUSSIAN_BLUR_TYPE", "float2");
+	}
 
+	if (m_blurKernelSize > 0)
+	{
+		auto blurSize = ToString(m_blurKernelSize);
+		m_blur[0]->AddMacroDefinition("MYE_BOX_BLUR_KERNEL_SIZE", blurSize.CString());
+		m_blur[1]->AddMacroDefinition("MYE_BOX_BLUR_KERNEL_SIZE", blurSize.CString());
 	}
 
 	return m_vsmGeneration->Load() &&

@@ -1,0 +1,5 @@
+{
+    "vertex": {
+        "source": "../d3d11/shaders/lpv_inject_vs.hlsl"
+    }
+}

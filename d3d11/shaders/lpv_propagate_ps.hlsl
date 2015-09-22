@@ -21,8 +21,6 @@ Texture3D<float4> g_lightVolumeGreen : register(__MYE_DX11_TEXTURE_SLOT_LPVLIGHT
 Texture3D<float4> g_lightVolumeBlue  : register(__MYE_DX11_TEXTURE_SLOT_LPVLIGHT_BLUE);
 Texture3D<float4> g_geometryVolume   : register(__MYE_DX11_TEXTURE_SLOT_LPVGEOMETRY);
 
-SamplerState      g_lpvSampler       : register(__MYE_DX11_SAMPLER_SLOT_LPV);
-
 #define MYE_LPV_FRONT_SOLID_ANGLE (0.4006696846f)
 #define MYE_LPV_SIDE_SOLID_ANGLE  (0.4234413544f)
 
@@ -159,7 +157,7 @@ PSOutput main(PSInput input)
 
 	float3 cell = { input.positionCS.xy, input.depth + .5f };
 
-	LPV lpv = { g_lightVolumeRed, g_lightVolumeGreen, g_lightVolumeBlue, g_geometryVolume, g_lpvSampler };
+	LPV lpv = { g_lightVolumeRed, g_lightVolumeGreen, g_lightVolumeBlue, g_geometryVolume, g_bilinearClampedSampler };
 
 	SHRGB sh = (SHRGB) 0;
 	

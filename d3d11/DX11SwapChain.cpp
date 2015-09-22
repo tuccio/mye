@@ -22,8 +22,12 @@ bool DX11SwapChain::Create(void)
 
 void DX11SwapChain::Destroy(void)
 {
+
+	SetFullscreen(false);
+
 	__MYE_DX11_RELEASE_COM_OPTIONAL(m_backBufferTargetView);
 	__MYE_DX11_RELEASE_COM_OPTIONAL(m_backBufferResourceView);
+
 }
 
 bool DX11SwapChain::Exists(void) const
@@ -53,7 +57,7 @@ bool DX11SwapChain::CreateSwapChain(void)
 	swapDesc.OutputWindow                = m_swapChainConfiguration.window->GetHandle();
 	swapDesc.Windowed                    = !m_swapChainConfiguration.fullscreen;
 	swapDesc.SwapEffect                  = DXGI_SWAP_EFFECT_DISCARD;
-	swapDesc.Flags                       = 0;
+	swapDesc.Flags                       = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
 	swapDesc.SampleDesc                  = DX11Device::GetSingleton().GetMSAASampleDesc(m_swapChainConfiguration.msaa, GetDXGIFormat(m_swapChainConfiguration.format));
 
@@ -142,4 +146,10 @@ void DX11SwapChain::ClearBackBuffer(const mye::math::Vector4f & color)
 const DX11SwapChainConfiguration & DX11SwapChain::GetConfiguration(void) const
 {
 	return m_swapChainConfiguration;
+}
+
+void DX11SwapChain::SetFullscreen(bool fullscreen)
+{
+	m_swapChain->SetFullscreenState(fullscreen, nullptr);
+	m_swapChainConfiguration.fullscreen = fullscreen;
 }

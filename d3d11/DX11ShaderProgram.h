@@ -2,10 +2,11 @@
 
 #include <mye/core/Resource.h>
 
-#include "DX11VertexShader.h"
+#include "DX11Shader.h"
+#include "DX11ComputeShader.h"
 #include "DX11GeometryShader.h"
 #include "DX11PixelShader.h"
-#include "DX11Shader.h"
+#include "DX11VertexShader.h"
 
 namespace mye
 {
@@ -33,6 +34,7 @@ namespace mye
 			DX11VertexShaderPointer   m_vertexShader;
 			DX11GeometryShaderPointer m_geometryShader;
 			DX11PixelShaderPointer    m_pixelShader;
+			DX11ComputeShaderPointer  m_computeShader;
 
 		protected:
 
