@@ -8,14 +8,14 @@ set ( LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib )
 
 # Packages
 
-find_package ( Bullet       REQUIRED )
-find_package ( Boost        REQUIRED )
-find_package ( Lua          REQUIRED )
-find_package ( lua++11      REQUIRED )
-find_package ( DevIL        REQUIRED )
-find_package ( Assimp       REQUIRED )
-find_package ( RapidXML     REQUIRED )
-find_package ( Windows81SDK REQUIRED )
+find_package ( Bullet    REQUIRED )
+find_package ( Boost     REQUIRED )
+find_package ( Lua       REQUIRED )
+find_package ( lua++11   REQUIRED )
+find_package ( DevIL     REQUIRED )
+find_package ( Assimp    REQUIRED )
+find_package ( RapidXML  REQUIRED )
+find_package ( DirectX11 REQUIRED )
 
 # Options
 

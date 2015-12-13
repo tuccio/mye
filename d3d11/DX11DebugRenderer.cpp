@@ -272,7 +272,7 @@ void DX11DebugRenderer::EnqueueShaderResource(DX11ShaderResource & shaderResourc
 {
 	boost::lock_guard<boost::recursive_mutex> lock(m_mutex);
 	shaderResource.GetShaderResourceView()->AddRef();
-	m_shaderResources.emplace_back(__ShadowResource { &shaderResource, { position.x(), position.y() }, { size.x(), size.y() }, slice });
+	m_shaderResources.emplace_back(__ShadowResource { &shaderResource, { position.x(), position.y() }, { (float) size.x(), (float) size.y() }, slice });
 }
 
 void DX11DebugRenderer::EnqueueLine(const Vector3 & from, const Vector3 & to, const Vector4 & color)

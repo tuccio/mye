@@ -1,34 +1,54 @@
-# - Try to find Assimp
-# Once done, this will define
-#
-#  ASSIMP_FOUND - system has Assimp
-#  ASSIMP_INCLUDE_DIR - the Assimp include directories
-#  ASSIMP_LIBRARIES - link these to use Assimp
+if (WIN32)
 
-FIND_PATH( ASSIMP_INCLUDE_DIR assimp/mesh.h
-  /usr/include
-  /usr/local/include
-  /opt/local/include
+	set ( ASSIMP_INCLUDE_HINTS ${ASSIMP_ROOT} )
+	set ( ASSIMP_INCLUDE_SUFFIXES include )
+	
+	set ( ASSIMP_LIBRARY_HINTS ${ASSIMP_ROOT} )
+	
+	if (CMAKE_CL_64)
+		set ( ASSIMP_LIBRARY_SUFFIXES lib64 )
+	else (CMAKE_CL_64)
+		set ( ASSIMP_LIBRARY_SUFFIXES lib32 )
+	endif (CMAKE_CL_64)
+
+else (WIN32)
+
+	set ( ASSIMP_INCLUDE_HINTS
+		/usr/include
+		/usr/local/include
+		/opt/local/include
+	)
+	
+	set ( ASSIMP_LIBRARY_HINTS
+		/usr/lib64
+		/usr/lib
+		/usr/local/lib
+		/opt/local/lib
+	)
+	
+endif (WIN32)
+
+find_path( ASSIMP_INCLUDE_DIR assimp/mesh.h
+	HINTS ${ASSIMP_INCLUDE_HINTS}
+	PATH_SUFFIXES ${ASSIMP_INCLUDE_SUFFIXES}
 )
 
-FIND_LIBRARY( ASSIMP_LIBRARY assimp
-  /usr/lib64
-  /usr/lib
-  /usr/local/lib
-  /opt/local/lib
+find_library( ASSIMP_LIBRARY assimp
+	HINTS ${ASSIMP_LIBRARY_HINTS}
+	PATH_SUFFIXES ${ASSIMP_LIBRARY_SUFFIXES}
 )
 
-IF(ASSIMP_INCLUDE_DIR AND ASSIMP_LIBRARY)
-  SET( ASSIMP_FOUND TRUE )
-  SET( ASSIMP_LIBRARIES ${ASSIMP_LIBRARY} )
-ENDIF(ASSIMP_INCLUDE_DIR AND ASSIMP_LIBRARY)
+if ( ASSIMP_INCLUDE_DIR AND ASSIMP_LIBRARY )
+	set( ASSIMP_FOUND TRUE )
+	set( ASSIMP_LIBRARIES ${ASSIMP_LIBRARY} )
+endif ( ASSIMP_INCLUDE_DIR AND ASSIMP_LIBRARY )
 
-IF(ASSIMP_FOUND)
-   IF(NOT ASSIMP_FIND_QUIETLY)
-      MESSAGE(STATUS "Found ASSIMP: ${ASSIMP_LIBRARY}")
-   ENDIF(NOT ASSIMP_FIND_QUIETLY)
-ELSE(ASSIMP_FOUND)
-   IF(ASSIMP_FIND_REQUIRED)
-      MESSAGE(FATAL_ERROR "Could not find libASSIMP")
-   ENDIF(ASSIMP_FIND_REQUIRED)
-ENDIF(ASSIMP_FOUND)
+if ( ASSIMP_FOUND )
+	if ( NOT ASSIMP_FIND_QUIETLY )
+		message ( STATUS "Found ASSIMP: ${ASSIMP_LIBRARY}" )
+	endif ( NOT ASSIMP_FIND_QUIETLY )
+else ( ASSIMP_FOUND )
+	if ( ASSIMP_FIND_REQUIRED )
+		message ( FATAL_ERROR "Could not find libASSIMP" )
+	endif ( ASSIMP_FIND_REQUIRED )
+endif ( ASSIMP_FOUND )

@@ -170,7 +170,7 @@ String String::Substring(Iterator from, Iterator to)
 		{
 
 			s += *from;
-			from++;
+			++from;
 
 		}
 

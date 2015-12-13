@@ -14,8 +14,5 @@ target_link_libraries( mye ${LUA_LIBRARY} )
 target_link_libraries( mye debug ${LUAPP11_LIBRARIES_DEBUG} )
 target_link_libraries( mye optimized ${LUAPP11_LIBRARIES} )
 
-#target_link_libraries(mye ${DirectX11_LIBRARY} ${DirectX11_D3DCOMPILER_LIBRARY} ${DirectX11_D3DX11_LIBRARY} ${DirectX11_DXGI_LIBRARY})
-target_link_libraries( mye ${Windows81SDK_D3D11_LIBRARY} ${Windows81SDK_D3DCOMPILER_LIBRARY} )
-
+target_link_libraries( mye ${DirectX11_LIBRARY} )
 target_link_libraries( mye ${ASSIMP_LIBRARY} )
-#target_link_libraries(mye ${Effects11_LIBRARY})

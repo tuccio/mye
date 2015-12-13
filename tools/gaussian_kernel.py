@@ -24,6 +24,11 @@ if __name__ == '__main__':
 		
 		G = [ gauss(offset, sigma) for offset in xrange(- halfKernel, halfKernel + 1) ]
 		
+		kernel = str(G)[1:-1]
+		
+		print('Kernel: ' + kernel)
+		print('Sum: ' + str(sum(G)))
+		
 		with open('gaussian_kernel.txt', 'w') as out:
 		
-			out.write(str(G)[1:-1])
+			out.write(kernel)
